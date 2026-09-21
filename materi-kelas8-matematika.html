@@ -147,7 +147,8 @@ h1,h2,h3,.display{font-family:'Space Grotesk',sans-serif;}
 
 </head>
 <body>
-  <div id="sidebar-container"></div>
+    <div id="sidebar-container"></div>
+
 <svg id="stars" width="100%" height="100%"></svg>
 
 <div class="wrap">
@@ -156,9 +157,6 @@ h1,h2,h3,.display{font-family:'Space Grotesk',sans-serif;}
     <div class="top-bar">
   <span class="tag">🧮 Matematika · Kelas 8</span>
 
-  <a href="index.html" class="back-link">
-    ← Kembali ke dashboard
-  </a>
 </div>
     <h1>Ruang Belajar Matematika</h1>
     <p>Pilih bab yang ingin kamu pelajari. Setiap bab berisi penjelasan konsep, contoh interaktif yang bisa diklik, visualisasi, dan kuis latihan lengkap dengan evaluasi di akhir bab.</p>
@@ -189,6 +187,19 @@ h1,h2,h3,.display{font-family:'Space Grotesk',sans-serif;}
     <div class="babgrid" id="genapGrid"></div>
   </div>
 
+  <div class="semester-block">
+  <div class="semester-head">
+    <h2>🎮 Arena Game</h2>
+    <span class="count">Game Matematika</span>
+  </div>
+
+  <p class="semester-sub">
+    Uji kemampuanmu melalui permainan matematika interaktif.
+  </p>
+
+  <div class="babgrid" id="gameGrid"></div>
+</div>
+
   <div class="footer-note">
     💡 Klik bab mana pun untuk membuka dasbornya dan melihat daftar subbabnya. Materi tiap subbab masih berlabel <strong>Segera Hadir</strong> — beri tahu aku subbab mana yang ingin dibuatkan presentasi interaktifnya lebih dulu.
   </div>
@@ -213,17 +224,27 @@ for(let i=0;i<60;i++){
 
 /* DATA */
 const ganjil = [
-  {n:'Bab 1', title:'Bilangan Berpangkat dan Bentuk Akar', desc:'Bilangan berpangkat bulat, bentuk akar, dan bentuk baku (notasi ilmiah).', icon:'🔢', href:'mtk kls 8/matb-bab1.html', available:true, jp:'16 JP'},
+  {n:'Bab 1', title:'Bilangan Berpangkat', desc:'Bilangan berpangkat bulat, bentuk akar, dan bentuk baku (notasi ilmiah).', icon:'🔢', href:'mtk kls 8/matb-bab1.html', available:true, jp:'16 JP'},
   {n:'Bab 2', title:'Teorema Pythagoras', desc:'Pembuktian, tripel Pythagoras, dan penerapannya pada masalah kontekstual.', icon:'📐', href:'mtk kls 8/matb-bab2.html', available:true, jp:'16 JP'},
   {n:'Bab 3', title:'Persamaan Linear dan Pertidaksamaan Linear', desc:'SPLDV serta persamaan & pertidaksamaan linear satu variabel.', icon:'➗', href:'mtk kls 8/matb-bab3.html', available:true, jp:'16 JP'},
 ];
 
 const genap = [
-  {n:'Bab 4', title:'Relasi dan Fungsi', desc:'Konsep relasi, representasi fungsi, nilai fungsi & korespondensi satu-satu.', icon:'🔗', href:'mtk kls 8/matb-bab4.html', available:false, jp:'16 JP'},
-  {n:'Bab 5', title:'Persamaan Garis Lurus', desc:'Grafik, gradien, dan menentukan persamaan garis lurus.', icon:'📈', href:'mtk kls 8/matb-bab5.html', available:false, jp:'18 JP'},
-  {n:'Bab 6', title:'Statistika', desc:'Ukuran pemusatan, penyebaran, dan interpretasi data sederhana.', icon:'📊', href:'mtk kls 8/matb-bab6.html', available:false, jp:'20 JP'},
+  {n:'Bab 4', title:'Relasi dan Fungsi', desc:'Konsep relasi, representasi fungsi, nilai fungsi & korespondensi satu-satu.', icon:'🔗', href:'mtk kls 8/matb-bab4.html', available:true, jp:'16 JP'},
+  {n:'Bab 5', title:'Persamaan Garis Lurus', desc:'Grafik, gradien, dan menentukan persamaan garis lurus.', icon:'📈', href:'mtk kls 8/matb-bab5.html', available:true, jp:'18 JP'},
+  {n:'Bab 6', title:'Statistika', desc:'Ukuran pemusatan, penyebaran, dan interpretasi data sederhana.', icon:'📊', href:'mtk kls 8/matb-bab6.html', available:true, jp:'20 JP'},
 ];
-
+const game = [
+  {
+    n: 'Arena Game',
+    title: 'Arena Game Matematika',
+    desc: 'Tantang kemampuanmu melalui permainan matematika interaktif.',
+    icon: '🎮',
+    href: 'mtk kls 8/game copy/index.html',
+    available: true,
+    pertemuan: 1
+  }
+];
 /* RENDER */
 function renderGrid(list, containerId){
   const grid = document.getElementById(containerId);
@@ -268,6 +289,7 @@ function renderGrid(list, containerId){
 /* INIT */
 renderGrid(ganjil,'ganjilGrid');
 renderGrid(genap,'genapGrid');
+renderGrid(game,'gameGrid');
 
 /* PROGRESS */
 const allBab = [...ganjil, ...genap];

@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bab 6 — Teori Peluang | Pembelajaran Interaktif</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root{
+  --bg:#07111f;--bg2:#0b1728;--card:#101f34;--card2:#142640;
+  --line:#243b58;--text:#edf6ff;--muted:#9db0c8;--blue:#48a7ff;
+  --cyan:#42e8d0;--purple:#8d75ff;--green:#55d98b;--yellow:#ffd166;
+  --red:#ff6b7a;--shadow:0 20px 55px rgba(0,0,0,.28);
+  --radius:22px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:radial-gradient(circle at 15% 10%,#102c4c 0,transparent 35%),radial-gradient(circle at 90% 80%,#211b4a 0,transparent 30%),var(--bg);color:var(--text);font-family:"Plus Jakarta Sans",sans-serif}
+body{overflow-x:hidden}
+button,input{font:inherit}
+button{cursor:pointer}
+.app{min-height:100vh;display:flex;flex-direction:column}
+.topbar{position:sticky;top:0;z-index:20;background:rgba(7,17,31,.84);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.08)}
+.top-inner{max-width:1250px;margin:auto;padding:14px 20px;display:flex;align-items:center;gap:16px}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.logo{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--blue),var(--purple));display:grid;place-items:center;font-size:22px;box-shadow:0 10px 30px rgba(72,167,255,.25)}
+.brand-text{min-width:0}.brand-text strong{display:block;font-family:Fredoka;font-size:17px}.brand-text span{display:block;color:var(--muted);font-size:11px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.progress-wrap{flex:1;margin-left:auto;max-width:420px}.progress-label{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-bottom:6px}.progress{height:7px;background:#172940;border-radius:99px;overflow:hidden}.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--cyan),var(--purple));transition:width .35s ease}
+main{width:100%;flex:1}
+.slide{display:none;max-width:1120px;margin:0 auto;padding:48px 24px 130px;min-height:calc(100vh - 74px);animation:enter .35s ease}
+.slide.active{display:block}
+@keyframes enter{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.kicker{color:var(--cyan);font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px}
+h1,h2,h3{font-family:Fredoka;margin:0 0 14px;line-height:1.12}
+h1{font-size:clamp(38px,6vw,72px);max-width:900px}
+h2{font-size:clamp(30px,4vw,48px)}
+h3{font-size:23px}
+p{line-height:1.75;color:#c8d6e6}
+.lead{font-size:clamp(16px,2vw,20px);max-width:800px}
+.hero{min-height:calc(100vh - 74px);display:grid;align-content:center}
+.hero-badge{display:inline-flex;width:max-content;gap:8px;align-items:center;padding:8px 13px;border:1px solid #315174;background:#102943;border-radius:999px;color:#cce8ff;font-size:12px;font-weight:700;margin-bottom:18px}
+.gradient{background:linear-gradient(90deg,#6bc5ff,#53f0d5,#a98cff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.card{background:linear-gradient(145deg,rgba(20,38,64,.96),rgba(12,28,47,.96));border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+.card p{margin:8px 0 0}
+.icon{font-size:30px;margin-bottom:10px}
+.tag{display:inline-block;padding:5px 9px;border-radius:9px;background:#172e49;color:#a9d8ff;font-size:11px;font-weight:800}
+.callout{border-left:4px solid var(--cyan);background:rgba(66,232,208,.07);padding:16px 18px;border-radius:12px;margin:18px 0}
+.formula{font-family:"JetBrains Mono",monospace;font-size:clamp(18px,3vw,27px);padding:20px;border-radius:16px;background:#071522;border:1px solid #28415e;text-align:center;color:#aee8ff;overflow:auto}
+.steps{display:grid;gap:12px;margin-top:18px}.step{display:flex;gap:14px;align-items:flex-start;padding:15px;border:1px solid var(--line);border-radius:16px;background:#0c1b2d}.num{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--blue),var(--purple));display:grid;place-items:center;font-weight:800;flex:none}
+.btn{border:0;border-radius:13px;padding:11px 16px;background:#1a3453;color:white;font-weight:800;transition:.2s}.btn:hover{transform:translateY(-2px);filter:brightness(1.12)}.btn.primary{background:linear-gradient(135deg,#258be9,#6957e8)}.btn.green{background:#176b4a}.btn.red{background:#71313a}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.choice-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:18px}.choice{padding:16px;border:1px solid var(--line);border-radius:15px;background:#0c1b2d;color:#eaf4ff;text-align:left}.choice:hover{border-color:var(--blue)}.choice.correct{border-color:var(--green);background:rgba(85,217,139,.1)}.choice.wrong{border-color:var(--red);background:rgba(255,107,122,.1)}
+.feedback{min-height:26px;margin-top:12px;font-weight:700}.ok{color:var(--green)}.bad{color:var(--red)}
+.reveal{display:none;margin-top:15px;padding:15px;border-radius:14px;background:#0a1929;border:1px dashed #42627f}.reveal.show{display:block}
+table{width:100%;border-collapse:collapse;margin-top:14px}th,td{padding:12px;border-bottom:1px solid var(--line);text-align:left}th{color:#b9d9f4;font-size:13px}
+.coin-stage{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:center}.coin{width:160px;height:160px;margin:auto;border-radius:50%;display:grid;place-items:center;font-family:Fredoka;font-size:25px;background:radial-gradient(circle at 35% 30%,#ffeaa4,#e8a92b 55%,#9a6110);color:#553800;border:7px solid #ffc94f;box-shadow:0 0 45px rgba(255,209,102,.22);transition:transform .5s}.coin.flip{transform:rotateY(720deg)}
+.sim-results{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.stat{flex:1;min-width:120px;background:#0a1929;border:1px solid var(--line);padding:13px;border-radius:14px}.stat b{display:block;font-size:24px;font-family:Fredoka}.stat span{font-size:11px;color:var(--muted)}
+.balls{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;padding:20px}.ball{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font-weight:800;border:2px solid #6f86a2;background:#23405f}.ball.redball{background:#803847}.ball.blueball{background:#245a88}
+.match{display:grid;grid-template-columns:1fr 1fr;gap:18px}.match button{display:block;width:100%;text-align:left;margin:8px 0}.match .selected{outline:2px solid var(--yellow)}
+input.answer{width:100%;padding:14px;border-radius:13px;border:1px solid var(--line);background:#081625;color:white;outline:none}.answer:focus{border-color:var(--blue)}
+.bar-chart{display:flex;align-items:end;gap:12px;height:190px;padding:15px;border-bottom:1px solid var(--line);border-left:1px solid var(--line)}.bar{flex:1;background:linear-gradient(to top,var(--purple),var(--cyan));border-radius:8px 8px 0 0;position:relative;min-width:30px}.bar span{position:absolute;bottom:-25px;width:100%;text-align:center;font-size:11px;color:var(--muted)}
+.quiz-q{padding:20px;border:1px solid var(--line);border-radius:18px;background:#0d1d31;margin:15px 0}.quiz-q .choice-grid{margin-top:12px}.quiz-score{font-family:Fredoka;font-size:38px}
+.reflection button{margin:5px}.selected-ref{outline:2px solid var(--cyan);background:#123b3a}
+.navbar{position:fixed;bottom:0;left:0;right:0;z-index:30;background:rgba(7,17,31,.9);backdrop-filter:blur(18px);border-top:1px solid rgba(255,255,255,.08)}
+.nav-inner{max-width:1120px;margin:auto;padding:12px 20px;display:flex;align-items:center;gap:10px}.nav-inner .spacer{flex:1}.slide-indicator{font-family:"JetBrains Mono";font-size:12px;color:var(--muted);min-width:70px;text-align:center}
+.dots{display:flex;gap:5px;justify-content:center;max-width:55vw;overflow:hidden}.dot{width:7px;height:7px;border-radius:50%;background:#30455d}.dot.active{width:20px;border-radius:99px;background:var(--cyan)}
+.toast{position:fixed;top:85px;right:18px;z-index:50;padding:12px 16px;border-radius:13px;background:#142d47;border:1px solid #315477;box-shadow:var(--shadow);opacity:0;transform:translateY(-10px);pointer-events:none;transition:.25s}.toast.show{opacity:1;transform:none}
+.footer-note{color:var(--muted);font-size:12px;text-align:center;margin-top:28px}
+@media(max-width:760px){
+ .top-inner{padding:10px 14px}.brand-text span{display:none}.logo{width:38px;height:38px}.progress-wrap{max-width:none}
+ .slide{padding:32px 16px 125px}.grid,.grid3,.coin-stage,.match{grid-template-columns:1fr}.choice-grid{grid-template-columns:1fr}
+ .nav-inner{padding:10px 12px}.dots{display:none}.nav-inner .btn{padding:10px 12px}.slide-indicator{min-width:58px}
+ h1{font-size:42px}.coin{width:130px;height:130px}.bar-chart{height:160px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="topbar">
+ <div class="top-inner">
+  <div class="brand"><div class="logo">🎲</div><div class="brand-text"><strong id="brandTitle">BAB 6 — TEORI PELUANG</strong><span id="brandSub">6.1 Konsep Dasar Peluang</span></div></div>
+  <div class="progress-wrap"><div class="progress-label"><span id="sectionLabel">Pembelajaran Interaktif</span><span id="percent">0%</span></div><div class="progress"><i id="progressBar"></i></div></div>
+ </div>
+</header>
+
+<main id="slides">
+
+<section class="slide active">
+ <div class="hero">
+  <div class="hero-badge">📘 Pembelajaran Interaktif • SMP</div>
+  <div class="kicker">Materi Pembelajaran</div>
+  <h1><span class="gradient">BAB 6 — TEORI PELUANG</span></h1>
+  <p class="lead">6.1 Konsep Dasar Peluang: percobaan acak, ruang sampel, titik sampel, dan kejadian.</p>
+  <div class="grid3" style="margin-top:25px">
+   <div class="card"><div class="icon">🎲</div><h3>Percobaan Acak</h3><p>Hasil belum dapat dipastikan sebelum percobaan dilakukan.</p></div>
+   <div class="card"><div class="icon">🧩</div><h3>Ruang Sampel</h3><p>Kumpulan semua hasil yang mungkin terjadi.</p></div>
+   <div class="card"><div class="icon">🎯</div><h3>Kejadian</h3><p>Satu atau beberapa hasil yang menjadi perhatian.</p></div>
+  </div>
+  <div class="actions"><button class="btn primary" onclick="nextSlide()">Mulai Pembelajaran →</button></div>
+ </div>
+</section>
+
+<section class="slide">
+ <div class="kicker">Apersepsi</div><h2>Pernahkah kamu menebak hasil sebelum sesuatu terjadi?</h2>
+ <p class="lead">Misalnya, saat melempar koin, kita tidak dapat memastikan sisi mana yang akan muncul. Namun kita dapat menyusun semua kemungkinan hasilnya.</p>
+ <div class="grid" style="margin-top:22px">
+  <div class="card"><span class="tag">Situasi A</span><h3>Undian nomor</h3><p>Kita tidak tahu nomor mana yang terambil sebelum undian dilakukan.</p></div>
+  <div class="card"><span class="tag">Situasi B</span><h3>Melambungkan dadu</h3><p>Kita tahu hasil yang mungkin adalah 1, 2, 3, 4, 5, atau 6.</p></div>
+ </div>
+ <div class="callout"><b>Pertanyaan pemantik:</b> Jika kita tidak bisa mengetahui hasil secara pasti, apakah kita tetap bisa mempelajari kemungkinan hasilnya?</div>
+</section>
+
+<section class="slide">
+ <div class="kicker">Tujuan Pembelajaran</div><h2>Setelah belajar, kamu dapat…</h2>
+ <div class="steps">
+  <div class="step"><div class="num">1</div><div><b>Menjelaskan</b><p>pengertian percobaan acak, ruang sampel, titik sampel, dan kejadian.</p></div></div>
+  <div class="step"><div class="num">2</div><div><b>Menentukan</b><p>ruang sampel dan titik sampel dari percobaan sederhana.</p></div></div>
+  <div class="step"><div class="num">3</div><div><b>Mengidentifikasi</b><p>kejadian sebagai himpunan bagian dari ruang sampel.</p></div></div>
+  <div class="step"><div class="num">4</div><div><b>Menghubungkan</b><p>konsep peluang dengan situasi sehari-hari dan simulasi sederhana.</p></div></div>
+ </div>
+</section>
+
+<section class="slide">
+ <div class="kicker">Konsep 1</div><h2>Apa itu percobaan acak?</h2>
+ <div class="grid">
+  <div class="card"><h3>Definisi</h3><p><b>Percobaan acak</b> adalah percobaan yang dapat diulang dalam kondisi yang sama, tetapi hasil yang diperoleh tidak dapat dipastikan sebelumnya.</p><div class="callout">Kita dapat mengetahui <b>hasil-hasil yang mungkin</b>, tetapi belum tahu hasil mana yang akan muncul.</div></div>
+  <div class="card"><h3>Contoh</h3><ul><li>Melempar sebuah koin.</li><li>Melempar sebuah dadu.</li><li>Mengambil satu bola dari kotak tanpa melihat.</li><li>Memilih satu kartu secara acak.</li></ul></div>
+ </div>
+ <button class="btn primary" onclick="toggle('notRandom')">Buka: bukan percobaan acak</button>
+ <div id="notRandom" class="reveal"><b>Contoh bukan percobaan acak:</b> menghitung 2 + 3. Dengan kondisi yang sama, hasilnya selalu 5 sehingga tidak memiliki ketidakpastian hasil.</div>
+</section>
+
+<section class="slide">
+ <div class="kicker">Aktivitas 1</div><h2>Coba lempar koin secara virtual</h2>
+ <div class="coin-stage">
+  <div class="card" style="text-align:center"><div id="coin" class="coin">KOIN</div><button class="btn primary" onclick="flipCoin()">Lempar Koin</button><div class="sim-results"><div class="stat"><b id="heads">0</b><span>Angka</span></div><div class="stat"><b id="tails">0</b><span>Gambar</span></div><div class="stat"><b id="trials">0</b><span>Percobaan</span></div></div></div>
+  <div class="card"><h3>Apa yang diamati?</h3><p>Setiap lemparan menghasilkan satu dari dua kemungkinan. Hasil tiap lemparan tidak dapat dipastikan sebelum koin dilempar.</p><div class="formula">S = {Angka, Gambar}</div><p style="font-size:13px">Catatan: banyak percobaan dapat membantu kita melihat pola frekuensi hasil, tetapi hasil setiap lemparan tetap acak.</p></div>
+ </div>
+</section>
+
+<section class="slide">
+ <div class="kicker">Konsep 2</div><h2>Ruang sampel</h2>
+ <p class="lead"><b>Ruang sampel</b> adalah himpunan semua hasil yang mungkin dari suatu percobaan acak. Biasanya dilambangkan dengan <b>S</b>.</p>
+ <div class="grid3" style="margin-top:22px">
+  <div class="card"><h3>🎲 Dadu</h3><div class="formula">S = {1,2,3,4,5,6}</div></div>
+  <div class="card"><h3>🪙 Koin</h3><div class="formula">S = {A,G}</div><p>A = Angka, G = Gambar.</p></div>
+  <div class="card"><h3>🎲 Dua pilihan</h3><div class="formula">S = {Ya,Tidak}</div><p>Contoh percobaan dengan dua hasil.</p></div>
+ </div>
+</section>
+
+<section class="slide">
+ <div class="kicker">Konsep 3</div><h2>Titik sampel</h2>
+ <p class="lead">Setiap anggota ruang sampel disebut <b>titik sampel</b>. Jadi, titik sampel adalah satu hasil tertentu dari percobaan.</p>
+ <div class="card" style="margin-top:20px">
+  <h3>Contoh: melempar dadu</h3>
+  <div class="balls">
+   <div class="ball">1</div><div class="ball">2</div><div class="ball">3</div><div class="ball">4</div><div class="ball">5</div><div class="ball">6</div>
+  </div>
+  <div class="callout">Ruang sampelnya mempunyai <b>6 titik sampel</b>, yaitu 1, 2, 3, 4, 5, dan 6.</div>
+ </div>
+</section>
+
+<section class="slide">
+ <div class="kicker">Konsep 4</div><h2>Kejadian: hasil yang menjadi perhatian</h2>
+ <p class="lead">Kejadian adalah himpunan bagian dari ruang sampel yang berisi satu atau beberapa hasil yang kita inginkan atau amati.</p>
+ <div class="grid">
+  <div class="card"><span class="tag">Contoh</span><h3>Dadu: muncul bilangan genap</h3><div class="formula">S = {1,2,3,4,5,6}</div><div class="formula" style="margin-top:10px">A = {2,4,6}</div></div>
+  <div class="card"><span class="tag">Contoh</span><h3>Dadu: muncul bilangan lebih dari 4</h3><div class="formula">B = {5,6}</div><p>Jadi kejadian dapat terdiri dari lebih dari satu titik sampel.</p></div>
+ </div>
+</section>
+
+<section class="slide">
+ <div class="kicker">Hubungan Konsep</div><h2>Bayangkan ruang sampel sebagai “kotak semua kemungkinan”</h2>
+ <div class="card">
+  <svg viewBox="0 0 760 330" width="100%" role="img" aria-label="Diagram ruang sampel dan kejadian">
+   <rect x="30" y="25" width="700" height="275" rx="28" fill="#0a1929" stroke="#41627f" stroke-width="3"/>
+   <text x="55" y="62" fill="#aee8ff" font-size="20" font-family="Plus Jakarta Sans">Ruang Sampel S</text>
+   <rect x="260" y="85" width="300" height="170" rx="25" fill="#173f51" stroke="#42e8d0" stroke-width="3"/>
+   <text x="285" y="116" fill="#7ff9e8" font-size="18" font-family="Plus Jakarta Sans">Kejadian A</text>
+   <g fill="#edf6ff" font-size="20" font-family="JetBrains Mono"><text x="90" y="125">1</text><text x="150" y="210">3</text><text x="625" y="160">5</text><text x="660" y="235">6</text><text x="315" y="165">2</text><text x="420" y="205">4</text></g>
+   <text x="45" y="285" fill="#9db0c8" font-size="14" font-family="Plus Jakarta Sans">Titik sampel = anggota ruang sampel</text>
+  </svg>
+ </div>
+ <div class="callout">Intinya: <b>ruang sampel</b> memuat semua kemungkinan, sedangkan <b>kejadian</b> memilih kemungkinan tertentu yang sedang kita perhatikan.</div>
+</section>
+
+<section class="slide">
+ <div class="kicker">Aktivitas 2</div><h2>Susun ruang sampel</h2>
+ <p>Pilih semua hasil yang mungkin jika sebuah dadu dilempar satu kali.</p>
+ <div class="choice-grid" id="sampleChoices">
+  <button class="choice" onclick="samplePick(this,1)">1</button><button class="choice" onclick="samplePick(this,2)">2</button>
+  <button class="choice" onclick="samplePick(this,3)">3</button><button class="choice" onclick="samplePick(this,4)">4</button>
+  <button class="choice" onclick="samplePick(this,5)">5</button><button class="choice" onclick="samplePick(this,6)">6</button>
+  <button class="choice" onclick="samplePick(this,7)">7</button><button class="choice" onclick="samplePick(this,0)">0</button>
+ </div>
+ <div class="actions"><button class="btn primary" onclick="checkSample()">Periksa</button><button class="btn" onclick="resetSample()">Reset</button></div>
+ <div id="sampleFeedback" class="feedback"></div>
+</section>
+
+<section class="slide">
+ <div class="kicker">Aktivitas 3</div><h2>Matching istilah</h2>
+ <p>Klik istilah di kiri, lalu klik maknanya di kanan.</p>
+ <div class="match">
+  <div id="terms">
+   <button class="btn" data-match="a" onclick="matchTerm(this)">Percobaan acak</button>
+   <button class="btn" data-match="b" onclick="matchTerm(this)">Ruang sampel</button>
+   <button class="btn" data-match="c" onclick="matchTerm(this)">Titik sampel</button>
+   <button class="btn" data-match="d" onclick="matchTerm(this)">Kejadian</button>
+  </div>
+  <div id="defs">
+   <button class="btn" data-match="c" onclick="matchDef(this)">Satu hasil tertentu.</button>
+   <button class="btn" data-match="a" onclick="matchDef(this)">Percobaan dengan hasil yang belum dapat dipastikan.</button>
+   <button class="btn" data-match="d" onclick="matchDef(this)">Himpunan hasil yang menjadi perhatian.</button>
+   <button class="btn" data-match="b" onclick="matchDef(this)">Kumpulan seluruh hasil yang mungkin.</button>
+  </div>
+ </div>
+ <div id="matchFeedback" class="feedback"></div>
+</section>
+
+<section class="slide">
+ <div class="kicker">Contoh Terbimbing</div><h2>Contoh 1 — Melempar dadu</h2>
+ <div class="card"><h3>Soal</h3><p>Sebuah dadu dilempar satu kali. Tentukan ruang sampel dan kejadian A jika A adalah “muncul bilangan ganjil”.</p></div>
+ <div class="steps">
+  <div class="step"><div class="num">1</div><div><b>Tentukan semua hasil mungkin.</b><p>Karena dadu memiliki enam sisi, hasilnya 1 sampai 6.</p></div></div>
+  <div class="step"><div class="num">2</div><div><b>Tulis ruang sampel.</b><div class="formula">S = {1,2,3,4,5,6}</div></div></div>
+  <div class="step"><div class="num">3</div><div><b>Pilih titik sampel yang memenuhi kejadian.</b><p>Bilangan ganjil di antara 1–6 adalah 1, 3, dan 5.</p><div class="formula">A = {1,3,5}</div></div></div>
+ </div>
+ <button class="btn primary" onclick="toggle('explain1')">Tampilkan pembahasan singkat</button>
+ <div id="explain1" class="reveal">Jadi, ruang sampel memuat 6 kemungkinan, sedangkan kejadian A hanya memuat 3 kemungkinan yang sesuai dengan syarat “ganjil”.</div>
+</section>
+
+<section class="slide">
+ <div class="kicker">Contoh 2</div><h2>Apakah kejadian harus memiliki banyak hasil?</h2>
+ <div class="grid">
+  <div class="card"><span class="tag">Bisa 1 titik</span><h3>Muncul angka 6</h3><div class="formula">A = {6}</div><p>Kejadian tetap sah walaupun hanya terdiri dari satu titik sampel.</p></div>
+  <div class="card"><span class="tag">Bisa beberapa titik</span><h3>Muncul bilangan prima</h3><div class="formula">B = {2,3,5}</div><p>Satu kejadian dapat terdiri dari beberapa titik sampel.</p></div>
+ </div>
+ <div class="callout">Jadi, ukuran kejadian bergantung pada syarat yang ditentukan.</div>
+</section>
+
+<section class="slide">
+ <div class="kicker">Contoh 3</div><h2>Dua kali pelemparan koin</h2>
+ <p>Jika sebuah koin dilempar dua kali, urutan hasil perlu diperhatikan.</p>
+ <div class="grid">
+  <div class="card"><h3>Ruang sampel</h3><div class="formula">S = {AA, AG, GA, GG}</div><p>A = Angka, G = Gambar.</p></div>
+  <div class="card"><h3>Kejadian: tepat satu Angka</h3><div class="formula">E = {AG, GA}</div><p>Ada dua titik sampel yang memenuhi syarat.</p></div>
+ </div>
+ <div class="callout">Perhatikan bahwa <b>AG</b> dan <b>GA</b> berbeda karena urutan hasilnya berbeda.</div>
+</section>
+
+<section class="slide">
+ <div class="kicker">Visualisasi</div><h2>Pohon kemungkinan dua koin</h2>
+ <div class="card">
+  <svg viewBox="0 0 850 380" width="100%" aria-label="Diagram pohon kemungkinan">
+   <g stroke="#41627f" stroke-width="3" fill="none">
+    <path d="M120 190 L300 90 M120 190 L300 290"/>
+    <path d="M300 90 L500 45 M300 90 L500 135"/>
+    <path d="M300 290 L500 245 M300 290 L500 335"/>
+   </g>
+   <g font-family="Plus Jakarta Sans" font-size="18" fill="#edf6ff">
+    <text x="70" y="185">Mulai</text><text x="315" y="82">A</text><text x="315" y="282">G</text>
+    <text x="515" y="40">AA</text><text x="515" y="130">AG</text><text x="515" y="240">GA</text><text x="515" y="330">GG</text>
+   </g>
+   <g fill="#42e8d0"><circle cx="120" cy="190" r="9"/><circle cx="300" cy="90" r="9"/><circle cx="300" cy="290" r="9"/><circle cx="500" cy="45" r="9"/><circle cx="500" cy="135" r="9"/><circle cx="500" cy="245" r="9"/><circle cx="500" cy="335" r="9"/></g>
+  </svg>
+ </div>
+ <p>Diagram pohon membantu memastikan tidak ada kemungkinan yang terlewat.</p>
+</section>
+
+<section class="slide">
+ <div class="kicker">Konsep Peluang</div><h2>Dari kemungkinan menuju peluang</h2>
+ <p>Setelah memahami ruang sampel dan kejadian, kita dapat menyatakan peluang kejadian pada situasi dengan hasil yang sama mungkin.</p>
+ <div class="formula">P(A) = n(A) / n(S)</div>
+ <div class="grid" style="margin-top:18px">
+  <div class="card"><h3>P(A)</h3><p>Peluang kejadian A.</p></div>
+  <div class="card"><h3>n(A)</h3><p>Banyak titik sampel yang termasuk kejadian A.</p></div>
+  <div class="card"><h3>n(S)</h3><p>Banyak seluruh titik sampel dalam ruang sampel.</p></div>
+  <div class="card"><h3>Syarat konteks</h3><p>Rumus ini digunakan ketika semua titik sampel memiliki kemungkinan yang sama.</p></div>
+ </div>
+</section>
+
+<section class="slide">
+ <div class="kicker">Contoh Peluang</div><h2>Peluang muncul bilangan genap pada dadu</h2>
+ <div class="card"><h3>Langkah 1 — Ruang sampel</h3><div class="formula">S = {1,2,3,4,5,6} → n(S)=6</div></div>
+ <div class="card" style="margin-top:14px"><h3>Langkah 2 — Kejadian</h3><div class="formula">A = {2,4,6} → n(A)=3</div></div>
+ <div class="card" style="margin-top:14px"><h3>Langkah 3 — Hitung</h3><div class="formula">P(A)=3/6=1/2=0,5=50%</div></div>
+</section>
+
+<section class="slide">
+ <div class="kicker">Eksperimen</div><h2>Frekuensi relatif dari simulasi dadu</h2>
+ <p>Tekan tombol untuk melakukan banyak percobaan dadu. Kita amati seberapa sering muncul angka 6.</p>
+ <div class="actions"><button class="btn primary" onclick="runDice(20)">20 Percobaan</button><button class="btn" onclick="runDice(100)">100 Percobaan</button><button class="btn" onclick="runDice(500)">500 Percobaan</button></div>
+ <div class="card" style="margin-top:18px"><div class="bar-chart"><div class="bar" id="barExp" style="height:0%"><span id="barLabel">0%</span></div><div style="flex:4"></div></div><div class="sim-results"><div class="stat"><b id="diceHits">0</b><span>Muncul angka 6</span></div><div class="stat"><b id="diceN">0</b><span>Total percobaan</span></div><div class="stat"><b id="diceRel">0%</b><span>Frekuensi relatif</span></div><div class="stat"><b>≈ 16,7%</b><span>Peluang teoritis 6</span></div></div></div>
+</section>
+
+<section class="slide">
+ <div class="kicker">Latihan Mudah</div><h2>Latihan 1</h2>
+ <div class="card"><h3>Sebuah koin dilempar satu kali. Manakah ruang sampelnya?</h3>
+ <div class="choice-grid">
+  <button class="choice" onclick="answer(this,true,'l1')">{Angka, Gambar}</button>
+  <button class="choice" onclick="answer(this,false,'l1')">{1, 2}</button>
+  <button class="choice" onclick="answer(this,false,'l1')">{A, B, C}</button>
+  <button class="choice" onclick="answer(this,false,'l1')">{Kepala, Ekor, Tengah}</button>
+ </div><div id="l1" class="feedback"></div></div>
+</section>
+
+<section class="slide">
+ <div class="kicker">Latihan Sedang</div><h2>Latihan 2</h2>
+ <div class="card"><h3>Dadu dilempar sekali. A adalah kejadian muncul bilangan lebih dari 3. Tentukan A.</h3>
+ <input id="l2input" class="answer" placeholder="Contoh format: 4,5,6" autocomplete="off">
+ <div class="actions"><button class="btn primary" onclick="checkInput('l2input','4,5,6','l2')">Periksa</button></div><div id="l2" class="feedback"></div></div>
+</section>
+
+<section class="slide">
+ <div class="kicker">Latihan Menantang</div><h2>Latihan 3</h2>
+ <div class="card"><h3>Sebuah koin dilempar dua kali. Kejadian E adalah “tepat satu Gambar”. Berapa banyak titik sampel dalam E?</h3>
+ <div class="choice-grid">
+  <button class="choice" onclick="answer(this,false,'l3')">1</button>
+  <button class="choice" onclick="answer(this,true,'l3')">2</button>
+  <button class="choice" onclick="answer(this,false,'l3')">3</button>
+  <button class="choice" onclick="answer(this,false,'l3')">4</button>
+ </div><div id="l3" class="feedback"></div></div>
+</section>
+
+<section class="slide">
+ <div class="kicker">Kuis Akhir</div><h2>Uji Pemahamanmu 🎯</h2>
+ <p>Jawablah semua soal. Skor dihitung otomatis setelah kamu menekan <b>Nilai Kuis</b>.</p>
+ <div id="quiz"></div>
+ <div class="actions"><button class="btn primary" onclick="gradeQuiz()">Nilai Kuis</button><button class="btn" onclick="resetQuiz()">Ulangi Kuis</button></div>
+ <div id="quizResult" class="card" style="display:none;margin-top:18px"></div>
+</section>
+
+<section class="slide">
+ <div class="kicker">Refleksi</div><h2>Bagaimana pemahamanmu?</h2>
+ <p>Pilih pernyataan yang paling menggambarkan pemahamanmu saat ini.</p>
+ <div class="reflection">
+  <button class="btn" onclick="reflect(this)">🌱 Saya masih perlu latihan.</button>
+  <button class="btn" onclick="reflect(this)">👍 Saya cukup memahami konsep.</button>
+  <button class="btn" onclick="reflect(this)">🚀 Saya siap mengerjakan soal yang lebih menantang.</button>
+ </div>
+ <div id="reflectionText" class="callout" style="display:none"></div>
+ <div class="card" style="margin-top:22px"><h3>Coba jelaskan dengan kata-katamu sendiri:</h3><p>Bagaimana hubungan antara ruang sampel, titik sampel, dan kejadian?</p><textarea id="reflectInput" style="width:100%;min-height:110px;border:1px solid var(--line);background:#081625;color:white;border-radius:13px;padding:13px;resize:vertical" placeholder="Tuliskan pemahamanmu..."></textarea></div>
+</section>
+
+<section class="slide">
+ <div class="kicker">Rangkuman</div><h2>Peta konsep Bab 6.1</h2>
+ <div class="grid3">
+  <div class="card"><div class="icon">🎲</div><h3>Percobaan acak</h3><p>Hasil belum dapat dipastikan sebelum percobaan dilakukan.</p></div>
+  <div class="card"><div class="icon">🌌</div><h3>Ruang sampel (S)</h3><p>Semua hasil yang mungkin.</p></div>
+  <div class="card"><div class="icon">🔹</div><h3>Titik sampel</h3><p>Satu hasil tertentu yang merupakan anggota S.</p></div>
+  <div class="card"><div class="icon">🎯</div><h3>Kejadian (A)</h3><p>Himpunan satu atau beberapa titik sampel yang diperhatikan.</p></div>
+  <div class="card"><div class="icon">📐</div><h3>Peluang</h3><p>Untuk hasil yang sama mungkin: P(A)=n(A)/n(S).</p></div>
+  <div class="card"><div class="icon">🔁</div><h3>Simulasi</h3><p>Percobaan berulang membantu mengamati frekuensi relatif.</p></div>
+ </div>
+</section>
+
+<section class="slide">
+ <div class="hero" style="min-height:auto;padding-top:30px">
+  <div class="hero-badge">✅ Pembelajaran selesai</div>
+  <div class="kicker">Penutup</div>
+  <h1>Sekarang kamu siap memahami <span class="gradient">peluang</span> lebih jauh.</h1>
+  <p class="lead">Kunci awal teori peluang adalah mengenali percobaan acak, menyusun ruang sampel, memahami titik sampel, lalu menentukan kejadian.</p>
+  <div class="formula">Percobaan → Ruang Sampel → Titik Sampel → Kejadian → Peluang</div>
+  <div class="actions"><button class="btn primary" onclick="goHome()">↺ Kembali ke Awal</button><button class="btn" onclick="window.print()">🖨 Cetak / Simpan PDF</button></div>
+  <div class="footer-note">BAB 6 — TEORI PELUANG • 6.1 Konsep Dasar Peluang</div>
+ </div>
+</section>
+
+</main>
+
+<nav class="navbar">
+ <div class="nav-inner">
+  <button class="btn" onclick="goHome()">⌂ Awal</button>
+  <button class="btn" id="prevBtn" onclick="prevSlide()">← Sebelumnya</button>
+  <div class="dots" id="dots"></div>
+  <div class="slide-indicator" id="slideIndicator">1 / 1</div>
+  <div class="spacer"></div>
+  <button class="btn primary" id="nextBtn" onclick="nextSlide()">Berikutnya →</button>
+ </div>
+</nav>
+<div id="toast" class="toast"></div>
+</div>
+
+<script>
+/* ==========================================================
+   DATA UTAMA — MATERI & SUBMATERI DIISI SATU KALI DI SINI
+   ========================================================== */
+const PEMBELAJARAN = {
+  materi: "BAB 6 — TEORI PELUANG",
+  submateri: "6.1 Konsep Dasar Peluang",
+  fokus: "Percobaan acak, ruang sampel, titik sampel, kejadian"
+};
+
+document.title = PEMBELAJARAN.materi + " | " + PEMBELAJARAN.submateri;
+document.getElementById("brandTitle").textContent = PEMBELAJARAN.materi;
+document.getElementById("brandSub").textContent = PEMBELAJARAN.submateri;
+
+/* ---------- NAVIGASI ---------- */
+const slides=[...document.querySelectorAll(".slide")];
+let current=0;
+const dots=document.getElementById("dots");
+slides.forEach((_,i)=>{
+ const d=document.createElement("i"); d.className="dot"+(i===0?" active":""); d.title="Slide "+(i+1);
+ d.onclick=()=>showSlide(i); dots.appendChild(d);
+});
+function showSlide(i){
+ current=Math.max(0,Math.min(slides.length-1,i));
+ slides.forEach((s,n)=>s.classList.toggle("active",n===current));
+ [...dots.children].forEach((d,n)=>d.classList.toggle("active",n===current));
+ const pct=Math.round((current/(slides.length-1))*100);
+ document.getElementById("progressBar").style.width=pct+"%";
+ document.getElementById("percent").textContent=pct+"%";
+ document.getElementById("slideIndicator").textContent=(current+1)+" / "+slides.length;
+ document.getElementById("prevBtn").disabled=current===0;
+ document.getElementById("nextBtn").textContent=current===slides.length-1?"Selesai":"Berikutnya →";
+ document.getElementById("sectionLabel").textContent=current===0?PEMBELAJARAN.submateri:"Pembelajaran Interaktif";
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+function nextSlide(){if(current<slides.length-1)showSlide(current+1)}
+function prevSlide(){if(current>0)showSlide(current-1)}
+function goHome(){showSlide(0)}
+document.addEventListener("keydown",e=>{
+ if(["INPUT","TEXTAREA","BUTTON"].includes(document.activeElement.tagName)) return;
+ if(e.key==="ArrowRight")nextSlide();
+ if(e.key==="ArrowLeft")prevSlide();
+});
+showSlide(0);
+
+/* ---------- UTILITAS ---------- */
+function toggle(id){document.getElementById(id).classList.toggle("show")}
+function toast(msg){
+ const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");
+ clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.classList.remove("show"),1800);
+}
+function answer(el,correct,id){
+ const box=el.parentElement;box.querySelectorAll(".choice").forEach(x=>x.classList.remove("correct","wrong"));
+ el.classList.add(correct?"correct":"wrong");
+ const f=document.getElementById(id);f.className="feedback "+(correct?"ok":"bad");
+ f.textContent=correct?"✓ Benar! Pemahamanmu tepat.":"✗ Belum tepat. Coba perhatikan kembali konsep pada soal.";
+}
+function checkInput(inputId,expected,feedbackId){
+ const val=document.getElementById(inputId).value.replace(/\s/g,"").replace(/[{}]/g,"").toLowerCase();
+ const exp=expected.replace(/\s/g,"").toLowerCase();
+ const f=document.getElementById(feedbackId);
+ if(val===exp){f.className="feedback ok";f.textContent="✓ Benar! Kejadian tersebut adalah {4,5,6}."}
+ else{f.className="feedback bad";f.textContent="✗ Belum tepat. Ingat: lebih dari 3 berarti 4, 5, dan 6."}
+}
+
+/* ---------- KOIN ---------- */
+let heads=0,tails=0,trials=0;
+function flipCoin(){
+ const coin=document.getElementById("coin");coin.classList.remove("flip");void coin.offsetWidth;coin.classList.add("flip");
+ const result=Math.random()<.5?"Angka":"Gambar";trials++;result==="Angka"?heads++:tails++;
+ setTimeout(()=>{coin.textContent=result;document.getElementById("heads").textContent=heads;document.getElementById("tails").textContent=tails;document.getElementById("trials").textContent=trials},250);
+}
+
+/* ---------- RUANG SAMPEL ---------- */
+let selectedSample=new Set();
+function samplePick(el,v){
+ if(v===0){el.classList.toggle("wrong");return}
+ if(selectedSample.has(v)){selectedSample.delete(v);el.classList.remove("correct")}else{selectedSample.add(v);el.classList.add("correct")}
+}
+function checkSample(){
+ const ok=selectedSample.size===6&&[1,2,3,4,5,6].every(x=>selectedSample.has(x));
+ const f=document.getElementById("sampleFeedback");f.className="feedback "+(ok?"ok":"bad");
+ f.textContent=ok?"✓ Lengkap! Ruang sampelnya S={1,2,3,4,5,6}.":"✗ Belum lengkap. Semua hasil 1 sampai 6 harus termasuk, sedangkan 0 dan 7 tidak.";
+}
+function resetSample(){selectedSample.clear();document.querySelectorAll("#sampleChoices .choice").forEach(x=>x.classList.remove("correct","wrong"));document.getElementById("sampleFeedback").textContent=""}
+
+/* ---------- MATCHING ---------- */
+let term=null,matched=new Set();
+function matchTerm(el){document.querySelectorAll("#terms .btn").forEach(x=>x.classList.remove("selected"));el.classList.add("selected");term=el.dataset.match}
+function matchDef(el){
+ if(!term){toast("Pilih istilah terlebih dahulu.");return}
+ if(term===el.dataset.match){
+  el.classList.add("selected");document.querySelector('#terms [data-match="'+term+'"]').classList.add("selected");
+  matched.add(term);term=null;
+  const f=document.getElementById("matchFeedback");f.className="feedback ok";f.textContent=matched.size===4?"✓ Semua pasangan benar!":"✓ Pasangan benar.";
+ }else{document.getElementById("matchFeedback").className="feedback bad";document.getElementById("matchFeedback").textContent="✗ Pasangan belum tepat. Coba lagi."}
+}
+
+/* ---------- SIMULASI DADU ---------- */
+function runDice(n){
+ let hits=0;for(let i=0;i<n;i++)if(Math.floor(Math.random()*6)+1===6)hits++;
+ const rel=hits/n*100;
+ document.getElementById("diceHits").textContent=hits;
+ document.getElementById("diceN").textContent=n;
+ document.getElementById("diceRel").textContent=rel.toFixed(1)+"%";
+ const bar=document.getElementById("barExp");bar.style.height=Math.max(4,Math.min(100,rel*4))+"%";document.getElementById("barLabel").textContent=rel.toFixed(1)+"%";
+}
+
+/* ---------- KUIS ---------- */
+const quizData=[
+ {q:"Manakah yang merupakan contoh percobaan acak?",o:["Menghitung 4+5","Melempar sebuah dadu","Mengukur sisi persegi yang sudah diketahui","Menentukan hasil 10−3"],a:1,e:"Melempar dadu memiliki hasil yang belum dapat dipastikan sebelum dilakukan."},
+ {q:"Ruang sampel pelemparan dadu satu kali adalah…",o:["{1,2,3}","{0,1,2,3,4,5,6}","{1,2,3,4,5,6}","{2,4,6}"],a:2,e:"Dadu standar memiliki enam hasil yang mungkin: 1 sampai 6."},
+ {q:"Jika S={1,2,3,4,5,6}, kejadian muncul bilangan prima adalah…",o:["{1,2,3}","{2,3,5}","{1,3,5}","{4,5,6}"],a:1,e:"Bilangan prima pada 1–6 adalah 2, 3, dan 5."},
+ {q:"Satu titik sampel adalah…",o:["Semua hasil yang mungkin","Satu hasil tertentu dari percobaan","Seluruh kejadian","Hasil yang pasti"],a:1,e:"Titik sampel adalah satu anggota ruang sampel."},
+ {q:"Jika dadu dilempar satu kali, peluang muncul angka genap adalah…",o:["1/6","1/3","1/2","2/3"],a:2,e:"Kejadian genap={2,4,6}, jadi P=3/6=1/2."},
+ {q:"Pada dua kali pelemparan koin, ruang sampelnya adalah…",o:["{A,G}","{AA,AG,GA,GG}","{A,A,G,G}","{AA,GG}"],a:1,e:"Empat urutan hasil mungkin: AA, AG, GA, GG."}
+];
+function renderQuiz(){
+ const q=document.getElementById("quiz");
+ q.innerHTML=quizData.map((x,i)=>`<div class="quiz-q"><h3>${i+1}. ${x.q}</h3><div class="choice-grid">${x.o.map((op,j)=>`<button class="choice" data-q="${i}" data-a="${j}" onclick="selectQuiz(this)">${op}</button>`).join("")}</div><div id="qe${i}" class="feedback"></div></div>`).join("");
+}
+let quizAnswers={};
+function selectQuiz(el){
+ const i=+el.dataset.q;quizAnswers[i]=+el.dataset.a;
+ document.querySelectorAll(`[data-q="${i}"]`).forEach(x=>x.classList.remove("correct","wrong"));
+ el.classList.add("correct");
+}
+function gradeQuiz(){
+ let score=0;
+ quizData.forEach((x,i)=>{
+  const buttons=document.querySelectorAll(`[data-q="${i}"]`);
+  buttons.forEach((b,j)=>{b.classList.remove("correct","wrong");if(j===x.a)b.classList.add("correct");if(quizAnswers[i]===j&&j!==x.a)b.classList.add("wrong")});
+  const f=document.getElementById("qe"+i);
+  if(quizAnswers[i]===x.a){score++;f.className="feedback ok";f.textContent="✓ Benar — "+x.e}
+  else{f.className="feedback bad";f.textContent="✗ Belum tepat — "+x.e}
+ });
+ const pct=Math.round(score/quizData.length*100),r=document.getElementById("quizResult");r.style.display="block";
+ r.innerHTML=`<div class="quiz-score">${score}/${quizData.length} • ${pct}</div><p>${pct>=80?"Hebat! Konsep dasar peluangmu sudah kuat.":pct>=60?"Bagus! Tinjau kembali bagian yang masih keliru.":"Tidak apa-apa. Pelajari lagi rangkuman dan contoh, lalu ulangi kuis."}</p>`;
+}
+function resetQuiz(){quizAnswers={};renderQuiz();document.getElementById("quizResult").style.display="none"}
+renderQuiz();
+
+/* ---------- REFLEKSI ---------- */
+function reflect(el){
+ document.querySelectorAll(".reflection .btn").forEach(x=>x.classList.remove("selected-ref"));el.classList.add("selected-ref");
+ document.getElementById("reflectionText").style.display="block";
+ document.getElementById("reflectionText").textContent="Refleksi tersimpan di halaman ini. Gunakan jawabanmu untuk menentukan bagian mana yang perlu dipelajari kembali.";
+}
+</script>
+</body>
+</html>

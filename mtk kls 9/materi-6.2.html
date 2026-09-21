@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Peluang Suatu Kejadian — Bab 6 Teori Peluang</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0a0d13;
+    --bg-soft: radial-gradient(1200px 700px at 85% -10%, rgba(124,92,252,0.16), transparent 60%),
+                radial-gradient(900px 600px at -10% 110%, rgba(34,211,184,0.10), transparent 55%);
+    --surface: #131826;
+    --surface-2: #1a2032;
+    --surface-3: #212841;
+    --border: #262e46;
+    --accent: #8b6bff;
+    --accent-soft: rgba(139,107,255,0.14);
+    --teal: #22d3b8;
+    --teal-soft: rgba(34,211,184,0.14);
+    --amber: #ffb454;
+    --red: #ff6b6b;
+    --red-soft: rgba(255,107,107,0.14);
+    --text: #eef0f7;
+    --text-dim: #a6adc2;
+    --text-faint: #6b7290;
+    --radius-lg: 22px;
+    --radius-md: 14px;
+    --radius-sm: 9px;
+    --font-display: 'Fredoka', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background: var(--bg-soft), var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    overflow:hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+  h1,h2,h3,.disp{ font-family: var(--font-display); font-weight:600; letter-spacing:0.2px; }
+  code, .mono, .formula{ font-family: var(--font-mono); }
+  ::selection{ background: var(--accent-soft); }
+
+  #app{ display:flex; flex-direction:column; height:100vh; }
+
+  /* progress bar */
+  #progress-track{ position:relative; height:4px; width:100%; background: var(--surface-2); flex-shrink:0; }
+  #progress-fill{ position:absolute; inset:0 auto 0 0; width:0%; background: linear-gradient(90deg, var(--teal), var(--accent)); transition: width .35s ease; }
+
+  header.topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 0.85rem clamp(1rem,4vw,2.2rem);
+    flex-shrink:0; border-bottom:1px solid var(--border);
+    background: rgba(10,13,19,0.6); backdrop-filter: blur(6px);
+  }
+  .topbar .brand{ display:flex; align-items:center; gap:0.6rem; }
+  .brand .dot{ width:10px; height:10px; border-radius:50%; background: linear-gradient(135deg, var(--accent), var(--teal)); flex-shrink:0; }
+  .brand-text{ line-height:1.2; }
+  .brand-text .eyebrow{ font-size:0.72rem; color: var(--text-faint); }
+  .brand-text .title{ font-size:0.95rem; font-family: var(--font-display); }
+  .topbar .counter{ font-family: var(--font-mono); font-size:0.82rem; color: var(--text-dim); background: var(--surface-2); padding:0.3rem 0.7rem; border-radius: 999px; border:1px solid var(--border); }
+
+  main#viewport{ flex:1; overflow-y:auto; scroll-behavior:smooth; }
+  .slide{ display:none; max-width: 880px; margin:0 auto; padding: clamp(1.6rem,5vw,3.2rem) clamp(1.1rem,4vw,2rem) 2rem; min-height: calc(100% - 0px); }
+  .slide.active{ display:block; animation: rise .5s cubic-bezier(.2,.7,.2,1); }
+  @keyframes rise{ from{ opacity:0; transform: translateY(14px);} to{ opacity:1; transform:none; } }
+
+  .kicker{ display:inline-flex; align-items:center; gap:0.5rem; font-size:0.78rem; color: var(--teal); background: var(--teal-soft); padding: 0.3rem 0.75rem; border-radius:999px; margin-bottom:1rem; }
+  h2.slide-title{ font-size: clamp(1.5rem, 4vw, 2.2rem); margin: 0 0 0.6rem; line-height:1.15; }
+  p.lead{ color: var(--text-dim); font-size:1.02rem; line-height:1.65; max-width:65ch; }
+
+  .card{ background: var(--surface); border:1px solid var(--border); border-radius: var(--radius-lg); padding: 1.4rem 1.5rem; }
+  .card + .card{ margin-top:1rem; }
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  @media(max-width:680px){ .grid2{ grid-template-columns:1fr; } }
+
+  button{ font-family: var(--font-body); cursor:pointer; }
+  .btn{ appearance:none; border:1px solid var(--border); background: var(--surface-2); color: var(--text); padding:0.65rem 1.1rem; border-radius: var(--radius-sm); font-size:0.9rem; font-weight:600; transition: transform .15s ease, background .15s ease, border-color .15s ease; }
+  .btn:hover{ background: var(--surface-3); border-color:#333d5c; }
+  .btn:active{ transform: scale(0.97); }
+  .btn-primary{ background: linear-gradient(135deg, var(--accent), #6f4de0); border-color:transparent; color:#fff; }
+  .btn-primary:hover{ filter:brightness(1.08); }
+  .btn-teal{ background: linear-gradient(135deg, var(--teal), #189d88); border-color:transparent; color:#052b25; }
+  .btn-ghost{ background:transparent; }
+  .btn:disabled{ opacity:0.45; cursor:not-allowed; }
+  .btn-row{ display:flex; gap:0.6rem; flex-wrap:wrap; margin-top:1rem; }
+
+  .pill{ display:inline-block; font-family:var(--font-mono); font-size:0.78rem; padding:0.2rem 0.6rem; border-radius:999px; border:1px solid var(--border); color:var(--text-dim); }
+
+  /* accordion */
+  .accordion-item{ border:1px solid var(--border); border-radius: var(--radius-md); overflow:hidden; margin-bottom:0.7rem; background: var(--surface); }
+  .accordion-header{ width:100%; text-align:left; background:transparent; border:none; color:var(--text); padding:1rem 1.2rem; display:flex; justify-content:space-between; align-items:center; font-weight:600; font-size:0.98rem; }
+  .accordion-header .plus{ font-family:var(--font-mono); color:var(--accent); transition: transform .25s ease; }
+  .accordion-item.open .plus{ transform: rotate(45deg); }
+  .accordion-body{ max-height:0; overflow:hidden; transition: max-height .3s ease; }
+  .accordion-body-inner{ padding: 0 1.2rem 1.1rem; color: var(--text-dim); line-height:1.6; font-size:0.94rem; }
+
+  /* number line */
+  .numline-wrap{ margin: 1.6rem 0 0.4rem; }
+  .numline{ position:relative; height:6px; border-radius:4px; background: linear-gradient(90deg, var(--red) 0%, var(--amber) 50%, var(--teal) 100%); }
+  .numline .marker{ position:absolute; top:50%; width:22px; height:22px; border-radius:50%; background:#fff; border:3px solid var(--accent); transform: translate(-50%,-50%); box-shadow:0 0 0 5px rgba(139,107,255,0.18); transition: left .12s ease; }
+  .numline-labels{ display:flex; justify-content:space-between; margin-top:0.6rem; font-family:var(--font-mono); font-size:0.78rem; color:var(--text-faint); }
+  input[type=range]{ width:100%; margin-top:1.2rem; accent-color: var(--accent); }
+  .meaning-box{ margin-top:1rem; padding:0.9rem 1.1rem; border-radius: var(--radius-md); background: var(--surface-2); border:1px solid var(--border); font-size:0.92rem; }
+  .meaning-box b{ color: var(--teal); }
+
+  /* dice & coin */
+  .dice-row{ display:flex; gap:0.7rem; flex-wrap:wrap; justify-content:center; margin: 1.2rem 0; }
+  .dice{ width:64px; height:64px; border-radius:14px; background: var(--surface-2); border:1px solid var(--border); display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,1fr); padding:9px; gap:2px; cursor:pointer; transition: border-color .2s ease, background .2s ease, transform .2s ease; }
+  .dice:hover{ border-color: var(--accent); transform: translateY(-2px); }
+  .dice.selected{ border-color: var(--teal); background: var(--teal-soft); }
+  .pip{ border-radius:50%; background: var(--text-faint); align-self:center; justify-self:center; width:8px; height:8px; }
+  .dice.selected .pip{ background: var(--teal); }
+  .dice-cap{ text-align:center; font-family:var(--font-mono); font-size:0.78rem; color:var(--text-faint); margin-top:-0.6rem; }
+
+  .coin-stage{ display:flex; flex-direction:column; align-items:center; gap:1rem; margin:1.2rem 0; }
+  .coin{ width:110px; height:110px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:1.6rem; color:#1c1408; background: linear-gradient(135deg,#ffd782,#e0a53d); border:4px solid #a97a1f; cursor:pointer; transition: transform .5s cubic-bezier(.2,.8,.3,1); user-select:none; }
+  .coin.spin{ transform: rotateY(1080deg); }
+
+  /* generic reveal / step */
+  .step-reveal{ margin-top:1rem; display:none; padding:0.9rem 1rem; border-radius: var(--radius-md); border:1px dashed var(--border); background: var(--surface-2); font-size:0.93rem; line-height:1.6; }
+  .step-reveal.show{ display:block; animation: fadeInSm .3s ease; }
+  @keyframes fadeInSm{ from{ opacity:0; transform: translateY(6px);} to{opacity:1; transform:none;} }
+
+  .formula-box{ font-family: var(--font-mono); background: var(--surface-2); border:1px solid var(--border); border-radius: var(--radius-md); padding:1rem 1.2rem; font-size:1.05rem; text-align:center; color: var(--teal); }
+
+  /* option buttons for practice/quiz */
+  .opt-list{ display:flex; flex-direction:column; gap:0.55rem; margin-top:1rem; }
+  .opt-btn{ text-align:left; background: var(--surface-2); border:1px solid var(--border); border-radius: var(--radius-sm); padding:0.75rem 1rem; color:var(--text); font-size:0.92rem; }
+  .opt-btn:hover{ border-color: var(--accent); }
+  .opt-btn.correct{ background: rgba(34,211,184,0.14); border-color: var(--teal); }
+  .opt-btn.wrong{ background: var(--red-soft); border-color: var(--red); }
+  .opt-btn:disabled{ cursor:default; }
+  .feedback{ margin-top:0.8rem; font-size:0.9rem; padding:0.7rem 0.9rem; border-radius:var(--radius-sm); display:none; }
+  .feedback.show{ display:block; animation: fadeInSm .3s ease; }
+  .feedback.ok{ background: var(--teal-soft); color:#bdf5ea; }
+  .feedback.bad{ background: var(--red-soft); color:#ffd2d2; }
+
+  .qcard{ margin-bottom:1.1rem; }
+  .qcard .qnum{ font-family: var(--font-mono); font-size:0.78rem; color: var(--text-faint); }
+
+  /* simulation bars */
+  .sim-controls{ display:flex; gap:0.6rem; flex-wrap:wrap; margin:1rem 0 1.4rem; }
+  .bars{ display:flex; align-items:flex-end; gap:0.7rem; height:180px; padding:0 0.2rem; }
+  .bar-col{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:0.4rem; height:100%; }
+  .bar{ width:100%; max-width:46px; background: linear-gradient(180deg, var(--accent), #5636c9); border-radius:8px 8px 3px 3px; transition: height .4s ease; min-height:2px; }
+  .bar-label{ font-family:var(--font-mono); font-size:0.76rem; color:var(--text-faint); }
+  .sim-stats{ display:flex; gap:1.2rem; flex-wrap:wrap; margin-top:1.1rem; font-size:0.86rem; color:var(--text-dim); }
+  .sim-stats b{ color:var(--text); }
+
+  /* reflection */
+  .reflect-item{ display:flex; gap:0.7rem; align-items:flex-start; padding:0.85rem 0; border-bottom:1px solid var(--border); }
+  .reflect-item:last-child{ border-bottom:none; }
+  .reflect-item input{ margin-top:0.3rem; width:17px; height:17px; accent-color: var(--teal); }
+  .reflect-item label{ font-size:0.93rem; color: var(--text-dim); line-height:1.5; }
+
+  /* summary */
+  .sum-item{ display:flex; gap:0.8rem; padding:0.9rem 0; border-bottom:1px solid var(--border); align-items:flex-start; }
+  .sum-item:last-child{ border-bottom:none; }
+  .sum-item .idx{ font-family: var(--font-display); color: var(--accent); font-size:1.1rem; min-width:1.6rem; }
+  .sum-item .body b{ display:block; margin-bottom:0.15rem; }
+  .sum-item .body span{ color: var(--text-dim); font-size:0.9rem; line-height:1.5; }
+
+  /* cover */
+  .cover{ min-height: calc(100vh - 140px); display:flex; flex-direction:column; justify-content:center; align-items:flex-start; }
+  .cover .badge{ display:inline-flex; align-items:center; gap:0.5rem; background: var(--surface-2); border:1px solid var(--border); padding:0.4rem 0.9rem; border-radius:999px; font-family:var(--font-mono); font-size:0.78rem; color: var(--teal); margin-bottom:1.4rem; }
+  .cover h1{ font-size: clamp(2rem, 6vw, 3.4rem); line-height:1.08; margin:0 0 0.8rem; }
+  .cover .accent{ color: var(--accent); }
+  .cover-dice{ position:relative; display:flex; gap:0.8rem; margin-top:2.2rem; }
+  .cover-dice .dice{ cursor:default; }
+  .cover-dice .dice:hover{ transform:none; border-color:var(--border); }
+
+  footer.navbar{
+    flex-shrink:0; display:flex; align-items:center; justify-content:space-between;
+    padding:0.9rem clamp(1rem,4vw,2.2rem); border-top:1px solid var(--border);
+    background: rgba(10,13,19,0.7); backdrop-filter: blur(6px); gap:0.8rem;
+  }
+  .nav-btn{ display:flex; align-items:center; gap:0.4rem; }
+  .nav-mid{ display:flex; align-items:center; gap:0.5rem; }
+  .nav-home{ font-size:0.82rem; color: var(--text-faint); background:transparent; border:none; }
+  .nav-home:hover{ color: var(--text-dim); }
+
+  @media(max-width:560px){
+    .topbar .brand-text .title{ font-size:0.85rem; }
+    footer.navbar{ padding:0.7rem 0.8rem; }
+    .btn{ padding:0.6rem 0.9rem; font-size:0.85rem; }
+    .dice{ width:52px; height:52px; }
+  }
+
+  .sr-only{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="progress-track"><div id="progress-fill"></div></div>
+  <header class="topbar">
+    <div class="brand">
+      <span class="dot"></span>
+      <div class="brand-text">
+        <div class="eyebrow">Bab 6 · Teori Peluang</div>
+        <div class="title">Peluang Suatu Kejadian</div>
+      </div>
+    </div>
+    <div class="counter" id="counterLabel">1 / 21</div>
+  </header>
+
+  <main id="viewport">
+
+    <!-- 1. COVER -->
+    <section class="slide active" data-title="Pembuka">
+      <div class="cover">
+        <span class="badge">Matematika · Kurikulum Merdeka</span>
+        <h1>Menebak yang <span class="accent">Tidak Pasti</span>,<br>dengan Cara yang Pasti.</h1>
+        <p class="lead">Setiap hari kita menebak-nebak: apakah hujan akan turun, apakah tim favorit akan menang, apakah undian akan berpihak pada kita. Matematika punya cara untuk mengukur tebakan itu — namanya <b style="color:var(--text)">peluang</b>. Mari kita mulai dari kejadian yang paling sederhana: melempar koin dan dadu.</p>
+        <div class="cover-dice">
+          <div class="dice" id="coverDice1"></div>
+          <div class="dice" id="coverDice2"></div>
+          <div class="coin" style="width:64px;height:64px;font-size:1rem;cursor:default;">A</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. APERSEPSI -->
+    <section class="slide" data-title="Apersepsi">
+      <span class="kicker">Sebelum Mulai</span>
+      <h2 class="slide-title">Pernahkah kamu bertanya seperti ini?</h2>
+      <p class="lead">Klik salah satu kartu untuk melihat mengapa pertanyaan itu berhubungan dengan peluang.</p>
+      <div class="grid2" style="margin-top:1.2rem;">
+        <div class="accordion-item" id="ap1">
+          <button class="accordion-header" onclick="toggleAcc('ap1')"><span>🎲 Kalau dadu dilempar, apakah lebih mudah dapat angka 6 atau angka genap?</span><span class="plus">+</span></button>
+          <div class="accordion-body"><div class="accordion-body-inner">Angka 6 hanya satu kemungkinan dari enam, sedangkan angka genap ada tiga kemungkinan (2, 4, 6). Artinya peluang muncul angka genap lebih besar. Nanti kita akan menghitungnya secara tepat, bukan hanya menebak.</div></div>
+        </div>
+        <div class="accordion-item" id="ap2">
+          <button class="accordion-header" onclick="toggleAcc('ap2')"><span>🪙 Kalau koin dilempar 10 kali, apakah pasti muncul 5 kali angka dan 5 kali gambar?</span><span class="plus">+</span></button>
+          <div class="accordion-body"><div class="accordion-body-inner">Tidak pasti! Peluang hanya menggambarkan kecenderungan jangka panjang, bukan jaminan hasil setiap percobaan. Kita akan membuktikannya lewat simulasi di slide selanjutnya.</div></div>
+        </div>
+        <div class="accordion-item" id="ap3">
+          <button class="accordion-header" onclick="toggleAcc('ap3')"><span>🎟️ Kenapa panitia undian bisa menyebut "peluang menang 1 banding 100"?</span><span class="plus">+</span></button>
+          <div class="accordion-body"><div class="accordion-body-inner">Angka itu didapat dari perbandingan jumlah kupon yang kamu miliki dengan seluruh kupon yang ada. Ini adalah penerapan langsung dari rumus peluang yang akan kita pelajari.</div></div>
+        </div>
+        <div class="accordion-item" id="ap4">
+          <button class="accordion-header" onclick="toggleAcc('ap4')"><span>☔ Ramalan cuaca bilang "peluang hujan 70%", apa maksudnya?</span><span class="plus">+</span></button>
+          <div class="accordion-body"><div class="accordion-body-inner">Nilai peluang selalu berada di antara 0 dan 1 (atau 0% sampai 100%). Semakin dekat ke 1, semakin besar kemungkinan kejadian itu terjadi. Konsep "nilai peluang" ini akan kita bahas tuntas.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. TUJUAN -->
+    <section class="slide" data-title="Tujuan">
+      <span class="kicker">Tujuan Pembelajaran</span>
+      <h2 class="slide-title">Setelah mempelajari materi ini, kamu diharapkan mampu:</h2>
+      <div class="card" style="margin-top:1rem;">
+        <div class="sum-item"><span class="idx">1</span><div class="body"><b>Menjelaskan konsep ruang sampel dan kejadian</b><span>Membedakan percobaan, ruang sampel (S), titik sampel, dan kejadian (A) pada peristiwa sederhana.</span></div></div>
+        <div class="sum-item"><span class="idx">2</span><div class="body"><b>Menentukan peluang suatu kejadian sederhana</b><span>Menghitung P(A) = n(A) / n(S) untuk kejadian pelemparan koin, dadu, dan pengambilan benda dari suatu wadah.</span></div></div>
+        <div class="sum-item"><span class="idx">3</span><div class="body"><b>Menjelaskan nilai peluang dan kejadian khusus</b><span>Memahami rentang nilai peluang 0 ≤ P(A) ≤ 1, kejadian pasti, kejadian mustahil, dan komplemen kejadian.</span></div></div>
+        <div class="sum-item"><span class="idx">4</span><div class="body"><b>Menerapkan peluang dalam kehidupan sehari-hari</b><span>Menggunakan konsep peluang untuk menganalisis situasi nyata seperti undian, permainan, dan ramalan cuaca.</span></div></div>
+      </div>
+    </section>
+
+    <!-- 4. KONSEP DASAR -->
+    <section class="slide" data-title="Konsep Dasar">
+      <span class="kicker">Konsep Dasar</span>
+      <h2 class="slide-title">Empat istilah yang perlu kamu kenal dulu</h2>
+      <p class="lead">Klik setiap istilah untuk membaca penjelasannya.</p>
+      <div style="margin-top:1.2rem;">
+        <div class="accordion-item" id="kd1">
+          <button class="accordion-header" onclick="toggleAcc('kd1')"><span>Percobaan (Eksperimen)</span><span class="plus">+</span></button>
+          <div class="accordion-body"><div class="accordion-body-inner">Kegiatan yang dapat diulang-ulang dan hasilnya tidak dapat diprediksi secara pasti sebelum dilakukan. Contoh: melempar koin, melempar dadu, mengambil kartu dari tumpukan.</div></div>
+        </div>
+        <div class="accordion-item" id="kd2">
+          <button class="accordion-header" onclick="toggleAcc('kd2')"><span>Ruang Sampel (S)</span><span class="plus">+</span></button>
+          <div class="accordion-body"><div class="accordion-body-inner">Himpunan dari semua hasil yang mungkin terjadi pada suatu percobaan. Contoh: pada pelemparan satu dadu, ruang sampelnya adalah S = {1, 2, 3, 4, 5, 6}.</div></div>
+        </div>
+        <div class="accordion-item" id="kd3">
+          <button class="accordion-header" onclick="toggleAcc('kd3')"><span>Titik Sampel</span><span class="plus">+</span></button>
+          <div class="accordion-body"><div class="accordion-body-inner">Setiap anggota tunggal dari ruang sampel. Pada S = {1, 2, 3, 4, 5, 6}, maka 1, 2, 3, 4, 5, dan 6 masing-masing disebut titik sampel.</div></div>
+        </div>
+        <div class="accordion-item" id="kd4">
+          <button class="accordion-header" onclick="toggleAcc('kd4')"><span>Kejadian (A)</span><span class="plus">+</span></button>
+          <div class="accordion-body"><div class="accordion-body-inner">Himpunan bagian dari ruang sampel yang memenuhi syarat tertentu. Contoh: kejadian muncul mata dadu genap adalah A = {2, 4, 6}, yaitu himpunan bagian dari S.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. RUANG SAMPEL KOIN -->
+    <section class="slide" data-title="Ruang Sampel Koin">
+      <span class="kicker">Eksplorasi 1</span>
+      <h2 class="slide-title">Ruang Sampel Pelemparan Satu Koin</h2>
+      <p class="lead">Klik koin di bawah untuk "melemparnya" dan lihat hasil yang mungkin muncul.</p>
+      <div class="card">
+        <div class="coin-stage">
+          <div class="coin" id="coinEl" onclick="flipCoin()">A</div>
+          <div class="pill" id="coinResult">Klik koin untuk memulai</div>
+        </div>
+        <div class="formula-box">S = { A, G } &nbsp;→&nbsp; n(S) = 2</div>
+        <p style="color:var(--text-dim); font-size:0.9rem; margin-top:0.9rem;">Keterangan: A = sisi Angka, G = sisi Gambar. Karena koin hanya punya dua sisi, hanya ada dua kemungkinan hasil pada setiap pelemparan.</p>
+      </div>
+    </section>
+
+    <!-- 6. RUANG SAMPEL DADU -->
+    <section class="slide" data-title="Ruang Sampel Dadu">
+      <span class="kicker">Eksplorasi 2</span>
+      <h2 class="slide-title">Ruang Sampel Pelemparan Satu Dadu</h2>
+      <p class="lead">Klik satu per satu sisi dadu untuk menandainya sebagai titik sampel.</p>
+      <div class="card">
+        <div class="dice-row" id="diceRow6"></div>
+        <div class="formula-box">S = { 1, 2, 3, 4, 5, 6 } &nbsp;→&nbsp; n(S) = 6</div>
+      </div>
+    </section>
+
+    <!-- 7. PENGERTIAN KEJADIAN -->
+    <section class="slide" data-title="Pengertian Kejadian">
+      <span class="kicker">Konsep</span>
+      <h2 class="slide-title">Dari Ruang Sampel menuju Kejadian</h2>
+      <p class="lead">Perhatikan ruang sampel dadu S = {1, 2, 3, 4, 5, 6}. Klik sisi-sisi yang termasuk "mata dadu genap" untuk membentuk kejadian A.</p>
+      <div class="card">
+        <div class="dice-row" id="diceRow7"></div>
+        <div id="eventFormula" class="formula-box">A = { } → n(A) = 0</div>
+        <div class="btn-row"><button class="btn" onclick="revealEvenAnswer()">Tampilkan Jawaban</button></div>
+        <div class="step-reveal" id="eventAnswerBox">Kejadian "muncul mata dadu genap" adalah <b>A = {2, 4, 6}</b>, sehingga n(A) = 3. Kejadian A merupakan himpunan bagian dari ruang sampel S.</div>
+      </div>
+    </section>
+
+    <!-- 8. RUMUS PELUANG -->
+    <section class="slide" data-title="Rumus Peluang">
+      <span class="kicker">Rumus Inti</span>
+      <h2 class="slide-title">Menghitung Peluang Suatu Kejadian</h2>
+      <p class="lead">Peluang suatu kejadian A, ditulis P(A), dihitung dengan membandingkan banyak titik sampel pada kejadian A terhadap banyak seluruh titik sampel pada ruang sampel S.</p>
+      <div class="card">
+        <div class="formula-box" style="font-size:1.3rem;">P(A) = n(A) / n(S)</div>
+        <div class="btn-row">
+          <button class="btn" onclick="showStep('rumusStep1')">Apa itu n(A)?</button>
+          <button class="btn" onclick="showStep('rumusStep2')">Apa itu n(S)?</button>
+          <button class="btn" onclick="showStep('rumusStep3')">Kenapa dibandingkan?</button>
+        </div>
+        <div class="step-reveal" id="rumusStep1">n(A) adalah banyaknya titik sampel yang termasuk dalam kejadian A — yaitu hasil-hasil yang kita anggap "berhasil" atau sesuai syarat.</div>
+        <div class="step-reveal" id="rumusStep2">n(S) adalah banyaknya seluruh titik sampel pada ruang sampel S — yaitu semua hasil yang mungkin terjadi.</div>
+        <div class="step-reveal" id="rumusStep3">Karena peluang mengukur seberapa "sering" kejadian A muncul dibanding seluruh kemungkinan, maka n(A) dibagi n(S) menghasilkan sebuah pecahan yang menggambarkan besar kecilnya kemungkinan itu.</div>
+      </div>
+    </section>
+
+    <!-- 9. CONTOH 1 -->
+    <section class="slide" data-title="Contoh 1">
+      <span class="kicker">Contoh Soal 1</span>
+      <h2 class="slide-title">Peluang Muncul Mata Dadu Genap</h2>
+      <div class="card">
+        <p style="margin:0 0 0.8rem;">Sebuah dadu dilempar satu kali. Tentukan peluang muncul mata dadu genap.</p>
+        <div class="btn-row">
+          <button class="btn" onclick="showStep('c1-petunjuk')">Petunjuk</button>
+          <button class="btn" onclick="showStep('c1-langkah')">Langkah Penyelesaian</button>
+          <button class="btn btn-teal" onclick="showStep('c1-jawaban')">Lihat Jawaban</button>
+        </div>
+        <div class="step-reveal" id="c1-petunjuk">Tentukan dulu ruang sampel S, lalu tentukan anggota kejadian A yaitu angka-angka genap pada dadu.</div>
+        <div class="step-reveal" id="c1-langkah">
+          1) S = {1, 2, 3, 4, 5, 6} → n(S) = 6<br>
+          2) A = kejadian muncul angka genap = {2, 4, 6} → n(A) = 3<br>
+          3) P(A) = n(A) / n(S) = 3/6
+        </div>
+        <div class="step-reveal" id="c1-jawaban"><b>P(A) = 3/6 = 1/2</b><br>Artinya, peluang muncul mata dadu genap adalah setengah, sama besar dengan peluang muncul mata dadu ganjil.</div>
+      </div>
+    </section>
+
+    <!-- 10. CONTOH 2 -->
+    <section class="slide" data-title="Contoh 2">
+      <span class="kicker">Contoh Soal 2</span>
+      <h2 class="slide-title">Peluang Muncul Sisi Gambar pada Koin</h2>
+      <div class="card">
+        <p style="margin:0 0 0.8rem;">Sebuah koin dilempar satu kali. Tentukan peluang muncul sisi gambar (G).</p>
+        <div class="btn-row">
+          <button class="btn" onclick="showStep('c2-petunjuk')">Petunjuk</button>
+          <button class="btn" onclick="showStep('c2-langkah')">Langkah Penyelesaian</button>
+          <button class="btn btn-teal" onclick="showStep('c2-jawaban')">Lihat Jawaban</button>
+        </div>
+        <div class="step-reveal" id="c2-petunjuk">Ingat kembali ruang sampel koin yang sudah kamu eksplorasi sebelumnya, lalu tentukan kejadian B = {G}.</div>
+        <div class="step-reveal" id="c2-langkah">
+          1) S = {A, G} → n(S) = 2<br>
+          2) B = kejadian muncul sisi gambar = {G} → n(B) = 1<br>
+          3) P(B) = n(B) / n(S) = 1/2
+        </div>
+        <div class="step-reveal" id="c2-jawaban"><b>P(B) = 1/2</b><br>Artinya, peluang muncul sisi gambar sama besar dengan peluang muncul sisi angka, yaitu masing-masing 1/2 atau 50%.</div>
+      </div>
+    </section>
+
+    <!-- 11. NILAI PELUANG -->
+    <section class="slide" data-title="Nilai Peluang">
+      <span class="kicker">Konsep Penting</span>
+      <h2 class="slide-title">Kisaran Nilai Peluang: 0 ≤ P(A) ≤ 1</h2>
+      <p class="lead">Geser slider berikut untuk melihat bagaimana nilai peluang berubah makna, dari kejadian yang mustahil terjadi hingga kejadian yang pasti terjadi.</p>
+      <div class="card">
+        <div class="numline-wrap">
+          <div class="numline"><div class="marker" id="plMarker" style="left:0%"></div></div>
+          <div class="numline-labels"><span>0</span><span>0.25</span><span>0.5</span><span>0.75</span><span>1</span></div>
+        </div>
+        <input type="range" id="plSlider" min="0" max="100" value="0" oninput="updatePeluangSlider(this.value)">
+        <div class="meaning-box" id="plMeaning"><b>P(A) = 0</b> → Kejadian <b>mustahil</b> terjadi. Contoh: peluang dadu menunjukkan angka 7.</div>
+      </div>
+    </section>
+
+    <!-- 12. KEJADIAN PASTI & MUSTAHIL -->
+    <section class="slide" data-title="Kejadian Pasti & Mustahil">
+      <span class="kicker">Kejadian Khusus</span>
+      <h2 class="slide-title">Kejadian Pasti dan Kejadian Mustahil</h2>
+      <p class="lead">Klik kartu untuk mengungkap definisi dan contohnya.</p>
+      <div class="grid2" style="margin-top:1rem;">
+        <div class="accordion-item" id="pm1">
+          <button class="accordion-header" onclick="toggleAcc('pm1')"><span>✅ Kejadian Pasti</span><span class="plus">+</span></button>
+          <div class="accordion-body"><div class="accordion-body-inner">Kejadian yang <b>selalu terjadi</b>, sehingga nilai peluangnya P(A) = 1. Ini terjadi ketika kejadian A memuat seluruh anggota ruang sampel, atau n(A) = n(S).<br><br><i>Contoh:</i> peluang muncul mata dadu kurang dari 7, karena semua kemungkinan (1–6) memenuhi syarat tersebut.</div></div>
+        </div>
+        <div class="accordion-item" id="pm2">
+          <button class="accordion-header" onclick="toggleAcc('pm2')"><span>🚫 Kejadian Mustahil</span><span class="plus">+</span></button>
+          <div class="accordion-body"><div class="accordion-body-inner">Kejadian yang <b>tidak mungkin terjadi</b>, sehingga nilai peluangnya P(A) = 0. Ini terjadi ketika kejadian A tidak memiliki anggota sama sekali, atau n(A) = 0.<br><br><i>Contoh:</i> peluang muncul mata dadu bernilai 7, karena dadu hanya bermata 1 sampai 6.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 13. KOMPLEMEN -->
+    <section class="slide" data-title="Komplemen Kejadian">
+      <span class="kicker">Konsep Lanjutan</span>
+      <h2 class="slide-title">Komplemen Suatu Kejadian</h2>
+      <p class="lead">Komplemen kejadian A (ditulis A′ atau Aᶜ) adalah kejadian "bukan A". Jumlah peluang suatu kejadian dan komplemennya selalu sama dengan 1.</p>
+      <div class="card">
+        <div class="formula-box">P(A) + P(A′) = 1</div>
+        <p style="margin-top:1rem; font-size:0.94rem; color:var(--text-dim);">Coba masukkan nilai P(A), lalu lihat nilai P(A′) yang dihitung otomatis.</p>
+        <div style="display:flex; gap:0.8rem; align-items:center; margin-top:0.8rem; flex-wrap:wrap;">
+          <label for="compInput" style="font-size:0.9rem;">P(A) =</label>
+          <input type="number" id="compInput" min="0" max="1" step="0.01" value="0.5" oninput="updateComplement(this.value)" style="width:100px; padding:0.5rem 0.7rem; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--surface-2); color:var(--text); font-family:var(--font-mono);">
+          <span style="color:var(--text-faint);">→</span>
+          <div class="pill" id="compOutput">P(A′) = 0.5</div>
+        </div>
+        <div class="meaning-box" style="margin-top:1.1rem;">Contoh: pada pelemparan dadu, jika A = kejadian muncul mata dadu genap, maka P(A) = 1/2. Komplemennya A′ = kejadian muncul mata dadu ganjil, dan P(A′) = 1 − 1/2 = 1/2.</div>
+      </div>
+    </section>
+
+    <!-- 14. SIMULASI -->
+    <section class="slide" data-title="Simulasi">
+      <span class="kicker">Aktivitas Interaktif</span>
+      <h2 class="slide-title">Simulasi: Melempar Dadu Berkali-kali</h2>
+      <p class="lead">Peluang teoritis tiap sisi dadu adalah 1/6 ≈ 0,167. Coba lempar dadu virtual berulang kali dan amati apakah frekuensi relatifnya mendekati nilai itu.</p>
+      <div class="card">
+        <div class="sim-controls">
+          <button class="btn btn-primary" onclick="rollDice(1)">Lempar 1×</button>
+          <button class="btn btn-primary" onclick="rollDice(10)">Lempar 10×</button>
+          <button class="btn btn-primary" onclick="rollDice(50)">Lempar 50×</button>
+          <button class="btn btn-ghost" onclick="resetSim()">Reset</button>
+        </div>
+        <div class="bars" id="simBars"></div>
+        <div class="sim-stats">
+          <span>Total lemparan: <b id="simTotal">0</b></span>
+          <span>Peluang teoritis tiap sisi: <b>1/6 ≈ 0,167</b></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 15. LATIHAN MUDAH -->
+    <section class="slide" data-title="Latihan Mudah">
+      <span class="kicker">Latihan · Tingkat Mudah</span>
+      <h2 class="slide-title">Uji Pemahamanmu — Level Mudah</h2>
+      <div class="card qcard">
+        <div class="qnum">Soal 1</div>
+        <p>Sebuah koin dilempar satu kali. Berapa peluang muncul sisi angka (A)?</p>
+        <div class="opt-list" data-answer="1">
+          <button class="opt-btn" onclick="checkPractice(this,'0')">0</button>
+          <button class="opt-btn" onclick="checkPractice(this,'1')">1/2</button>
+          <button class="opt-btn" onclick="checkPractice(this,'2')">1</button>
+          <button class="opt-btn" onclick="checkPractice(this,'3')">2</button>
+        </div>
+        <div class="feedback" data-fb></div>
+      </div>
+      <div class="card qcard">
+        <div class="qnum">Soal 2</div>
+        <p>Sebuah dadu dilempar satu kali. Berapa n(S) pada percobaan tersebut?</p>
+        <div class="opt-list" data-answer="2">
+          <button class="opt-btn" onclick="checkPractice(this,'0')">2</button>
+          <button class="opt-btn" onclick="checkPractice(this,'1')">4</button>
+          <button class="opt-btn" onclick="checkPractice(this,'2')">6</button>
+          <button class="opt-btn" onclick="checkPractice(this,'3')">8</button>
+        </div>
+        <div class="feedback" data-fb></div>
+      </div>
+    </section>
+
+    <!-- 16. LATIHAN SEDANG -->
+    <section class="slide" data-title="Latihan Sedang">
+      <span class="kicker">Latihan · Tingkat Sedang</span>
+      <h2 class="slide-title">Uji Pemahamanmu — Level Sedang</h2>
+      <div class="card qcard">
+        <div class="qnum">Soal 1</div>
+        <p>Sebuah dadu dilempar satu kali. Berapa peluang muncul mata dadu bilangan prima?</p>
+        <p style="font-size:0.85rem; color:var(--text-faint); margin-top:-0.4rem;">Ingat: bilangan prima pada 1–6 adalah 2, 3, dan 5.</p>
+        <div class="opt-list" data-answer="1">
+          <button class="opt-btn" onclick="checkPractice(this,'0')">1/6</button>
+          <button class="opt-btn" onclick="checkPractice(this,'1')">1/2</button>
+          <button class="opt-btn" onclick="checkPractice(this,'2')">2/3</button>
+          <button class="opt-btn" onclick="checkPractice(this,'3')">5/6</button>
+        </div>
+        <div class="feedback" data-fb></div>
+      </div>
+      <div class="card qcard">
+        <div class="qnum">Soal 2</div>
+        <p>Sebuah dadu dilempar satu kali. Berapa peluang muncul mata dadu kurang dari 4?</p>
+        <div class="opt-list" data-answer="1">
+          <button class="opt-btn" onclick="checkPractice(this,'0')">1/6</button>
+          <button class="opt-btn" onclick="checkPractice(this,'1')">1/2</button>
+          <button class="opt-btn" onclick="checkPractice(this,'2')">2/3</button>
+          <button class="opt-btn" onclick="checkPractice(this,'3')">1</button>
+        </div>
+        <div class="feedback" data-fb></div>
+      </div>
+    </section>
+
+    <!-- 17. LATIHAN MENANTANG -->
+    <section class="slide" data-title="Latihan Menantang">
+      <span class="kicker">Latihan · Tingkat Menantang</span>
+      <h2 class="slide-title">Uji Pemahamanmu — Level Menantang</h2>
+      <div class="card">
+        <p>Dalam sebuah kantong terdapat 5 kelereng merah, 3 kelereng biru, dan 2 kelereng kuning. Satu kelereng diambil secara acak.</p>
+        <div class="btn-row">
+          <button class="btn" onclick="showStep('c3-petunjuk')">Petunjuk</button>
+        </div>
+        <div class="step-reveal" id="c3-petunjuk">Total kelereng adalah n(S) = 5 + 3 + 2 = 10. Hitung peluang tiap kejadian dengan rumus P(A) = n(A)/n(S).</div>
+
+        <div class="qcard" style="margin-top:1.2rem;">
+          <div class="qnum">Pertanyaan A</div>
+          <p>Berapa peluang terambil kelereng biru?</p>
+          <div class="opt-list" data-answer="1">
+            <button class="opt-btn" onclick="checkPractice(this,'0')">1/10</button>
+            <button class="opt-btn" onclick="checkPractice(this,'1')">3/10</button>
+            <button class="opt-btn" onclick="checkPractice(this,'2')">5/10</button>
+            <button class="opt-btn" onclick="checkPractice(this,'3')">7/10</button>
+          </div>
+          <div class="feedback" data-fb></div>
+        </div>
+        <div class="qcard">
+          <div class="qnum">Pertanyaan B</div>
+          <p>Berapa peluang terambil kelereng <b>bukan</b> merah? (gunakan konsep komplemen)</p>
+          <div class="opt-list" data-answer="2">
+            <button class="opt-btn" onclick="checkPractice(this,'0')">1/2</button>
+            <button class="opt-btn" onclick="checkPractice(this,'1')">2/5</button>
+            <button class="opt-btn" onclick="checkPractice(this,'2')">5/10</button>
+            <button class="opt-btn" onclick="checkPractice(this,'3')">5/2</button>
+          </div>
+          <div class="feedback" data-fb></div>
+          <div class="step-reveal" id="c3-jawaban" style="margin-top:0.6rem;">Peluang terambil merah = 5/10, maka peluang bukan merah = 1 − 5/10 = 5/10 (yang secara nilai sama dengan 1/2, namun dalam bentuk pecahan senilai 5/10 pada opsi C).</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 18. KUIS -->
+    <section class="slide" data-title="Kuis Akhir">
+      <span class="kicker">Kuis Akhir</span>
+      <h2 class="slide-title">Saatnya Menguji Seluruh Pemahamanmu</h2>
+      <p class="lead">Jawab seluruh soal berikut, lalu lihat skor akhirmu.</p>
+      <div id="quizContainer"></div>
+      <div class="card" id="quizScoreCard" style="display:none; text-align:center;">
+        <h3 style="margin:0 0 0.4rem;">Skor Kamu</h3>
+        <div class="formula-box" style="font-size:1.4rem;" id="quizScoreText">0 / 0</div>
+        <div class="btn-row" style="justify-content:center;"><button class="btn btn-primary" onclick="resetQuiz()">Ulangi Kuis</button></div>
+      </div>
+      <div class="btn-row"><button class="btn btn-teal" id="quizFinishBtn" onclick="finishQuiz()">Selesai & Lihat Skor</button></div>
+    </section>
+
+    <!-- 19. REFLEKSI -->
+    <section class="slide" data-title="Refleksi">
+      <span class="kicker">Refleksi</span>
+      <h2 class="slide-title">Sejauh Mana Pemahamanmu?</h2>
+      <p class="lead">Centang pernyataan yang sesuai dengan dirimu setelah mempelajari materi ini.</p>
+      <div class="card">
+        <div class="reflect-item"><input type="checkbox" id="r1"><label for="r1">Saya dapat menjelaskan perbedaan ruang sampel, titik sampel, dan kejadian.</label></div>
+        <div class="reflect-item"><input type="checkbox" id="r2"><label for="r2">Saya dapat menghitung peluang suatu kejadian menggunakan rumus P(A) = n(A)/n(S).</label></div>
+        <div class="reflect-item"><input type="checkbox" id="r3"><label for="r3">Saya memahami bahwa nilai peluang selalu berada di antara 0 dan 1.</label></div>
+        <div class="reflect-item"><input type="checkbox" id="r4"><label for="r4">Saya dapat membedakan kejadian pasti, kejadian mustahil, dan komplemen kejadian.</label></div>
+        <div class="reflect-item"><input type="checkbox" id="r5"><label for="r5">Saya dapat mengaitkan konsep peluang dengan situasi sehari-hari.</label></div>
+      </div>
+      <p style="color:var(--text-faint); font-size:0.85rem; margin-top:0.8rem;">Jika masih ada pernyataan yang belum kamu centang, cobalah membuka kembali slide yang berkaitan sebelum lanjut ke rangkuman.</p>
+    </section>
+
+    <!-- 20. RANGKUMAN -->
+    <section class="slide" data-title="Rangkuman">
+      <span class="kicker">Rangkuman</span>
+      <h2 class="slide-title">Poin-Poin Penting Bab Ini</h2>
+      <div class="card">
+        <div class="sum-item"><span class="idx">•</span><div class="body"><b>Ruang sampel (S)</b><span>Himpunan semua hasil yang mungkin dari suatu percobaan. Contoh: dadu → S = {1,2,3,4,5,6}, n(S)=6.</span></div></div>
+        <div class="sum-item"><span class="idx">•</span><div class="body"><b>Kejadian (A)</b><span>Himpunan bagian dari ruang sampel yang memenuhi syarat tertentu.</span></div></div>
+        <div class="sum-item"><span class="idx">•</span><div class="body"><b>Rumus peluang</b><span>P(A) = n(A) / n(S), berlaku untuk semua kejadian sederhana.</span></div></div>
+        <div class="sum-item"><span class="idx">•</span><div class="body"><b>Nilai peluang</b><span>Selalu berada pada rentang 0 ≤ P(A) ≤ 1.</span></div></div>
+        <div class="sum-item"><span class="idx">•</span><div class="body"><b>Kejadian pasti & mustahil</b><span>P(A)=1 untuk kejadian pasti, P(A)=0 untuk kejadian mustahil.</span></div></div>
+        <div class="sum-item"><span class="idx">•</span><div class="body"><b>Komplemen kejadian</b><span>P(A) + P(A′) = 1, sehingga P(A′) = 1 − P(A).</span></div></div>
+      </div>
+    </section>
+
+    <!-- 21. PENUTUP -->
+    <section class="slide" data-title="Penutup">
+      <div class="cover">
+        <span class="badge">Selesai</span>
+        <h1>Kamu Sudah Menguasai<br><span class="accent">Peluang Kejadian Sederhana.</span></h1>
+        <p class="lead">Konsep ini adalah pondasi untuk mempelajari peluang kejadian majemuk, kombinasi, dan permutasi di bab-bab berikutnya. Ulangi bagian yang masih terasa sulit sebelum melangkah lebih jauh.</p>
+        <div class="btn-row"><button class="btn btn-primary" onclick="goTo(0)">Ulangi dari Awal</button></div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="navbar">
+    <button class="btn nav-btn" id="prevBtn" onclick="prev()">← Sebelumnya</button>
+    <div class="nav-mid">
+      <button class="nav-home" onclick="goTo(0)">Kembali ke awal</button>
+    </div>
+    <button class="btn btn-primary nav-btn" id="nextBtn" onclick="next()">Berikutnya →</button>
+  </footer>
+</div>
+
+<script>
+/* ---------- NAVIGATION ---------- */
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+let current = 0;
+
+function goTo(i){
+  if(i < 0 || i >= total) return;
+  slides[current].classList.remove('active');
+  current = i;
+  slides[current].classList.add('active');
+  document.getElementById('viewport').scrollTop = 0;
+  document.getElementById('progress-fill').style.width = ((current+1)/total*100) + '%';
+  document.getElementById('counterLabel').textContent = (current+1) + ' / ' + total;
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === total-1;
+  document.getElementById('nextBtn').textContent = current === total-1 ? 'Selesai ✓' : 'Berikutnya →';
+}
+function next(){ if(current < total-1) goTo(current+1); }
+function prev(){ if(current > 0) goTo(current-1); }
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'ArrowRight') next();
+  if(e.key === 'ArrowLeft') prev();
+});
+goTo(0);
+
+/* ---------- ACCORDION ---------- */
+function toggleAcc(id){
+  const item = document.getElementById(id);
+  const body = item.querySelector('.accordion-body');
+  const isOpen = item.classList.contains('open');
+  item.classList.toggle('open', !isOpen);
+  body.style.maxHeight = isOpen ? null : body.scrollHeight + 'px';
+}
+
+/* ---------- STEP REVEAL ---------- */
+function showStep(id){
+  document.getElementById(id).classList.toggle('show');
+}
+
+/* ---------- DICE RENDERING ---------- */
+const pipMap = {
+  1: [4],
+  2: [0,8],
+  3: [0,4,8],
+  4: [0,2,6,8],
+  5: [0,2,4,6,8],
+  6: [0,2,3,5,6,8]
+};
+function buildDiceFace(n){
+  const dice = document.createElement('div');
+  dice.className = 'dice';
+  dice.dataset.value = n;
+  for(let cell=0; cell<9; cell++){
+    const pip = document.createElement('div');
+    if(pipMap[n].includes(cell)) pip.className = 'pip';
+    dice.appendChild(pip);
+  }
+  return dice;
+}
+function renderDiceRow(containerId, opts){
+  const container = document.getElementById(containerId);
+  if(!container) return;
+  for(let n=1; n<=6; n++){
+    const face = buildDiceFace(n);
+    if(opts && opts.onClick) face.addEventListener('click', ()=>opts.onClick(n, face));
+    container.appendChild(face);
+  }
+}
+renderDiceRow('coverDice1');
+renderDiceRow('coverDice2');
+document.getElementById('coverDice1').children[0].parentElement; // no-op safety
+// set fixed cover dice faces (3 and 5) without interactivity styling
+(function(){
+  const d1 = document.getElementById('coverDice1');
+  const d2 = document.getElementById('coverDice2');
+  d1.replaceWith(buildStaticDice(3, 'coverDice1'));
+  d2.replaceWith(buildStaticDice(5, 'coverDice2'));
+})();
+function buildStaticDice(n, id){
+  const face = buildDiceFace(n);
+  face.id = id;
+  face.style.cursor = 'default';
+  return face;
+}
+
+renderDiceRow('diceRow6', { onClick: (n, face) => { face.classList.toggle('selected'); } });
+
+renderDiceRow('diceRow7', { onClick: (n, face) => {
+  face.classList.toggle('selected');
+  updateEventFormula();
+}});
+function updateEventFormula(){
+  const selected = Array.from(document.querySelectorAll('#diceRow7 .dice.selected')).map(d=>d.dataset.value);
+  document.getElementById('eventFormula').textContent = 'A = { ' + selected.join(', ') + ' } → n(A) = ' + selected.length;
+}
+function revealEvenAnswer(){
+  document.querySelectorAll('#diceRow7 .dice').forEach(d=>{
+    const v = parseInt(d.dataset.value);
+    d.classList.toggle('selected', v % 2 === 0);
+  });
+  updateEventFormula();
+  document.getElementById('eventAnswerBox').classList.add('show');
+}
+
+/* ---------- COIN FLIP ---------- */
+function flipCoin(){
+  const coin = document.getElementById('coinEl');
+  coin.classList.remove('spin'); void coin.offsetWidth; coin.classList.add('spin');
+  const result = Math.random() < 0.5 ? 'A' : 'G';
+  setTimeout(()=>{
+    coin.textContent = result;
+    document.getElementById('coinResult').textContent = result === 'A' ? 'Hasil: Angka (A)' : 'Hasil: Gambar (G)';
+  }, 480);
+}
+
+/* ---------- NILAI PELUANG SLIDER ---------- */
+function updatePeluangSlider(val){
+  const v = val/100;
+  document.getElementById('plMarker').style.left = val + '%';
+  const box = document.getElementById('plMeaning');
+  let html = '';
+  if(v === 0){
+    html = '<b>P(A) = 0</b> → Kejadian <b>mustahil</b> terjadi. Contoh: peluang dadu menunjukkan angka 7.';
+  } else if(v < 0.5){
+    html = '<b>P(A) = ' + v.toFixed(2) + '</b> → Kejadian <b>kecil kemungkinannya</b> terjadi.';
+  } else if(v === 0.5){
+    html = '<b>P(A) = 0,5</b> → Kejadian <b>sama besar kemungkinannya</b> terjadi maupun tidak terjadi. Contoh: muncul sisi angka pada koin.';
+  } else if(v < 1){
+    html = '<b>P(A) = ' + v.toFixed(2) + '</b> → Kejadian <b>besar kemungkinannya</b> terjadi.';
+  } else {
+    html = '<b>P(A) = 1</b> → Kejadian <b>pasti</b> terjadi. Contoh: peluang dadu menunjukkan angka kurang dari 7.';
+  }
+  box.innerHTML = html;
+}
+
+/* ---------- KOMPLEMEN ---------- */
+function updateComplement(val){
+  let v = parseFloat(val);
+  if(isNaN(v)) v = 0;
+  v = Math.min(1, Math.max(0, v));
+  document.getElementById('compOutput').textContent = 'P(A′) = ' + (1-v).toFixed(2);
+}
+
+/* ---------- SIMULASI DADU ---------- */
+let simCounts = [0,0,0,0,0,0];
+let simTotal = 0;
+function renderSimBars(){
+  const wrap = document.getElementById('simBars');
+  wrap.innerHTML = '';
+  const max = Math.max(1, ...simCounts);
+  for(let i=0;i<6;i++){
+    const col = document.createElement('div'); col.className='bar-col';
+    const bar = document.createElement('div'); bar.className='bar';
+    const heightPct = (simCounts[i]/max*100);
+    bar.style.height = heightPct + '%';
+    const label = document.createElement('div'); label.className='bar-label';
+    label.textContent = (i+1) + ' · ' + simCounts[i];
+    col.appendChild(bar); col.appendChild(label);
+    wrap.appendChild(col);
+  }
+  document.getElementById('simTotal').textContent = simTotal;
+}
+function rollDice(times){
+  for(let t=0;t<times;t++){
+    const r = Math.floor(Math.random()*6);
+    simCounts[r]++;
+    simTotal++;
+  }
+  renderSimBars();
+}
+function resetSim(){ simCounts=[0,0,0,0,0,0]; simTotal=0; renderSimBars(); }
+renderSimBars();
+
+/* ---------- PRACTICE (latihan) ---------- */
+function checkPractice(btn, optIndex){
+  const list = btn.parentElement;
+  if(list.dataset.locked === 'true') return;
+  list.dataset.locked = 'true';
+  const answer = list.dataset.answer;
+  const buttons = list.querySelectorAll('.opt-btn');
+  buttons.forEach((b,i)=>{
+    b.disabled = true;
+    if(String(i) === answer) b.classList.add('correct');
+  });
+  const fb = list.parentElement.querySelector('[data-fb]');
+  if(optIndex === answer){
+    btn.classList.add('correct');
+    fb.textContent = 'Benar! Kerja bagus.';
+    fb.className = 'feedback show ok';
+  } else {
+    btn.classList.add('wrong');
+    fb.textContent = 'Belum tepat. Perhatikan jawaban yang ditandai hijau, lalu pahami alasannya.';
+    fb.className = 'feedback show bad';
+  }
+}
+
+/* ---------- KUIS ---------- */
+const quizData = [
+  { q:'Sebuah dadu dilempar satu kali. Berapa n(S) pada percobaan tersebut?', opts:['2','4','6','12'], correct:2, explain:'Dadu memiliki 6 sisi, sehingga ruang sampelnya S = {1,2,3,4,5,6} dan n(S) = 6.' },
+  { q:'Sebuah koin dilempar satu kali. Berapa peluang muncul sisi angka?', opts:['0','1/4','1/2','1'], correct:2, explain:'n(S)=2 dan n(A)=1 (hanya sisi angka), sehingga P(A) = 1/2.' },
+  { q:'Pada pelemparan dadu, berapa peluang muncul mata dadu genap?', opts:['1/6','1/3','1/2','2/3'], correct:2, explain:'A = {2,4,6}, n(A)=3, n(S)=6, sehingga P(A) = 3/6 = 1/2.' },
+  { q:'Nilai peluang suatu kejadian A selalu berada pada rentang…', opts:['−1 ≤ P(A) ≤ 1','0 ≤ P(A) ≤ 1','0 < P(A) < 1','1 ≤ P(A) ≤ 10'], correct:1, explain:'Nilai peluang tidak pernah negatif dan tidak pernah lebih dari 1, sehingga rentangnya 0 ≤ P(A) ≤ 1.' },
+  { q:'Peluang muncul mata dadu bernilai 7 adalah…', opts:['0','1/6','1/2','1'], correct:0, explain:'Dadu hanya bermata 1–6, sehingga tidak ada anggota kejadian ini. P(A)=0, disebut kejadian mustahil.' },
+  { q:'Jika P(A) = 3/8, berapa nilai P(A′)?', opts:['3/8','5/8','8/3','1'], correct:1, explain:'P(A′) = 1 − P(A) = 1 − 3/8 = 5/8.' },
+  { q:'Dalam kantong berisi 4 kelereng merah dan 6 kelereng putih, peluang terambil kelereng merah adalah…', opts:['2/5','3/5','4/10','2/3'], correct:0, explain:'n(S)=10, n(merah)=4, sehingga P(merah) = 4/10 = 2/5.' }
+];
+let quizAnswers = new Array(quizData.length).fill(null);
+
+function renderQuiz(){
+  const container = document.getElementById('quizContainer');
+  container.innerHTML = '';
+  quizData.forEach((item, qi)=>{
+    const card = document.createElement('div');
+    card.className = 'card qcard';
+    const numDiv = document.createElement('div'); numDiv.className='qnum'; numDiv.textContent = 'Soal ' + (qi+1);
+    const qp = document.createElement('p'); qp.textContent = item.q;
+    const optList = document.createElement('div'); optList.className='opt-list';
+    item.opts.forEach((optText, oi)=>{
+      const b = document.createElement('button');
+      b.className='opt-btn'; b.textContent = optText;
+      b.onclick = ()=>answerQuiz(qi, oi, card);
+      optList.appendChild(b);
+    });
+    const fb = document.createElement('div'); fb.className='feedback'; fb.dataset.role='fb';
+    card.appendChild(numDiv); card.appendChild(qp); card.appendChild(optList); card.appendChild(fb);
+    container.appendChild(card);
+  });
+}
+function answerQuiz(qi, oi, card){
+  if(quizAnswers[qi] !== null) return;
+  quizAnswers[qi] = oi;
+  const buttons = card.querySelectorAll('.opt-btn');
+  const correct = quizData[qi].correct;
+  buttons.forEach((b,i)=>{
+    b.disabled = true;
+    if(i === correct) b.classList.add('correct');
+    else if(i === oi) b.classList.add('wrong');
+  });
+  const fb = card.querySelector('[data-role="fb"]');
+  fb.textContent = (oi === correct ? 'Benar! ' : 'Belum tepat. ') + quizData[qi].explain;
+  fb.className = 'feedback show ' + (oi === correct ? 'ok' : 'bad');
+}
+function finishQuiz(){
+  const unanswered = quizAnswers.filter(a=>a===null).length;
+  if(unanswered > 0){
+    alert('Masih ada ' + unanswered + ' soal yang belum dijawab. Silakan lengkapi dulu.');
+    return;
+  }
+  let score = 0;
+  quizAnswers.forEach((a,i)=>{ if(a === quizData[i].correct) score++; });
+  document.getElementById('quizScoreText').textContent = score + ' / ' + quizData.length;
+  document.getElementById('quizScoreCard').style.display = 'block';
+  document.getElementById('quizFinishBtn').style.display = 'none';
+  document.getElementById('quizScoreCard').scrollIntoView({behavior:'smooth', block:'center'});
+}
+function resetQuiz(){
+  quizAnswers = new Array(quizData.length).fill(null);
+  document.getElementById('quizScoreCard').style.display = 'none';
+  document.getElementById('quizFinishBtn').style.display = 'inline-flex';
+  renderQuiz();
+}
+renderQuiz();
+</script>
+</body>
+</html>

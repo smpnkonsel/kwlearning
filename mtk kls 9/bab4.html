@@ -19,16 +19,8 @@ body{background:radial-gradient(circle at 15% 8%, #16204a 0%, var(--void) 45%), 
 h1,h2,h3{font-family:'Space Grotesk',sans-serif;}
 .mono{font-family:'JetBrains Mono',monospace;}
 #stars{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.5;}
-.wrap{
-  position:relative;
-  z-index:1;
-
-  width:calc(100% - 280px);
-  max-width:1140px;
-
-  margin-left:280px;
-  margin-right:20px;
-}.backlink{display:inline-flex;align-items:center;gap:7px;color:var(--ink-dim);text-decoration:none;font-size:13.5px;font-family:'JetBrains Mono',monospace;border:1px solid var(--line);padding:7px 14px;border-radius:999px;transition:all .18s;}
+.wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:30px 24px 70px;}
+.backlink{display:inline-flex;align-items:center;gap:7px;color:var(--ink-dim);text-decoration:none;font-size:13.5px;font-family:'JetBrains Mono',monospace;border:1px solid var(--line);padding:7px 14px;border-radius:999px;transition:all .18s;}
 .backlink:hover{border-color:var(--gold);color:var(--gold);}
 .hero{margin:26px 0 30px;}
 .tag{display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--teal);background:rgba(45,212,191,0.1);border:1px solid rgba(45,212,191,0.3);padding:5px 12px;border-radius:999px;margin-bottom:16px;}
@@ -59,13 +51,8 @@ h1,h2,h3{font-family:'Space Grotesk',sans-serif;}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--panel-hi);border:1px solid var(--gold);color:var(--ink);padding:12px 20px;border-radius:12px;font-size:13.5px;opacity:0;pointer-events:none;transition:all .3s ease;z-index:10;box-shadow:0 10px 30px rgba(0,0,0,0.4);text-align:center;max-width:80vw;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 </style>
-<link rel="stylesheet" href="../assets/css/sidebar.css">
-
 </head>
 <body>
-  <div id="sidebar-container"></div>
-<script src="../assets/js/include.js"></script>
-
 <svg id="stars" width="100%" height="100%"></svg>
 <div class="wrap">
   <a class="backlink" href="../materi-kelas9-matematika.html">← Beranda</a>
@@ -104,8 +91,74 @@ for(let i=0;i<50;i++){
   starsSvg.appendChild(c);
 }
 
-const topics = [{"num": "4.1", "title": "Konsep Transformasi Geometri", "tujuan": "Peserta didik mampu memahami konsep dan jenis-jenis transformasi geometri.", "jp": "4 JP", "available": false, "href": null, "isEval": false}, {"num": "4.2", "title": "Translasi dan Refleksi", "tujuan": "Peserta didik mampu menentukan hasil translasi dan refleksi suatu objek pada bidang koordinat.", "jp": "8 JP", "available": false, "href": null, "isEval": false}, {"num": "4.3", "title": "Rotasi dan Dilatasi", "tujuan": "Peserta didik mampu menentukan hasil rotasi dan dilatasi suatu objek pada bidang koordinat.", "jp": "8 JP", "available": false, "href": null, "isEval": false}, {"num": "4.4", "title": "Penerapan Transformasi Geometri", "tujuan": "Peserta didik mampu menerapkan transformasi geometri untuk menyelesaikan masalah kontekstual.", "jp": "8 JP", "available": false, "href": null, "isEval": false}, {"num": "Evaluasi", "title": "Evaluasi Bab 4", "tujuan": "Mengukur pemahaman menyeluruh peserta didik terhadap seluruh subbab di atas melalui soal pilihan ganda dan masalah kontekstual.", "jp": "—", "available": false, "href": null, "isEval": true}];
+const topics = [
+  {
+    num: "4.1",
+    title: "Konsep Transformasi Geometri",
+    tujuan: "Peserta didik mampu memahami konsep dan jenis-jenis transformasi geometri.",
+    jp: "4 JP",
+    available: true,
+    href: "materi-4.1.html",
+    isEval: false
+  },
+ {
+  num: "4.2",
+  title: "Translasi",
+  tujuan: "Peserta didik mampu menentukan hasil translasi suatu objek pada bidang koordinat.",
+  jp: "2 JP",
+  available: true,
+  href: "materi-4.2.html",
+  isEval: false
+},
 
+{
+  num: "4.3",
+  title: "Refleksi",
+  tujuan: "Peserta didik mampu menentukan hasil refleksi suatu objek pada bidang koordinat.",
+  jp: "2 JP",
+  available: true,
+  href: "materi-4.3.html",
+  isEval: false
+},
+
+{
+  num: "4.4",
+  title: "Rotasi",
+  tujuan: "Peserta didik mampu menentukan hasil rotasi suatu objek pada bidang koordinat.",
+  jp: "2 JP",
+  available: true,
+  href: "materi-4.4.html",
+  isEval: false
+},
+
+{
+  num: "4.5",
+  title: "Dilatasi",
+  tujuan: "Peserta didik mampu menentukan hasil dilatasi suatu objek pada bidang koordinat.",
+  jp: "2 JP",
+  available: true,
+  href: "materi-4.5.html",
+  isEval: false
+},
+  {
+    num: "4.6",
+    title: "Penerapan Transformasi Geometri",
+    tujuan: "Peserta didik mampu menerapkan transformasi geometri untuk menyelesaikan masalah kontekstual.",
+    jp: "8 JP",
+    available: true,
+    href: "materi-4.4.html",
+    isEval: false
+  },
+  {
+    num: "Evaluasi",
+    title: "Evaluasi Bab 4",
+    tujuan: "Mengukur pemahaman menyeluruh peserta didik terhadap seluruh subbab di atas melalui soal pilihan ganda dan masalah kontekstual.",
+    jp: "—",
+    available: false,
+    href: "evaluasi-bab-4.html",
+    isEval: true
+  }
+];
 const grid = document.getElementById('topicGrid');
 topics.forEach(t=>{
   const el = document.createElement('button');

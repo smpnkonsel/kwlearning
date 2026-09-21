@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>4.1 Konsep Transformasi Geometri</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0e1a; --bg2:#0d1220; --card:#131a2e; --card2:#182140; --border:#232c47;
+    --text:#e8ebf5; --text-dim:#8b93ab; --text-dim2:#5d6684;
+    --coral:#ff6b5b; --coral-dim:rgba(255,107,91,.14); --coral-bd:rgba(255,107,91,.35);
+    --teal:#2dd4bf; --teal-dim:rgba(45,212,191,.14); --teal-bd:rgba(45,212,191,.35);
+    --amber:#fbbf24; --amber-dim:rgba(251,191,36,.14); --amber-bd:rgba(251,191,36,.35);
+    --purple:#a78bfa; --purple-dim:rgba(167,139,250,.14); --purple-bd:rgba(167,139,250,.35);
+    --sans:'Space Grotesk',sans-serif; --mono:'JetBrains Mono',monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:var(--sans); background:radial-gradient(ellipse at top,var(--bg2),var(--bg) 60%);
+    color:var(--text); overflow:hidden; -webkit-tap-highlight-color:transparent;
+  }
+  .presentation{position:relative; width:100vw; height:100vh; overflow:hidden;}
+  .slide{
+    position:absolute; inset:0; display:none; flex-direction:column;
+    padding:clamp(16px,4vw,56px); overflow-y:auto; opacity:0; transition:opacity .35s ease;
+  }
+  .slide.active{display:flex; opacity:1;}
+  .slide-inner{max-width:1100px; margin:0 auto; width:100%; padding-bottom:90px;}
+  h1{font-size:clamp(26px,4.6vw,44px); font-weight:700; letter-spacing:-.02em; line-height:1.15;}
+  h2{font-size:clamp(22px,3.6vw,32px); font-weight:700; letter-spacing:-.01em; margin-bottom:6px;}
+  h3{font-size:clamp(16px,2.2vw,19px); font-weight:600; margin-bottom:8px;}
+  p{color:var(--text-dim); line-height:1.65; font-size:clamp(14px,1.8vw,16px);}
+  .eyebrow{
+    font-family:var(--mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--teal); display:flex; align-items:center; gap:8px; margin-bottom:10px;
+  }
+  .eyebrow::before{content:''; width:18px; height:2px; background:var(--teal); display:inline-block;}
+  .card{
+    background:linear-gradient(155deg,var(--card),var(--card2)); border:1px solid var(--border);
+    border-radius:16px; padding:clamp(16px,2.4vw,26px); margin-top:16px;
+  }
+  .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
+  .grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+  .grid-4{display:grid; grid-template-columns:repeat(4,1fr); gap:14px;}
+  @media(max-width:760px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}}
+  .badge{
+    display:inline-block; font-family:var(--mono); font-size:11px; padding:4px 10px; border-radius:20px;
+    background:var(--coral-dim); color:var(--coral); border:1px solid var(--coral-bd); font-weight:600;
+  }
+  .badge.teal{background:var(--teal-dim); color:var(--teal); border-color:var(--teal-bd);}
+  .badge.amber{background:var(--amber-dim); color:var(--amber); border-color:var(--amber-bd);}
+  .badge.purple{background:var(--purple-dim); color:var(--purple); border-color:var(--purple-bd);}
+  .icon-tile{
+    width:50px; height:50px; border-radius:14px; display:flex; align-items:center; justify-content:center;
+    font-size:23px; margin-bottom:10px; flex-shrink:0;
+  }
+  .illus-card{background:#0d1424; border:1px solid var(--border); border-radius:14px; padding:16px; text-align:center;}
+  .illus-card svg{width:100%; max-width:220px; height:auto;}
+  .illus-card .cap{font-size:13px; color:var(--text-dim); margin-top:8px;}
+  .illus-card .cap b{color:var(--text);}
+  /* Nav */
+  .nav-top{position:fixed; top:0; left:0; right:0; height:4px; background:var(--border); z-index:50;}
+  .nav-top-fill{height:100%; background:linear-gradient(90deg,var(--teal),var(--coral)); transition:width .3s ease; width:8.3%;}
+  .nav-bottom{
+    position:fixed; bottom:0; left:0; right:0; padding:12px 20px; display:flex; align-items:center;
+    justify-content:space-between; background:linear-gradient(0deg,var(--bg) 60%,transparent); z-index:50; gap:10px;
+  }
+  .nav-btn{
+    font-family:var(--sans); font-weight:600; font-size:14px; color:var(--text); background:var(--card2);
+    border:1px solid var(--border); padding:10px 18px; border-radius:10px; cursor:pointer; display:flex;
+    align-items:center; gap:6px; transition:.2s;
+  }
+  .nav-btn:hover{border-color:var(--teal); color:var(--teal);}
+  .nav-btn:disabled{opacity:.3; cursor:not-allowed;}
+  .dots{display:flex; gap:6px; flex-wrap:wrap; justify-content:center; max-width:50vw;}
+  .dot{width:7px; height:7px; border-radius:50%; background:var(--border); cursor:pointer; transition:.2s; flex-shrink:0;}
+  .dot.active{background:var(--coral); width:20px; border-radius:4px;}
+  .slide-count{font-family:var(--mono); font-size:12px; color:var(--text-dim2); white-space:nowrap;}
+  /* type overview cards */
+  .type-card{border:1px solid var(--border); border-radius:14px; padding:18px; background:#0d1424;}
+  .type-card .visual{background:#0a0f1e; border-radius:10px; padding:14px; margin:12px 0; text-align:center;}
+  .type-card .visual svg{width:100%; max-width:260px; height:auto;}
+  .trait-list{margin-top:10px; font-size:13.5px; color:var(--text-dim);}
+  .trait-list div{padding:4px 0; padding-left:18px; position:relative;}
+  .trait-list div::before{content:'—'; position:absolute; left:0; color:var(--teal);}
+  /* compare */
+  .compare-wrap{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  @media(max-width:760px){.compare-wrap{grid-template-columns:1fr;}}
+  .compare-card{border-radius:14px; padding:18px; border:1px solid var(--border); background:#0d1424;}
+  /* game */
+  .game-card{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px; margin-top:16px;}
+  .game-progress{font-family:var(--mono); font-size:12px; color:var(--text-dim2); margin-bottom:14px;}
+  .game-visual{background:#0a0f1e; border:1px solid var(--border); border-radius:12px; padding:16px; margin-bottom:18px; text-align:center;}
+  .game-visual svg{width:100%; max-width:420px; height:auto;}
+  .game-opts{display:grid; grid-template-columns:repeat(4,1fr); gap:10px;}
+  @media(max-width:600px){.game-opts{grid-template-columns:repeat(2,1fr);}}
+  .game-opt{
+    font-family:var(--sans); font-weight:600; font-size:14px; padding:14px 8px; border-radius:10px;
+    background:var(--card2); border:1px solid var(--border); color:var(--text); cursor:pointer; transition:.15s;
+  }
+  .game-opt:hover{border-color:var(--teal);}
+  .game-opt.correct{background:var(--teal-dim); border-color:var(--teal); color:var(--teal);}
+  .game-opt.wrong{background:var(--coral-dim); border-color:var(--coral); color:var(--coral);}
+  .game-opt:disabled{cursor:default;}
+  .game-explain{margin-top:14px; padding:12px 14px; border-radius:9px; background:#0d1424; border:1px solid var(--border); font-size:14px; color:var(--text-dim); display:none;}
+  .game-explain.show{display:block;}
+  .game-next{margin-top:16px;}
+  .reveal-btn{
+    font-family:var(--mono); font-size:12.5px; font-weight:600; color:var(--bg); background:var(--teal);
+    border:none; padding:9px 16px; border-radius:8px; cursor:pointer; margin-top:10px; transition:.15s;
+  }
+  .reveal-btn:hover{filter:brightness(1.1);}
+  .score-screen{text-align:center; padding:24px 10px;}
+  .score-num{font-family:var(--mono); font-size:52px; font-weight:700; background:linear-gradient(90deg,var(--teal),var(--coral)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  /* quiz */
+  .quiz-q{font-size:16.5px; font-weight:600; margin-bottom:16px; line-height:1.5;}
+  .quiz-opt{
+    display:block; width:100%; text-align:left; padding:13px 16px; margin-bottom:10px; border-radius:10px;
+    background:var(--card2); border:1px solid var(--border); color:var(--text); font-family:var(--sans);
+    font-size:14.5px; cursor:pointer; transition:.15s;
+  }
+  .quiz-opt:hover{border-color:var(--teal);}
+  .quiz-opt.correct{background:var(--teal-dim); border-color:var(--teal); color:var(--teal);}
+  .quiz-opt.wrong{background:var(--coral-dim); border-color:var(--coral); color:var(--coral);}
+  .quiz-opt:disabled{cursor:default;}
+  .finish-btn{
+    display:inline-block; font-family:var(--sans); font-weight:700; font-size:15px; color:var(--bg);
+    background:linear-gradient(90deg,var(--teal),var(--coral)); padding:14px 30px; border-radius:12px;
+    text-decoration:none; margin-top:16px; border:none; cursor:pointer;
+  }
+  .finish-btn.secondary{background:var(--card2); color:var(--text); border:1px solid var(--border);}
+  ::-webkit-scrollbar{width:6px;} ::-webkit-scrollbar-thumb{background:var(--border); border-radius:3px;}
+</style>
+</head>
+<body>
+
+<div class="nav-top"><div class="nav-top-fill" id="progressFill"></div></div>
+
+<div class="presentation" id="presentation">
+
+  <!-- 0: COVER -->
+  <section class="slide active">
+    <div class="slide-inner" style="display:flex; flex-direction:column; justify-content:center; min-height:80vh;">
+      <span class="eyebrow">Bab 4 · Sub-materi 4.1</span>
+      <h1>Konsep Transformasi<br>Geometri</h1>
+      <p style="max-width:540px; margin-top:16px; font-size:17px;">Sebelum belajar menghitung, mari pahami dulu apa itu transformasi geometri dan bagaimana cara mengenali keempat jenisnya di sekitar kita.</p>
+      <div class="card" style="margin-top:26px; max-width:520px;">
+        <div style="display:flex; gap:20px; flex-wrap:wrap;">
+          <div><div class="badge teal">⏱ 4 JP</div></div>
+          <div><div class="badge amber">🎯 Tujuan Pembelajaran</div></div>
+        </div>
+        <p style="margin-top:12px; color:var(--text); font-size:14.5px;">Peserta didik mampu memahami konsep dan jenis-jenis transformasi geometri.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1: APA ITU TRANSFORMASI -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="eyebrow">01 · Definisi</span>
+      <h2>Apa itu Transformasi Geometri?</h2>
+      <p>Transformasi geometri adalah proses memindahkan, mencerminkan, memutar, atau mengubah ukuran suatu bangun geometri mengikuti aturan tertentu.</p>
+      <div class="grid-2" style="margin-top:14px;">
+        <div class="card">
+          <h3>Objek dan Bayangan</h3>
+          <p style="font-size:14px;">Bangun mula-mula disebut <b style="color:var(--teal)">objek</b>. Bangun hasil transformasi disebut <b style="color:var(--coral)">bayangan (peta)</b>. Titik bayangan ditulis dengan tanda aksen: titik A menjadi A′ (dibaca "A aksen").</p>
+          <svg viewBox="0 0 260 100" style="width:100%; margin-top:10px;">
+            <polygon points="20,80 60,80 40,30" fill="rgba(45,212,191,.15)" stroke="#2dd4bf" stroke-width="2"/>
+            <text x="30" y="20" fill="#2dd4bf" font-family="JetBrains Mono" font-size="12">objek</text>
+            <path d="M75,55 L115,55" stroke="#5d6684" stroke-width="2" marker-end="url(#arr)"/>
+            <defs><marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#5d6684"/></marker></defs>
+            <polygon points="150,90 210,90 180,25" fill="rgba(255,107,91,.15)" stroke="#ff6b5b" stroke-width="2"/>
+            <text x="165" y="15" fill="#ff6b5b" font-family="JetBrains Mono" font-size="12">bayangan</text>
+          </svg>
+        </div>
+        <div class="card">
+          <h3>Contoh dalam kehidupan</h3>
+          <p style="font-size:14px;">Transformasi bukan hanya konsep di buku — kita menjumpainya setiap hari: bayangan di cermin, jarum jam yang berputar, foto yang di-zoom, hingga potongan lego yang digeser.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2: TRANSFORMASI DI SEKITAR KITA -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="eyebrow">02 · Konteks Nyata</span>
+      <h2>Transformasi di Sekitar Kita</h2>
+      <p>Perhatikan empat situasi berikut. Masing-masing sebenarnya adalah contoh dari satu jenis transformasi geometri.</p>
+      <div class="grid-4" style="margin-top:16px;">
+        <div class="illus-card">
+          <svg viewBox="0 0 120 120">
+            <rect x="10" y="15" width="45" height="70" fill="rgba(45,212,191,.12)" stroke="#2dd4bf" stroke-width="2" rx="3"/>
+            <circle cx="32" cy="40" r="7" fill="#fbbf24"/>
+            <polygon points="24,60 40,60 32,75" fill="#fbbf24"/>
+            <line x1="60" y1="10" x2="60" y2="110" stroke="#e8ebf5" stroke-width="2" stroke-dasharray="4 3"/>
+            <rect x="65" y="15" width="45" height="70" fill="rgba(255,107,91,.12)" stroke="#ff6b5b" stroke-width="2" rx="3"/>
+            <circle cx="88" cy="40" r="7" fill="#fbbf24"/>
+            <polygon points="80,60 96,60 88,75" fill="#fbbf24"/>
+          </svg>
+          <div class="cap"><b>Cermin</b><br>Objek terpantul terbalik → Refleksi</div>
+        </div>
+        <div class="illus-card">
+          <svg viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="45" fill="none" stroke="#232c47" stroke-width="3"/>
+            <circle cx="60" cy="60" r="4" fill="#fbbf24"/>
+            <line x1="60" y1="60" x2="60" y2="18" stroke="#2dd4bf" stroke-width="3"/>
+            <circle cx="60" cy="18" r="6" fill="#2dd4bf"/>
+            <line x1="60" y1="60" x2="98" y2="83" stroke="#ff6b5b" stroke-width="3"/>
+            <circle cx="98" cy="83" r="6" fill="#ff6b5b"/>
+            <path d="M75,25 A45,45 0 0,1 95,55" fill="none" stroke="#5d6684" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#arr2)"/>
+            <defs><marker id="arr2" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#5d6684"/></marker></defs>
+          </svg>
+          <div class="cap"><b>Bianglala</b><br>Kursi berputar mengelilingi pusat → Rotasi</div>
+        </div>
+        <div class="illus-card">
+          <svg viewBox="0 0 120 120">
+            <polygon points="20,80 40,80 30,55" fill="rgba(45,212,191,.15)" stroke="#2dd4bf" stroke-width="2"/>
+            <polygon points="55,95 95,95 75,40" fill="rgba(255,107,91,.15)" stroke="#ff6b5b" stroke-width="2"/>
+            <path d="M42,60 L52,55" stroke="#5d6684" stroke-width="2" marker-end="url(#arr3)"/>
+            <defs><marker id="arr3" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#5d6684"/></marker></defs>
+          </svg>
+          <div class="cap"><b>Zoom Kamera</b><br>Ukuran gambar membesar → Dilatasi</div>
+        </div>
+        <div class="illus-card">
+          <svg viewBox="0 0 120 120">
+            <rect x="10" y="55" width="24" height="24" fill="rgba(45,212,191,.15)" stroke="#2dd4bf" stroke-width="2"/>
+            <path d="M40,67 L75,67" stroke="#5d6684" stroke-width="2" stroke-dasharray="3 3" marker-end="url(#arr4)"/>
+            <defs><marker id="arr4" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#5d6684"/></marker></defs>
+            <rect x="80" y="55" width="24" height="24" fill="rgba(255,107,91,.15)" stroke="#ff6b5b" stroke-width="2"/>
+          </svg>
+          <div class="cap"><b>Pintu Geser</b><br>Bergerak lurus tanpa berubah bentuk → Translasi</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3: 4 JENIS OVERVIEW -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="eyebrow">03 · Klasifikasi</span>
+      <h2>Mengenal 4 Jenis Transformasi</h2>
+      <p>Setiap transformasi geometri termasuk ke dalam salah satu dari empat jenis berikut.</p>
+      <div class="grid-4" style="margin-top:16px;">
+        <div class="card">
+          <div class="icon-tile" style="background:var(--teal-dim);">↗️</div>
+          <h3 style="color:var(--teal);">Translasi</h3>
+          <p style="font-size:13px;">Pergeseran lurus objek ke arah tertentu, tanpa memutar atau membalik.</p>
+        </div>
+        <div class="card">
+          <div class="icon-tile" style="background:var(--coral-dim);">🪞</div>
+          <h3 style="color:var(--coral);">Refleksi</h3>
+          <p style="font-size:13px;">Pencerminan objek terhadap sebuah garis, hasilnya terbalik seperti di cermin.</p>
+        </div>
+        <div class="card">
+          <div class="icon-tile" style="background:var(--amber-dim);">🔄</div>
+          <h3 style="color:var(--amber);">Rotasi</h3>
+          <p style="font-size:13px;">Perputaran objek mengelilingi sebuah titik pusat sejauh sudut tertentu.</p>
+        </div>
+        <div class="card">
+          <div class="icon-tile" style="background:var(--purple-dim);">🔍</div>
+          <h3 style="color:var(--purple);">Dilatasi</h3>
+          <p style="font-size:13px;">Perbesaran atau perkecilan ukuran objek terhadap titik pusat.</p>
+        </div>
+      </div>
+      <div class="card" style="margin-top:16px;">
+        <p style="font-size:13.5px;">📌 Pada pertemuan berikutnya (4.2 – 4.5), setiap jenis akan dipelajari lebih dalam lengkap dengan rumus dan latihan hitung. Materi 4.1 ini berfokus pada <b style="color:var(--text)">mengenali ciri visual</b> masing-masing jenis.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4: CIRI VISUAL - TRANSLASI -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="eyebrow" style="color:var(--teal);">04 · Ciri Visual</span>
+      <h2>Translasi — Ciri Khasnya Apa?</h2>
+      <div class="grid-2" style="margin-top:10px;">
+        <div class="type-card">
+          <div class="visual">
+            <svg viewBox="0 0 260 120">
+              <polygon points="30,90 55,90 42,55" fill="rgba(45,212,191,.15)" stroke="#2dd4bf" stroke-width="2"/>
+              <path d="M65,72 L165,72" stroke="#5d6684" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#arrT)"/>
+              <defs><marker id="arrT" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#5d6684"/></marker></defs>
+              <polygon points="175,90 200,90 187,55" fill="rgba(255,107,91,.15)" stroke="#ff6b5b" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="trait-list">
+            <div>Bentuk dan ukuran objek <b style="color:var(--text)">tetap sama persis</b></div>
+            <div>Objek bergerak <b style="color:var(--text)">lurus</b> ke satu arah</div>
+            <div>Tidak ada perputaran maupun pembalikan bentuk</div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Bayangkan seperti ini</h3>
+          <p style="font-size:14px;">Menggeser potongan puzzle di atas meja, atau menggeser buku dari satu sisi rak ke sisi lain — bentuknya tidak berubah, hanya posisinya.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5: CIRI VISUAL - REFLEKSI -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="eyebrow" style="color:var(--coral);">04 · Ciri Visual</span>
+      <h2>Refleksi — Ciri Khasnya Apa?</h2>
+      <div class="grid-2" style="margin-top:10px;">
+        <div class="type-card">
+          <div class="visual">
+            <svg viewBox="0 0 260 120">
+              <polygon points="45,90 70,90 45,55" fill="rgba(45,212,191,.15)" stroke="#2dd4bf" stroke-width="2"/>
+              <line x1="130" y1="15" x2="130" y2="105" stroke="#fbbf24" stroke-width="1.6" stroke-dasharray="5 4"/>
+              <polygon points="215,90 190,90 215,55" fill="rgba(255,107,91,.15)" stroke="#ff6b5b" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="trait-list">
+            <div>Bayangan tampak <b style="color:var(--text)">terbalik</b> seperti di cermin</div>
+            <div>Jarak objek dan bayangan ke garis cermin <b style="color:var(--text)">sama</b></div>
+            <div>Ukuran objek tidak berubah, hanya arah hadapnya</div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Bayangkan seperti ini</h3>
+          <p style="font-size:14px;">Tanganmu kanan di depan cermin terlihat seperti tangan kiri. Huruf "b" jika dicerminkan terhadap garis tegak akan tampak seperti huruf "d".</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6: CIRI VISUAL - ROTASI -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="eyebrow" style="color:var(--amber);">04 · Ciri Visual</span>
+      <h2>Rotasi — Ciri Khasnya Apa?</h2>
+      <div class="grid-2" style="margin-top:10px;">
+        <div class="type-card">
+          <div class="visual">
+            <svg viewBox="0 0 260 120">
+              <circle cx="130" cy="60" r="4" fill="#fbbf24"/>
+              <polygon points="130,55 155,55 145,30" fill="rgba(45,212,191,.15)" stroke="#2dd4bf" stroke-width="2"/>
+              <polygon points="135,60 135,85 160,75" fill="rgba(255,107,91,.15)" stroke="#ff6b5b" stroke-width="2"/>
+              <path d="M150,35 A40,40 0 0,1 158,80" fill="none" stroke="#5d6684" stroke-width="1.5" stroke-dasharray="3 3" marker-end="url(#arrR)"/>
+              <defs><marker id="arrR" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#5d6684"/></marker></defs>
+            </svg>
+          </div>
+          <div class="trait-list">
+            <div>Objek berputar mengelilingi <b style="color:var(--text)">satu titik pusat</b></div>
+            <div>Jarak setiap titik objek ke pusat <b style="color:var(--text)">tidak berubah</b></div>
+            <div>Arah hadap objek berubah sesuai sudut putar</div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Bayangkan seperti ini</h3>
+          <p style="font-size:14px;">Jarum jam berputar mengelilingi porosnya, atau baling-baling kipas angin yang berputar di tempat.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7: CIRI VISUAL - DILATASI -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="eyebrow" style="color:var(--purple);">04 · Ciri Visual</span>
+      <h2>Dilatasi — Ciri Khasnya Apa?</h2>
+      <div class="grid-2" style="margin-top:10px;">
+        <div class="type-card">
+          <div class="visual">
+            <svg viewBox="0 0 260 120">
+              <circle cx="60" cy="95" r="3" fill="#a78bfa"/>
+              <polygon points="60,95 80,95 70,75" fill="rgba(45,212,191,.15)" stroke="#2dd4bf" stroke-width="2"/>
+              <polygon points="60,95 120,95 90,35" fill="rgba(255,107,91,.12)" stroke="#ff6b5b" stroke-width="2"/>
+              <line x1="60" y1="95" x2="90" y2="35" stroke="#5d6684" stroke-width="1" stroke-dasharray="3 3"/>
+              <line x1="80" y1="95" x2="120" y2="95" stroke="#5d6684" stroke-width="1" stroke-dasharray="3 3"/>
+            </svg>
+          </div>
+          <div class="trait-list">
+            <div>Bentuk objek <b style="color:var(--text)">tidak berubah</b> (sebangun)</div>
+            <div>Ukuran objek <b style="color:var(--text)">membesar atau mengecil</b></div>
+            <div>Perubahan ukuran diukur dari satu titik pusat</div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Bayangkan seperti ini</h3>
+          <p style="font-size:14px;">Mencetak foto dari ukuran dompet menjadi ukuran poster, atau memperkecil denah rumah agar muat di kertas.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8: ISOMETRI VS DILATASI -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="eyebrow">05 · Sifat Penting</span>
+      <h2>Isometri vs Dilatasi</h2>
+      <p>Empat jenis transformasi terbagi menjadi dua kelompok besar berdasarkan apa yang berubah dan apa yang tetap.</p>
+      <div class="compare-wrap" style="margin-top:14px;">
+        <div class="compare-card" style="border-left:3px solid var(--teal);">
+          <span class="badge teal">Isometri</span>
+          <h3 style="margin-top:10px;">Translasi · Refleksi · Rotasi</h3>
+          <p style="font-size:14px;">Bentuk <b style="color:var(--text)">dan</b> ukuran objek tetap sama dengan bayangannya. Objek dan bayangan disebut <b style="color:var(--text)">kongruen</b> (sama dan sebangun persis).</p>
+        </div>
+        <div class="compare-card" style="border-left:3px solid var(--purple);">
+          <span class="badge purple">Bukan Isometri</span>
+          <h3 style="margin-top:10px;">Dilatasi</h3>
+          <p style="font-size:14px;">Bentuk objek tetap sama, tapi <b style="color:var(--text)">ukurannya berubah</b>. Objek dan bayangan disebut <b style="color:var(--text)">sebangun</b>, tapi tidak kongruen (kecuali faktor skalanya ±1).</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9: GAME TEBAK TRANSFORMASI -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="eyebrow">06 · Aktivitas Interaktif</span>
+      <h2>Tebak Jenis Transformasi</h2>
+      <p>Amati bentuk sebelum dan sesudah, lalu tebak jenis transformasinya.</p>
+      <div class="game-card" id="gameContainer"></div>
+    </div>
+  </section>
+
+  <!-- 10: KUIS KONSEP -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="eyebrow">07 · Evaluasi</span>
+      <h2>Kuis Pemahaman Konsep</h2>
+      <p>6 pertanyaan seputar konsep dan ciri-ciri transformasi geometri (bukan hitungan).</p>
+      <div class="game-card" id="quizContainer"></div>
+    </div>
+  </section>
+
+  <!-- 11: RANGKUMAN & PENUTUP -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="eyebrow">08 · Rangkuman</span>
+      <h2>Yang Perlu Diingat</h2>
+      <div class="grid-2" style="margin-top:10px;">
+        <div class="card">
+          <h3>Poin-poin kunci</h3>
+          <div class="trait-list" style="margin-top:6px;">
+            <div>Transformasi = mengubah posisi/ukuran objek menjadi bayangan</div>
+            <div>Ada 4 jenis: translasi, refleksi, rotasi, dilatasi</div>
+            <div>Translasi, refleksi, rotasi = isometri (kongruen)</div>
+            <div>Dilatasi = mengubah ukuran (sebangun)</div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Selanjutnya</h3>
+          <p style="font-size:14px;">Pada materi 4.2 kita akan mempelajari <b style="color:var(--teal)">Translasi</b> secara mendalam: rumus, cara menghitung koordinat bayangan, dan latihan soal.</p>
+        </div>
+      </div>
+      <div style="text-align:center; margin-top:30px;">
+        <a href="materi-4.2.html" class="finish-btn">Lanjut ke Materi 4.2: Translasi →</a><br>
+        <a href="bab4.html" class="finish-btn secondary">← Kembali ke Daftar Bab</a>
+        <p style="font-size:11px; margin-top:10px; color:var(--text-dim2);">(sesuaikan nama file "materi-4-2.html" dan "index.html" dengan struktur folder Anda)</p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="nav-bottom">
+  <button class="nav-btn" id="btnPrev" onclick="changeSlide(-1)">← Sebelumnya</button>
+  <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+    <div class="dots" id="dots"></div>
+    <span class="slide-count" id="slideCount">1 / 12</span>
+  </div>
+  <button class="nav-btn" id="btnNext" onclick="changeSlide(1)">Selanjutnya →</button>
+</div>
+
+<script>
+/* ============ NAVIGATION ============ */
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+let current = 0;
+const dotsWrap = document.getElementById('dots');
+slides.forEach((s,i)=>{
+  const d = document.createElement('div');
+  d.className = 'dot' + (i===0 ? ' active' : '');
+  d.onclick = ()=> goTo(i);
+  dotsWrap.appendChild(d);
+});
+function updateNav(){
+  document.querySelectorAll('.dot').forEach((d,i)=> d.classList.toggle('active', i===current));
+  document.getElementById('slideCount').textContent = (current+1)+' / '+total;
+  document.getElementById('progressFill').style.width = ((current+1)/total*100)+'%';
+  document.getElementById('btnPrev').disabled = current===0;
+  document.getElementById('btnNext').disabled = current===total-1;
+}
+function goTo(i){
+  slides[current].classList.remove('active');
+  current = Math.max(0, Math.min(total-1, i));
+  slides[current].classList.add('active');
+  slides[current].scrollTop = 0;
+  updateNav();
+}
+function changeSlide(dir){ goTo(current+dir); }
+document.addEventListener('keydown', e=>{
+  if(e.key==='ArrowRight') changeSlide(1);
+  if(e.key==='ArrowLeft') changeSlide(-1);
+});
+let touchX=0;
+document.addEventListener('touchstart', e=> touchX = e.touches[0].clientX);
+document.addEventListener('touchend', e=>{
+  const dx = e.changedTouches[0].clientX - touchX;
+  if(Math.abs(dx) > 60) changeSlide(dx < 0 ? 1 : -1);
+});
+updateNav();
+
+/* ============ GAME: TEBAK TRANSFORMASI ============ */
+/* flag-shaped icon so orientation changes are visually obvious */
+const flagPath = "M34,15 L40,15 L40,20 L66,32 L40,44 L40,70 L34,70 Z";
+function flagSVG(transform, color){
+  return `<path d="${flagPath}" fill="${color==='teal'?'rgba(45,212,191,.18)':'rgba(255,107,91,.18)'}" stroke="${color==='teal'?'#2dd4bf':'#ff6b5b'}" stroke-width="2.5" transform="${transform}"/>`;
+}
+const gameData = [
+  {label:'Contoh 1', before:'translate(0,0)', after:'translate(160,0)', answer:'translasi',
+   exp:'Bentuk dan arah hadap bendera sama persis, hanya posisinya bergeser lurus ke kanan → Translasi.'},
+  {label:'Contoh 2', before:'translate(0,0)', after:'translate(300,0) scale(-1,1) translate(0,0)', answer:'refleksi',
+   exp:'Bendera menghadap arah berlawanan (seperti dipantulkan cermin tegak) → Refleksi.'},
+  {label:'Contoh 3', before:'translate(0,0)', after:'translate(230,10) rotate(180,37,42)', answer:'rotasi',
+   exp:'Bendera berputar 180° mengelilingi satu titik pusat, jaraknya ke pusat tetap sama → Rotasi.'},
+  {label:'Contoh 4', before:'translate(0,0)', after:'translate(150,-20) scale(1.7)', answer:'dilatasi',
+   exp:'Bentuk bendera tetap sama, tetapi ukurannya membesar → Dilatasi.'},
+  {label:'Contoh 5', before:'translate(0,0)', after:'translate(210,0) scale(1,-1) translate(0,-84)', answer:'refleksi',
+   exp:'Bendera terbalik atas-bawah seperti dipantulkan cermin datar → Refleksi.'},
+  {label:'Contoh 6', before:'translate(0,0)', after:'translate(190,55) scale(0.55)', answer:'dilatasi',
+   exp:'Bentuk bendera tetap sama namun mengecil → Dilatasi (faktor skala di antara 0 dan 1).'},
+];
+const typeNames = {translasi:'Translasi', refleksi:'Refleksi', rotasi:'Rotasi', dilatasi:'Dilatasi'};
+let gameIdx = 0, gameScore = 0;
+function renderGame(){
+  const container = document.getElementById('gameContainer');
+  if(gameIdx >= gameData.length){
+    container.innerHTML = `
+      <div class="score-screen">
+        <div class="game-progress">Permainan selesai</div>
+        <div class="score-num">${gameScore}/${gameData.length}</div>
+        <p style="margin-top:10px;">${gameScore===gameData.length ? 'Keren! Kamu sudah bisa mengenali keempat jenis transformasi. 🎯' : 'Coba tinjau lagi ciri-ciri visual tiap jenis, lalu ulangi permainan.'}</p>
+        <button class="reveal-btn" style="margin-top:14px;" onclick="gameIdx=0;gameScore=0;renderGame();">Ulangi Permainan</button>
+      </div>`;
+    return;
+  }
+  const item = gameData[gameIdx];
+  let html = `<div class="game-progress">${item.label} dari ${gameData.length} &nbsp;·&nbsp; Skor: ${gameScore}</div>`;
+  html += `<div class="game-visual"><svg viewBox="0 0 300 100">
+      ${flagSVG(item.before,'teal')}
+      ${flagSVG(item.after,'coral')}
+    </svg>
+    <div style="font-family:var(--mono); font-size:11px; color:var(--text-dim2); margin-top:6px;">
+      <span style="color:#2dd4bf;">■</span> objek &nbsp; <span style="color:#ff6b5b;">■</span> bayangan
+    </div></div>`;
+  html += `<div class="game-opts">
+      <button class="game-opt" onclick="answerGame('translasi')">Translasi</button>
+      <button class="game-opt" onclick="answerGame('refleksi')">Refleksi</button>
+      <button class="game-opt" onclick="answerGame('rotasi')">Rotasi</button>
+      <button class="game-opt" onclick="answerGame('dilatasi')">Dilatasi</button>
+    </div>`;
+  html += `<div class="game-explain" id="gameExplain">${item.exp}</div>`;
+  container.innerHTML = html;
+}
+function answerGame(choice){
+  const item = gameData[gameIdx];
+  const btns = document.querySelectorAll('.game-opt');
+  btns.forEach(b=>{
+    b.disabled = true;
+    if(b.textContent.toLowerCase() === typeNames[item.answer].toLowerCase()) b.classList.add('correct');
+  });
+  if(choice !== item.answer){
+    btns.forEach(b=>{ if(b.textContent.toLowerCase()===typeNames[choice].toLowerCase()) b.classList.add('wrong'); });
+  } else {
+    gameScore++;
+  }
+  document.getElementById('gameExplain').classList.add('show');
+  const nextBtn = document.createElement('button');
+  nextBtn.className = 'reveal-btn game-next';
+  nextBtn.textContent = (gameIdx === gameData.length-1) ? 'Lihat Skor' : 'Contoh Berikutnya →';
+  nextBtn.onclick = ()=>{ gameIdx++; renderGame(); };
+  document.getElementById('gameContainer').appendChild(nextBtn);
+}
+
+/* ============ QUIZ KONSEP ============ */
+const quizData = [
+  {q:'Bangun mula-mula sebelum ditransformasikan disebut...', opts:['Objek','Bayangan','Vektor','Faktor skala'], correct:0, exp:'Bangun mula-mula disebut objek; hasilnya disebut bayangan/peta.'},
+  {q:'Jenis transformasi yang membuat objek terlihat seperti pantulan di cermin adalah...', opts:['Refleksi','Translasi','Rotasi','Dilatasi'], correct:0, exp:'Refleksi (pencerminan) menghasilkan bayangan yang terbalik seperti di cermin.'},
+  {q:'Roda sepeda yang berputar pada porosnya adalah contoh transformasi jenis...', opts:['Rotasi','Translasi','Refleksi','Dilatasi'], correct:0, exp:'Perputaran mengelilingi satu titik pusat adalah ciri utama rotasi.'},
+  {q:'Transformasi yang mengubah ukuran suatu bangun (membesar/mengecil) adalah...', opts:['Dilatasi','Translasi','Refleksi','Rotasi'], correct:0, exp:'Dilatasi adalah satu-satunya jenis transformasi yang mengubah ukuran objek.'},
+  {q:'Manakah kelompok transformasi yang tergolong isometri (bentuk dan ukuran tetap)?', opts:['Translasi, Refleksi, Rotasi','Translasi, Dilatasi, Rotasi','Refleksi, Dilatasi','Hanya Dilatasi'], correct:0, exp:'Translasi, refleksi, dan rotasi tidak mengubah ukuran — objek dan bayangannya kongruen.'},
+  {q:'Menggeser meja lurus ke kanan tanpa memutar atau membaliknya adalah contoh...', opts:['Translasi','Refleksi','Rotasi','Dilatasi'], correct:0, exp:'Pergeseran lurus tanpa perubahan arah hadap adalah ciri translasi.'}
+];
+let quizIdx = 0, quizScore = 0;
+function renderQuiz(){
+  const container = document.getElementById('quizContainer');
+  if(quizIdx >= quizData.length){
+    container.innerHTML = `
+      <div class="score-screen">
+        <div class="game-progress">Kuis selesai</div>
+        <div class="score-num">${quizScore}/${quizData.length}</div>
+        <p style="margin-top:10px;">${quizScore===quizData.length ? 'Pemahaman konsepmu sudah solid! Lanjut ke materi berikutnya. 🎯' : 'Tinjau kembali ciri-ciri tiap jenis transformasi di slide sebelumnya.'}</p>
+        <button class="reveal-btn" style="margin-top:14px;" onclick="quizIdx=0;quizScore=0;renderQuiz();">Ulangi Kuis</button>
+      </div>`;
+    return;
+  }
+  const item = quizData[quizIdx];
+  let html = `<div class="game-progress">Soal ${quizIdx+1} dari ${quizData.length} &nbsp;·&nbsp; Skor: ${quizScore}</div>`;
+  html += `<div class="quiz-q">${item.q}</div>`;
+  item.opts.forEach((opt,i)=>{
+    html += `<button class="quiz-opt" onclick="answerQuiz(${i})">${opt}</button>`;
+  });
+  html += `<div class="game-explain" id="quizExplain">${item.exp}</div>`;
+  container.innerHTML = html;
+}
+function answerQuiz(i){
+  const item = quizData[quizIdx];
+  const btns = document.querySelectorAll('.quiz-opt');
+  btns.forEach(b=> b.disabled = true);
+  btns[item.correct].classList.add('correct');
+  if(i !== item.correct){ btns[i].classList.add('wrong'); } else { quizScore++; }
+  document.getElementById('quizExplain').classList.add('show');
+  const nextBtn = document.createElement('button');
+  nextBtn.className = 'reveal-btn game-next';
+  nextBtn.textContent = (quizIdx === quizData.length-1) ? 'Lihat Skor' : 'Soal Berikutnya →';
+  nextBtn.onclick = ()=>{ quizIdx++; renderQuiz(); };
+  document.getElementById('quizContainer').appendChild(nextBtn);
+}
+
+/* ============ INIT ============ */
+renderGame();
+renderQuiz();
+</script>
+</body>
+</html>

@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Bab 5 — Kekongruenan Segitiga dan Segitiga Istimewa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0e1a; --card:#131a2e; --card2:#182140; --border:#2a3660;
+  --coral:#ff6b6b; --teal:#4ecdc4; --amber:#ffd166; --text:#eef1fa; --muted:#a6b0d6;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html,body{height:100%; overflow:hidden;}
+body{
+  background:radial-gradient(circle at 20% 10%, #101830 0%, var(--bg) 55%);
+  color:var(--text); font-family:'Space Grotesk',sans-serif;
+  display:flex; flex-direction:column; height:100vh; width:100vw;
+}
+.mono{font-family:'JetBrains Mono',monospace;}
+header{
+  padding:12px 24px; display:flex; align-items:center; gap:16px;
+  border-bottom:1px solid var(--border); flex-shrink:0; background:rgba(10,14,26,.7);
+}
+.brand{font-size:.72rem; color:var(--muted); letter-spacing:.05em; white-space:nowrap;}
+.progress-wrap{flex:1; height:6px; background:var(--card2); border-radius:6px; overflow:hidden;}
+.progress-bar{height:100%; width:8%; background:linear-gradient(90deg,var(--coral),var(--amber)); transition:width .35s ease;}
+.slide-counter{font-size:.72rem; color:var(--muted); white-space:nowrap;}
+
+main{flex:1; position:relative; overflow:hidden;}
+.slide{
+  position:absolute; inset:0; padding:20px 5vw 14px;
+  display:none; flex-direction:column; gap:10px;
+  animation:fade .4s ease;
+}
+.slide.active{display:flex;}
+@keyframes fade{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+
+h1{font-size:clamp(1.3rem,2.8vw,2.05rem); font-weight:700; line-height:1.15;}
+h2{font-size:clamp(1.05rem,2vw,1.4rem); font-weight:600; color:var(--teal);}
+.tag{
+  display:inline-block; font-size:.68rem; font-family:'JetBrains Mono',monospace;
+  color:var(--amber); background:rgba(255,209,102,.1); border:1px solid rgba(255,209,102,.3);
+  padding:3px 10px; border-radius:20px; letter-spacing:.06em; width:fit-content;
+}
+.grid{display:grid; gap:12px; flex:1; min-height:0;}
+.card{
+  background:var(--card); border:1px solid var(--border); border-radius:14px;
+  padding:15px 17px; display:flex; flex-direction:column; gap:7px; min-height:0;
+}
+.card h3{font-size:.95rem; color:var(--coral); font-weight:700;}
+.card p, .card li{font-size:.86rem; color:var(--muted); line-height:1.55;}
+.card b{color:var(--text);}
+.card-teal{border-color:rgba(78,205,196,.4);}
+.card-amber{border-color:rgba(255,209,102,.4);}
+.center{display:flex; align-items:center; justify-content:center;}
+.scroll{overflow-y:auto;}
+
+/* COVER */
+.cover{align-items:center; justify-content:center; text-align:center; gap:16px;}
+.cover .badge{
+  font-family:'JetBrains Mono',monospace; font-size:.78rem; color:var(--teal);
+  border:1px solid var(--teal); padding:6px 16px; border-radius:30px; letter-spacing:.1em;
+}
+.cover h1{font-size:clamp(1.7rem,4.6vw,3rem); background:linear-gradient(90deg,#fff,var(--teal)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.cover .sub{color:var(--muted); font-size:.95rem; max-width:700px;}
+.cover .shapes{display:flex; gap:26px; margin-top:8px;}
+
+.btn{
+  font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:.78rem;
+  background:var(--card2); color:var(--text); border:1px solid var(--border);
+  padding:8px 16px; border-radius:10px; cursor:pointer; transition:.2s;
+}
+.btn:hover{border-color:var(--teal); color:var(--teal);}
+.btn.active{background:var(--teal); color:#03201d; border-color:var(--teal);}
+.btn-row{display:flex; gap:8px; flex-wrap:wrap;}
+
+svg text{font-family:'JetBrains Mono',monospace;}
+
+footer{
+  padding:9px 24px; display:flex; align-items:center; justify-content:space-between;
+  border-top:1px solid var(--border); flex-shrink:0; background:rgba(10,14,26,.7);
+}
+.nav-btn{
+  background:var(--card2); border:1px solid var(--border); color:var(--text);
+  width:36px; height:36px; border-radius:10px; cursor:pointer; font-size:1rem;
+  display:flex; align-items:center; justify-content:center; transition:.2s;
+}
+.nav-btn:hover{border-color:var(--coral); color:var(--coral);}
+.nav-btn:disabled{opacity:.3; cursor:not-allowed;}
+.dots{display:flex; gap:6px; flex-wrap:wrap; max-width:50vw; justify-content:center;}
+.dot{width:7px; height:7px; border-radius:50%; background:var(--card2); border:1px solid var(--border); cursor:pointer; transition:.2s;}
+.dot.active{background:var(--coral); border-color:var(--coral); transform:scale(1.3);}
+.slide-title-mini{font-size:.68rem; color:var(--muted); letter-spacing:.05em;}
+
+/* quiz / latihan options */
+.opt{
+  display:flex; align-items:center; gap:10px; text-align:left; padding:10px 14px;
+  border-radius:10px; border:1px solid var(--border); background:var(--card2);
+  cursor:pointer; font-size:.85rem; color:var(--text); transition:.15s; width:100%;
+}
+.opt:hover{border-color:var(--teal);}
+.opt-letter{
+  width:22px; height:22px; border-radius:6px; background:rgba(255,255,255,.07);
+  display:flex; align-items:center; justify-content:center; font-size:.72rem;
+  font-family:'JetBrains Mono',monospace; color:var(--muted); flex-shrink:0;
+}
+.opt.correct{background:rgba(78,205,196,.16); border-color:var(--teal);}
+.opt.correct .opt-letter{background:var(--teal); color:#03201d;}
+.opt.wrong{background:rgba(255,107,107,.16); border-color:var(--coral);}
+.opt.wrong .opt-letter{background:var(--coral); color:#2a0b0b;}
+.pembahasan{
+  margin-top:8px; padding:10px 14px; border-radius:10px; font-size:.82rem; color:var(--text);
+  background:rgba(255,209,102,.08); border:1px solid rgba(255,209,102,.3);
+  display:none; line-height:1.5;
+}
+.pembahasan.show{display:block;}
+.pembahasan b{color:var(--amber);}
+.q-block{margin-bottom:16px;}
+.q-block:last-child{margin-bottom:4px;}
+.q-num{
+  display:inline-flex; width:22px; height:22px; border-radius:6px; background:var(--coral);
+  color:#2a0b0b; font-family:'JetBrains Mono',monospace; font-size:.72rem; font-weight:700;
+  align-items:center; justify-content:center; margin-right:6px;
+}
+
+/* step box for worked examples */
+.step-box{background:var(--card2); border:1px solid var(--border); border-radius:10px; padding:9px 13px; margin-top:4px;}
+.step-label{font-size:.65rem; color:var(--amber); font-family:'JetBrains Mono',monospace; letter-spacing:.07em; text-transform:uppercase; margin-bottom:3px; display:block;}
+.step-box p{color:var(--text); font-size:.85rem;}
+.conclusion{border-color:var(--teal); background:rgba(78,205,196,.1);}
+.conclusion .step-label{color:var(--teal);}
+
+.two-col{display:grid; grid-template-columns:1fr 1fr; gap:14px; flex:1; min-height:0;}
+@media (max-width:760px){ .two-col{grid-template-columns:1fr;} }
+
+.score-box{font-family:'JetBrains Mono',monospace; font-size:.82rem; color:var(--amber);}
+::-webkit-scrollbar{width:6px;} ::-webkit-scrollbar-thumb{background:var(--border); border-radius:6px;}
+</style>
+</head>
+<body>
+
+<header>
+  <span class="brand mono">BAB 5 · KEKONGRUENAN BANGUN DATAR</span>
+  <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+  <span class="slide-counter mono" id="slideCounter">1 / 12</span>
+</header>
+
+<main id="main">
+
+<!-- 1. COVER -->
+<section class="slide active cover">
+  <span class="badge">FASE D · SMP · KURIKULUM MERDEKA</span>
+  <h1>Kekongruenan Segitiga<br>dan Segitiga Istimewa</h1>
+  <p class="sub">Bab 5 — Kekongruenan pada Bangun Datar &nbsp;|&nbsp; Sub Materi 4.2</p>
+  <div class="shapes">
+    <svg width="90" height="80" viewBox="0 0 90 80"><polygon points="45,8 8,72 82,72" fill="none" stroke="#ff6b6b" stroke-width="3"/></svg>
+    <svg width="90" height="80" viewBox="0 0 90 80"><polygon points="45,8 10,72 80,72" fill="none" stroke="#4ecdc4" stroke-width="3"/></svg>
+    <svg width="90" height="80" viewBox="0 0 90 80"><polygon points="10,72 10,10 82,72" fill="none" stroke="#ffd166" stroke-width="3"/></svg>
+  </div>
+  <p class="mono" style="color:var(--muted); font-size:.75rem;">Tekan ► atau geser untuk mulai</p>
+</section>
+
+<!-- 2. TUJUAN PEMBELAJARAN -->
+<section class="slide">
+  <span class="tag">TUJUAN PEMBELAJARAN</span>
+  <h1>Apa yang akan kamu kuasai?</h1>
+  <div class="grid" style="grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,1fr);">
+    <div class="card"><h3>01 · Pengertian</h3><p>Menjelaskan pengertian dua segitiga yang kongruen.</p></div>
+    <div class="card"><h3>02 · Bersesuaian</h3><p>Menentukan sisi dan sudut yang bersesuaian pada dua segitiga.</p></div>
+    <div class="card card-teal"><h3>03 · Syarat SSS</h3><p>Membuktikan kekongruenan dengan syarat Sisi-Sisi-Sisi.</p></div>
+    <div class="card card-teal"><h3>04 · Syarat SAS</h3><p>Membuktikan kekongruenan dengan syarat Sisi-Sudut-Sisi.</p></div>
+    <div class="card card-teal"><h3>05 · Syarat ASA/AAS</h3><p>Membuktikan kekongruenan dengan syarat Sudut-Sisi-Sudut / Sudut-Sudut-Sisi.</p></div>
+    <div class="card card-amber"><h3>06 · Segitiga Istimewa</h3><p>Mengenali sifat segitiga sama sisi, sama kaki, dan siku-siku.</p></div>
+    <div class="card card-amber"><h3>07 · Penerapan</h3><p>Menerapkan sifat segitiga istimewa dalam pembuktian kongruensi.</p></div>
+    <div class="card"><h3>08 · Penalaran</h3><p>Menyusun argumen logis untuk membuktikan kekongruenan.</p></div>
+    <div class="card"><h3>09 · Pemecahan Masalah</h3><p>Menyelesaikan masalah kontekstual menggunakan konsep kekongruenan.</p></div>
+  </div>
+</section>
+
+<!-- 3. APERSEPSI -->
+<section class="slide">
+  <span class="tag">APERSEPSI · KONTEKS NYATA</span>
+  <h1>Kongruen di sekitar kita</h1>
+  <div class="two-col">
+    <div class="card scroll">
+      <p>Perhatikan struktur <b>rangka atap rumah (kuda-kuda)</b>. Setiap segitiga penyangga dibuat dengan ukuran sisi dan sudut yang sama persis agar beban terdistribusi merata.</p>
+      <p>Contoh lain: <b>sayap kupu-kupu</b>, <b>rangka jembatan baja</b>, <b>ubin lantai segitiga</b>, dan <b>potongan kue/pizza</b> yang dibagi sama besar.</p>
+      <p style="color:var(--amber)">💡 Dua bangun disebut <b style="color:var(--amber)">kongruen</b> jika bentuk dan ukurannya <u>sama persis</u> — bisa saling menutupi tanpa sisa jika salah satunya digeser, diputar, atau dicerminkan.</p>
+    </div>
+    <div class="card center">
+      <svg width="100%" height="100%" viewBox="0 0 320 220">
+        <polygon points="30,190 160,190 95,60" fill="none" stroke="#ff6b6b" stroke-width="3"/>
+        <line x1="95" y1="60" x2="95" y2="190" stroke="#ff6b6b" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <polygon points="160,190 290,190 225,60" fill="none" stroke="#4ecdc4" stroke-width="3"/>
+        <line x1="225" y1="60" x2="225" y2="190" stroke="#4ecdc4" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="160" y="212" text-anchor="middle" fill="#a6b0d6" font-size="11">Rangka Kuda-Kuda Atap</text>
+        <text x="90" y="45" fill="#ff6b6b" font-size="11">Δ1</text>
+        <text x="220" y="45" fill="#4ecdc4" font-size="11">Δ2</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- 4. KONSEP MATERI -->
+<section class="slide">
+  <span class="tag">KONSEP MATERI</span>
+  <h1>Segitiga Kongruen & Bagian Bersesuaian</h1>
+  <div class="two-col">
+    <div class="card scroll">
+      <h3>Pengertian</h3>
+      <p>Dua segitiga dikatakan <b style="color:var(--teal)">kongruen (≅)</b> jika ketiga sisi dan ketiga sudutnya sama besar, sehingga satu segitiga tepat menutupi segitiga lainnya.</p>
+      <h3 style="margin-top:6px;">Sisi & Sudut Bersesuaian</h3>
+      <p>Jika △ABC ≅ △DEF, maka urutan huruf menunjukkan pasangan yang bersesuaian:</p>
+      <p class="mono" style="color:var(--amber);">AB↔DE &nbsp; BC↔EF &nbsp; AC↔DF<br>∠A↔∠D &nbsp; ∠B↔∠E &nbsp; ∠C↔∠F</p>
+      <div class="btn-row" style="margin-top:4px;">
+        <button class="btn active" id="btnSisi" onclick="toggleMode('sisi')">Tampilkan Sisi Bersesuaian</button>
+        <button class="btn" id="btnSudut" onclick="toggleMode('sudut')">Tampilkan Sudut Bersesuaian</button>
+      </div>
+    </div>
+    <div class="card center">
+      <svg width="100%" height="100%" viewBox="0 0 340 220" id="conceptSvg">
+        <polygon points="30,190 150,190 80,50" fill="none" stroke="#eef1fa" stroke-width="2.5"/>
+        <text x="22" y="200" fill="#ff6b6b" font-size="13">A</text>
+        <text x="155" y="200" fill="#4ecdc4" font-size="13">B</text>
+        <text x="75" y="42" fill="#ffd166" font-size="13">C</text>
+
+        <polygon points="190,190 310,190 260,50" fill="none" stroke="#eef1fa" stroke-width="2.5"/>
+        <text x="182" y="200" fill="#ff6b6b" font-size="13">D</text>
+        <text x="315" y="200" fill="#4ecdc4" font-size="13">E</text>
+        <text x="264" y="42" fill="#ffd166" font-size="13">F</text>
+
+        <g id="sisiLayer">
+          <line x1="30" y1="190" x2="150" y2="190" stroke="#ff6b6b" stroke-width="4"/>
+          <line x1="190" y1="190" x2="310" y2="190" stroke="#ff6b6b" stroke-width="4"/>
+        </g>
+        <g id="sudutLayer" style="display:none;">
+          <path d="M 55 190 A 25 25 0 0 0 45 170" fill="none" stroke="#ff6b6b" stroke-width="2.5"/>
+          <path d="M 215 190 A 25 25 0 0 0 205 170" fill="none" stroke="#ff6b6b" stroke-width="2.5"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- 5. SYARAT KEKONGRUENAN (interaktif) -->
+<section class="slide">
+  <span class="tag">KONSEP · SYARAT KEKONGRUENAN</span>
+  <h1>Tiga Syarat Kekongruenan Segitiga</h1>
+  <div class="btn-row">
+    <button class="btn active" data-syarat="sss" onclick="showSyarat('sss')">SSS</button>
+    <button class="btn" data-syarat="sas" onclick="showSyarat('sas')">SAS</button>
+    <button class="btn" data-syarat="asa" onclick="showSyarat('asa')">ASA / AAS</button>
+  </div>
+  <div class="two-col">
+    <div class="card center"><svg width="100%" height="100%" viewBox="0 0 340 220" id="syaratSvg"></svg></div>
+    <div class="card scroll" id="syaratText"></div>
+  </div>
+</section>
+
+<!-- 6. CONTOH SOAL: SYARAT KEKONGRUENAN -->
+<section class="slide">
+  <span class="tag">CONTOH SOAL & PEMBAHASAN</span>
+  <h1>Membuktikan Kekongruenan Segitiga</h1>
+  <div class="btn-row">
+    <button class="btn active" data-contoh="sss" onclick="showContoh('sss')">Contoh SSS</button>
+    <button class="btn" data-contoh="sas" onclick="showContoh('sas')">Contoh SAS</button>
+    <button class="btn" data-contoh="asa" onclick="showContoh('asa')">Contoh ASA/AAS</button>
+  </div>
+  <div class="two-col">
+    <div class="card center"><svg width="100%" height="100%" viewBox="0 0 340 220" id="contohSvg"></svg></div>
+    <div class="card scroll" id="contohText"></div>
+  </div>
+</section>
+
+<!-- 7. LANGKAH / PENERAPAN: Segitiga Istimewa -->
+<section class="slide">
+  <span class="tag">LANGKAH & PENERAPAN</span>
+  <h1>Segitiga Istimewa dalam Kekongruenan</h1>
+  <div class="grid" style="grid-template-columns:1fr 1fr 1fr; grid-template-rows:1fr 1fr;">
+    <div class="card center"><svg viewBox="0 0 140 130" width="100%" height="85"><polygon points="70,10 15,115 125,115" fill="none" stroke="#4ecdc4" stroke-width="2.5"/><text x="60" y="12" fill="#4ecdc4" font-size="9">60°</text></svg></div>
+    <div class="card">
+      <h3>Segitiga Sama Sisi</h3>
+      <p>Ketiga sisi sama panjang, ketiga sudut = 60°. Dua segitiga sama sisi dengan panjang sisi sama pasti kongruen (syarat SSS otomatis terpenuhi).</p>
+    </div>
+    <div class="card center"><svg viewBox="0 0 140 130" width="100%" height="85"><polygon points="70,10 20,115 120,115" fill="none" stroke="#ff6b6b" stroke-width="2.5"/><line x1="70" y1="10" x2="70" y2="115" stroke="#ff6b6b" stroke-width="1" stroke-dasharray="3,3"/></svg></div>
+    <div class="card">
+      <h3>Segitiga Sama Kaki</h3>
+      <p>Dua sisi sama panjang & dua sudut alas sama besar. Garis tinggi dari puncak membagi menjadi dua segitiga siku-siku yang kongruen (syarat SAS).</p>
+    </div>
+    <div class="card center"><svg viewBox="0 0 140 130" width="100%" height="85"><polygon points="20,115 20,15 120,115" fill="none" stroke="#ffd166" stroke-width="2.5"/><rect x="20" y="100" width="15" height="15" fill="none" stroke="#ffd166"/></svg></div>
+    <div class="card">
+      <h3>Segitiga Siku-Siku</h3>
+      <p>Memiliki sudut 90°. Dua segitiga siku-siku kongruen jika sisi siku-siku & sisi miring sama (kasus khusus SAS/SSS).</p>
+    </div>
+  </div>
+</section>
+
+<!-- 8. CONTOH SOAL: PENERAPAN SEGITIGA ISTIMEWA -->
+<section class="slide">
+  <span class="tag">CONTOH SOAL & PEMBAHASAN</span>
+  <h1>Penerapan Sifat Segitiga Istimewa</h1>
+  <div class="two-col">
+    <div class="card center">
+      <svg width="100%" height="100%" viewBox="0 0 300 220">
+        <polygon points="60,190 240,190 150,40" fill="none" stroke="#eef1fa" stroke-width="2.5"/>
+        <line x1="150" y1="40" x2="150" y2="190" stroke="#ffd166" stroke-width="2" stroke-dasharray="4,3"/>
+        <text x="45" y="205" fill="#ff6b6b" font-size="12">B</text>
+        <text x="245" y="205" fill="#ff6b6b" font-size="12">C</text>
+        <text x="145" y="32" fill="#ff6b6b" font-size="12">A</text>
+        <text x="153" y="205" fill="#ffd166" font-size="12">D</text>
+        <text x="95" y="205" fill="#a6b0d6" font-size="10">5 m</text>
+        <text x="185" y="205" fill="#a6b0d6" font-size="10">5 m</text>
+        <text x="60" y="120" fill="#a6b0d6" font-size="10">5 m</text>
+        <text x="215" y="120" fill="#a6b0d6" font-size="10">5 m</text>
+        <rect x="150" y="178" width="12" height="12" fill="none" stroke="#ffd166"/>
+        <rect x="138" y="178" width="12" height="12" fill="none" stroke="#ffd166"/>
+      </svg>
+    </div>
+    <div class="card scroll">
+      <p><b>Soal:</b> Rangka atap berbentuk segitiga sama kaki ABC dengan AB = AC = 5 m dan alas BC = 8 m. Garis AD adalah garis tinggi dari A tegak lurus BC di titik D (D adalah titik tengah BC). Buktikan bahwa △ABD ≅ △ACD.</p>
+      <div class="step-box"><span class="step-label">Diketahui</span><p>AB = AC = 5 m &nbsp;|&nbsp; BD = DC = 4 m (D titik tengah BC) &nbsp;|&nbsp; ∠ADB = ∠ADC = 90°</p></div>
+      <div class="step-box"><span class="step-label">Penyelesaian</span><p>AB = AC (sisi kaki sama panjang)<br>∠ADB = ∠ADC = 90° (garis tinggi tegak lurus alas)<br>BD = DC (D titik tengah BC)<br>Maka dua sisi dan sudut apitnya sama besar.</p></div>
+      <div class="step-box conclusion"><span class="step-label">Kesimpulan</span><p>Berdasarkan syarat <b>SAS</b>, terbukti △ABD ≅ △ACD. Artinya garis tinggi pada segitiga sama kaki membagi segitiga menjadi dua bagian yang kongruen.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 9. LATIHAN INTERAKTIF -->
+<section class="slide">
+  <span class="tag">LATIHAN INTERAKTIF</span>
+  <h1>Uji Pemahamanmu</h1>
+  <div class="card scroll" style="flex:1;" id="latihanBox"></div>
+</section>
+
+<!-- 10. TANTANGAN / QUIZ -->
+<section class="slide">
+  <span class="tag">TANTANGAN</span>
+  <div style="display:flex; justify-content:space-between; align-items:center;">
+    <h1>Kuis Kekongruenan</h1>
+    <span class="score-box" id="quizScore">Skor: 0 / 5</span>
+  </div>
+  <div class="card scroll" style="flex:1;" id="quizBox"></div>
+</section>
+
+<!-- 11. RANGKUMAN -->
+<section class="slide">
+  <span class="tag">RANGKUMAN</span>
+  <h1>Poin-Poin Penting</h1>
+  <div class="grid" style="grid-template-columns:repeat(2,1fr); grid-template-rows:repeat(2,1fr);">
+    <div class="card card-teal"><h3>Kongruen</h3><p>Dua segitiga kongruen bila semua sisi & sudut bersesuaian sama besar (notasi ≅).</p></div>
+    <div class="card card-teal"><h3>Tiga Syarat Utama</h3><p><b class="mono">SSS</b> (sisi-sisi-sisi), <b class="mono">SAS</b> (sisi-sudut-sisi diapit), <b class="mono">ASA/AAS</b> (sudut-sisi-sudut).</p></div>
+    <div class="card card-amber"><h3>Segitiga Istimewa</h3><p>Sama sisi, sama kaki, dan siku-siku memiliki sifat khusus yang mempermudah pembuktian kongruensi.</p></div>
+    <div class="card card-amber"><h3>Penerapan</h3><p>Sifat segitiga istimewa digunakan untuk membuktikan kekongruenan pada rangka bangunan, jembatan, dan desain simetris.</p></div>
+  </div>
+</section>
+
+<!-- 12. REFLEKSI -->
+<section class="slide">
+  <span class="tag">REFLEKSI</span>
+  <h1>Bagaimana pemahamanmu?</h1>
+  <div class="two-col">
+    <div class="card scroll">
+      <h3>Renungkan</h3>
+      <p>1. Bagian mana yang paling mudah kamu pahami: SSS, SAS, atau ASA/AAS?</p>
+      <p>2. Sifat segitiga istimewa apa yang paling membantumu dalam membuktikan kekongruenan?</p>
+      <p>3. Berikan satu contoh benda di sekitarmu yang memuat segitiga kongruen.</p>
+    </div>
+    <div class="card center" style="flex-direction:column; gap:14px;">
+      <p style="color:var(--muted); font-size:.85rem;">Seberapa yakin kamu dengan materi ini?</p>
+      <div class="btn-row" id="refleksiBtns">
+        <button class="btn" onclick="pickReflect(this,'😕 Perlu Latihan Lagi')">😕</button>
+        <button class="btn" onclick="pickReflect(this,'🙂 Cukup Paham')">🙂</button>
+        <button class="btn" onclick="pickReflect(this,'😄 Sangat Paham')">😄</button>
+      </div>
+      <p class="mono" id="reflectResult" style="color:var(--teal); font-size:.85rem;"></p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <button class="nav-btn" id="prevBtn" onclick="go(-1)">◀</button>
+  <div class="dots" id="dots"></div>
+  <span class="slide-title-mini mono" id="slideTitle"></span>
+  <button class="nav-btn" id="nextBtn" onclick="go(1)">▶</button>
+</footer>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const titles = ['Cover','Tujuan','Apersepsi','Konsep Materi','Syarat Kekongruenan','Contoh Soal Syarat','Segitiga Istimewa','Contoh Soal Penerapan','Latihan','Kuis','Rangkuman','Refleksi'];
+let current = 0;
+const dotsWrap = document.getElementById('dots');
+titles.forEach((t,i)=>{
+  const d = document.createElement('div');
+  d.className = 'dot' + (i===0?' active':'');
+  d.onclick = ()=>{current=i; render();};
+  dotsWrap.appendChild(d);
+});
+
+function render(){
+  slides.forEach((s,i)=> s.classList.toggle('active', i===current));
+  document.querySelectorAll('.dot').forEach((d,i)=> d.classList.toggle('active', i===current));
+  document.getElementById('progressBar').style.width = ((current+1)/slides.length*100)+'%';
+  document.getElementById('slideCounter').textContent = (current+1)+' / '+slides.length;
+  document.getElementById('slideTitle').textContent = titles[current];
+  document.getElementById('prevBtn').disabled = current===0;
+  document.getElementById('nextBtn').disabled = current===slides.length-1;
+}
+function go(dir){
+  const n = current+dir;
+  if(n>=0 && n<slides.length){ current=n; render(); }
+}
+document.addEventListener('keydown', e=>{
+  if(e.key==='ArrowRight') go(1);
+  if(e.key==='ArrowLeft') go(-1);
+});
+let touchX=0;
+document.addEventListener('touchstart', e=> touchX = e.touches[0].clientX);
+document.addEventListener('touchend', e=>{
+  const dx = e.changedTouches[0].clientX - touchX;
+  if(dx>60) go(-1); if(dx<-60) go(1);
+});
+
+// ---- Slide 4: toggle sisi/sudut bersesuaian ----
+function toggleMode(mode){
+  document.getElementById('btnSisi').classList.toggle('active', mode==='sisi');
+  document.getElementById('btnSudut').classList.toggle('active', mode==='sudut');
+  document.getElementById('sisiLayer').style.display = mode==='sisi' ? 'block':'none';
+  document.getElementById('sudutLayer').style.display = mode==='sudut' ? 'block':'none';
+}
+
+// ---- SVG helpers ----
+function tri(x1,y1,x2,y2,x3,y3,color,l1,l2,l3){
+  return `<polygon points="${x1},${y1} ${x2},${y2} ${x3},${y3}" fill="none" stroke="${color}" stroke-width="2.5"/>
+    <text x="${x1-14}" y="${y1+4}" fill="${color}" font-size="12">${l1}</text>
+    <text x="${x2+6}" y="${y2+4}" fill="${color}" font-size="12">${l2}</text>
+    <text x="${x3-4}" y="${y3-8}" fill="${color}" font-size="12">${l3}</text>`;
+}
+function markSide(x1,y1,x2,y2,n){
+  const mx=(x1+x2)/2, my=(y1+y2)/2;
+  const dx=x2-x1, dy=y2-y1, len=Math.sqrt(dx*dx+dy*dy);
+  const nx=-dy/len*5, ny=dx/len*5;
+  let ticks='';
+  for(let i=0;i<n;i++){
+    const off=(i-(n-1)/2)*6;
+    const tx=mx+(dx/len)*off, ty=my+(dy/len)*off;
+    ticks+=`<line x1="${tx-nx}" y1="${ty-ny}" x2="${tx+nx}" y2="${ty+ny}" stroke="#ffd166" stroke-width="2"/>`;
+  }
+  return ticks;
+}
+function angleArc(cx,cy,startDeg,endDeg,color){
+  const r=22;
+  const toRad=d=>d*Math.PI/180;
+  const x1=cx+r*Math.cos(toRad(startDeg)), y1=cy+r*Math.sin(toRad(startDeg));
+  const x2=cx+r*Math.cos(toRad(endDeg)), y2=cy+r*Math.sin(toRad(endDeg));
+  return `<path d="M ${x1} ${y1} A ${r} ${r} 0 0 1 ${x2} ${y2}" fill="none" stroke="${color}" stroke-width="2"/>`;
+}
+// Menggambar busur sudut yang AKURAT: dihitung langsung dari posisi titik sudut (cx,cy)
+// dan dua titik lain yang membentuk sisi-sisinya, bukan sudut hardcode.
+function vertexAngleArc(cx,cy,p1x,p1y,p2x,p2y,color,r){
+  r = r || 22;
+  const a1 = Math.atan2(p1y-cy, p1x-cx);
+  const a2 = Math.atan2(p2y-cy, p2x-cx);
+  const x1 = cx + r*Math.cos(a1), y1 = cy + r*Math.sin(a1);
+  const x2 = cx + r*Math.cos(a2), y2 = cy + r*Math.sin(a2);
+  let diff = (a2-a1) * 180/Math.PI;
+  while(diff <= -180) diff += 360;
+  while(diff > 180) diff -= 360;
+  const sweep = diff > 0 ? 1 : 0;
+  return `<path d="M ${x1} ${y1} A ${r} ${r} 0 0 ${sweep} ${x2} ${y2}" fill="none" stroke="${color}" stroke-width="2"/>`;
+}
+function sideLabel(x1,y1,x2,y2,txt,color,dy){
+  const mx=(x1+x2)/2, my=(y1+y2)/2;
+  return `<text x="${mx}" y="${my+(dy||14)}" fill="${color}" font-size="10" text-anchor="middle">${txt}</text>`;
+}
+
+// ---- Slide 5: syarat SSS / SAS / ASA (konsep) ----
+const syaratData = {
+  sss: {
+    text: `<h3>Syarat SSS (Sisi-Sisi-Sisi)</h3>
+      <p>Dua segitiga kongruen jika <b>ketiga pasang sisi</b> yang bersesuaian sama panjang.</p>
+      <p class="mono" style="color:var(--amber)">AB=DE, BC=EF, AC=DF ⟹ △ABC ≅ △DEF</p>
+      <p>Tidak perlu memeriksa sudut — jika tiga sisi sudah sama, bentuk segitiga pasti sama persis.</p>`,
+    draw: (svg)=>{
+      svg.innerHTML = tri(30,190,150,190,80,55,'#ff6b6b','A','B','C') +
+        markSide(30,190,150,190,1) + markSide(150,190,80,55,2) + markSide(80,55,30,190,3) +
+        tri(190,190,310,190,240,55,'#4ecdc4','D','E','F') +
+        markSide(190,190,310,190,1) + markSide(310,190,240,55,2) + markSide(240,55,190,190,3);
+    }
+  },
+  sas: {
+    text: `<h3>Syarat SAS (Sisi-Sudut-Sisi)</h3>
+      <p>Dua segitiga kongruen jika <b>dua sisi</b> dan <b>sudut apitnya</b> (sudut di antara kedua sisi) sama.</p>
+      <p class="mono" style="color:var(--amber)">AB=DE, ∠B=∠E, BC=EF ⟹ △ABC ≅ △DEF</p>
+      <p>Sudut yang diperiksa harus tepat berada di antara dua sisi yang diketahui.</p>`,
+    draw: (svg)=>{
+      svg.innerHTML = tri(30,190,150,190,80,55,'#ff6b6b','A','B','C') +
+        markSide(30,190,150,190,1) + markSide(150,190,80,55,1) + vertexAngleArc(150,190,30,190,80,55,'#ffd166') +
+        tri(190,190,310,190,240,55,'#4ecdc4','D','E','F') +
+        markSide(190,190,310,190,1) + markSide(310,190,240,55,1) + vertexAngleArc(310,190,190,190,240,55,'#ffd166');
+    }
+  },
+  asa: {
+    text: `<h3>Syarat ASA / AAS</h3>
+      <p><b>ASA</b>: dua sudut dan sisi <i>di antara</i> keduanya sama. <b>AAS</b>: dua sudut dan satu sisi <i>bukan</i> di antara keduanya sama.</p>
+      <p class="mono" style="color:var(--amber)">∠A=∠D, AB=DE, ∠B=∠E ⟹ △ABC ≅ △DEF</p>
+      <p>Karena jumlah sudut segitiga selalu 180°, dua sudut yang sama otomatis membuat sudut ketiga juga sama.</p>`,
+    draw: (svg)=>{
+      svg.innerHTML = tri(30,190,150,190,80,55,'#ff6b6b','A','B','C') +
+        markSide(30,190,150,190,1) + vertexAngleArc(30,190,150,190,80,55,'#ffd166') + vertexAngleArc(150,190,30,190,80,55,'#ffd166') +
+        tri(190,190,310,190,240,55,'#4ecdc4','D','E','F') +
+        markSide(190,190,310,190,1) + vertexAngleArc(190,190,310,190,240,55,'#ffd166') + vertexAngleArc(310,190,190,190,240,55,'#ffd166');
+    }
+  }
+};
+function showSyarat(key){
+  document.querySelectorAll('[data-syarat]').forEach(b=> b.classList.toggle('active', b.dataset.syarat===key));
+  document.getElementById('syaratText').innerHTML = syaratData[key].text;
+  syaratData[key].draw(document.getElementById('syaratSvg'));
+}
+showSyarat('sss');
+
+// ---- Slide 6: CONTOH SOAL syarat kekongruenan ----
+const contohData = {
+  sss: {
+    draw: (svg)=>{
+      svg.innerHTML = tri(30,190,150,190,80,55,'#ff6b6b','A','B','C') +
+        sideLabel(30,190,150,190,'8 cm','#a6b0d6',16) + sideLabel(150,190,80,55,'6 cm','#a6b0d6') + sideLabel(80,55,30,190,'5 cm','#a6b0d6') +
+        tri(190,190,310,190,240,55,'#4ecdc4','P','Q','R') +
+        sideLabel(190,190,310,190,'8 cm','#a6b0d6',16) + sideLabel(310,190,240,55,'6 cm','#a6b0d6') + sideLabel(240,55,190,190,'5 cm','#a6b0d6');
+    },
+    html: `<p><b>Soal:</b> Diketahui △ABC dan △PQR dengan AB = 8 cm, BC = 6 cm, AC = 5 cm, serta PQ = 8 cm, QR = 6 cm, PR = 5 cm. Apakah △ABC ≅ △PQR? Sebutkan syaratnya.</p>
+      <div class="step-box"><span class="step-label">Diketahui</span><p>AB = PQ = 8 cm &nbsp;|&nbsp; BC = QR = 6 cm &nbsp;|&nbsp; AC = PR = 5 cm</p></div>
+      <div class="step-box"><span class="step-label">Penyelesaian</span><p>Bandingkan ketiga pasang sisi yang bersesuaian:<br>AB = PQ, BC = QR, AC = PR — semuanya sama panjang.</p></div>
+      <div class="step-box conclusion"><span class="step-label">Kesimpulan</span><p>Karena ketiga sisi bersesuaian sama panjang, maka menurut syarat <b>SSS</b>, △ABC ≅ △PQR.</p></div>`
+  },
+  sas: {
+    draw: (svg)=>{
+      svg.innerHTML = tri(30,190,150,190,80,55,'#ff6b6b','K','L','M') +
+        sideLabel(30,190,150,190,'7 cm','#a6b0d6',16) + sideLabel(150,190,80,55,'9 cm','#a6b0d6') + vertexAngleArc(150,190,30,190,80,55,'#ffd166') +
+        tri(190,190,310,190,240,55,'#4ecdc4','X','Y','Z') +
+        sideLabel(190,190,310,190,'7 cm','#a6b0d6',16) + sideLabel(310,190,240,55,'9 cm','#a6b0d6') + vertexAngleArc(310,190,190,190,240,55,'#ffd166');
+    },
+    html: `<p><b>Soal:</b> Diketahui △KLM dan △XYZ dengan KL = 7 cm, ∠L = 50°, LM = 9 cm, serta XY = 7 cm, ∠Y = 50°, YZ = 9 cm. Buktikan △KLM ≅ △XYZ.</p>
+      <div class="step-box"><span class="step-label">Diketahui</span><p>KL = XY = 7 cm &nbsp;|&nbsp; ∠L = ∠Y = 50° &nbsp;|&nbsp; LM = YZ = 9 cm</p></div>
+      <div class="step-box"><span class="step-label">Penyelesaian</span><p>∠L dan ∠Y sama-sama diapit oleh sisi KL–LM dan XY–YZ.<br>KL = XY, ∠L = ∠Y (sudut apit), LM = YZ.</p></div>
+      <div class="step-box conclusion"><span class="step-label">Kesimpulan</span><p>Dua sisi dan sudut apitnya sama besar, sehingga menurut syarat <b>SAS</b>, △KLM ≅ △XYZ.</p></div>`
+  },
+  asa: {
+    draw: (svg)=>{
+      svg.innerHTML = tri(30,190,150,190,80,55,'#ff6b6b','D','E','F') +
+        sideLabel(30,190,150,190,'6 cm','#a6b0d6',16) + vertexAngleArc(30,190,150,190,80,55,'#ffd166') + vertexAngleArc(150,190,30,190,80,55,'#ffd166') +
+        tri(190,190,310,190,240,55,'#4ecdc4','G','H','I') +
+        sideLabel(190,190,310,190,'6 cm','#a6b0d6',16) + vertexAngleArc(190,190,310,190,240,55,'#ffd166') + vertexAngleArc(310,190,190,190,240,55,'#ffd166');
+    },
+    html: `<p><b>Soal:</b> Diketahui △DEF dan △GHI dengan ∠D = 40°, DE = 6 cm, ∠E = 70°, serta ∠G = 40°, GH = 6 cm, ∠H = 70°. Buktikan △DEF ≅ △GHI.</p>
+      <div class="step-box"><span class="step-label">Diketahui</span><p>∠D = ∠G = 40° &nbsp;|&nbsp; DE = GH = 6 cm &nbsp;|&nbsp; ∠E = ∠H = 70°</p></div>
+      <div class="step-box"><span class="step-label">Penyelesaian</span><p>Sisi DE diapit oleh ∠D dan ∠E, begitu pula GH diapit oleh ∠G dan ∠H.<br>∠D = ∠G, DE = GH, ∠E = ∠H.</p></div>
+      <div class="step-box conclusion"><span class="step-label">Kesimpulan</span><p>Dua sudut dan sisi di antaranya sama besar, sehingga menurut syarat <b>ASA</b>, △DEF ≅ △GHI.</p></div>`
+  }
+};
+function showContoh(key){
+  document.querySelectorAll('[data-contoh]').forEach(b=> b.classList.toggle('active', b.dataset.contoh===key));
+  document.getElementById('contohText').innerHTML = contohData[key].html;
+  contohData[key].draw(document.getElementById('contohSvg'));
+}
+showContoh('sss');
+
+// ---- Slide 9: Latihan Interaktif ----
+const latihanData = [
+  {q:'Diketahui △PQR dan △STU dengan PQ=ST, QR=TU, PR=SU. Syarat kekongruenan yang berlaku adalah...',
+   opts:['SSS','SAS','ASA'], correct:0,
+   fb:'Ketiga pasang sisi (PQ-ST, QR-TU, PR-SU) sama panjang tanpa informasi sudut, sehingga yang berlaku adalah syarat SSS.'},
+  {q:'Diketahui AB=DE, ∠A=∠D, AC=DF, dengan sudut A diapit oleh sisi AB dan AC. Syarat yang digunakan adalah...',
+   opts:['SSS','SAS','AAS'], correct:1,
+   fb:'Dua sisi (AB & AC) dan sudut yang diapitnya (∠A) sama besar dengan pasangannya, sehingga syaratnya SAS.'},
+  {q:'Segitiga sama kaki dibagi dua oleh garis tinggi dari titik puncak. Kedua bagian tersebut kongruen karena...',
+   opts:['Ketiga sisi sama (SSS)','Dua sisi sama & sudut siku-siku apit sama (SAS)','Tidak dapat ditentukan'], correct:1,
+   fb:'Sisi kaki yang sama, sudut siku-siku dari garis tinggi, dan garis tinggi yang berimpit membentuk syarat SAS.'},
+  {q:'Diketahui ∠B=∠E, BC=EF, ∠C=∠F, dengan BC berada di antara ∠B dan ∠C. Syarat yang berlaku adalah...',
+   opts:['SSS','SAS','ASA'], correct:2,
+   fb:'Dua sudut (∠B & ∠C) dan sisi BC yang diapit keduanya sama besar dengan pasangannya, sehingga syaratnya ASA.'}
+];
+const latBox = document.getElementById('latihanBox');
+latihanData.forEach((item,i)=>{
+  const div = document.createElement('div');
+  div.className = 'q-block';
+  div.innerHTML = `<p style="color:var(--text); font-weight:600; margin-bottom:9px;"><span class="q-num">${i+1}</span>${item.q}</p>
+    <div class="btn-row" style="flex-direction:column; align-items:stretch; gap:8px;">
+      ${item.opts.map((o,oi)=>`<button class="opt" onclick="checkLatihan(this,${i},${oi})"><span class="opt-letter">${String.fromCharCode(65+oi)}</span><span>${o}</span></button>`).join('')}
+    </div>
+    <div class="pembahasan" id="fbLat${i}"></div>`;
+  latBox.appendChild(div);
+});
+function checkLatihan(btn,qi,oi){
+  const item = latihanData[qi];
+  const parent = btn.parentElement;
+  if(parent.dataset.done) return;
+  parent.dataset.done='1';
+  [...parent.children].forEach(b=>b.style.pointerEvents='none');
+  const fb = document.getElementById('fbLat'+qi);
+  fb.classList.add('show');
+  if(oi===item.correct){
+    btn.classList.add('correct');
+    fb.innerHTML = '<b>✓ Benar!</b> '+item.fb;
+  } else {
+    btn.classList.add('wrong');
+    parent.children[item.correct].classList.add('correct');
+    fb.innerHTML = '<b>✗ Belum tepat.</b> '+item.fb;
+  }
+}
+
+// ---- Slide 10: Quiz ----
+const quizData = [
+  {q:'Notasi △ABC ≅ △DEF berarti...', opts:['Luas kedua segitiga sama','Sisi & sudut bersesuaian sama besar','Kedua segitiga sebangun saja'], correct:1,
+   fb:'Kongruen berarti seluruh sisi dan sudut yang bersesuaian sama besar, bukan sekadar luas atau bentuknya mirip (sebangun).'},
+  {q:'Pada △ABC ≅ △DEF, sisi yang bersesuaian dengan BC adalah...', opts:['DE','EF','DF'], correct:1,
+   fb:'Urutan huruf menunjukkan pasangan: A↔D, B↔E, C↔F, sehingga BC bersesuaian dengan EF.'},
+  {q:'Syarat yang HANYA membutuhkan tiga sisi sama panjang adalah...', opts:['SAS','ASA','SSS'], correct:2,
+   fb:'SSS (Sisi-Sisi-Sisi) cukup membandingkan tiga pasang sisi tanpa perlu memeriksa sudut.'},
+  {q:'Segitiga sama sisi memiliki setiap sudut sebesar...', opts:['45°','60°','90°'], correct:1,
+   fb:'Jumlah sudut segitiga 180° dibagi tiga sudut yang sama besar menghasilkan 60° per sudut.'},
+  {q:'Dua segitiga siku-siku dengan sisi siku-siku dan sisi miring sama termasuk kasus khusus syarat...', opts:['SSS/SAS','Tidak ada syarat','AAA'], correct:0,
+   fb:'Karena sudut siku-siku sudah pasti sama (90°), kesamaan dua sisi lainnya membuktikan kongruensi lewat SSS/SAS.'}
+];
+let quizScore = 0;
+const quizBox = document.getElementById('quizBox');
+quizData.forEach((item,i)=>{
+  const div = document.createElement('div');
+  div.className = 'q-block';
+  div.innerHTML = `<p style="color:var(--text); font-weight:600; margin-bottom:9px;"><span class="q-num">${i+1}</span>${item.q}</p>
+    <div class="btn-row" style="flex-direction:column; align-items:stretch; gap:8px;">
+      ${item.opts.map((o,oi)=>`<button class="opt" onclick="checkQuiz(this,${i},${oi})"><span class="opt-letter">${String.fromCharCode(65+oi)}</span><span>${o}</span></button>`).join('')}
+    </div>
+    <div class="pembahasan" id="fbQuiz${i}"></div>`;
+  quizBox.appendChild(div);
+});
+function checkQuiz(btn,qi,oi){
+  const item = quizData[qi];
+  const parent = btn.parentElement;
+  if(parent.dataset.done) return;
+  parent.dataset.done='1';
+  [...parent.children].forEach(b=>b.style.pointerEvents='none');
+  const fb = document.getElementById('fbQuiz'+qi);
+  fb.classList.add('show');
+  if(oi===item.correct){
+    btn.classList.add('correct'); quizScore++;
+    fb.innerHTML = '<b>✓ Benar!</b> '+item.fb;
+  } else {
+    btn.classList.add('wrong');
+    parent.children[item.correct].classList.add('correct');
+    fb.innerHTML = '<b>✗ Belum tepat.</b> '+item.fb;
+  }
+  document.getElementById('quizScore').textContent = 'Skor: '+quizScore+' / '+quizData.length;
+}
+
+// ---- Slide 12: Refleksi ----
+function pickReflect(btn,label){
+  document.querySelectorAll('#refleksiBtns .btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('reflectResult').textContent = 'Refleksimu: '+label;
+}
+
+render();
+</script>
+</body>
+</html>

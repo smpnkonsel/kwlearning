@@ -156,9 +156,6 @@ h1,h2,h3,.display{font-family:'Space Grotesk',sans-serif;}
      <div class="top-bar">
   <span class="tag">🧮 Matematika · Kelas 9</span>
 
-  <a href="index.html" class="back-link">
-    ← Kembali ke dashboard
-  </a>
 </div>
     <h1>Ruang Belajar Matematika</h1>
     <p>Pilih bab yang ingin kamu pelajari. Setiap bab berisi penjelasan konsep, contoh interaktif yang bisa diklik, visualisasi, dan kuis latihan lengkap dengan evaluasi di akhir bab.</p>
@@ -188,7 +185,18 @@ h1,h2,h3,.display{font-family:'Space Grotesk',sans-serif;}
     <p class="semester-sub">Materi lanjutan setelah ganjil selesai.</p>
     <div class="babgrid" id="genapGrid"></div>
   </div>
+<div class="semester-block">
+  <div class="semester-head">
+    <h2>🎮 Arena Game</h2>
+    <span class="count">Game Matematika</span>
+  </div>
 
+  <p class="semester-sub">
+    Uji kemampuanmu melalui permainan matematika interaktif.
+  </p>
+
+  <div class="babgrid" id="gameGrid"></div>
+</div>
   <div class="footer-note">
     💡 Klik bab mana pun untuk membuka dasbornya dan melihat daftar subbabnya. Materi tiap subbab masih berlabel <strong>Segera Hadir</strong> — beri tahu aku subbab mana yang ingin dibuatkan presentasi interaktifnya lebih dulu.
   </div>
@@ -196,7 +204,6 @@ h1,h2,h3,.display{font-family:'Space Grotesk',sans-serif;}
 </div>
 
 <div class="toast" id="toast">Bab ini masih dalam penyusunan — segera hadir! ✨</div>
-<script src="assets/js/include.js"></script>
 
 <script>
 /* starfield */
@@ -217,9 +224,21 @@ const ganjil = [
   {n:'Bab 3', title:'Bangun Ruang', desc:'Luas permukaan dan volume bangun ruang sisi datar & lengkung.', icon:'🧊', href:'mtk kls 9/bab3.html', available:true, jp:'28 JP'},
 ];
 const genap = [
-  {n:'Bab 4', title:'Transformasi Geometri', desc:'Translasi, refleksi, rotasi, dan dilatasi bangun datar.', icon:'🔺', href:'mtk kls 9/mtk kls 9/bab4.html', available:false, jp:'28 JP'},
-  {n:'Bab 5', title:'Kekongruenan pada Bangun Datar', desc:'Syarat kongruen, kesebangunan, dan penerapannya.', icon:'📐', href:'mtk kls 9/bab5.html', available:false, jp:'20 JP'},
-  {n:'Bab 6', title:'Teori Peluang', desc:'Ruang sampel, kejadian, dan peluang suatu kejadian.', icon:'🎲', href:'mtk kls 9/bab6.html', available:false, jp:'20 JP'},
+  {n:'Bab 4', title:'Transformasi Geometri', desc:'Translasi, refleksi, rotasi, dan dilatasi bangun datar.', icon:'🔺', href:'mtk kls 9/bab4.html', available:true, jp:'28 JP'},
+  {n:'Bab 5', title:'Kekongruenan pada Bangun Datar', desc:'Syarat kongruen, kesebangunan, dan penerapannya.', icon:'📐', href:'mtk kls 9/bab5.html', available:true, jp:'20 JP'},
+  {n:'Bab 6', title:'Teori Peluang', desc:'Ruang sampel, kejadian, dan peluang suatu kejadian.', icon:'🎲', href:'mtk kls 9/bab6.html', available:true, jp:'20 JP'},
+];
+
+const game = [
+  {
+    n: 'Arena Game',
+    title: 'Arena Game Matematika',
+    desc: 'Tantang kemampuanmu melalui permainan matematika interaktif.',
+    icon: '🎮',
+    href: 'mtk kls 9/game/index.html',
+    available: true,
+    pertemuan: 1
+  }
 ];
 
 function renderGrid(list, containerId){
@@ -249,6 +268,7 @@ function renderGrid(list, containerId){
 }
 renderGrid(ganjil,'ganjilGrid');
 renderGrid(genap,'genapGrid');
+renderGrid(game,'gameGrid');
 
 const allBab = [...ganjil, ...genap];
 const availCount = allBab.filter(b=>b.available).length;
@@ -262,5 +282,7 @@ function showToast(){
   window._toastTimer = setTimeout(()=>t.classList.remove('show'), 2400);
 }
 </script>
+<script src="assets/js/include.js"></script>
+
 </body>
 </html>
