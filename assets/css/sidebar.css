@@ -1,0 +1,629 @@
+/* ==========================================
+   KW LEARNING - SIDEBAR
+   ========================================== */
+
+:root {
+  --sidebar-width: 270px;
+
+  --sidebar-bg: #0f172a;
+  --sidebar-bg-dark: #111827;
+
+  --text-main: #f8fafc;
+  --text-soft: #cbd5e1;
+  --text-muted: #94a3b8;
+
+  --primary: #6366f1;
+  --primary-dark: #4f46e5;
+  --primary-light: #818cf8;
+
+  --border: rgba(255, 255, 255, 0.08);
+}
+
+
+/* ==========================================
+   SIDEBAR
+   ========================================== */
+
+.sidebar {
+  position: fixed;
+
+  top: 0;
+  left: 0;
+
+  width: var(--sidebar-width);
+  height: 100vh;
+
+  box-sizing: border-box;
+
+  padding: 24px 18px;
+
+  display: flex;
+  flex-direction: column;
+
+  color: var(--text-soft);
+
+  background:
+    radial-gradient(
+      circle at 0% 0%,
+      rgba(99, 102, 241, 0.18),
+      transparent 32%
+    ),
+    linear-gradient(
+      180deg,
+      var(--sidebar-bg),
+      var(--sidebar-bg-dark)
+    );
+
+  border-right: 1px solid var(--border);
+
+  box-shadow:
+    8px 0 30px rgba(15, 23, 42, 0.08);
+
+  z-index: 1000;
+
+  overflow-y: auto;
+
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,.15) transparent;
+}
+
+
+/* Scrollbar */
+
+.sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,.15);
+  border-radius: 20px;
+}
+
+
+/* ==========================================
+   LOGO
+   ========================================== */
+
+.logo {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 14px;
+}
+
+.logo-frame {
+  width: 82px;
+  height: 82px;
+
+  padding: 7px;
+
+  box-sizing: border-box;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 24px;
+
+  background: rgba(255,255,255,.07);
+
+  border: 1px solid rgba(255,255,255,.12);
+
+  box-shadow:
+    0 12px 30px rgba(0,0,0,.25),
+    inset 0 1px 0 rgba(255,255,255,.08);
+
+  transition:
+    transform .3s ease,
+    box-shadow .3s ease;
+}
+
+.logo-frame:hover {
+  transform: translateY(-3px) scale(1.03);
+
+  box-shadow:
+    0 15px 35px rgba(99,102,241,.28);
+}
+
+.logo-frame img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+
+  border-radius: 16px;
+
+  display: block;
+}
+
+
+/* ==========================================
+   BRAND
+   ========================================== */
+
+.brand {
+  text-align: center;
+
+  margin-bottom: 27px;
+
+  color: var(--text-main);
+
+  font-size: 17px;
+
+  font-weight: 800;
+
+  letter-spacing: 1.2px;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+
+/* ==========================================
+   NAVIGATION
+   ========================================== */
+
+.nav {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+.nav a {
+  position: relative;
+
+  min-height: 48px;
+
+  padding: 0 14px;
+
+  box-sizing: border-box;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+
+  color: var(--text-soft);
+
+  text-decoration: none;
+
+  font-size: 14px;
+
+  font-weight: 500;
+
+  border-radius: 13px;
+
+  transition:
+    color .25s ease,
+    background .25s ease,
+    transform .25s ease,
+    box-shadow .25s ease;
+}
+
+
+/* ICON */
+
+.nav .ico {
+  width: 25px;
+  min-width: 25px;
+
+  height: 25px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  color: var(--text-muted);
+
+  font-size: 20px;
+
+  line-height: 1;
+
+  transition:
+    color .25s ease,
+    transform .25s ease;
+}
+
+
+/* ==========================================
+   HOVER
+   ========================================== */
+
+.nav a:hover {
+  color: var(--text-main);
+
+  background: rgba(255,255,255,.07);
+
+  transform: translateX(4px);
+}
+
+.nav a:hover .ico {
+  color: var(--primary-light);
+
+  transform: scale(1.08);
+}
+
+
+/* ==========================================
+   ACTIVE
+   ========================================== */
+
+.nav a.active {
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--primary),
+      var(--primary-dark)
+    );
+
+  box-shadow:
+    0 8px 22px rgba(79,70,229,.28);
+}
+
+.nav a.active .ico {
+  color: #ffffff;
+}
+
+
+/* Garis indikator active */
+
+.nav a.active::before {
+  content: "";
+
+  position: absolute;
+
+  left: -18px;
+
+  top: 50%;
+
+  width: 4px;
+  height: 28px;
+
+  transform: translateY(-50%);
+
+  background: var(--primary-light);
+
+  border-radius: 0 5px 5px 0;
+}
+
+
+/* ==========================================
+   PROGRESS
+   ========================================== */
+
+.progressBox {
+  margin-top: auto;
+
+  padding: 17px;
+
+  border-radius: 17px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.075),
+      rgba(255,255,255,.025)
+    );
+
+  border: 1px solid rgba(255,255,255,.08);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+
+/* Label */
+
+.progressBox small {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: var(--text-muted);
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  letter-spacing: .8px;
+
+  text-transform: uppercase;
+}
+
+
+/* 78% */
+
+.progressValue {
+  margin-bottom: 10px;
+
+  color: #ffffff;
+
+  font-size: 27px;
+
+  line-height: 1;
+
+  font-weight: 800;
+}
+
+
+/* Progress background */
+
+.progressBar {
+  width: 100%;
+
+  height: 7px;
+
+  overflow: hidden;
+
+  border-radius: 20px;
+
+  background: rgba(255,255,255,.09);
+}
+
+
+/* Progress */
+
+.progressBar span {
+  display: block;
+
+  width: 78%;
+
+  height: 100%;
+
+  border-radius: inherit;
+
+  background:
+    linear-gradient(
+      90deg,
+      #6366f1,
+      #8b5cf6,
+      #a78bfa
+    );
+
+  box-shadow:
+    0 0 12px rgba(99,102,241,.55);
+
+  animation: progressLoad 1.2s ease;
+}
+
+
+@keyframes progressLoad {
+
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 78%;
+  }
+
+}
+
+
+/* ==========================================
+   QUOTE
+   ========================================== */
+
+.quote {
+  margin-top: 15px;
+
+  padding: 15px 16px;
+
+  box-sizing: border-box;
+
+  border-radius: 15px;
+
+  color: var(--text-muted);
+
+  font-size: 11.5px;
+
+  line-height: 1.65;
+
+  font-style: italic;
+
+  background: rgba(255,255,255,.035);
+
+  border: 1px solid rgba(255,255,255,.06);
+}
+
+
+/* ==========================================
+   KONTEN UTAMA
+   ========================================== */
+
+main,
+.main,
+.content {
+  margin-left: var(--sidebar-width);
+
+  min-height: 100vh;
+
+  box-sizing: border-box;
+}
+
+
+/* ==========================================
+   TABLET
+   ========================================== */
+
+@media (max-width: 900px) {
+
+  :root {
+    --sidebar-width: 235px;
+  }
+
+  .sidebar {
+    padding: 20px 14px;
+  }
+
+  .logo-frame {
+    width: 70px;
+    height: 70px;
+  }
+
+  .brand {
+    font-size: 15px;
+  }
+
+  .nav a {
+    min-height: 45px;
+
+    padding: 0 11px;
+
+    font-size: 13px;
+
+    gap: 10px;
+  }
+
+  .nav .ico {
+    width: 22px;
+    min-width: 22px;
+
+    font-size: 18px;
+  }
+}
+
+
+/* ==========================================
+   MOBILE
+   ========================================== */
+
+@media (max-width: 700px) {
+
+  .sidebar {
+    position: relative;
+
+    width: 100%;
+
+    height: auto;
+
+    min-height: auto;
+
+    padding: 18px 15px;
+
+    border-right: none;
+
+    border-bottom: 1px solid var(--border);
+
+    box-shadow:
+      0 5px 20px rgba(15,23,42,.12);
+
+    overflow: visible;
+  }
+
+  .logo {
+    margin-bottom: 9px;
+  }
+
+  .logo-frame {
+    width: 62px;
+    height: 62px;
+
+    border-radius: 18px;
+  }
+
+  .brand {
+    margin-bottom: 18px;
+
+    font-size: 15px;
+  }
+
+  .nav {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 7px;
+  }
+
+  .nav a {
+    min-height: 44px;
+
+    padding: 0 11px;
+  }
+
+  .nav a.active::before {
+    display: none;
+  }
+
+  .progressBox {
+    margin-top: 18px;
+  }
+
+  .quote {
+    margin-bottom: 4px;
+  }
+
+  main,
+  .main,
+  .content {
+    margin-left: 0;
+  }
+}
+
+
+/* ==========================================
+   HP KECIL
+   ========================================== */
+
+@media (max-width: 420px) {
+
+  .nav {
+    grid-template-columns: 1fr;
+  }
+
+  .nav a {
+    min-height: 45px;
+  }
+
+  .brand {
+    font-size: 14px;
+  }
+
+  .progressValue {
+    font-size: 24px;
+  }
+}
+
+
+/* ==========================================
+   FOCUS ACCESSIBILITY
+   ========================================== */
+
+.nav a:focus-visible {
+  outline: 2px solid var(--primary-light);
+
+  outline-offset: 2px;
+}
+
+
+/* ==========================================
+   REDUCE MOTION
+   ========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+
+    transition: none !important;
+  }
+}

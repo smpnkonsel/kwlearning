@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Petualangan Garis Bilangan</title>
+<style>
+*{box-sizing:border-box}
+:root{
+  --green:#36c93f;--dark:#17202a;--gold:#ffd43b;--cream:#fff5d7;
+  --red:#e94b3c;--blue:#2788e8;
+}
+body{
+  margin:0;font-family:"Trebuchet MS",Arial,sans-serif;color:#fff;
+  min-height:100vh;overflow-x:hidden;
+  background:linear-gradient(#5ec8ff 0 38%,#78c94a 38% 100%);
+}
+body:before{
+  content:"";position:fixed;inset:0;pointer-events:none;opacity:.35;
+  background:
+   radial-gradient(circle at 15% 15%,#fff 0 45px,transparent 46px),
+   radial-gradient(circle at 78% 12%,#fff 0 35px,transparent 36px);
+}
+.game{min-height:100vh;padding:14px;position:relative}
+.top{
+ display:flex;gap:14px;align-items:center;justify-content:space-between;
+ max-width:1500px;margin:auto;
+}
+.panel{
+ background:rgba(20,31,40,.92);border:4px solid #9a6a2f;border-radius:22px;
+ box-shadow:0 7px 0 rgba(0,0,0,.25),inset 0 0 0 2px #f6cf73;
+}
+.player{display:flex;align-items:center;gap:12px;padding:10px 18px;min-width:260px}
+.avatar{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;
+ background:#ffe0a6;font-size:36px;border:3px solid #fff}
+.player b{display:block;color:#ffd92f;font-size:20px}.stats{font-size:18px;margin-top:4px}
+.title{
+ padding:13px 38px;text-align:center;background:#70471e;border:5px solid #9d6b2e;
+ border-radius:18px;box-shadow:0 7px 0 rgba(0,0,0,.25)
+}
+.title h1{margin:0;color:#ffe44e;font-size:clamp(28px,4vw,54px);line-height:1}
+.title span{font-size:clamp(19px,2vw,29px);font-weight:900}
+.actions{display:flex;gap:9px}.iconbtn{
+ min-width:92px;padding:12px 8px;color:#fff;background:#172735;border:3px solid #4d6b7b;
+ border-radius:18px;font-weight:bold;cursor:pointer;font-size:15px
+}
+.iconbtn:hover{transform:translateY(-2px);filter:brightness(1.15)}
+.layout{max-width:1500px;margin:18px auto;display:grid;grid-template-columns:240px 1fr 260px;gap:16px}
+.side{padding:18px;background:rgba(17,31,40,.92);border:3px solid #33515d;border-radius:20px;box-shadow:0 7px 0 #25402c}
+.side h3{margin:0 0 12px;color:#ffe35a;font-size:21px}.side ul{padding-left:20px;line-height:1.8;margin:0}
+.side .badge{margin-top:20px;padding:12px;border-radius:14px;background:#253b49}
+.badge strong{color:#6df16d}
+.center{min-width:0}
+.mission{
+ max-width:700px;margin:0 auto 14px;text-align:center;padding:14px 20px;
+ background:var(--cream);color:#222;border:4px solid #b7792c;border-radius:22px;
+ box-shadow:0 7px 0 rgba(0,0,0,.2)
+}
+.ribbon{display:inline-block;background:#d94a35;color:#fff;padding:7px 35px;border-radius:10px;
+ font-weight:900;font-size:22px;transform:translateY(-27px);margin-bottom:-22px}
+.mission h2{margin:8px 0 0;font-size:25px}.mission .target{font-size:44px;font-weight:900;color:#d7372a}
+.world{
+ position:relative;height:405px;border-radius:28px;overflow:hidden;
+ border:5px solid #765029;box-shadow:0 9px 0 rgba(0,0,0,.28);
+ background:
+  linear-gradient(180deg,rgba(70,180,235,.55),rgba(82,146,71,.3)),
+  radial-gradient(ellipse at 50% 55%,#9ad8ef 0 18%,transparent 19%),
+  linear-gradient(#52b9ed 0 52%,#6dbb45 52% 100%);
+}
+.mountain{position:absolute;bottom:105px;width:0;height:0;border-left:180px solid transparent;border-right:180px solid transparent;border-bottom:230px solid rgba(68,111,151,.75)}
+.m1{left:5%;transform:scale(.8)}.m2{left:28%;transform:scale(1.1)}.m3{right:0;transform:scale(.85)}
+.cloud{position:absolute;background:#fff;border-radius:50px;width:120px;height:35px;opacity:.75}
+.cloud:before,.cloud:after{content:"";position:absolute;background:#fff;border-radius:50%}
+.cloud:before{width:55px;height:55px;left:18px;top:-28px}.cloud:after{width:70px;height:70px;right:18px;top:-37px}
+.c1{top:65px;left:5%}.c2{top:90px;right:10%}
+.flag{position:absolute;right:10%;bottom:125px;font-size:55px;filter:drop-shadow(0 4px 2px #333)}
+.hero{
+ position:absolute;bottom:125px;left:var(--hero-x,42%);
+ font-size:72px;transition:left .45s cubic-bezier(.2,.8,.2,1);
+ filter:drop-shadow(0 5px 2px rgba(0,0,0,.3));z-index:4
+}
+.coin{position:absolute;bottom:175px;left:53%;font-size:43px;animation:float 1.4s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-12px) rotate(8deg)}}
+.ground{position:absolute;left:0;right:0;bottom:0;height:125px;background:#54a83f;border-top:8px solid #8bd64b}
+.numberline{
+ position:absolute;left:4%;right:4%;bottom:30px;height:75px;z-index:5;
+ display:flex;align-items:flex-start;justify-content:space-between;
+}
+.numberline:before{content:"";position:absolute;left:0;right:0;top:15px;height:7px;background:#fff;border-radius:10px}
+.num{position:relative;width:8%;text-align:center;padding-top:28px;font-weight:900;font-size:20px;color:#fff;cursor:pointer;z-index:2}
+.num:before{content:"";position:absolute;top:5px;left:50%;transform:translateX(-50%);
+ width:5px;height:25px;background:#fff;border-radius:5px}
+.num.zero{color:#ffd52d}.num.negative{color:#fff}.num.selected{color:#5aff6b}
+.num.selected:after{content:"";position:absolute;left:50%;top:-10px;transform:translateX(-50%);
+ width:31px;height:31px;border-radius:50%;background:#37d34a;box-shadow:0 0 0 6px rgba(55,211,74,.2);z-index:-1}
+.controls{
+ display:flex;justify-content:center;gap:18px;margin-top:14px
+}
+.move{
+ width:150px;padding:15px;border:4px solid #247a2a;border-radius:18px;background:#5bd646;
+ color:#fff;font-size:25px;font-weight:900;cursor:pointer;box-shadow:0 6px 0 #2d762d
+}
+.move:active{transform:translateY(5px);box-shadow:0 1px 0 #2d762d}
+.bottommsg{
+ margin-top:14px;padding:14px 20px;background:var(--cream);color:#222;border:4px solid #bd873c;
+ border-radius:18px;text-align:center;font-size:20px;font-weight:bold
+}
+.right .missionbox{padding:17px;line-height:1.55}.right .missionbox h3{color:#ffe35a;margin-top:0}
+.type{display:block;padding:7px 10px;margin:6px 0;border-radius:9px;background:#243845}
+.neg{color:#ff665d}.pos{color:#59dfff}.nul{color:#ffe329}
+.progress{height:15px;background:#18232b;border-radius:20px;overflow:hidden;margin:8px 0}
+.progress i{display:block;height:100%;width:20%;background:#4ed843}
+.level{display:flex;justify-content:space-between;align-items:center;font-weight:bold}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;place-items:center;z-index:20;padding:20px}
+.modal.show{display:grid}.modalbox{max-width:560px;width:100%;padding:25px;background:#fff5d7;color:#222;border:5px solid #b9792e;border-radius:24px;text-align:center}
+.modalbox h2{color:#c83d2d;font-size:32px}.modalbox button{padding:12px 25px;border:0;border-radius:12px;background:#35bd45;color:white;font-size:18px;font-weight:bold;cursor:pointer}
+@media(max-width:1050px){.layout{grid-template-columns:1fr}.side{display:none}.world{height:430px}}
+@media(max-width:700px){
+ .top{flex-wrap:wrap}.title{order:-1;width:100%}.player{flex:1}.actions{width:100%}.iconbtn{flex:1}
+ .layout{margin-top:8px}.world{height:390px}.hero{font-size:55px}.flag{font-size:45px}
+ .numberline{left:2%;right:2%}.num{font-size:14px}.move{width:130px}
+}
+</style>
+</head>
+<body>
+<div class="game">
+  <header class="top">
+    <div class="panel player">
+      <div class="avatar">🧑‍🚀</div>
+      <div><b id="playerName">Petualang Muda</b><div class="stats">⭐ <span id="score">0</span> &nbsp; ❤️ <span id="life">3</span></div></div>
+    </div>
+    <div class="title"><h1>PETUALANGAN</h1><span>GARIS BILANGAN</span></div>
+    <div class="actions">
+      <button class="iconbtn" onclick="showAchievement()">🏆<br>Peringkat</button>
+      <button class="iconbtn" onclick="toggleSound()">🔊<br><span id="soundText">Suara</span></button>
+      <button class="iconbtn" onclick="location.reload()">↻<br>Ulang</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="side">
+      <h3>📜 MATERI</h3>
+      <ul>
+        <li>Pengertian Bilangan Bulat</li>
+        <li>Bilangan Positif</li>
+        <li>Bilangan Nol</li>
+        <li>Bilangan Negatif</li>
+        <li>Garis Bilangan</li>
+      </ul>
+      <div class="badge">🎯 <strong>Tujuan</strong><br>Menentukan jenis dan posisi bilangan bulat pada garis bilangan.</div>
+      <div class="badge">💡 <strong>Petunjuk</strong><br>Klik angka yang menjadi jawaban. Gunakan tombol kiri/kanan untuk bergerak.</div>
+    </aside>
+
+    <section class="center">
+      <div class="mission">
+        <div class="ribbon">MISI <span id="qNo">1</span>/10</div>
+        <h2 id="question">Temukan posisi bilangan</h2>
+        <div class="target" id="target">-3</div>
+      </div>
+
+      <div class="world" id="world">
+        <div class="mountain m1"></div><div class="mountain m2"></div><div class="mountain m3"></div>
+        <div class="cloud c1"></div><div class="cloud c2"></div>
+        <div class="ground"></div>
+        <div class="coin">⭐</div>
+        <div class="flag">🚩</div>
+        <div class="hero" id="hero">🧑‍🚀</div>
+        <div class="numberline" id="numberline"></div>
+      </div>
+
+      <div class="controls">
+        <button class="move" onclick="moveHero(-1)">⬅ KIRI</button>
+        <button class="move" onclick="moveHero(1)">KANAN ➡</button>
+      </div>
+      <div class="bottommsg" id="feedback">Pilih angka pada garis bilangan untuk menjawab misi.</div>
+    </section>
+
+    <aside class="side right">
+      <div class="level"><span>LEVEL <b id="level">1</b></span><span id="progressText">0/10</span> ⭐</div>
+      <div class="progress"><i id="progress"></i></div>
+      <div class="missionbox">
+        <h3>🎯 MISI</h3>
+        <p>Bantu karakter menemukan posisi bilangan yang diminta pada garis bilangan.</p>
+        <h3>JENIS BILANGAN</h3>
+        <span class="type neg">● Bilangan Negatif</span>
+        <span class="type nul">● Bilangan Nol</span>
+        <span class="type pos">● Bilangan Positif</span>
+      </div>
+    </aside>
+  </main>
+</div>
+
+<div class="modal" id="modal">
+ <div class="modalbox">
+   <h2 id="modalTitle">🎉 Hebat!</h2>
+   <p id="modalText"></p>
+   <button onclick="closeModal()">Lanjutkan</button>
+ </div>
+</div>
+
+<script>
+const values=[-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7];
+const questions=[
+ {type:"posisi",n:-3,text:"Temukan posisi bilangan"},
+ {type:"jenis",n:-6,text:"Bilangan apakah ini?"},
+ {type:"posisi",n:4,text:"Temukan posisi bilangan"},
+ {type:"jenis",n:0,text:"Bilangan apakah ini?"},
+ {type:"posisi",n:-1,text:"Temukan posisi bilangan"},
+ {type:"jenis",n:7,text:"Bilangan apakah ini?"},
+ {type:"posisi",n:2,text:"Temukan posisi bilangan"},
+ {type:"jenis",n:-5,text:"Bilangan apakah ini?"},
+ {type:"posisi",n:6,text:"Temukan posisi bilangan"},
+ {type:"jenis",n:0,text:"Bilangan apakah ini?"}
+];
+let qIndex=0,score=0,life=3,current=-3,sound=true,locked=false;
+
+const $=id=>document.getElementById(id);
+
+function renderLine(){
+  $("numberline").innerHTML="";
+  values.forEach(n=>{
+    const b=document.createElement("button");
+    b.className="num "+(n<0?"negative":n===0?"zero":"positive")+(n===current?" selected":"");
+    b.textContent=n;
+    b.onclick=()=>answer(n);
+    $("numberline").appendChild(b);
+  });
+}
+function setHero(){
+  const idx=values.indexOf(current);
+  $("hero").style.setProperty("--hero-x",`${5+idx*6.43}%`);
+}
+function loadQuestion(){
+  locked=false;
+  const q=questions[qIndex];
+  current=0;
+  $("target").textContent=q.n>0?"+"+q.n:q.n;
+  $("question").textContent=q.text;
+  $("qNo").textContent=qIndex+1;
+  $("progressText").textContent=`${qIndex}/10`;
+  $("progress").style.width=(qIndex*10)+"%";
+  renderLine();setHero();
+  $("feedback").textContent=q.type==="jenis"
+    ?"Pilih angka yang sesuai dengan jenis bilangan pada misi."
+    :"Klik posisi bilangan yang diminta pada garis bilangan.";
+}
+function answer(n){
+  if(locked)return;
+  const q=questions[qIndex];
+  if(n===q.n){
+    locked=true;score+=20;$("score").textContent=score;
+    $("feedback").innerHTML=`<span style="color:#159d2b">✅ BENAR!</span> ${formatExplain(n)} &nbsp; ⭐ +20 Poin`;
+    current=n;renderLine();setHero();beep(700);
+    setTimeout(()=>{
+      qIndex++;
+      if(qIndex>=questions.length){finishGame();return}
+      loadQuestion();
+    },1100);
+  }else{
+    life--; $("life").textContent=life; beep(180);
+    $("feedback").innerHTML=`❌ Belum tepat. Coba lagi. ${n<q.n?"Petunjuk: bergerak lebih ke kanan ➡":"Petunjuk: bergerak lebih ke kiri ⬅"}`;
+    if(life<=0){
+      $("modalTitle").textContent="💪 Coba Lagi";
+      $("modalText").textContent="Nyawa habis. Jangan menyerah! Ulangi permainan dan taklukkan garis bilangan.";
+      $("modal").classList.add("show");
+    }
+  }
+}
+function formatExplain(n){
+ if(n<0)return `<b>${n}</b> adalah bilangan bulat <span style="color:#e43c31">negatif</span>.`;
+ if(n===0)return `<b>0</b> adalah bilangan bulat <span style="color:#d6a400">nol</span>.`;
+ return `<b>${n}</b> adalah bilangan bulat <span style="color:#118fd2">positif</span>.`;
+}
+function moveHero(dir){
+ let idx=values.indexOf(current);
+ idx=Math.max(0,Math.min(values.length-1,idx+dir));
+ current=values[idx];renderLine();setHero();
+}
+function finishGame(){
+ $("modalTitle").textContent="🏆 Misi Selesai!";
+ $("modalText").innerHTML=`Kamu berhasil menyelesaikan 10 misi.<br><br><b>Skor akhir: ${score}</b><br>⭐ Semakin sering berlatih, semakin hebat!`;
+ $("modal").classList.add("show");
+ $("progress").style.width="100%";$("progressText").textContent="10/10";
+}
+function closeModal(){
+ $("modal").classList.remove("show");
+ if(life<=0){qIndex=0;score=0;life=3;$("score").textContent=0;$("life").textContent=3;loadQuestion();}
+}
+function showAchievement(){
+ $("modalTitle").textContent="🏆 Peringkat Petualang";
+ $("modalText").innerHTML=`Skor saat ini: <b>${score}</b><br><br>⭐ 0–80: Penjelajah<br>⭐⭐ 100–160: Petualang<br>⭐⭐⭐ 180–200: Master Bilangan`;
+ $("modal").classList.add("show");
+}
+function toggleSound(){
+ sound=!sound;$("soundText").textContent=sound?"Suara":"Senyap";
+}
+function beep(freq){
+ if(!sound)return;
+ try{
+   const ctx=new (window.AudioContext||window.webkitAudioContext)();
+   const o=ctx.createOscillator(),g=ctx.createGain();
+   o.frequency.value=freq;o.type="sine";g.gain.value=.05;
+   o.connect(g);g.connect(ctx.destination);o.start();
+   setTimeout(()=>{o.stop();ctx.close()},120);
+ }catch(e){}
+}
+loadQuestion();
+</script>
+</body>
+</html>

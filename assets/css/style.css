@@ -1,0 +1,2175 @@
+/* =========================================================
+   CSS MAIN DASHBOARD
+   =========================================================
+   FILE INI HANYA MENGATUR AREA MAIN / KONTEN UTAMA.
+
+   SIDEBAR TIDAK DIATUR DI SINI.
+
+   Yang diatur:
+   - Background halaman
+   - Main
+   - Topbar
+   - Hero
+   - Kelas
+   - Mata pelajaran
+   - Bab
+   - CTA
+   - Footer
+   - Modal
+   - Responsive main
+========================================================= */
+
+
+/* =========================================================
+   1. RESET DASAR
+========================================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   2. VARIABEL WARNA
+========================================================= */
+
+:root {
+  --navy: #071d3c;
+  --blue: #237df4;
+  --blue2: #1764d9;
+  --purple: #914cff;
+  --dark-purple: #17143f;
+
+  --text: #ffffff;
+  --muted: #9fb2d3;
+
+  --line: rgba(113,154,220,.15);
+
+  --shadow: 0 18px 50px rgba(0,12,35,.28);
+
+  --ease: cubic-bezier(.22,1,.36,1);
+
+  --radius: 22px;
+}
+
+
+/* =========================================================
+   3. HTML & BODY
+   Fungsi:
+   Mengatur ukuran dasar halaman.
+========================================================= */
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+
+  min-height: 100%;
+
+  overflow-x: hidden;
+
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+
+/* =========================================================
+   4. BODY
+   Fungsi:
+   Mengatur background utama dashboard.
+========================================================= */
+
+body {
+  background:
+    radial-gradient(
+      circle at 12% 10%,
+      rgba(24,92,180,.12),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 88% 12%,
+      rgba(123,65,230,.12),
+      transparent 32%
+    ),
+    linear-gradient(
+      135deg,
+      #061a35 0%,
+      #071d3c 48%,
+      #111039 100%
+    );
+
+  color: var(--text);
+
+  min-height: 100vh;
+
+  -webkit-font-smoothing: antialiased;
+}
+
+
+/* =========================================================
+   5. APP
+   Fungsi:
+   Mengatur layout utama antara SIDEBAR dan MAIN.
+
+   CATATAN:
+   Tidak menentukan ukuran sidebar.
+
+   Sidebar tetap mengambil ukuran yang ditentukan
+   oleh CSS/sidebar Anda sendiri.
+========================================================= */
+
+.app {
+  display: flex;
+
+  min-height: 100vh;
+
+  width: 100%;
+
+  max-width: 100vw;
+
+  overflow-x: hidden;
+}
+
+
+/* =========================================================
+   6. EFEK BACKGROUND
+========================================================= */
+
+body::before,
+body::after {
+  content: "";
+
+  position: fixed;
+
+  width: 420px;
+  height: 420px;
+
+  border-radius: 50%;
+
+  filter: blur(3px);
+
+  pointer-events: none;
+
+  z-index: -1;
+}
+
+
+/* Blob kiri */
+
+body::before {
+  left: -190px;
+
+  top: 220px;
+
+  background: rgba(42,118,244,.08);
+
+  animation:
+    blob 11s ease-in-out infinite alternate;
+}
+
+
+/* Blob kanan */
+
+body::after {
+  right: -200px;
+
+  top: 80px;
+
+  background: rgba(118,86,237,.07);
+
+  animation:
+    blob 13s ease-in-out infinite alternate-reverse;
+}
+
+
+/* Animasi background */
+
+@keyframes blob {
+
+  from {
+    transform: translate(0,0) scale(1);
+  }
+
+  to {
+    transform: translate(30px,25px) scale(1.08);
+  }
+
+}
+
+
+/* =========================================================
+   7. MAIN
+   Fungsi:
+   Mengisi ruang yang tersisa setelah SIDEBAR.
+
+   PENTING:
+   Tidak menggunakan margin-left.
+   Tidak menggunakan width:100%.
+   Tidak menentukan lebar sidebar.
+========================================================= */
+
+.main {
+  flex: 1 1 auto;
+
+  min-width: 0;
+
+  width: auto;
+
+  max-width: 100%;
+
+  padding: 28px 42px 50px;
+}
+
+
+/* =========================================================
+   8. TOPBAR
+   Fungsi:
+   Bagian paling atas area MAIN.
+========================================================= */
+
+.topbar {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 28px;
+
+  min-width: 0;
+
+  flex-wrap: wrap;
+}
+
+
+/* =========================================================
+   9. WELCOME / WAKTU
+========================================================= */
+
+.timeWelcome {
+  min-width: 0;
+
+  flex: 1 1 320px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 10px 15px;
+
+  border:
+    1px solid
+    rgba(114,161,231,.18);
+
+  border-radius: 16px;
+
+  background: rgba(255,255,255,.045);
+
+  box-shadow:
+    0 10px 25px rgba(0,0,0,.10);
+}
+
+
+/* Icon waktu */
+
+.timeIcon {
+  width: 42px;
+  height: 42px;
+
+  flex: 0 0 42px;
+
+  display: grid;
+
+  place-items: center;
+
+  border-radius: 13px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #236ff0,
+      #5c44d7
+    );
+
+  box-shadow:
+    0 8px 18px rgba(45,103,232,.25);
+
+  font-size: 20px;
+}
+
+
+/* Label waktu */
+
+.timeWelcome small {
+  display: block;
+
+  color: #9fb4d8;
+
+  font-size: 11px;
+
+  margin-bottom: 3px;
+}
+
+
+/* Waktu */
+
+.timeWelcome strong {
+  display: block;
+
+  color: #fff;
+
+  font:
+    600 13px/1.35
+    "Plus Jakarta Sans",
+    sans-serif;
+
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   10. USER
+========================================================= */
+
+.user {
+  flex: 0 0 auto;
+
+  min-width: 165px;
+
+  max-width: 220px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  padding: 7px 10px 7px 7px;
+
+  border:
+    1px solid
+    rgba(114,161,231,.18);
+
+  border-radius: 16px;
+
+  background: rgba(255,255,255,.045);
+}
+
+
+/* Avatar */
+
+.avatar {
+  width: 38px;
+  height: 38px;
+
+  flex: 0 0 38px;
+
+  border-radius: 50%;
+
+  display: grid;
+
+  place-items: center;
+
+  background:
+    linear-gradient(
+      135deg,
+      #1975ed,
+      #7b5cf0
+    );
+
+  color: #fff;
+
+  border:
+    2px solid
+    rgba(255,255,255,.15);
+
+  box-shadow:
+    0 5px 15px rgba(32,77,170,.18);
+}
+
+
+/* Container teks user */
+
+.userText {
+  min-width: 0;
+
+  flex: 1;
+}
+
+
+/* Nama user */
+
+.userMain {
+  display: block;
+
+  color: #fff;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+
+/* Status user */
+
+.userText small {
+  display: block;
+
+  color: #91a7ca;
+
+  font-size: 9px;
+
+  margin-top: 2px;
+}
+
+
+/* Chevron */
+
+.userChevron {
+  color: #91a7ca;
+
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   11. HERO
+========================================================= */
+
+.hero {
+  min-height: 360px;
+
+  border-radius: 30px;
+
+  position: relative;
+
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 82% 20%,
+      rgba(38,125,244,.15),
+      transparent 34%
+    ),
+    linear-gradient(
+      110deg,
+      #0a2a53 0%,
+      #081f40 55%,
+      #071b37 100%
+    );
+
+  border:
+    1px solid
+    rgba(111,164,255,.16);
+
+  box-shadow: var(--shadow);
+
+  padding: 34px 38px;
+
+  display: flex;
+
+  align-items: center;
+
+  margin-bottom: 24px;
+}
+
+
+/* Dekorasi hero */
+
+.hero::before {
+  content: "";
+
+  position: absolute;
+
+  width: 430px;
+  height: 430px;
+
+  right: -100px;
+
+  top: -120px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(44,129,247,.13),
+      transparent 67%
+    );
+
+  animation:
+    pulseBg 5s ease-in-out infinite alternate;
+}
+
+
+/* Animasi hero */
+
+@keyframes pulseBg {
+
+  to {
+    transform: scale(1.12);
+
+    opacity: .75;
+  }
+
+}
+
+
+/* =========================================================
+   12. HERO TEXT
+========================================================= */
+
+.heroText {
+  position: relative;
+
+  z-index: 2;
+
+  width: min(49%,590px);
+
+  min-width: 0;
+
+  animation:
+    rise .75s var(--ease) both;
+}
+
+
+/* Animasi teks */
+
+@keyframes rise {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: none;
+  }
+
+}
+
+
+/* =========================================================
+   13. EYEBROW
+========================================================= */
+
+.eyebrow {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  color: #69a7ff;
+
+  font:
+    700 11px
+    "JetBrains Mono";
+
+  text-transform: uppercase;
+
+  letter-spacing: .13em;
+
+  margin-bottom: 12px;
+}
+
+
+/* Titik */
+
+.dot {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #22c9bd;
+
+  animation:
+    dotPulse 2s infinite;
+}
+
+
+/* Animasi titik */
+
+@keyframes dotPulse {
+
+  70% {
+    box-shadow:
+      0 0 0 9px transparent;
+  }
+
+  100% {
+    box-shadow:
+      0 0 0 0 transparent;
+  }
+
+}
+
+
+/* =========================================================
+   14. GREETING
+========================================================= */
+
+.greeting {
+  color: #9fb3d5;
+
+  font-size: 15px;
+
+  margin-bottom: 6px;
+}
+
+
+.greeting b {
+  color: #fff;
+}
+
+
+/* =========================================================
+   15. JUDUL UTAMA
+========================================================= */
+
+h1 {
+  font:
+    700
+    clamp(34px,3.6vw,50px)/1.05
+    "Space Grotesk";
+
+  margin: 0 0 12px;
+
+  letter-spacing: -.03em;
+
+  color: #fff;
+
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   16. SUBJUDUL HERO
+========================================================= */
+
+.hero h2 {
+  font:
+    700
+    clamp(22px,2.2vw,29px)/1.15
+    "Space Grotesk";
+
+  margin: 0 0 10px;
+
+  color: #68a5ff;
+
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   17. PARAGRAF HERO
+========================================================= */
+
+.hero p {
+  max-width: 560px;
+
+  color: #a9b9d3;
+
+  line-height: 1.65;
+
+  font-size: 14px;
+
+  margin: 0 0 16px;
+
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   18. MORPH LINE
+========================================================= */
+
+.morph-line {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  max-width: 100%;
+
+  min-width: 0;
+
+  padding: 9px 14px;
+
+  border:
+    1px solid
+    rgba(127,165,229,.18);
+
+  background: rgba(255,255,255,.06);
+
+  border-radius: 999px;
+
+  font:
+    600 12px
+    "JetBrains Mono";
+
+  color: #b58aff;
+
+  box-shadow:
+    0 7px 18px rgba(0,0,0,.08);
+
+  overflow: hidden;
+}
+
+
+/* Teks morph */
+
+.morph-line #morphTxt {
+  min-width: 0;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+
+/* Tag */
+
+.morph-line .tag {
+  flex: 0 0 auto;
+
+  font-size: 9px;
+
+  text-transform: uppercase;
+
+  color: #9baed0;
+}
+
+
+/* Cursor */
+
+.cursor {
+  width: 6px;
+  height: 14px;
+
+  flex: 0 0 6px;
+
+  background: currentColor;
+
+  animation:
+    blink 1s step-end infinite;
+}
+
+
+/* Animasi cursor */
+
+@keyframes blink {
+
+  50% {
+    opacity: 0;
+  }
+
+}
+
+
+/* =========================================================
+   19. HERO ART
+========================================================= */
+
+.heroArt {
+  position: absolute;
+
+  right: -4px;
+
+  bottom: -20px;
+
+  width: min(48%,570px);
+
+  max-width: 48%;
+
+  z-index: 1;
+
+  animation:
+    artFloat 5s ease-in-out infinite;
+}
+
+
+.heroArt img {
+  width: 100%;
+
+  max-width: 100%;
+
+  height: auto;
+
+  display: block;
+
+  object-fit: contain;
+
+  filter:
+    drop-shadow(
+      0 25px 30px
+      rgba(26,77,151,.13)
+    );
+}
+
+
+/* Animasi gambar */
+
+@keyframes artFloat {
+
+  50% {
+    transform:
+      translateY(-8px)
+      rotate(.4deg);
+  }
+
+}
+
+
+/* =========================================================
+   20. SECTION
+========================================================= */
+
+.section {
+  min-width: 0;
+
+  background: rgba(9,28,58,.72);
+
+  border:
+    1px solid
+    rgba(113,154,220,.15);
+
+  border-radius: 26px;
+
+  padding: 25px 26px;
+
+  box-shadow:
+    0 14px 40px
+    rgba(0,10,30,.18);
+
+  margin-bottom: 22px;
+}
+
+
+/* =========================================================
+   21. SECTION HEADER
+========================================================= */
+
+.sectionHead {
+  min-width: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 15px;
+
+  margin-bottom: 18px;
+}
+
+
+.sectionHead h2 {
+  min-width: 0;
+
+  font:
+    700 22px
+    "Space Grotesk";
+
+  margin: 0;
+
+  color: #fff;
+}
+
+
+.sectionHead span {
+  font-size: 12px;
+
+  color: #9fb2d3;
+
+  text-align: right;
+}
+
+
+/* =========================================================
+   22. GRID KELAS
+========================================================= */
+
+.gradeGrid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3,minmax(0,1fr));
+
+  gap: 15px;
+}
+
+
+/* =========================================================
+   23. KARTU KELAS
+========================================================= */
+
+.grade {
+  min-width: 0;
+
+  background: rgba(255,255,255,.045);
+
+  border:
+    1px solid
+    rgba(116,155,220,.15);
+
+  border-radius: 18px;
+
+  padding: 17px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+
+  transition:
+    .25s var(--ease);
+
+  position: relative;
+
+  overflow: hidden;
+
+  color: #fff;
+}
+
+
+/* Efek kartu */
+
+.grade::before {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      110deg,
+      transparent,
+      rgba(41,113,232,.08),
+      transparent
+    );
+
+  transform:
+    translateX(-120%);
+
+  transition: .55s;
+}
+
+
+.grade:hover::before {
+  transform:
+    translateX(120%);
+}
+
+
+.grade:hover {
+  transform:
+    translateY(-4px);
+
+  border-color:
+    #4675ad;
+
+  box-shadow:
+    0 12px 26px
+    rgba(25,91,190,.12);
+}
+
+
+/* Nomor kelas */
+
+.gradeNum {
+  width: 44px;
+  height: 44px;
+
+  flex: 0 0 44px;
+
+  border-radius: 14px;
+
+  display: grid;
+
+  place-items: center;
+
+  color: #fff;
+
+  font:
+    700 20px
+    "Space Grotesk";
+
+  background:
+    linear-gradient(
+      135deg,
+      #1678ee,
+      #1550c9
+    );
+
+  box-shadow:
+    0 8px 17px
+    rgba(21,80,201,.2);
+}
+
+
+/* Kelas kedua */
+
+.grade:nth-child(2) .gradeNum {
+  background:
+    linear-gradient(
+      135deg,
+      #19b9b2,
+      #087eab
+    );
+}
+
+
+/* Kelas ketiga */
+
+.grade:nth-child(3) .gradeNum {
+  background:
+    linear-gradient(
+      135deg,
+      #8661ef,
+      #6c45d6
+    );
+}
+
+
+.grade b {
+  font-size: 14px;
+
+  display: block;
+
+  color: #fff;
+}
+
+
+.grade small {
+  color: #9eafd0;
+
+  font-size: 11px;
+}
+
+
+/* =========================================================
+   24. GRID MATA PELAJARAN
+========================================================= */
+
+.subjectGrid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2,minmax(0,1fr));
+
+  gap: 18px;
+}
+
+
+/* =========================================================
+   25. KARTU MATA PELAJARAN
+========================================================= */
+
+.subjectCard {
+  min-width: 0;
+
+  min-height: 250px;
+
+  border-radius: 22px;
+
+  padding: 28px 30px;
+
+  position: relative;
+
+  overflow: hidden;
+
+  border:
+    1px solid
+    rgba(111,164,255,.18);
+
+  transition:
+    .28s var(--ease);
+
+  background:
+    radial-gradient(
+      circle at 78% 22%,
+      rgba(54,137,255,.12),
+      transparent 34%
+    ),
+    linear-gradient(
+      135deg,
+      #0d3566 0%,
+      #0a2850 52%,
+      #071d3c 100%
+    );
+
+  color: #fff;
+
+  box-shadow:
+    0 18px 45px
+    rgba(2,18,49,.24);
+}
+
+
+/* Kartu informasi */
+
+.subjectCard.infoCard {
+  background:
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(157,91,255,.16),
+      transparent 36%
+    ),
+    linear-gradient(
+      135deg,
+      #24205f 0%,
+      #191747 52%,
+      #121239 100%
+    );
+
+  border-color:
+    rgba(164,112,255,.20);
+}
+
+
+/* Efek cahaya */
+
+.subjectCard::before {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      110deg,
+      transparent 20%,
+      rgba(255,255,255,.035) 50%,
+      transparent 80%
+    );
+
+  transform:
+    translateX(-120%);
+
+  transition:
+    .7s var(--ease);
+
+  pointer-events: none;
+}
+
+
+.subjectCard:hover::before {
+  transform:
+    translateX(120%);
+}
+
+
+.subjectCard:hover {
+  transform:
+    translateY(-5px);
+
+  box-shadow:
+    0 22px 48px
+    rgba(2,18,49,.34);
+
+  border-color:
+    rgba(105,161,255,.38);
+}
+
+
+.subjectCard.infoCard:hover {
+  border-color:
+    rgba(169,111,255,.42);
+}
+
+
+/* =========================================================
+   26. JUDUL & DESKRIPSI SUBJECT
+========================================================= */
+
+.subjectCard h3,
+.subjectCard p {
+  position: relative;
+
+  z-index: 2;
+
+  max-width:
+    calc(100% - 135px);
+}
+
+
+.subjectCard h3 {
+  font:
+    700 22px
+    "Space Grotesk";
+
+  margin: 0 0 8px;
+
+  color: #fff;
+
+  overflow-wrap: anywhere;
+}
+
+
+.subjectCard p {
+  font-size: 12px;
+
+  color: #aebfe0;
+
+  line-height: 1.7;
+
+  margin: 0 0 16px;
+
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   27. TOMBOL SUBJECT
+========================================================= */
+
+.subjectBtn {
+  position: relative;
+
+  z-index: 4;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  border:
+    1px solid
+    rgba(255,255,255,.12);
+
+  color: #fff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #237df4,
+      #1764d9
+    );
+
+  padding: 10px 16px;
+
+  border-radius: 12px;
+
+  font-weight: 700;
+
+  font-size: 12px;
+
+  text-decoration: none;
+
+  box-shadow:
+    0 9px 22px
+    rgba(12,91,210,.28);
+
+  transition: .2s;
+}
+
+
+.subjectBtn:hover {
+  transform:
+    translateY(-2px);
+
+  filter:
+    brightness(1.08);
+}
+
+
+/* Tombol info */
+
+.infoCard .subjectBtn {
+  background:
+    linear-gradient(
+      135deg,
+      #914cff,
+      #7137dc
+    );
+
+  box-shadow:
+    0 9px 22px
+    rgba(118,62,224,.30);
+}
+
+
+/* =========================================================
+   28. ILUSTRASI SUBJECT
+========================================================= */
+
+.subjectArt {
+  position: absolute;
+
+  right: 18px;
+
+  top: 24px;
+
+  z-index: 1;
+
+  font-size: 65px;
+
+  opacity: .85;
+
+  pointer-events: none;
+
+  filter:
+    drop-shadow(
+      0 12px 20px
+      rgba(0,0,0,.18)
+    );
+
+  animation:
+    iconBob 4s ease-in-out infinite;
+}
+
+
+/* =========================================================
+   29. ANIMASI ICON
+========================================================= */
+
+@keyframes iconBob {
+
+  50% {
+    transform:
+      translateY(-8px)
+      rotate(2deg);
+  }
+
+}
+
+
+/* =========================================================
+   30. GRID BAB
+========================================================= */
+
+.chapterGrid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4,minmax(0,1fr));
+
+  gap: 15px;
+}
+
+
+/* =========================================================
+   31. KARTU BAB
+========================================================= */
+
+.chapter {
+  min-width: 0;
+
+  background: rgba(255,255,255,.045);
+
+  border:
+    1px solid
+    rgba(116,155,220,.15);
+
+  border-radius: 19px;
+
+  padding: 16px;
+
+  min-height: 220px;
+
+  transition:
+    .25s var(--ease);
+
+  cursor: pointer;
+
+  position: relative;
+
+  overflow: hidden;
+
+  color: #fff;
+}
+
+
+.chapter:hover {
+  transform:
+    translateY(-5px);
+
+  box-shadow:
+    0 15px 30px
+    rgba(25,76,155,.10);
+
+  border-color:
+    #4675ad;
+}
+
+
+/* =========================================================
+   32. ICON BAB
+========================================================= */
+
+.chapterIcon {
+  height: 88px;
+
+  border-radius: 15px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(35,125,244,.16),
+      rgba(255,255,255,.035)
+    );
+
+  display: grid;
+
+  place-items: center;
+
+  font-size: 46px;
+
+  margin-bottom: 12px;
+
+  animation:
+    iconBob 4s ease-in-out infinite;
+}
+
+
+.chapter:nth-child(2) .chapterIcon {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(145,76,255,.18),
+      rgba(255,255,255,.035)
+    );
+}
+
+
+.chapter:nth-child(3) .chapterIcon {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(34,201,189,.14),
+      rgba(255,255,255,.035)
+    );
+}
+
+
+.chapter:nth-child(4) .chapterIcon {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(145,76,255,.16),
+      rgba(255,255,255,.035)
+    );
+}
+
+
+/* =========================================================
+   33. LABEL BAB
+========================================================= */
+
+.chapter small {
+  color: #6fa5ff;
+
+  font:
+    700 9px
+    "JetBrains Mono";
+}
+
+
+/* =========================================================
+   34. JUDUL BAB
+========================================================= */
+
+.chapter h3 {
+  font:
+    700 15px
+    "Space Grotesk";
+
+  margin: 5px 0;
+
+  color: #fff;
+}
+
+
+/* =========================================================
+   35. DESKRIPSI BAB
+========================================================= */
+
+.chapter p {
+  font-size: 10.5px;
+
+  line-height: 1.5;
+
+  color: #9eafd0;
+
+  margin: 0 0 11px;
+
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   36. PROGRESS BAB
+========================================================= */
+
+.miniProgress {
+  height: 5px;
+
+  border-radius: 99px;
+
+  background:
+    rgba(255,255,255,.08);
+
+  overflow: hidden;
+}
+
+
+.miniProgress span {
+  display: block;
+
+  height: 100%;
+
+  width: 65%;
+
+  background:
+    linear-gradient(
+      90deg,
+      #22b8d7,
+      #2875ee
+    );
+
+  border-radius: 99px;
+
+  animation:
+    mini 3s ease-in-out infinite alternate;
+}
+
+
+/* Animasi progress */
+
+@keyframes mini {
+
+  to {
+    width: 78%;
+  }
+
+}
+
+
+/* =========================================================
+   37. FOOTER BAB
+========================================================= */
+
+.chapterFooter {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 8px;
+
+  margin-top: 7px;
+
+  color: #8296ba;
+
+  font-size: 9px;
+}
+
+
+/* =========================================================
+   38. TOMBOL PLAY
+========================================================= */
+
+.play {
+  width: 28px;
+  height: 28px;
+
+  flex: 0 0 28px;
+
+  border-radius: 50%;
+
+  display: grid;
+
+  place-items: center;
+
+  border:
+    1px solid
+    rgba(113,170,255,.38);
+
+  color: #72adff;
+
+  background:
+    rgba(35,125,244,.12);
+}
+
+
+/* =========================================================
+   39. CTA
+========================================================= */
+
+.cta {
+  border-radius: 25px;
+
+  overflow: hidden;
+
+  background:
+    linear-gradient(
+      110deg,
+      #092b83,
+      #124ed0 60%,
+      #263ca5
+    );
+
+  color: #fff;
+
+  padding: 28px 34px;
+
+  position: relative;
+
+  min-height: 150px;
+
+  display: flex;
+
+  align-items: center;
+}
+
+
+/* Dekorasi CTA */
+
+.cta::before {
+  content:
+    "✦   ✧      ✦          ✧";
+
+  position: absolute;
+
+  inset: 18px;
+
+  color:
+    rgba(255,255,255,.18);
+
+  font-size: 25px;
+
+  letter-spacing: 40px;
+
+  animation:
+    starsMove 8s linear infinite;
+}
+
+
+/* Animasi bintang */
+
+@keyframes starsMove {
+
+  to {
+    transform:
+      translateX(50px);
+  }
+
+}
+
+
+/* =========================================================
+   40. CTA TEXT
+========================================================= */
+
+.ctaText {
+  position: relative;
+
+  z-index: 2;
+
+  max-width: 65%;
+}
+
+
+.cta h2 {
+  font:
+    700 28px
+    "Space Grotesk";
+
+  margin: 0 0 5px;
+
+  overflow-wrap: anywhere;
+}
+
+
+.cta p {
+  margin: 0 0 15px;
+
+  color: #d6e3ff;
+
+  font-size: 12px;
+
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   41. TOMBOL CTA
+========================================================= */
+
+.cta a {
+  display: inline-flex;
+
+  color: #fff;
+
+  text-decoration: none;
+
+  background: #2379f4;
+
+  border:
+    1px solid
+    rgba(255,255,255,.2);
+
+  padding: 10px 16px;
+
+  border-radius: 12px;
+
+  font-size: 12px;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   42. ROCKET
+========================================================= */
+
+.rocket {
+  position: absolute;
+
+  right: 45px;
+
+  bottom: 2px;
+
+  font-size: 105px;
+
+  animation:
+    rocket 4s ease-in-out infinite;
+}
+
+
+/* Animasi rocket */
+
+@keyframes rocket {
+
+  0%,
+  100% {
+    transform:
+      translateY(5px)
+      rotate(-7deg);
+  }
+
+  50% {
+    transform:
+      translateY(-12px)
+      rotate(-3deg);
+  }
+
+}
+
+
+/* =========================================================
+   43. FOOTER
+========================================================= */
+
+footer {
+  text-align: center;
+
+  color: #8296ba;
+
+  font:
+    11px
+    "JetBrains Mono";
+
+  padding: 20px 0 5px;
+}
+
+
+/* =========================================================
+   44. MODAL
+========================================================= */
+
+.modal {
+  position: fixed;
+
+  inset: 0;
+
+  background:
+    rgba(5,18,54,.48);
+
+  backdrop-filter: blur(5px);
+
+  display: none;
+
+  align-items: center;
+
+  justify-content: center;
+
+  z-index: 100;
+
+  padding: 20px;
+}
+
+
+/* Modal aktif */
+
+.modal.show {
+  display: flex;
+}
+
+
+/* =========================================================
+   45. MODAL BOX
+========================================================= */
+
+.modalBox {
+  width: min(620px,100%);
+
+  min-width: 0;
+
+  background: #fff;
+
+  color: #14233f;
+
+  border-radius: 24px;
+
+  padding: 25px;
+
+  box-shadow:
+    0 30px 80px
+    rgba(0,20,80,.28);
+
+  animation:
+    modalIn .35s var(--ease);
+}
+
+
+/* Animasi modal */
+
+@keyframes modalIn {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(18px)
+      scale(.97);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: none;
+  }
+
+}
+
+
+/* =========================================================
+   46. MODAL HEADER
+========================================================= */
+
+.modalTop {
+  display: flex;
+
+  justify-content: space-between;
+
+  gap: 10px;
+
+  align-items: center;
+}
+
+
+.modalTop h3 {
+  font:
+    700 22px
+    "Space Grotesk";
+
+  margin: 0;
+}
+
+
+/* Tombol close */
+
+.close {
+  border: 0;
+
+  background: #eef3fb;
+
+  width: 34px;
+  height: 34px;
+
+  border-radius: 50%;
+
+  cursor: pointer;
+
+  font-size: 18px;
+}
+
+
+/* =========================================================
+   47. TOPIC LIST
+========================================================= */
+
+.topicList {
+  display: grid;
+
+  gap: 8px;
+
+  margin-top: 18px;
+
+  max-height: 55vh;
+
+  overflow: auto;
+}
+
+
+/* Item topic */
+
+.topicItem {
+  padding: 11px 13px;
+
+  border:
+    1px solid
+    #e3e9f5;
+
+  border-radius: 12px;
+
+  background: #f9fbff;
+
+  font-size: 12px;
+
+  color: #53617c;
+
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   48. RESPONSIVE TABLET
+   Fungsi:
+   Mengatur MAIN pada layar sedang.
+
+   SIDEBAR TIDAK DISENTUH.
+========================================================= */
+
+@media (max-width: 1100px) {
+
+  .main {
+    flex: 1 1 auto;
+
+    min-width: 0;
+
+    width: auto;
+
+    max-width: 100%;
+
+    padding: 24px;
+  }
+
+
+  .heroText {
+    width: 52%;
+  }
+
+
+  .heroArt {
+    width: 46%;
+
+    max-width: 46%;
+  }
+
+
+  .gradeGrid {
+    grid-template-columns:
+      repeat(3,minmax(0,1fr));
+  }
+
+
+  .chapterGrid {
+    grid-template-columns:
+      repeat(2,minmax(0,1fr));
+  }
+
+
+  .subjectCard h3,
+  .subjectCard p {
+    max-width:
+      calc(100% - 105px);
+  }
+
+}
+
+
+/* =========================================================
+   49. RESPONSIVE MOBILE
+   Fungsi:
+   Hanya mengatur MAIN.
+
+   SIDEBAR TIDAK DIATUR.
+========================================================= */
+
+@media (max-width: 760px) {
+
+  .main {
+    flex: 1 1 auto;
+
+    min-width: 0;
+
+    width: auto;
+
+    max-width: 100%;
+
+    padding: 15px;
+  }
+
+
+  /* TOPBAR */
+
+  .topbar {
+    gap: 10px;
+
+    margin-bottom: 15px;
+  }
+
+
+  .timeWelcome {
+    flex: 1 1 100%;
+
+    min-width: 0;
+  }
+
+
+  .user {
+    flex: 1 1 100%;
+
+    max-width: none;
+
+    min-width: 0;
+  }
+
+
+  /* HERO */
+
+  .hero {
+    min-height: 520px;
+
+    padding: 28px 23px;
+
+    align-items: flex-start;
+  }
+
+
+  .heroText {
+    width: 100%;
+  }
+
+
+  .heroArt {
+    width: 100%;
+
+    max-width: 100%;
+
+    right: -25px;
+
+    bottom: -15px;
+  }
+
+
+  /* GRID */
+
+  .gradeGrid,
+  .subjectGrid,
+  .chapterGrid {
+    grid-template-columns: 1fr;
+  }
+
+
+  /* SECTION */
+
+  .section {
+    padding: 20px 16px;
+  }
+
+
+  .sectionHead {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+
+  .sectionHead span {
+    text-align: left;
+  }
+
+
+  /* SUBJECT */
+
+  .subjectCard {
+    min-height: 235px;
+
+    padding: 23px;
+  }
+
+
+  .subjectCard h3,
+  .subjectCard p {
+    max-width: 70%;
+  }
+
+
+  /* CTA */
+
+  .cta {
+    min-height: 210px;
+
+    padding: 24px;
+  }
+
+
+  .ctaText {
+    max-width: 70%;
+  }
+
+
+  .rocket {
+    right: 8px;
+
+    font-size: 80px;
+  }
+
+}
+
+
+/* =========================================================
+   50. REDUCED MOTION
+   Fungsi:
+   Mengurangi animasi jika pengguna mengaktifkan
+   pengaturan reduced motion.
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+
+    transition: none !important;
+  }
+
+}

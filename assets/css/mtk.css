@@ -1,0 +1,824 @@
+* {
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   1. VARIABEL WARNA MAIN
+   Fungsi:
+   Menyimpan warna yang digunakan oleh bagian konten utama.
+========================================================= */
+
+:root {
+  --blue: #2867e8;
+  --blue-2: #1f5fd7;
+  --bg: #edf4ff;
+  --text: #172b5c;
+  --muted: #7181a3;
+  --line: #dce6f6;
+  --card: #ffffff;
+}
+
+
+/* =========================================================
+   2. BODY
+   Fungsi:
+   Mengatur background halaman dan mencegah scroll horizontal.
+   
+   Tidak mengatur sidebar.
+========================================================= */
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  font-family: "Plus Jakarta Sans", Arial, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+body {
+  overflow-x: hidden;
+}
+
+
+/* =========================================================
+   3. AREA MAIN
+   Fungsi:
+   Mengatur seluruh area konten utama.
+   
+   Sidebar TIDAK diatur di sini.
+   
+   flex: 1 membuat main mengambil sisa ruang yang tersedia
+   setelah sidebar.
+========================================================= */
+
+.main {
+  flex: 1;
+  min-width: 0;
+  padding: 38px 56px 60px;
+}
+
+
+/* =========================================================
+   4. TOPBAR
+   Fungsi:
+   Mengatur bagian paling atas main.
+   Biasanya berisi pencarian dan profil pengguna.
+========================================================= */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 25px;
+
+  margin-bottom: 37px;
+}
+
+
+/* =========================================================
+   5. SEARCH UTAMA
+   Fungsi:
+   Kotak pencarian pada bagian atas dashboard.
+========================================================= */
+
+.search {
+  width: min(545px, 100%);
+  height: 60px;
+
+  border: 1px solid #d7e3f6;
+
+  background: #fff;
+
+  border-radius: 17px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 0 22px;
+
+  color: #7583a2;
+
+  box-shadow: 0 8px 25px #8aa4d315;
+
+  font-size: 20px;
+}
+
+
+/* Icon search */
+
+.search span:first-child {
+  font-size: 20px;
+  margin-right: 14px;
+  color: #213e72;
+}
+
+
+/* =========================================================
+   6. INFORMASI USER
+   Fungsi:
+   Menampilkan nama user dan avatar.
+========================================================= */
+
+.user {
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+
+  font-size: 17px;
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+
+/* Avatar */
+
+.avatar {
+  width: 48px;
+  height: 48px;
+
+  border-radius: 50%;
+
+  background: #2d69e9;
+
+  border: 4px solid #fff;
+
+  box-shadow: 0 4px 12px #4569a433;
+
+  display: grid;
+  place-items: center;
+}
+
+
+/* =========================================================
+   7. HERO / BANNER UTAMA
+   Fungsi:
+   Menampilkan sambutan, judul pembelajaran,
+   deskripsi, dan area ilustrasi.
+========================================================= */
+
+.hero {
+  min-height: 428px;
+
+  background: #fff;
+
+  border-radius: 29px;
+
+  position: relative;
+
+  overflow: hidden;
+
+  border: 1px solid #e0e9f7;
+
+  box-shadow: 0 16px 40px #7895c31c;
+
+  margin-bottom: 30px;
+}
+
+
+/* =========================================================
+   8. ISI HERO
+   Fungsi:
+   Mengatur posisi teks di dalam banner.
+========================================================= */
+
+.hero-copy {
+  padding: 57px 53% 45px 53px;
+
+  position: relative;
+
+  z-index: 2;
+}
+
+
+/* =========================================================
+   9. EYEBROW
+   Fungsi:
+   Label kecil sebelum judul utama.
+========================================================= */
+
+.eyebrow {
+  color: #2867e8;
+
+  font: 700 13px "JetBrains Mono", monospace;
+
+  letter-spacing: 0.16em;
+
+  margin-bottom: 16px;
+}
+
+
+/* Titik dekorasi eyebrow */
+
+.eyebrow::before {
+  content: "";
+
+  display: inline-block;
+
+  width: 10px;
+  height: 10px;
+
+  background: #25c8ba;
+
+  border-radius: 50%;
+
+  margin-right: 12px;
+}
+
+
+/* =========================================================
+   10. GREETING
+   Fungsi:
+   Teks sambutan seperti "Selamat datang".
+========================================================= */
+
+.greeting {
+  color: #7181a3;
+
+  font-size: 19px;
+
+  margin-bottom: 8px;
+}
+
+
+/* =========================================================
+   11. JUDUL HERO
+========================================================= */
+
+.hero h1 {
+  font-size: 57px;
+
+  line-height: 1.02;
+
+  margin: 0 0 12px;
+
+  letter-spacing: -2.5px;
+}
+
+
+/* =========================================================
+   12. SUBJUDUL HERO
+========================================================= */
+
+.hero h2 {
+  font-size: 31px;
+
+  line-height: 1.15;
+
+  color: #2765cc;
+
+  margin: 0 0 13px;
+}
+
+
+/* =========================================================
+   13. DESKRIPSI HERO
+========================================================= */
+
+.hero p {
+  font-size: 17px;
+
+  line-height: 1.7;
+
+  color: #6e7e9f;
+
+  margin: 0;
+}
+
+
+/* =========================================================
+   14. CODE PILL
+   Fungsi:
+   Label kecil berbentuk kapsul.
+========================================================= */
+
+.code-pill {
+  display: inline-flex;
+
+  margin-top: 22px;
+
+  border: 1px solid #dbe6f7;
+
+  border-radius: 30px;
+
+  padding: 12px 17px;
+
+  background: #fff;
+
+  color: #7858ed;
+
+  font: 600 13px "JetBrains Mono", monospace;
+
+  box-shadow: 0 5px 14px #7895c322;
+}
+
+
+/* =========================================================
+   15. AREA ILUSTRASI HERO
+========================================================= */
+
+.hero-art {
+  position: absolute;
+
+  right: 0;
+  top: 0;
+
+  width: 46%;
+  height: 100%;
+
+  background: linear-gradient(
+    135deg,
+    #e8f3ff,
+    #d9e9ff
+  );
+}
+
+
+/* Dekorasi hero */
+
+.hero-art::after {
+  content: "";
+
+  position: absolute;
+
+  inset: 20px 30px 0 30px;
+
+  border-radius: 25px;
+
+  background:
+    radial-gradient(
+      circle at 70% 35%,
+      #fff 0 6%,
+      transparent 7%
+    ),
+    linear-gradient(
+      135deg,
+      #dff1ff,
+      #c7ddff
+    );
+
+  opacity: 0.9;
+}
+
+
+/* =========================================================
+   16. SECTION KELAS
+========================================================= */
+
+.classes {
+  background: #fff;
+
+  border: 1px solid #e0e9f7;
+
+  border-radius: 29px;
+
+  padding: 32px;
+
+  box-shadow: 0 16px 40px #7895c31c;
+
+  margin-bottom: 30px;
+}
+
+
+/* Header section */
+
+.section-head {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  margin-bottom: 24px;
+}
+
+
+/* Judul section */
+
+.section-head h3 {
+  font-size: 27px;
+  margin: 0;
+}
+
+
+/* Informasi tambahan */
+
+.section-head span {
+  color: #8190ae;
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   17. GRID KELAS
+========================================================= */
+
+.class-grid {
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 18px;
+}
+
+
+/* =========================================================
+   18. KARTU KELAS
+========================================================= */
+
+.class-card {
+  border: 1px solid #e0e8f5;
+
+  border-radius: 19px;
+
+  padding: 23px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 16px;
+
+  background: #fff;
+
+  cursor: pointer;
+
+  transition: 0.18s ease;
+
+  user-select: none;
+}
+
+
+/* Hover kartu */
+
+.class-card:hover {
+  border-color: var(--blue);
+
+  box-shadow: 0 10px 22px #2867e81f;
+
+  transform: translateY(-2px);
+}
+
+
+/* Nomor kelas */
+
+.class-number {
+  width: 57px;
+  height: 57px;
+
+  border-radius: 17px;
+
+  display: grid;
+
+  place-items: center;
+
+  color: #fff;
+
+  font-size: 25px;
+
+  font-weight: 800;
+
+  background: #2867e8;
+
+  box-shadow: 0 8px 17px #2867e83d;
+}
+
+
+/* Warna kelas kedua */
+
+.class-card:nth-child(2) .class-number {
+  background: #13a9ba;
+}
+
+
+/* Warna kelas ketiga */
+
+.class-card:nth-child(3) .class-number {
+  background: #7650df;
+}
+
+
+/* Nama kelas */
+
+.class-card strong {
+  display: block;
+
+  font-size: 17px;
+
+  margin-bottom: 6px;
+}
+
+
+/* Keterangan kelas */
+
+.class-card small {
+  color: #7d8ca9;
+
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   19. KELAS AKTIF
+   Fungsi:
+   Menandai kartu kelas yang sedang dipilih.
+========================================================= */
+
+.class-card.active {
+  border-color: var(--blue);
+
+  background:
+    linear-gradient(
+      0deg,
+      #eef4ff,
+      #eef4ff
+    ),
+    #fff;
+
+  box-shadow: 0 12px 26px #2867e830;
+}
+
+
+/* Nama kelas aktif */
+
+.class-card.active strong {
+  color: var(--blue-2);
+}
+
+
+/* =========================================================
+   20. KOTAK KONTEN
+   Fungsi:
+   Wadah utama daftar atau isi materi.
+========================================================= */
+
+.content-box {
+  background: #fff;
+
+  border-radius: 29px;
+
+  border: 1px solid #e0e9f7;
+
+  box-shadow: 0 16px 40px #7895c31c;
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   21. HEADER KONTEN
+========================================================= */
+
+.content-head {
+  padding: 23px 30px;
+
+  border-bottom: 1px solid #e4ebf6;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 16px;
+
+  flex-wrap: wrap;
+}
+
+
+/* Judul konten */
+
+.content-head h3 {
+  margin: 0;
+  font-size: 21px;
+}
+
+
+/* Keterangan konten */
+
+.content-head span {
+  font-size: 13px;
+  color: #8190ae;
+}
+
+
+/* =========================================================
+   22. SEARCH MATERI
+========================================================= */
+
+.material-search {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 18px 30px;
+
+  background: #f7faff;
+
+  border-bottom: 1px solid #e4ebf6;
+}
+
+
+/* Input search materi */
+
+.material-search #search-materi {
+  flex: 1;
+
+  height: 52px;
+
+  border: 1px solid var(--line);
+
+  border-radius: 14px;
+
+  padding: 0 18px;
+
+  font-size: 16px;
+
+  font-family: inherit;
+
+  color: var(--text);
+
+  background: #fff;
+
+  outline: none;
+
+  transition: 0.15s;
+
+  box-shadow: 0 4px 12px #8aa4d312;
+}
+
+
+/* Placeholder */
+
+.material-search #search-materi::placeholder {
+  color: #9aa8c4;
+}
+
+
+/* Saat input aktif */
+
+.material-search #search-materi:focus {
+  border-color: var(--blue);
+
+  box-shadow: 0 0 0 4px #2867e81f;
+}
+
+
+/* =========================================================
+   23. TOMBOL SEARCH MATERI
+========================================================= */
+
+.material-search #btn-search {
+  height: 52px;
+
+  padding: 0 26px;
+
+  border: none;
+
+  border-radius: 14px;
+
+  background: var(--blue);
+
+  color: #fff;
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  white-space: nowrap;
+
+  transition: 0.15s;
+
+  box-shadow: 0 8px 18px #2867e83d;
+}
+
+
+/* Hover tombol */
+
+.material-search #btn-search:hover {
+  background: var(--blue-2);
+
+  transform: translateY(-1px);
+}
+
+
+/* Saat tombol ditekan */
+
+.material-search #btn-search:active {
+  transform: translateY(0);
+}
+
+
+/* =========================================================
+   24. FRAME MATERI
+   Fungsi:
+   Menampilkan halaman materi di dalam iframe.
+========================================================= */
+
+#content-frame {
+  display: block;
+
+  width: 100%;
+
+  height: 650px;
+
+  border: 0;
+
+  background: #f8fbff;
+}
+
+
+/* =========================================================
+   25. PESAN ERROR
+========================================================= */
+
+.sidebar-error {
+  padding: 20px;
+
+  color: #fff;
+
+  background: #a33;
+}
+
+
+/* =========================================================
+   26. RESPONSIVE TABLET / LAPTOP
+   Fungsi:
+   Menyesuaikan MAIN ketika layar lebih kecil.
+   
+   CATATAN:
+   Tidak mengatur ukuran atau posisi SIDEBAR.
+========================================================= */
+
+@media (max-width: 1050px) {
+
+  .main {
+    padding: 28px;
+  }
+
+  .hero-copy {
+    padding-left: 35px;
+  }
+
+  .hero h1 {
+    font-size: 46px;
+  }
+}
+
+
+/* =========================================================
+   27. RESPONSIVE MOBILE
+   Fungsi:
+   Mengatur MAIN agar nyaman digunakan pada HP.
+   
+   Sidebar tidak diatur di sini.
+========================================================= */
+
+@media (max-width: 800px) {
+
+  .main {
+    padding: 18px;
+  }
+
+  .hero {
+    min-height: 0;
+  }
+
+  .hero-copy {
+    padding: 35px;
+  }
+
+  .hero-art {
+    display: none;
+  }
+
+  .class-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .topbar {
+    align-items: flex-start;
+  }
+
+  .search {
+    font-size: 15px;
+  }
+
+  .material-search {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 16px;
+  }
+
+  .material-search #btn-search {
+    width: 100%;
+  }
+}
