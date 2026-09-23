@@ -35,8 +35,7 @@ const TEAM_COLORS = [
     "#ffd700"
 ];
 
-const MAX_TEAMS = 6;
-const MIN_TEAMS = 2;
+const MIN_TEAMS = 1;
 
 const STORAGE_KEY = "KW_ARENA_STATE";
 const AUTO_NEXT_CORRECT_KEY = "KW_ARENA_AUTO_NEXT_CORRECT";
@@ -553,34 +552,22 @@ document.addEventListener("DOMContentLoaded", () => {
         // TAMBAH TIM
         // --------------------------------------------------------------
 
-        const addTeamBtn =
-            document.getElementById(
-                "addTeamBtn"
-            );
+const addTeamBtn =
+    document.getElementById(
+        "addTeamBtn"
+    );
 
+if (addTeamBtn) {
 
-        if (addTeamBtn) {
+    addTeamBtn.onclick = () => {
 
-            addTeamBtn.onclick = () => {
+        // Tambah 1 pemain/tim
+        setupTeamCount++;
 
-                if (
-                    setupTeamCount >=
-                    MAX_TEAMS
-                ) {
-                    showToast(
-                        `Maksimal ${MAX_TEAMS} tim.`,
-                        "warning"
-                    );
-
-                    return;
-                }
-
-
-                setupTeamCount++;
-
-                renderTeamSetupRows();
-            };
-        }
+        // Buat baris pemain baru
+        renderTeamSetupRows();
+    };
+}
 
 
         // --------------------------------------------------------------
@@ -747,7 +734,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <input
                     type="text"
                     class="input-field team-name-input"
-                    placeholder="Nama Tim ${i + 1}"
+                    placeholder="Nama Tim/Pemain ${i + 1}"
                     value="${savedVal}"
                     maxlength="24"
                 >
