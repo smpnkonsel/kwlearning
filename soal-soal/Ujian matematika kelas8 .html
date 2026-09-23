@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ujian Matematika Kelas 8 — KW Learning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FAF8F3;
+    --paper-panel:#FFFFFF;
+    --ink:#20242B;
+    --ink-soft:#5B6069;
+    --navy:#1F3A5F;
+    --navy-deep:#14263D;
+    --gold:#C98A2C;
+    --line:#E3DCC9;
+
+    --sedang:#2E86AB;
+    --sedang-bg:#EAF3F8;
+    --susah:#C9642A;
+    --susah-bg:#FBEEE4;
+    --hots:#7B4FA6;
+    --hots-bg:#F1EAF8;
+    --olimpiade:#B23A48;
+    --olimpiade-bg:#FAEBEC;
+
+    --correct:#2F9E5B;
+    --correct-bg:#E7F5EC;
+    --wrong:#C0392B;
+    --wrong-bg:#FBEBE9;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Public Sans', system-ui, -apple-system, sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{
+    font-family:'Fraunces', Georgia, serif;
+    margin:0;
+  }
+
+  a{color:inherit;}
+
+  .skip-link{position:absolute;left:-999px;top:0;}
+  .skip-link:focus{left:8px;top:8px;background:var(--navy);color:#fff;padding:8px 12px;border-radius:6px;z-index:50;}
+
+  header.masthead{
+    background:linear-gradient(180deg, var(--navy) 0%, var(--navy-deep) 100%);
+    color:#F4F1E8;
+    padding:28px 20px 22px;
+  }
+  .masthead-inner{
+    max-width:1080px;
+    margin:0 auto;
+  }
+  .wordmark{
+    font-size:13px;
+    letter-spacing:.02em;
+    color:#B9C6D6;
+    margin-bottom:6px;
+  }
+  header.masthead h1{
+    font-size:clamp(24px,4vw,34px);
+    font-weight:600;
+    color:#fff;
+  }
+  .masthead p{
+    margin:8px 0 0;
+    color:#C7D2DE;
+    font-size:15px;
+    max-width:640px;
+  }
+
+  .progress-wrap{
+    max-width:1080px;
+    margin:18px auto 0;
+    padding:0 20px;
+  }
+  .progress-track{
+    height:8px;
+    background:rgba(255,255,255,.14);
+    border-radius:99px;
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;
+    background:var(--gold);
+    width:0%;
+    transition:width .25s ease;
+  }
+  .progress-label{
+    color:#C7D2DE;
+    font-size:13px;
+    margin-top:8px;
+  }
+
+  main{
+    max-width:1080px;
+    margin:26px auto 60px;
+    padding:0 20px;
+    display:grid;
+    grid-template-columns:1fr 260px;
+    gap:24px;
+    align-items:start;
+  }
+
+  @media (max-width:820px){
+    main{grid-template-columns:1fr;}
+    .navigator{order:2;}
+  }
+
+  .panel{
+    background:var(--paper-panel);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:26px 28px;
+  }
+
+  .badge-row{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    flex-wrap:wrap;
+    margin-bottom:16px;
+  }
+  .level-chip{
+    display:inline-block;
+    font-size:13px;
+    font-weight:600;
+    padding:5px 12px;
+    border-radius:99px;
+  }
+  .level-chip.sedang{background:var(--sedang-bg);color:var(--sedang);}
+  .level-chip.sulit{background:var(--susah-bg);color:var(--susah);}
+  .level-chip.hots{background:var(--hots-bg);color:var(--hots);}
+  .level-chip.olimpiade{background:var(--olimpiade-bg);color:var(--olimpiade);}
+  .topic-chip{
+    font-size:13px;
+    color:var(--ink-soft);
+    border:1px solid var(--line);
+    padding:5px 12px;
+    border-radius:99px;
+  }
+
+  .q-number{
+    font-family:'Fraunces', serif;
+    font-size:15px;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+  .q-text{
+    font-size:19px;
+    line-height:1.55;
+    margin:0 0 22px;
+    color:var(--ink);
+  }
+
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-bottom:26px;
+  }
+  .option{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:13px 16px;
+    cursor:pointer;
+    background:#fff;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .option:hover{border-color:var(--navy);}
+  .option input{
+    margin-top:3px;
+    accent-color:var(--navy);
+    flex:none;
+  }
+  .option.selected{
+    border-color:var(--navy);
+    background:#F2F6FA;
+  }
+  .option .opt-letter{
+    font-weight:600;
+    color:var(--navy);
+    flex:none;
+    width:18px;
+  }
+  .option.correct{border-color:var(--correct);background:var(--correct-bg);}
+  .option.incorrect{border-color:var(--wrong);background:var(--wrong-bg);}
+  .option input:disabled{cursor:default;}
+  fieldset{border:none;margin:0;padding:0;}
+
+  .nav-buttons{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+  }
+  button{
+    font-family:'Public Sans', sans-serif;
+    font-size:15px;
+    font-weight:600;
+    border-radius:8px;
+    padding:11px 20px;
+    cursor:pointer;
+    border:1px solid transparent;
+  }
+  button:focus-visible{outline:3px solid var(--gold);outline-offset:2px;}
+  .btn-ghost{
+    background:#fff;
+    border:1px solid var(--line);
+    color:var(--ink);
+  }
+  .btn-ghost:hover{border-color:var(--navy);}
+  .btn-ghost:disabled{opacity:.4;cursor:not-allowed;}
+  .btn-primary{
+    background:var(--navy);
+    color:#fff;
+  }
+  .btn-primary:hover{background:var(--navy-deep);}
+  .btn-submit{
+    background:var(--gold);
+    color:#2A1D06;
+  }
+  .btn-submit:hover{filter:brightness(0.95);}
+
+  .navigator{
+    background:var(--paper-panel);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:18px;
+    position:sticky;
+    top:16px;
+  }
+  .navigator h2{
+    font-size:15px;
+    font-weight:600;
+    margin-bottom:12px;
+    color:var(--ink);
+  }
+  .nav-grid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:7px;
+    margin-bottom:16px;
+  }
+  .nav-cell{
+    aspect-ratio:1;
+    border-radius:6px;
+    border:1.5px solid var(--line);
+    background:#fff;
+    font-size:13px;
+    font-weight:600;
+    color:var(--ink-soft);
+    cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    padding:0;
+  }
+  .nav-cell.answered{background:var(--navy);border-color:var(--navy);color:#fff;}
+  .nav-cell.current{outline:2px solid var(--gold);outline-offset:1px;}
+
+  .legend{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    font-size:12.5px;
+    color:var(--ink-soft);
+  }
+  .legend-item{display:flex;align-items:center;gap:8px;}
+  .dot{width:9px;height:9px;border-radius:50%;flex:none;}
+  .dot.sedang{background:var(--sedang);}
+  .dot.sulit{background:var(--susah);}
+  .dot.hots{background:var(--hots);}
+  .dot.olimpiade{background:var(--olimpiade);}
+
+  /* results */
+  .results h2{font-size:26px;margin-bottom:4px;}
+  .score-hero{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    margin:10px 0 22px;
+  }
+  .score-hero .num{
+    font-family:'Fraunces', serif;
+    font-size:52px;
+    color:var(--navy);
+    font-weight:600;
+  }
+  .score-hero .of{color:var(--ink-soft);font-size:16px;}
+
+  .breakdown{
+    display:grid;
+    gap:12px;
+    margin-bottom:28px;
+  }
+  .bd-row{display:grid;grid-template-columns:110px 1fr 60px;align-items:center;gap:12px;font-size:14px;}
+  .bd-track{height:10px;background:#EEEAE0;border-radius:99px;overflow:hidden;}
+  .bd-fill{height:100%;border-radius:99px;}
+  .bd-fill.sedang{background:var(--sedang);}
+  .bd-fill.sulit{background:var(--susah);}
+  .bd-fill.hots{background:var(--hots);}
+  .bd-fill.olimpiade{background:var(--olimpiade);}
+
+  .review-item{
+    border-top:1px solid var(--line);
+    padding:20px 0;
+  }
+  .review-item:first-child{border-top:none;}
+  .review-q{font-size:16px;margin:10px 0 12px;}
+  .review-opt{
+    padding:8px 12px;
+    border-radius:6px;
+    font-size:14px;
+    margin-bottom:6px;
+    border:1px solid var(--line);
+  }
+  .review-opt.correct{border-color:var(--correct);background:var(--correct-bg);color:#1E6B3E;}
+  .review-opt.wrong-pick{border-color:var(--wrong);background:var(--wrong-bg);color:#8E2A20;}
+  .explanation{
+    font-size:14px;
+    color:var(--ink-soft);
+    background:#F6F4EC;
+    border-radius:8px;
+    padding:12px 14px;
+    margin-top:10px;
+  }
+  .explanation b{color:var(--ink);}
+
+  .hidden{display:none !important;}
+
+  footer{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:13px;
+    padding:30px 20px 40px;
+  }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#soal-panel">Langsung ke soal</a>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="wordmark">KW Learning · Ruang Belajar Matematika</div>
+    <h1>Ujian Matematika Kelas 8</h1>
+    <p>45 soal pilihan ganda — jenjang sedang, sulit, HOTS, dan olimpiade. Kerjakan semua soal, jawaban bisa diubah sebelum dikumpulkan.</p>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label" id="progressLabel">0 dari 45 soal terjawab</div>
+  </div>
+</header>
+
+<main>
+  <section class="panel" id="soal-panel" aria-live="polite"></section>
+
+  <aside class="navigator" id="navigatorPanel">
+    <h2>Navigasi soal</h2>
+    <div class="nav-grid" id="navGrid"></div>
+    <div class="legend">
+      <div class="legend-item"><span class="dot sedang"></span> Sedang (1–15)</div>
+      <div class="legend-item"><span class="dot sulit"></span> Sulit (16–30)</div>
+      <div class="legend-item"><span class="dot hots"></span> HOTS (31–40)</div>
+      <div class="legend-item"><span class="dot olimpiade"></span> Olimpiade (41–45)</div>
+    </div>
+  </aside>
+</main>
+
+<footer>KW Learning — Ujian Matematika Kelas 8</footer>
+
+<script>
+const QUESTIONS = [
+// ---------- SEDANG (1-15) ----------
+{level:"sedang", topic:"Pola Bilangan", q:"Barisan bilangan 2, 5, 8, 11, ... memiliki beda tetap 3. Suku ke-10 dari barisan tersebut adalah ...", opts:["26","29","32","35"], correct:1, exp:"Suku ke-n = 2 + 3(n-1) = 3n - 1. Untuk n = 10: 3(10) - 1 = 29."},
+{level:"sedang", topic:"Relasi dan Fungsi", q:"Diketahui f(x) = 3x - 2. Nilai f(4) adalah ...", opts:["8","9","10","12"], correct:2, exp:"f(4) = 3(4) - 2 = 12 - 2 = 10."},
+{level:"sedang", topic:"Persamaan Garis Lurus", q:"Gradien garis dengan persamaan 2x + 3y = 6 adalah ...", opts:["2/3","-2/3","3/2","-3/2"], correct:1, exp:"Ubah ke bentuk y = mx + c: y = -2/3 x + 2, sehingga gradiennya -2/3."},
+{level:"sedang", topic:"SPLDV", q:"Diketahui 2x + y = 7 dan x - y = 2. Nilai x adalah ...", opts:["2","3","4","5"], correct:1, exp:"Jumlahkan kedua persamaan: 3x = 9, sehingga x = 3."},
+{level:"sedang", topic:"Teorema Pythagoras", q:"Sebuah segitiga siku-siku memiliki sisi siku-siku 3 cm dan 4 cm. Panjang sisi miringnya adalah ...", opts:["5 cm","6 cm","7 cm","8 cm"], correct:0, exp:"Sisi miring = √(3² + 4²) = √25 = 5 cm (tripel Pythagoras 3-4-5)."},
+{level:"sedang", topic:"Lingkaran", q:"Keliling lingkaran dengan jari-jari 7 cm (π = 22/7) adalah ...", opts:["22 cm","44 cm","88 cm","154 cm"], correct:1, exp:"Keliling = 2πr = 2 × 22/7 × 7 = 44 cm."},
+{level:"sedang", topic:"Bangun Ruang Sisi Datar", q:"Luas permukaan kubus dengan panjang rusuk 5 cm adalah ...", opts:["100 cm²","125 cm²","150 cm²","175 cm²"], correct:2, exp:"Luas permukaan kubus = 6 × s² = 6 × 25 = 150 cm²."},
+{level:"sedang", topic:"Bangun Ruang Sisi Datar", q:"Sebuah balok memiliki panjang 4 cm, lebar 3 cm, dan tinggi 5 cm. Volume balok tersebut adalah ...", opts:["45 cm³","50 cm³","60 cm³","65 cm³"], correct:2, exp:"Volume balok = p × l × t = 4 × 3 × 5 = 60 cm³."},
+{level:"sedang", topic:"Statistika", q:"Rata-rata dari data 5, 7, 8, 10 adalah ...", opts:["7","7,5","8","8,5"], correct:1, exp:"Rata-rata = (5+7+8+10)/4 = 30/4 = 7,5."},
+{level:"sedang", topic:"Statistika", q:"Median dari data 3, 4, 7, 9, 11 adalah ...", opts:["4","7","9","11"], correct:1, exp:"Data sudah terurut dan berjumlah ganjil, sehingga median adalah nilai tengah, yaitu 7."},
+{level:"sedang", topic:"Statistika", q:"Modus dari data 2, 3, 3, 4, 5, 5, 5, 6 adalah ...", opts:["3","4","5","6"], correct:2, exp:"Nilai 5 muncul paling banyak (3 kali), sehingga modusnya adalah 5."},
+{level:"sedang", topic:"Peluang", q:"Sebuah dadu dilempar satu kali. Peluang muncul mata dadu genap adalah ...", opts:["1/6","1/3","1/2","2/3"], correct:2, exp:"Mata dadu genap ada 3 (2, 4, 6) dari 6 kemungkinan, sehingga peluangnya 3/6 = 1/2."},
+{level:"sedang", topic:"Koordinat Kartesius", q:"Titik (-3, 4) terletak pada kuadran ...", opts:["I","II","III","IV"], correct:1, exp:"x negatif dan y positif merupakan ciri kuadran II."},
+{level:"sedang", topic:"Persamaan Garis Lurus", q:"Persamaan garis yang melalui titik (1, 2) dan (3, 6) adalah ...", opts:["y = 2x","y = x + 1","y = 2x + 1","y = 3x - 1"], correct:0, exp:"Gradien = (6-2)/(3-1) = 2. Dengan titik (1,2): y - 2 = 2(x - 1), sehingga y = 2x."},
+{level:"sedang", topic:"Bangun Ruang Sisi Datar", q:"Alas sebuah prisma berbentuk segitiga siku-siku dengan kaki 3 cm dan 4 cm, dan tinggi prisma 10 cm. Volume prisma tersebut adalah ...", opts:["30 cm³","40 cm³","60 cm³","80 cm³"], correct:2, exp:"Luas alas = ½ × 3 × 4 = 6 cm². Volume = luas alas × tinggi = 6 × 10 = 60 cm³."},
+
+// ---------- SULIT (16-30) ----------
+{level:"sulit", topic:"Pola Bilangan", q:"Barisan bilangan kuadrat 1, 4, 9, 16, ... Suku ke-7 dari barisan tersebut adalah ...", opts:["36","42","49","56"], correct:2, exp:"Suku ke-n = n². Untuk n = 7: 7² = 49."},
+{level:"sulit", topic:"Relasi dan Fungsi", q:"Diketahui f(x) = x + 2 dan g(x) = 2x. Nilai (f∘g)(3) adalah ...", opts:["6","7","8","10"], correct:2, exp:"g(3) = 6, kemudian f(6) = 6 + 2 = 8."},
+{level:"sulit", topic:"SPLDV", q:"Harga 2 buku dan 3 pensil adalah Rp16.000. Harga 3 buku dan 2 pensil adalah Rp19.000. Harga satu buku adalah ...", opts:["Rp4.000","Rp4.500","Rp5.000","Rp5.500"], correct:2, exp:"Eliminasi: 6b+9p=48.000 dan 6b+4p=38.000 → 5p=10.000 → p=2.000. Substitusi: 2b+6.000=16.000 → b=5.000."},
+{level:"sulit", topic:"Teorema Pythagoras", q:"Sebuah tangga bersandar pada tembok. Jarak kaki tangga ke tembok 5 m dan tinggi tembok yang dicapai tangga 12 m. Panjang tangga tersebut adalah ...", opts:["12 m","13 m","14 m","15 m"], correct:1, exp:"Panjang tangga = √(5² + 12²) = √169 = 13 m (tripel Pythagoras 5-12-13)."},
+{level:"sulit", topic:"Lingkaran", q:"Sudut pusat sebuah lingkaran adalah 80°. Besar sudut keliling yang menghadap busur yang sama adalah ...", opts:["20°","40°","80°","160°"], correct:1, exp:"Sudut keliling = ½ × sudut pusat = ½ × 80° = 40°."},
+{level:"sulit", topic:"Bangun Ruang Sisi Datar", q:"Sebuah limas alas persegi memiliki panjang sisi alas 6 cm dan tinggi sisi tegak (apotema) 5 cm. Luas permukaan limas tersebut adalah ...", opts:["72 cm²","84 cm²","96 cm²","108 cm²"], correct:2, exp:"Luas alas = 6² = 36 cm². Luas 4 sisi tegak = 4 × (½ × 6 × 5) = 60 cm². Total = 36 + 60 = 96 cm²."},
+{level:"sulit", topic:"Bangun Ruang Sisi Datar", q:"Sebuah bangun gabungan terdiri atas kubus rusuk 4 cm dan limas beralas sama dengan tinggi limas 3 cm. Volume total bangun tersebut adalah ...", opts:["64 cm³","72 cm³","80 cm³","88 cm³"], correct:2, exp:"Volume kubus = 4³ = 64 cm³. Volume limas = ⅓ × 16 × 3 = 16 cm³. Total = 64 + 16 = 80 cm³."},
+{level:"sulit", topic:"Statistika", q:"Data nilai ujian: nilai 5 (frekuensi 2), nilai 6 (frekuensi 3), nilai 7 (frekuensi 5), nilai 8 (frekuensi 4), nilai 9 (frekuensi 1). Rata-rata data tersebut adalah ...", opts:["6,5","6,93","7,2","7,5"], correct:1, exp:"Jumlah = (5×2)+(6×3)+(7×5)+(8×4)+(9×1) = 104. Total frekuensi = 15. Rata-rata = 104/15 ≈ 6,93."},
+{level:"sulit", topic:"Peluang", q:"Dua dadu dilempar bersamaan. Peluang munculnya jumlah mata dadu sama dengan 7 adalah ...", opts:["1/12","1/9","1/6","1/4"], correct:2, exp:"Pasangan berjumlah 7: (1,6),(2,5),(3,4),(4,3),(5,2),(6,1) = 6 kejadian dari 36, sehingga peluangnya 6/36 = 1/6."},
+{level:"sulit", topic:"Persamaan Garis Lurus", q:"Persamaan garis yang sejajar dengan garis y = 3x - 1 dan melalui titik (0, 4) adalah ...", opts:["y = 3x + 4","y = 3x - 4","y = -3x + 4","y = ⅓x + 4"], correct:0, exp:"Garis sejajar memiliki gradien sama, yaitu 3. Dengan titik (0,4): y = 3x + 4."},
+{level:"sulit", topic:"Persamaan Garis Lurus", q:"Garis yang tegak lurus dengan garis bergradien 2/3 memiliki gradien ...", opts:["2/3","-2/3","3/2","-3/2"], correct:3, exp:"Dua garis tegak lurus memiliki hasil kali gradien -1, sehingga gradiennya -1 ÷ (2/3) = -3/2."},
+{level:"sulit", topic:"SPLDV", q:"Diketahui 4x + y = 10 dan x + y = 4. Nilai x - y adalah ...", opts:["-2","0","2","4"], correct:1, exp:"Eliminasi: 3x = 6 → x = 2. Substitusi: y = 4 - 2 = 2. Maka x - y = 2 - 2 = 0."},
+{level:"sulit", topic:"Pola Bilangan", q:"Suatu barisan aritmetika terdiri atas 11 suku dengan suku pertama 4 dan beda 5. Suku tengah barisan tersebut adalah ...", opts:["24","29","34","39"], correct:1, exp:"Suku tengah adalah suku ke-6: a₆ = 4 + 5(6-1) = 4 + 25 = 29."},
+{level:"sulit", topic:"Relasi dan Fungsi", q:"Diketahui f(x) = 2x + 3. Invers dari fungsi tersebut, f⁻¹(x), adalah ...", opts:["(x - 3)/2","(x + 3)/2","2x - 3","(x - 2)/3"], correct:0, exp:"Misalkan y = 2x + 3, maka x = (y - 3)/2. Jadi f⁻¹(x) = (x - 3)/2."},
+{level:"sulit", topic:"Lingkaran", q:"Sebuah lingkaran berjari-jari 21 cm memiliki sudut pusat 60° (π = 22/7). Panjang busur untuk sudut pusat tersebut adalah ...", opts:["11 cm","22 cm","33 cm","44 cm"], correct:1, exp:"Panjang busur = (60/360) × 2 × 22/7 × 21 = (1/6) × 132 = 22 cm."},
+
+// ---------- HOTS (31-40) ----------
+{level:"hots", topic:"Kesebangunan", q:"Sebuah tongkat setinggi 2 m memiliki panjang bayangan 3 m. Pada saat yang sama, sebuah menara memiliki panjang bayangan 24 m. Tinggi menara tersebut adalah ...", opts:["12 m","16 m","18 m","20 m"], correct:1, exp:"Perbandingan tinggi dan bayangan tetap: tinggi menara = (2/3) × 24 = 16 m."},
+{level:"hots", topic:"SPLDV Kontekstual", q:"Umur ayah sekarang 4 kali umur anak. Sepuluh tahun lagi, umur ayah menjadi 3 kali umur anak. Umur anak sekarang adalah ...", opts:["10 tahun","15 tahun","20 tahun","25 tahun"], correct:2, exp:"Misal umur anak x, ayah 4x. Persamaan: 4x+10 = 3(x+10) → x = 20 tahun."},
+{level:"hots", topic:"Barisan Geometri", q:"Jumlah bakteri berkembang biak dua kali lipat setiap jam, dimulai dari 5 bakteri. Jumlah bakteri setelah 6 jam adalah ...", opts:["160","240","320","400"], correct:2, exp:"Jumlah bakteri = 5 × 2⁶ = 5 × 64 = 320."},
+{level:"hots", topic:"Statistika", q:"Data nilai 5 siswa 70, 75, 80, 85, 90 memiliki mean dan median 80. Jika nilai 90 diganti menjadi 190 (data lainnya tetap), pernyataan yang benar adalah ...", opts:["Mean dan median naik dengan besar yang sama","Mean naik signifikan, median tetap 80","Median naik signifikan, mean tetap 80","Mean dan median sama-sama tidak berubah"], correct:1, exp:"Median hanya bergantung pada urutan data sehingga tidak terpengaruh nilai ekstrem (tetap 80), sedangkan mean sangat terpengaruh oleh outlier dan naik signifikan."},
+{level:"hots", topic:"Peluang", q:"Sebuah kotak berisi 4 bola merah dan 6 bola biru. Diambil 2 bola berturut-turut tanpa pengembalian. Peluang keduanya bola merah adalah ...", opts:["1/15","2/15","4/15","1/5"], correct:1, exp:"P = (4/10) × (3/9) = 12/90 = 2/15."},
+{level:"hots", topic:"Bangun Ruang Sisi Datar", q:"Sebuah bangunan berbentuk gabungan balok (panjang 4 cm, lebar 3 cm, tinggi 2 cm) dengan atap prisma segitiga (alas segitiga 3 cm, tinggi segitiga 2 cm, panjang prisma 4 cm). Volume total bangunan tersebut adalah ...", opts:["24 cm³","30 cm³","36 cm³","42 cm³"], correct:2, exp:"Volume balok = 4×3×2 = 24 cm³. Volume prisma = (½×3×2)×4 = 12 cm³. Total = 24+12 = 36 cm³."},
+{level:"hots", topic:"Transformasi Geometri", q:"Bayangan titik (3, -5) setelah direfleksikan terhadap sumbu-x adalah ...", opts:["(3, 5)","(-3, 5)","(-3, -5)","(5, 3)"], correct:0, exp:"Refleksi terhadap sumbu-x mengubah tanda koordinat y, sehingga (3,-5) menjadi (3,5)."},
+{level:"hots", topic:"Relasi dan Fungsi", q:"Sebuah tabel nilai fungsi menunjukkan x = 1, 2, 3, 4 menghasilkan y = 5, 8, 11, 14. Rumus fungsi yang sesuai adalah ...", opts:["f(x) = 3x + 2","f(x) = 2x + 3","f(x) = 3x - 2","f(x) = 4x + 1"], correct:0, exp:"Selisih y tiap kenaikan x adalah 3 (gradien 3). Untuk x=1, y=5, maka konstanta: 5 = 3(1)+c → c=2. Rumusnya f(x)=3x+2."},
+{level:"hots", topic:"Persamaan Garis Lurus", q:"Jarak mobil A dari titik awal dinyatakan sebagai 60t (km), sedangkan mobil B dinyatakan sebagai 40t + 40 (km), dengan t dalam jam. Waktu saat kedua mobil berada pada jarak yang sama adalah ...", opts:["1 jam","1,5 jam","2 jam","2,5 jam"], correct:2, exp:"60t = 40t + 40 → 20t = 40 → t = 2 jam."},
+{level:"hots", topic:"Optimasi", q:"Sebuah persegi panjang memiliki keliling tetap 40 m. Agar luasnya maksimum, bentuk bangun tersebut harus berupa persegi dengan luas ...", opts:["75 m²","84 m²","96 m²","100 m²"], correct:3, exp:"Keliling 40 m berarti panjang+lebar=20. Luas maksimum dicapai saat panjang=lebar=10 m, sehingga luas = 10×10 = 100 m²."},
+
+// ---------- OLIMPIADE (41-45) ----------
+{level:"olimpiade", topic:"Barisan Aritmetika", q:"Jumlah 20 suku pertama barisan aritmetika dengan suku pertama 3 dan beda 4 adalah ...", opts:["780","800","820","840"], correct:2, exp:"Sn = n/2 × (2a + (n-1)d) = 10 × (6 + 19×4) = 10 × 82 = 820."},
+{level:"olimpiade", topic:"Bilangan Bulat", q:"Banyak pasangan bilangan asli (x, y) yang memenuhi persamaan 3x + 5y = 34 adalah ...", opts:["1 pasangan","2 pasangan","3 pasangan","4 pasangan"], correct:1, exp:"Untuk y=2 diperoleh x=8, dan untuk y=5 diperoleh x=3. Nilai y lain (1,3,4,6) tidak menghasilkan x bulat positif, sehingga hanya ada 2 pasangan."},
+{level:"olimpiade", topic:"Geometri", q:"Sebuah persegi bersisi 14 cm memuat lingkaran terbesar yang mungkin di dalamnya (π = 22/7). Luas daerah di dalam persegi namun di luar lingkaran adalah ...", opts:["32 cm²","38 cm²","42 cm²","48 cm²"], correct:2, exp:"Diameter lingkaran = 14 cm sehingga jari-jari 7 cm. Luas lingkaran = 22/7×7² = 154 cm². Luas persegi = 14² = 196 cm². Selisih = 196-154 = 42 cm²."},
+{level:"olimpiade", topic:"Kombinatorik", q:"Dari 5 siswa (3 putra dan 2 putri) akan dipilih 2 orang secara acak untuk mewakili lomba. Peluang terpilihnya 1 putra dan 1 putri adalah ...", opts:["1/5","2/5","3/5","4/5"], correct:2, exp:"Banyak cara memilih 1 putra dan 1 putri = 3×2 = 6. Banyak cara memilih 2 dari 5 = 10. Peluang = 6/10 = 3/5."},
+{level:"olimpiade", topic:"Sistem Non-linear", q:"Jika x + y = 7 dan x² + y² = 25, maka nilai xy adalah ...", opts:["10","12","14","16"], correct:1, exp:"(x+y)² = x² + 2xy + y² → 49 = 25 + 2xy → 2xy = 24 → xy = 12."}
+];
+
+const LEVEL_LABEL = {sedang:"Sedang", sulit:"Sulit", hots:"HOTS", olimpiade:"Olimpiade"};
+
+const state = {
+  current: 0,
+  answers: new Array(QUESTIONS.length).fill(null),
+  submitted: false
+};
+
+const panel = document.getElementById('soal-panel');
+const navGrid = document.getElementById('navGrid');
+const progressFill = document.getElementById('progressFill');
+const progressLabel = document.getElementById('progressLabel');
+
+function buildNavGrid(){
+  navGrid.innerHTML = '';
+  QUESTIONS.forEach((q, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'nav-cell';
+    btn.type = 'button';
+    btn.textContent = i + 1;
+    btn.setAttribute('aria-label', 'Soal nomor ' + (i+1) + ', tingkat ' + LEVEL_LABEL[q.level]);
+    btn.addEventListener('click', () => { state.current = i; render(); });
+    navGrid.appendChild(btn);
+  });
+}
+
+function updateNavGrid(){
+  const cells = navGrid.querySelectorAll('.nav-cell');
+  cells.forEach((cell, i) => {
+    cell.classList.toggle('answered', state.answers[i] !== null);
+    cell.classList.toggle('current', i === state.current && !state.submitted);
+  });
+}
+
+function updateProgress(){
+  const answered = state.answers.filter(a => a !== null).length;
+  const pct = Math.round((answered / QUESTIONS.length) * 100);
+  progressFill.style.width = pct + '%';
+  progressLabel.textContent = answered + ' dari ' + QUESTIONS.length + ' soal terjawab';
+}
+
+function renderQuestion(){
+  const i = state.current;
+  const q = QUESTIONS[i];
+  const letters = ['A','B','C','D'];
+
+  const optionsHtml = q.opts.map((opt, idx) => {
+    const selected = state.answers[i] === idx;
+    return `
+      <label class="option${selected ? ' selected' : ''}">
+        <input type="radio" name="opt" value="${idx}" ${selected ? 'checked' : ''}>
+        <span class="opt-letter">${letters[idx]}.</span>
+        <span>${opt}</span>
+      </label>`;
+  }).join('');
+
+  panel.innerHTML = `
+    <div class="badge-row">
+      <span class="level-chip ${q.level}">${LEVEL_LABEL[q.level]}</span>
+      <span class="topic-chip">${q.topic}</span>
+    </div>
+    <div class="q-number">Soal ${i + 1} dari ${QUESTIONS.length}</div>
+    <p class="q-text">${q.q}</p>
+    <fieldset class="options" id="optionsGroup">${optionsHtml}</fieldset>
+    <div class="nav-buttons">
+      <button type="button" class="btn-ghost" id="btnPrev" ${i === 0 ? 'disabled' : ''}>Sebelumnya</button>
+      ${i === QUESTIONS.length - 1
+        ? '<button type="button" class="btn-submit" id="btnSubmit">Kumpulkan jawaban</button>'
+        : '<button type="button" class="btn-primary" id="btnNext">Berikutnya</button>'}
+    </div>
+  `;
+
+  panel.querySelectorAll('input[name="opt"]').forEach(input => {
+    input.addEventListener('change', (e) => {
+      state.answers[i] = parseInt(e.target.value, 10);
+      updateNavGrid();
+      updateProgress();
+      panel.querySelectorAll('.option').forEach((el, idx) => {
+        el.classList.toggle('selected', idx === state.answers[i]);
+      });
+    });
+  });
+
+  const prevBtn = document.getElementById('btnPrev');
+  if (prevBtn) prevBtn.addEventListener('click', () => { state.current--; render(); });
+
+  const nextBtn = document.getElementById('btnNext');
+  if (nextBtn) nextBtn.addEventListener('click', () => { state.current++; render(); });
+
+  const submitBtn = document.getElementById('btnSubmit');
+  if (submitBtn) submitBtn.addEventListener('click', () => {
+    const unanswered = state.answers.filter(a => a === null).length;
+    if (unanswered > 0) {
+      const ok = confirm('Masih ada ' + unanswered + ' soal belum dijawab. Tetap kumpulkan?');
+      if (!ok) return;
+    }
+    state.submitted = true;
+    renderResults();
+  });
+}
+
+function renderResults(){
+  const levels = ['sedang','sulit','hots','olimpiade'];
+  const counts = {};
+  levels.forEach(l => counts[l] = {correct:0, total:0});
+
+  let totalCorrect = 0;
+  QUESTIONS.forEach((q, i) => {
+    counts[q.level].total++;
+    if (state.answers[i] === q.correct) {
+      counts[q.level].correct++;
+      totalCorrect++;
+    }
+  });
+
+  const breakdownHtml = levels.map(l => {
+    const c = counts[l];
+    const pct = c.total ? Math.round((c.correct / c.total) * 100) : 0;
+    return `
+      <div class="bd-row">
+        <span>${LEVEL_LABEL[l]}</span>
+        <div class="bd-track"><div class="bd-fill ${l}" style="width:${pct}%"></div></div>
+        <span>${c.correct}/${c.total}</span>
+      </div>`;
+  }).join('');
+
+  const letters = ['A','B','C','D'];
+  const reviewHtml = QUESTIONS.map((q, i) => {
+    const userAns = state.answers[i];
+    const isCorrect = userAns === q.correct;
+    const optsHtml = q.opts.map((opt, idx) => {
+      let cls = '';
+      if (idx === q.correct) cls = 'correct';
+      else if (idx === userAns) cls = 'wrong-pick';
+      return `<div class="review-opt ${cls}">${letters[idx]}. ${opt}</div>`;
+    }).join('');
+
+    return `
+      <div class="review-item">
+        <div class="badge-row">
+          <span class="level-chip ${q.level}">${LEVEL_LABEL[q.level]}</span>
+          <span class="topic-chip">${q.topic}</span>
+          <span class="topic-chip" style="border-color:${isCorrect ? 'var(--correct)' : 'var(--wrong)'};color:${isCorrect ? 'var(--correct)' : 'var(--wrong)'}">${isCorrect ? 'Benar' : (userAns === null ? 'Tidak dijawab' : 'Salah')}</span>
+        </div>
+        <p class="review-q">${i + 1}. ${q.q}</p>
+        ${optsHtml}
+        <div class="explanation"><b>Pembahasan:</b> ${q.exp}</div>
+      </div>`;
+  }).join('');
+
+  document.getElementById('navigatorPanel').classList.add('hidden');
+  document.querySelector('main').style.gridTemplateColumns = '1fr';
+
+  panel.innerHTML = `
+    <div class="results">
+      <h2>Hasil ujian</h2>
+      <div class="score-hero">
+        <span class="num">${totalCorrect}</span>
+        <span class="of">dari ${QUESTIONS.length} soal benar</span>
+      </div>
+      <div class="breakdown">${breakdownHtml}</div>
+      <button type="button" class="btn-ghost" id="btnRetry">Ulangi ujian</button>
+      <div style="margin-top:30px;">${reviewHtml}</div>
+    </div>
+  `;
+
+  document.getElementById('btnRetry').addEventListener('click', () => {
+    state.current = 0;
+    state.answers = new Array(QUESTIONS.length).fill(null);
+    state.submitted = false;
+    document.getElementById('navigatorPanel').classList.remove('hidden');
+    document.querySelector('main').style.gridTemplateColumns = '';
+    updateNavGrid();
+    updateProgress();
+    render();
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function render(){
+  if (state.submitted) { renderResults(); return; }
+  renderQuestion();
+  updateNavGrid();
+  updateProgress();
+  document.getElementById('soal-panel').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+buildNavGrid();
+render();
+</script>
+</body>
+</html>
