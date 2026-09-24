@@ -5,6 +5,10 @@
    SISTEM WAKTU:
    1. Durasi Total Permainan
    2. Waktu Menjawab Tiap Tim
+
+   TIMER BENAR-BENAR TERPISAH:
+   - timerSeconds       = waktu total permainan
+   - playerTimeSeconds  = waktu menjawab tim aktif
    ========================================================================== */
 
 
@@ -39,6 +43,11 @@ const MIN_TEAMS = 1;
 
 const STORAGE_KEY = "KW_ARENA_STATE";
 const AUTO_NEXT_CORRECT_KEY = "KW_ARENA_AUTO_NEXT_CORRECT";
+
+// Versi sistem timer.
+// Digunakan agar data LocalStorage dari sistem timer lama
+// dapat dimigrasikan ke sistem dua timer.
+const TIMER_MODE_VERSION = 2;
 
 
 // ==========================================================================
@@ -77,16 +86,25 @@ document.addEventListener("DOMContentLoaded", () => {
         timerMaxSeconds: 300,
 
         // --------------------------------------------------------------
-        // TIMER TIAP TIM
+        // TIMER MENJAWAB TIAP TIM
         // --------------------------------------------------------------
 
         playerTimeSeconds: 30,
         playerTimeMaxSeconds: 30,
 
-        // Timer interval gabungan
+        // Versi sistem timer
+        timerModeVersion: TIMER_MODE_VERSION,
+
+        // --------------------------------------------------------------
+        // TIMER INTERVAL
+        // --------------------------------------------------------------
+
         timerInterval: null,
 
-        // Status timer
+        // --------------------------------------------------------------
+        // STATUS TIMER
+        // --------------------------------------------------------------
+
         isTimerRunning: false,
 
         // --------------------------------------------------------------
@@ -100,7 +118,9 @@ document.addEventListener("DOMContentLoaded", () => {
         isSpinning: false,
         selectedOptionIndex: null,
 
-        gameFinished: false
+        gameFinished: false,
+
+        gameStarted: false
     };
 
 
@@ -110,9 +130,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let audioCtx = null;
 
+
     function getAudioCtx() {
 
         if (!audioCtx) {
+
             audioCtx = new (
                 window.AudioContext ||
                 window.webkitAudioContext
@@ -125,7 +147,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function playSound(type) {
 
-        if (!state.soundEnabled) return;
+        if (!state.soundEnabled) {
+            return;
+        }
 
         try {
 
@@ -259,7 +283,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 "Audio play error",
                 e
             );
-
         }
     }
 
@@ -278,10 +301,14 @@ document.addEventListener("DOMContentLoaded", () => {
     ) {
 
         const overlay =
-            document.getElementById("toastOverlay");
+            document.getElementById(
+                "toastOverlay"
+            );
 
         const card =
-            document.getElementById("toastCard");
+            document.getElementById(
+                "toastCard"
+            );
 
 
         if (!overlay || !card) {
@@ -312,34 +339,46 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         const icon =
-            document.getElementById("toastIcon");
+            document.getElementById(
+                "toastIcon"
+            );
 
         const msg =
-            document.getElementById("toastMessage");
+            document.getElementById(
+                "toastMessage"
+            );
 
 
         const icons = {
+
             error: "⚠️",
             warning: "❗",
             info: "ℹ️",
             success: "✅"
+
         };
 
 
         icon.textContent =
             icons[type] || icons.error;
 
-        msg.textContent = message;
+        msg.textContent =
+            message;
 
 
         card.className =
             `toast-card toast-${type}`;
 
-        overlay.classList.remove("hidden");
+        overlay.classList.remove(
+            "hidden"
+        );
 
 
         if (toastTimeout) {
-            clearTimeout(toastTimeout);
+
+            clearTimeout(
+                toastTimeout
+            );
         }
 
 
@@ -366,7 +405,10 @@ document.addEventListener("DOMContentLoaded", () => {
         card.onclick = () => {
 
             if (toastTimeout) {
-                clearTimeout(toastTimeout);
+
+                clearTimeout(
+                    toastTimeout
+                );
             }
 
             hideToast();
@@ -386,6 +428,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // ======================================================================
 
     let setupSelectedChapterId = null;
+
     let setupTeamCount = 2;
 
 
@@ -396,7 +439,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 "chapterGrid"
             );
 
-        if (!grid) return;
+
+        if (!grid) {
+            return;
+        }
 
 
         grid.innerHTML = "";
@@ -407,18 +453,25 @@ document.addEventListener("DOMContentLoaded", () => {
         // --------------------------------------------------------------
 
         const allCard =
-            document.createElement("button");
+            document.createElement(
+                "button"
+            );
 
-        allCard.type = "button";
+
+        allCard.type =
+            "button";
+
 
         allCard.className =
             "chapter-card all-chapter-card";
+
 
         allCard.dataset.chapterId =
             "all";
 
 
         allCard.innerHTML = `
+
             <span class="chapter-icon">
                 🎲
             </span>
@@ -430,6 +483,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <span class="chapter-sub">
                 Menggabungkan soal dari seluruh bab
             </span>
+
         `;
 
 
@@ -438,9 +492,13 @@ document.addEventListener("DOMContentLoaded", () => {
             setupSelectedChapterId =
                 "all";
 
+
             document
-                .querySelectorAll(".chapter-card")
+                .querySelectorAll(
+                    ".chapter-card"
+                )
                 .forEach(card => {
+
                     card.classList.remove(
                         "selected"
                     );
@@ -457,13 +515,18 @@ document.addEventListener("DOMContentLoaded", () => {
                     "setupError"
                 );
 
+
             if (error) {
-                error.textContent = "";
+
+                error.textContent =
+                    "";
             }
         };
 
 
-        grid.appendChild(allCard);
+        grid.appendChild(
+            allCard
+        );
 
 
         // --------------------------------------------------------------
@@ -471,23 +534,31 @@ document.addEventListener("DOMContentLoaded", () => {
         // --------------------------------------------------------------
 
         CHAPTERS.forEach(
-            (ch, idx) => {
+            (
+                ch,
+                idx
+            ) => {
 
                 const card =
                     document.createElement(
                         "button"
                     );
 
-                card.type = "button";
+
+                card.type =
+                    "button";
+
 
                 card.className =
                     "chapter-card";
+
 
                 card.dataset.chapterId =
                     ch.id;
 
 
                 card.innerHTML = `
+
                     <span class="chapter-icon">
                         ${ch.icon}
                     </span>
@@ -499,6 +570,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <span class="chapter-sub">
                         Klik untuk memilih materi ini
                     </span>
+
                 `;
 
 
@@ -513,6 +585,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             ".chapter-card"
                         )
                         .forEach(c => {
+
                             c.classList.remove(
                                 "selected"
                             );
@@ -529,16 +602,22 @@ document.addEventListener("DOMContentLoaded", () => {
                             "setupError"
                         );
 
+
                     if (error) {
-                        error.textContent = "";
+
+                        error.textContent =
+                            "";
                     }
                 };
 
 
-                grid.appendChild(card);
+                grid.appendChild(
+                    card
+                );
 
 
                 if (idx === 0) {
+
                     card.click();
                 }
             }
@@ -552,22 +631,21 @@ document.addEventListener("DOMContentLoaded", () => {
         // TAMBAH TIM
         // --------------------------------------------------------------
 
-const addTeamBtn =
-    document.getElementById(
-        "addTeamBtn"
-    );
+        const addTeamBtn =
+            document.getElementById(
+                "addTeamBtn"
+            );
 
-if (addTeamBtn) {
 
-    addTeamBtn.onclick = () => {
+        if (addTeamBtn) {
 
-        // Tambah 1 pemain/tim
-        setupTeamCount++;
+            addTeamBtn.onclick = () => {
 
-        // Buat baris pemain baru
-        renderTeamSetupRows();
-    };
-}
+                setupTeamCount++;
+
+                renderTeamSetupRows();
+            };
+        }
 
 
         // --------------------------------------------------------------
@@ -589,6 +667,7 @@ if (addTeamBtn) {
 
 
                     if (input) {
+
                         input.value =
                             chip.dataset.min;
                     }
@@ -599,6 +678,7 @@ if (addTeamBtn) {
                             "#timeQuickPicks .time-chip"
                         )
                         .forEach(c => {
+
                             c.classList.remove(
                                 "active"
                             );
@@ -631,6 +711,7 @@ if (addTeamBtn) {
 
 
                     if (input) {
+
                         input.value =
                             chip.dataset.sec;
                     }
@@ -641,6 +722,7 @@ if (addTeamBtn) {
                             "#playerTimeQuickPicks .player-time-chip"
                         )
                         .forEach(c => {
+
                             c.classList.remove(
                                 "active"
                             );
@@ -665,6 +747,7 @@ if (addTeamBtn) {
 
 
         if (startBtn) {
+
             startBtn.onclick =
                 handleStartGame;
         }
@@ -683,7 +766,9 @@ if (addTeamBtn) {
             );
 
 
-        if (!list) return;
+        if (!list) {
+            return;
+        }
 
 
         const existingValues =
@@ -691,12 +776,14 @@ if (addTeamBtn) {
                 list.querySelectorAll(
                     ".team-name-input"
                 )
-            ).map(input =>
-                input.value
+            ).map(
+                input =>
+                    input.value
             );
 
 
-        list.innerHTML = "";
+        list.innerHTML =
+            "";
 
 
         for (
@@ -716,10 +803,12 @@ if (addTeamBtn) {
 
 
             const savedVal =
-                existingValues[i] || "";
+                existingValues[i] ||
+                "";
 
 
             row.innerHTML = `
+
                 <div
                     class="team-setup-swatch"
                     style="
@@ -746,6 +835,7 @@ if (addTeamBtn) {
                 >
                     ✕
                 </button>
+
             `;
 
 
@@ -756,7 +846,8 @@ if (addTeamBtn) {
 
 
             removeBtn.disabled =
-                setupTeamCount <= MIN_TEAMS;
+                setupTeamCount <=
+                MIN_TEAMS;
 
 
             removeBtn.onclick = () => {
@@ -775,7 +866,9 @@ if (addTeamBtn) {
             };
 
 
-            list.appendChild(row);
+            list.appendChild(
+                row
+            );
         }
     }
 
@@ -786,91 +879,43 @@ if (addTeamBtn) {
 
     function handleStartGame() {
 
-        playSound("click");
-
-
-        const errorBox =
+        const timeInput =
             document.getElementById(
-                "setupError"
+                "setupTimeInput"
             );
 
 
-        if (!setupSelectedChapterId) {
-
-            showToast(
-                "Silakan pilih bab/materi terlebih dahulu.",
-                "warning"
+        const playerTimeInput =
+            document.getElementById(
+                "setupPlayerTimeInput"
             );
 
-            return;
-        }
-
-
-        const nameInputs =
-            Array.from(
-                document.querySelectorAll(
-                    ".team-name-input"
-                )
-            );
-
-
-        const teamNames =
-            nameInputs.map(
-                (inp, idx) =>
-                    inp.value.trim() ||
-                    `Tim ${idx + 1}`
-            );
-
-
-        // --------------------------------------------------------------
-        // DURASI TOTAL
-        // --------------------------------------------------------------
 
         const minutes =
             parseInt(
-                document.getElementById(
-                    "setupTimeInput"
-                ).value,
+                timeInput?.value,
                 10
             );
 
-
-        if (
-            !minutes ||
-            minutes < 1 ||
-            minutes > 90
-        ) {
-
-            showToast(
-                "Masukkan durasi total permainan 1–90 menit.",
-                "warning"
-            );
-
-            return;
-        }
-
-
-        // --------------------------------------------------------------
-        // WAKTU TIAP TIM
-        // --------------------------------------------------------------
 
         const playerSeconds =
             parseInt(
-                document.getElementById(
-                    "setupPlayerTimeInput"
-                ).value,
+                playerTimeInput?.value,
                 10
             );
 
 
+        // --------------------------------------------------------------
+        // VALIDASI WAKTU TOTAL
+        // --------------------------------------------------------------
+
         if (
-            !playerSeconds ||
-            playerSeconds < 5 ||
-            playerSeconds > 300
+            !Number.isFinite(minutes) ||
+            minutes <= 0
         ) {
 
             showToast(
-                "Waktu tiap tim harus antara 5–300 detik.",
+                "Masukkan durasi permainan yang valid.",
                 "warning"
             );
 
@@ -878,66 +923,178 @@ if (addTeamBtn) {
         }
 
 
-        if (errorBox) {
-            errorBox.textContent = "";
+        // --------------------------------------------------------------
+        // VALIDASI WAKTU TIM
+        // --------------------------------------------------------------
+
+        if (
+            !Number.isFinite(playerSeconds) ||
+            playerSeconds <= 0
+        ) {
+
+            showToast(
+                "Masukkan waktu menjawab tim yang valid.",
+                "warning"
+            );
+
+            return;
         }
 
 
         // --------------------------------------------------------------
-        // BUAT TIM
+        // NAMA TIM
         // --------------------------------------------------------------
 
-        const teams =
-            teamNames.map(
-                (name, idx) => ({
-
-                    id: idx,
-
-                    name: name,
-
-                    score: 0,
-
-                    color:
-                        TEAM_COLORS[
-                            idx %
-                            TEAM_COLORS.length
-                        ]
-                })
+        const teamInputs =
+            document.querySelectorAll(
+                ".team-name-input"
             );
 
 
-        state.teams = teams;
-
-        state.activeTeamIndex = 0;
+        const teams = [];
 
 
-        // Timer total
+        teamInputs.forEach(
+            (
+                input,
+                index
+            ) => {
+
+                const name =
+                    input.value.trim() ||
+                    `Tim ${index + 1}`;
+
+
+                teams.push({
+
+                    id:
+                        `team-${Date.now()}-${index}`,
+
+                    name:
+                        name,
+
+                    score:
+                        0,
+
+                    correct:
+                        0,
+
+                    wrong:
+                        0,
+
+                    color:
+                        TEAM_COLORS[
+                            index %
+                            TEAM_COLORS.length
+                        ]
+                });
+            }
+        );
+
+
+        if (!teams.length) {
+
+            showToast(
+                "Minimal harus ada 1 tim.",
+                "warning"
+            );
+
+            return;
+        }
+
+
+        // --------------------------------------------------------------
+        // STOP TIMER LAMA
+        // --------------------------------------------------------------
+
+        stopTimers();
+
+
+        // --------------------------------------------------------------
+        // DATA TIM
+        // --------------------------------------------------------------
+
+        state.teams =
+            teams;
+
+
+        state.activeTeamIndex =
+            0;
+
+
+        // ==============================================================
+        // TIMER 1 — TOTAL PERMAINAN
+        // ==============================================================
+
         state.timerMaxSeconds =
             minutes * 60;
+
 
         state.timerSeconds =
             minutes * 60;
 
 
-        // Timer tiap tim
+        // ==============================================================
+        // TIMER 2 — WAKTU MENJAWAB TIM
+        // ==============================================================
+
         state.playerTimeMaxSeconds =
             playerSeconds;
+
 
         state.playerTimeSeconds =
             playerSeconds;
 
 
-        state.answeredQuestions = {};
+        // ==============================================================
+        // RESET GAME
+        // ==============================================================
 
-        state.currentQuestionIndex = 0;
-
-        state.selectedCategory = "all";
-
-        state.selectedOptionIndex = null;
-
-        state.gameFinished = false;
+        state.currentQuestionIndex =
+            -1;
 
 
+        state.answeredQuestions =
+            {};
+
+
+        state.questionsData =
+            [];
+
+
+        state.gameFinished =
+            false;
+
+
+        state.isSpinning =
+            false;
+
+
+        state.selectedOptionIndex =
+            null;
+
+
+        state.timerInterval =
+            null;
+
+
+        state.isTimerRunning =
+            false;
+
+
+        state.gameStarted =
+            true;
+
+
+        state.timerModeVersion =
+            TIMER_MODE_VERSION;
+
+
+        saveLocalStorage();
+
+
+        // --------------------------------------------------------------
+        // LOAD SOAL
         // --------------------------------------------------------------
 
         if (
@@ -947,7 +1104,9 @@ if (addTeamBtn) {
 
             loadAllChaptersAndStart();
 
-        } else {
+        }
+
+        else {
 
             loadChapterAndStart(
                 setupSelectedChapterId
@@ -970,7 +1129,8 @@ if (addTeamBtn) {
 
         if (startBtn) {
 
-            startBtn.disabled = true;
+            startBtn.disabled =
+                true;
 
             startBtn.textContent =
                 "MEMUAT SEMUA SOAL...";
@@ -994,6 +1154,7 @@ if (addTeamBtn) {
                                 );
                             }
 
+
                             return response.text();
                         })
 
@@ -1002,6 +1163,7 @@ if (addTeamBtn) {
 
                             const parser =
                                 new DOMParser();
+
 
                             const doc =
                                 parser.parseFromString(
@@ -1051,219 +1213,247 @@ if (addTeamBtn) {
             );
 
 
-        Promise.all(requests)
+        Promise.all(
+            requests
+        )
 
-            .then(results => {
+            .then(
+                results => {
 
-                const allQuestions = [];
-
-                const categoryMap =
-                    new Map();
-
-
-                results.forEach(
-                    ({
-                        chapterCfg,
-                        data
-                    }) => {
-
-                        const questions =
-                            Array.isArray(
-                                data.questions
-                            )
-                                ? data.questions
-                                : [];
+                    const allQuestions =
+                        [];
 
 
-                        const categories =
-                            Array.isArray(
-                                data.categories
-                            )
-                                ? data.categories
-                                : [];
+                    const categoryMap =
+                        new Map();
 
 
-                        categories.forEach(
-                            cat => {
+                    results.forEach(
+                        ({
+                            chapterCfg,
+                            data
+                        }) => {
 
-                                const key =
-                                    typeof cat ===
-                                    "object"
-                                        ? (
-                                            cat.key ??
-                                            cat.name
+                            const questions =
+                                Array.isArray(
+                                    data.questions
+                                )
+                                    ? data.questions
+                                    : [];
+
+
+                            const categories =
+                                Array.isArray(
+                                    data.categories
+                                )
+                                    ? data.categories
+                                    : [];
+
+
+                            categories.forEach(
+                                cat => {
+
+                                    const key =
+                                        typeof cat ===
+                                        "object"
+
+                                            ? (
+                                                cat.key ??
+                                                cat.name
+                                            )
+
+                                            : String(
+                                                cat
+                                            );
+
+
+                                    const name =
+                                        typeof cat ===
+                                        "object"
+
+                                            ? (
+                                                cat.name ??
+                                                cat.key
+                                            )
+
+                                            : String(
+                                                cat
+                                            );
+
+
+                                    if (
+                                        !key ||
+                                        categoryMap.has(
+                                            key
                                         )
-                                        : String(cat);
+                                    ) {
 
-
-                                const name =
-                                    typeof cat ===
-                                    "object"
-                                        ? (
-                                            cat.name ??
-                                            cat.key
-                                        )
-                                        : String(cat);
-
-
-                                if (
-                                    !key ||
-                                    categoryMap.has(
-                                        key
-                                    )
-                                ) {
-                                    return;
-                                }
-
-
-                                categoryMap.set(
-                                    key,
-                                    {
-                                        key,
-                                        name,
-                                        icon:
-                                            typeof cat ===
-                                            "object"
-                                                ? (
-                                                    cat.icon ||
-                                                    "📌"
-                                                )
-                                                : "📌"
+                                        return;
                                     }
-                                );
-                            }
-                        );
 
 
-                        questions.forEach(
-                            (
-                                question,
-                                index
-                            ) => {
+                                    categoryMap.set(
+                                        key,
+                                        {
 
-                                const originalId =
-                                    question.id ??
-                                    (index + 1);
+                                            key,
+
+                                            name,
+
+                                            icon:
+                                                typeof cat ===
+                                                "object"
+
+                                                    ? (
+                                                        cat.icon ||
+                                                        "📌"
+                                                    )
+
+                                                    : "📌"
+                                        }
+                                    );
+                                }
+                            );
 
 
-                                allQuestions.push({
+                            questions.forEach(
+                                (
+                                    question,
+                                    index
+                                ) => {
 
-                                    ...question,
+                                    const originalId =
+                                        question.id ??
+                                        (
+                                            index + 1
+                                        );
 
-                                    id:
-                                        `${chapterCfg.id}-${originalId}`,
 
-                                    originalId,
+                                    allQuestions.push({
 
-                                    sourceChapterId:
-                                        chapterCfg.id,
+                                        ...question,
 
-                                    sourceChapterLabel:
-                                        chapterCfg.label,
+                                        id:
+                                            `${chapterCfg.id}-${originalId}`,
 
-                                    sourceChapterIcon:
-                                        chapterCfg.icon,
+                                        originalId,
 
-                                    sourceChapterFile:
-                                        chapterCfg.file
-                                });
-                            }
+                                        sourceChapterId:
+                                            chapterCfg.id,
+
+                                        sourceChapterLabel:
+                                            chapterCfg.label,
+
+                                        sourceChapterIcon:
+                                            chapterCfg.icon,
+
+                                        sourceChapterFile:
+                                            chapterCfg.file
+                                    });
+                                }
+                            );
+                        }
+                    );
+
+
+                    if (
+                        !allQuestions.length
+                    ) {
+
+                        throw new Error(
+                            "Tidak ada soal dari seluruh bab."
                         );
                     }
-                );
 
 
-                if (!allQuestions.length) {
-
-                    throw new Error(
-                        "Tidak ada soal dari seluruh bab."
-                    );
-                }
-
-
-                shuffleArray(
-                    allQuestions
-                );
-
-
-                state.chapterId =
-                    "all";
-
-
-                state.chapterMeta = {
-
-                    title:
-                        "Semua Bab — Soal Random",
-
-                    subtitle:
-                        `${allQuestions.length} soal dari semua bab/materi`,
-
-                    icon:
-                        "🎲"
-                };
-
-
-                state.categories =
-                    Array.from(
-                        categoryMap.values()
+                    shuffleArray(
+                        allQuestions
                     );
 
 
-                state.questionsData =
-                    allQuestions;
+                    state.chapterId =
+                        "all";
 
 
-                state.setupComplete =
-                    true;
+                    state.chapterMeta = {
+
+                        title:
+                            "Semua Bab — Soal Random",
+
+                        subtitle:
+                            `${allQuestions.length} soal dari semua bab/materi`,
+
+                        icon:
+                            "🎲"
+                    };
 
 
-                state.currentQuestionIndex =
-                    0;
+                    state.categories =
+                        Array.from(
+                            categoryMap.values()
+                        );
 
 
-                state.answeredQuestions =
-                    {};
+                    state.questionsData =
+                        allQuestions;
 
 
-                state.selectedCategory =
-                    "all";
+                    state.setupComplete =
+                        true;
 
 
-                state.selectedOptionIndex =
-                    null;
+                    state.currentQuestionIndex =
+                        0;
 
 
-                startArena();
-            })
+                    state.answeredQuestions =
+                        {};
 
 
-            .catch(error => {
-
-                console.error(
-                    "DETAIL ERROR SEMUA BAB:",
-                    error
-                );
+                    state.selectedCategory =
+                        "all";
 
 
-                showToast(
-                    "Gagal memuat soal dari semua bab. Pastikan folder /soal berisi file soal dan jalankan melalui Live Server.",
-                    "error",
-                    9000
-                );
-            })
+                    state.selectedOptionIndex =
+                        null;
 
 
-            .finally(() => {
-
-                if (startBtn) {
-
-                    startBtn.disabled =
-                        false;
-
-                    startBtn.textContent =
-                        "🚀 MULAI PERMAINAN";
+                    startArena();
                 }
-            });
+            )
+
+
+            .catch(
+                error => {
+
+                    console.error(
+                        "DETAIL ERROR SEMUA BAB:",
+                        error
+                    );
+
+
+                    showToast(
+                        "Gagal memuat soal dari semua bab. Pastikan folder /soal berisi file soal dan jalankan melalui Live Server.",
+                        "error",
+                        9000
+                    );
+                }
+            )
+
+
+            .finally(
+                () => {
+
+                    if (startBtn) {
+
+                        startBtn.disabled =
+                            false;
+
+                        startBtn.textContent =
+                            "🚀 MULAI PERMAINAN";
+                    }
+                }
+            );
     }
 
 
@@ -1277,7 +1467,9 @@ if (addTeamBtn) {
 
         const chapterCfg =
             CHAPTERS.find(
-                c => c.id === chapterId
+                c =>
+                    c.id ===
+                    chapterId
             );
 
 
@@ -1308,113 +1500,135 @@ if (addTeamBtn) {
         }
 
 
-        fetch(chapterCfg.file)
+        fetch(
+            chapterCfg.file
+        )
 
-            .then(res => {
+            .then(
+                res => {
 
-                if (!res.ok) {
+                    if (!res.ok) {
 
-                    throw new Error(
-                        "HTTP " + res.status
+                        throw new Error(
+                            "HTTP " +
+                            res.status
+                        );
+                    }
+
+
+                    return res.text();
+                }
+            )
+
+
+            .then(
+                html => {
+
+                    const parser =
+                        new DOMParser();
+
+
+                    const doc =
+                        parser.parseFromString(
+                            html,
+                            "text/html"
+                        );
+
+
+                    const scriptTag =
+                        doc.getElementById(
+                            "quiz-bank"
+                        );
+
+
+                    if (!scriptTag) {
+
+                        throw new Error(
+                            "Format file soal tidak valid."
+                        );
+                    }
+
+
+                    const data =
+                        JSON.parse(
+                            scriptTag.textContent
+                        );
+
+
+                    state.chapterId =
+                        chapterCfg.id;
+
+
+                    state.chapterMeta =
+                        data.meta ||
+                        {
+
+                            title:
+                                chapterCfg.label,
+
+                            subtitle:
+                                "",
+
+                            icon:
+                                chapterCfg.icon
+                        };
+
+
+                    state.categories =
+                        data.categories ||
+                        [];
+
+
+                    state.questionsData =
+                        data.questions ||
+                        [];
+
+
+                    state.setupComplete =
+                        true;
+
+
+                    state.currentQuestionIndex =
+                        0;
+
+
+                    startArena();
+                }
+            )
+
+
+            .catch(
+                err => {
+
+                    console.error(
+                        err
+                    );
+
+
+                    showToast(
+                        "Gagal memuat file soal (" +
+                        chapterCfg.file +
+                        "). Jalankan project melalui Live Server.",
+                        "error",
+                        9000
                     );
                 }
-
-                return res.text();
-            })
+            )
 
 
-            .then(html => {
+            .finally(
+                () => {
 
-                const parser =
-                    new DOMParser();
+                    if (startBtn) {
 
-                const doc =
-                    parser.parseFromString(
-                        html,
-                        "text/html"
-                    );
+                        startBtn.disabled =
+                            false;
 
-
-                const scriptTag =
-                    doc.getElementById(
-                        "quiz-bank"
-                    );
-
-
-                if (!scriptTag) {
-
-                    throw new Error(
-                        "Format file soal tidak valid."
-                    );
+                        startBtn.textContent =
+                            "🚀 MULAI PERMAINAN";
+                    }
                 }
-
-
-                const data =
-                    JSON.parse(
-                        scriptTag.textContent
-                    );
-
-
-                state.chapterId =
-                    chapterCfg.id;
-
-
-                state.chapterMeta =
-                    data.meta || {
-
-                        title:
-                            chapterCfg.label,
-
-                        subtitle:
-                            "",
-
-                        icon:
-                            chapterCfg.icon
-                    };
-
-
-                state.categories =
-                    data.categories || [];
-
-
-                state.questionsData =
-                    data.questions || [];
-
-
-                state.setupComplete =
-                    true;
-
-
-                startArena();
-            })
-
-
-            .catch(err => {
-
-                console.error(err);
-
-
-                showToast(
-                    "Gagal memuat file soal (" +
-                    chapterCfg.file +
-                    "). Jalankan project melalui Live Server.",
-                    "error",
-                    9000
-                );
-            })
-
-
-            .finally(() => {
-
-                if (startBtn) {
-
-                    startBtn.disabled =
-                        false;
-
-                    startBtn.textContent =
-                        "🚀 MULAI PERMAINAN";
-                }
-            });
+            );
     }
 
 
@@ -1424,12 +1638,17 @@ if (addTeamBtn) {
 
     function startArena() {
 
-        state.gameFinished = false;
+        state.gameFinished =
+            false;
 
 
         document
-            .getElementById("setupScreen")
-            .classList.add("hidden");
+            .getElementById(
+                "setupScreen"
+            )
+            .classList.add(
+                "hidden"
+            );
 
 
         document.body.classList.remove(
@@ -1438,28 +1657,32 @@ if (addTeamBtn) {
 
 
         document
-            .getElementById("appContainer")
-            .classList.remove("hidden");
+            .getElementById(
+                "appContainer"
+            )
+            .classList.remove(
+                "hidden"
+            );
 
 
         document.getElementById(
             "babIcon"
         ).textContent =
-            state.chapterMeta.icon ||
+            state.chapterMeta?.icon ||
             "📖";
 
 
         document.getElementById(
             "babTitle"
         ).textContent =
-            state.chapterMeta.title ||
+            state.chapterMeta?.title ||
             "Bab";
 
 
         document.getElementById(
             "babSubtitle"
         ).textContent =
-            state.chapterMeta.subtitle ||
+            state.chapterMeta?.subtitle ||
             "Kuis Interaktif SMP";
 
 
@@ -1490,15 +1713,76 @@ if (addTeamBtn) {
         updateProgress();
 
 
-        // Pastikan timer tim dimulai dari nilai maksimal
+        // ==============================================================
+        // VALIDASI TIMER TOTAL
+        // ==============================================================
+
         if (
-            !state.playerTimeSeconds ||
-            state.playerTimeSeconds <= 0
+            !Number.isFinite(
+                Number(
+                    state.timerSeconds
+                )
+            ) ||
+            Number(
+                state.timerSeconds
+            ) < 0
+        ) {
+
+            state.timerSeconds =
+                Number(
+                    state.timerMaxSeconds
+                ) ||
+                300;
+        }
+
+
+        // ==============================================================
+        // VALIDASI TIMER TIM
+        // ==============================================================
+
+        if (
+            !Number.isFinite(
+                Number(
+                    state.playerTimeMaxSeconds
+                )
+            ) ||
+            Number(
+                state.playerTimeMaxSeconds
+            ) <= 0
+        ) {
+
+            state.playerTimeMaxSeconds =
+                30;
+        }
+
+
+        if (
+            !Number.isFinite(
+                Number(
+                    state.playerTimeSeconds
+                )
+            ) ||
+            Number(
+                state.playerTimeSeconds
+            ) < 0
         ) {
 
             state.playerTimeSeconds =
                 state.playerTimeMaxSeconds;
         }
+
+
+        // ==============================================================
+        // JANGAN PERNAH ADA LAGI:
+        //
+        // state.playerTimeSeconds = state.timerSeconds;
+        //
+        // KEDUA TIMER SUDAH SEPENUHNYA TERPISAH.
+        // ==============================================================
+
+
+        state.timerModeVersion =
+            TIMER_MODE_VERSION;
 
 
         updateTimerDisplay();
@@ -1508,7 +1792,10 @@ if (addTeamBtn) {
         saveLocalStorage();
 
 
-        // Mulai timer
+        // ==============================================================
+        // MULAI DUA TIMER
+        // ==============================================================
+
         startTimers();
     }
 
@@ -1558,13 +1845,23 @@ if (addTeamBtn) {
             );
 
 
-        if (!saved) return;
+        if (!saved) {
+            return;
+        }
 
 
         try {
 
             const parsed =
-                JSON.parse(saved);
+                JSON.parse(
+                    saved
+                );
+
+
+            const savedTimerVersion =
+                Number(
+                    parsed.timerModeVersion
+                ) || 1;
 
 
             state = {
@@ -1573,12 +1870,89 @@ if (addTeamBtn) {
             };
 
 
-            // ----------------------------------------------------------
-            // Kompatibilitas dengan data lama
-            // ----------------------------------------------------------
+            // ==========================================================
+            // MIGRASI DARI SISTEM TIMER LAMA
+            // ==========================================================
 
             if (
-                !state.playerTimeMaxSeconds
+                savedTimerVersion <
+                TIMER_MODE_VERSION
+            ) {
+
+                /*
+                 * Sistem lama menggunakan:
+                 *
+                 * playerTimeSeconds = timerSeconds
+                 * playerTimeMaxSeconds = timerMaxSeconds
+                 *
+                 * Nilai waktu menjawab asli sudah tidak dapat
+                 * diketahui lagi dari LocalStorage lama.
+                 *
+                 * Karena itu gunakan default 30 detik.
+                 */
+
+                state.playerTimeMaxSeconds =
+                    30;
+
+
+                state.playerTimeSeconds =
+                    30;
+
+
+                state.timerModeVersion =
+                    TIMER_MODE_VERSION;
+            }
+
+
+            // ==========================================================
+            // VALIDASI TIMER TOTAL
+            // ==========================================================
+
+            if (
+                !Number.isFinite(
+                    Number(
+                        state.timerMaxSeconds
+                    )
+                ) ||
+                Number(
+                    state.timerMaxSeconds
+                ) <= 0
+            ) {
+
+                state.timerMaxSeconds =
+                    300;
+            }
+
+
+            if (
+                !Number.isFinite(
+                    Number(
+                        state.timerSeconds
+                    )
+                ) ||
+                Number(
+                    state.timerSeconds
+                ) < 0
+            ) {
+
+                state.timerSeconds =
+                    state.timerMaxSeconds;
+            }
+
+
+            // ==========================================================
+            // VALIDASI TIMER TIM
+            // ==============================================================
+
+            if (
+                !Number.isFinite(
+                    Number(
+                        state.playerTimeMaxSeconds
+                    )
+                ) ||
+                Number(
+                    state.playerTimeMaxSeconds
+                ) <= 0
             ) {
 
                 state.playerTimeMaxSeconds =
@@ -1587,14 +1961,24 @@ if (addTeamBtn) {
 
 
             if (
-                !state.playerTimeSeconds ||
-                state.playerTimeSeconds <= 0
+                !Number.isFinite(
+                    Number(
+                        state.playerTimeSeconds
+                    )
+                ) ||
+                Number(
+                    state.playerTimeSeconds
+                ) < 0
             ) {
 
                 state.playerTimeSeconds =
                     state.playerTimeMaxSeconds;
             }
 
+
+            // ==========================================================
+            // AUTO NEXT
+            // ==========================================================
 
             if (
                 typeof state.autoNextCorrect ===
@@ -1609,6 +1993,7 @@ if (addTeamBtn) {
                 );
             }
 
+
         } catch (e) {
 
             console.error(
@@ -1618,6 +2003,10 @@ if (addTeamBtn) {
         }
     }
 
+
+    // ======================================================================
+    // SAVE LOCAL STORAGE
+    // ======================================================================
 
     function saveLocalStorage() {
 
@@ -1652,19 +2041,34 @@ if (addTeamBtn) {
                 currentQuestionIndex:
                     state.currentQuestionIndex,
 
-                // TIMER TOTAL
+                // ======================================================
+                // TIMER TOTAL PERMAINAN
+                // ======================================================
+
                 timerSeconds:
                     state.timerSeconds,
 
                 timerMaxSeconds:
                     state.timerMaxSeconds,
 
-                // TIMER TIAP TIM
+                // ======================================================
+                // TIMER MENJAWAB TIM
+                // ======================================================
+
                 playerTimeSeconds:
                     state.playerTimeSeconds,
 
                 playerTimeMaxSeconds:
                     state.playerTimeMaxSeconds,
+
+                // ======================================================
+                // VERSI TIMER
+                // ======================================================
+
+                timerModeVersion:
+                    TIMER_MODE_VERSION,
+
+                // ======================================================
 
                 soundEnabled:
                     state.soundEnabled,
@@ -1696,10 +2100,13 @@ if (addTeamBtn) {
             );
 
 
-        if (!wheelSvg) return;
+        if (!wheelSvg) {
+            return;
+        }
 
 
-        wheelSvg.innerHTML = "";
+        wheelSvg.innerHTML =
+            "";
 
 
         const numSectors =
@@ -1710,7 +2117,8 @@ if (addTeamBtn) {
 
 
         const anglePerSector =
-            360 / numSectors;
+            360 /
+            numSectors;
 
 
         const colors = [
@@ -1730,7 +2138,8 @@ if (addTeamBtn) {
         ) {
 
             const startAngle =
-                i * anglePerSector;
+                i *
+                anglePerSector;
 
 
             const endAngle =
@@ -1740,7 +2149,8 @@ if (addTeamBtn) {
 
             const color =
                 colors[
-                    i % colors.length
+                    i %
+                    colors.length
                 ];
 
 
@@ -1845,7 +2255,8 @@ if (addTeamBtn) {
 
             const midAngle =
                 startAngle +
-                anglePerSector / 2;
+                anglePerSector /
+                2;
 
 
             const tx =
@@ -1950,6 +2361,7 @@ if (addTeamBtn) {
             state.isSpinning ||
             state.gameFinished
         ) {
+
             return;
         }
 
@@ -1957,13 +2369,18 @@ if (addTeamBtn) {
         if (
             state.questionsData.length === 0
         ) {
+
             return;
         }
 
 
-        state.isSpinning = true;
+        state.isSpinning =
+            true;
 
-        playSound("click");
+
+        playSound(
+            "click"
+        );
 
 
         const spinBtn =
@@ -1973,7 +2390,9 @@ if (addTeamBtn) {
 
 
         if (spinBtn) {
-            spinBtn.disabled = true;
+
+            spinBtn.disabled =
+                true;
         }
 
 
@@ -1981,6 +2400,15 @@ if (addTeamBtn) {
             document.getElementById(
                 "wheelContainer"
             );
+
+
+        if (!wheelContainer) {
+
+            state.isSpinning =
+                false;
+
+            return;
+        }
 
 
         const total =
@@ -1991,7 +2419,10 @@ if (addTeamBtn) {
             state.questionsData
 
                 .map(
-                    (q, idx) => ({
+                    (
+                        q,
+                        idx
+                    ) => ({
                         q,
                         idx
                     })
@@ -1999,9 +2430,10 @@ if (addTeamBtn) {
 
                 .filter(
                     item =>
-                        !state.answeredQuestions[
-                            item.q.id
-                        ]
+                        !state
+                            .answeredQuestions[
+                                item.q.id
+                            ]
                 )
 
                 .map(
@@ -2012,7 +2444,8 @@ if (addTeamBtn) {
 
         let targetIndex =
             Math.floor(
-                Math.random() * total
+                Math.random() *
+                total
             );
 
 
@@ -2031,7 +2464,8 @@ if (addTeamBtn) {
 
 
         const anglePerSector =
-            360 / total;
+            360 /
+            total;
 
 
         const targetSectorAngle =
@@ -2040,12 +2474,14 @@ if (addTeamBtn) {
                 anglePerSector
             ) +
             (
-                anglePerSector / 2
+                anglePerSector /
+                2
             );
 
 
         const randomSpins =
-            5 * 360;
+            5 *
+            360;
 
 
         const totalRotation =
@@ -2060,68 +2496,86 @@ if (addTeamBtn) {
             `rotate(${totalRotation}deg)`;
 
 
-        let spinTicks = 0;
+        let spinTicks =
+            0;
 
 
         const tickInterval =
-            setInterval(() => {
+            setInterval(
+                () => {
 
-                playSound("spin");
-
-                spinTicks++;
-
-
-                if (spinTicks > 20) {
-
-                    clearInterval(
-                        tickInterval
+                    playSound(
+                        "spin"
                     );
-                }
-
-            }, 150);
 
 
-        setTimeout(() => {
-
-            state.isSpinning =
-                false;
+                    spinTicks++;
 
 
-            if (spinBtn) {
-                spinBtn.disabled = false;
-            }
+                    if (
+                        spinTicks >
+                        20
+                    ) {
 
+                        clearInterval(
+                            tickInterval
+                        );
+                    }
 
-            wheelContainer.style.transition =
-                "none";
-
-
-            wheelContainer.style.transform =
-                `rotate(
-                    ${360 - targetSectorAngle}deg
-                )`;
-
-
-            setTimeout(() => {
-
-                wheelContainer.style.transition =
-                    "transform 4s cubic-bezier(0.15, 0.9, 0.2, 1)";
-
-            }, 50);
-
-
-            state.currentQuestionIndex =
-                targetIndex;
-
-
-            renderQuestion(
-                targetIndex
+                },
+                150
             );
 
 
-            saveLocalStorage();
+        setTimeout(
+            () => {
 
-        }, 4000);
+                state.isSpinning =
+                    false;
+
+
+                if (spinBtn) {
+
+                    spinBtn.disabled =
+                        false;
+                }
+
+
+                wheelContainer.style.transition =
+                    "none";
+
+
+                wheelContainer.style.transform =
+                    `rotate(
+                        ${360 - targetSectorAngle}deg
+                    )`;
+
+
+                setTimeout(
+                    () => {
+
+                        wheelContainer.style.transition =
+                            "transform 4s cubic-bezier(0.15, 0.9, 0.2, 1)";
+
+                    },
+                    50
+                );
+
+
+                state.currentQuestionIndex =
+                    targetIndex;
+
+
+                renderQuestion(
+                    targetIndex
+                );
+
+
+                saveLocalStorage();
+
+            },
+            4000
+        );
     }
 
 
@@ -2129,49 +2583,90 @@ if (addTeamBtn) {
     // RENDER QUESTION
     // ======================================================================
 
-    function renderQuestion(index) {
+    function renderQuestion(
+        index
+    ) {
 
         state.selectedOptionIndex =
             null;
 
 
         const q =
-            state.questionsData[index];
+            state.questionsData[
+                index
+            ];
 
 
-        if (!q) return;
+        if (!q) {
+            return;
+        }
 
 
-        document.getElementById(
-            "currentNumberDisplay"
-        ).textContent =
-            q.originalId ??
-            q.id;
+        const currentNumberDisplay =
+            document.getElementById(
+                "currentNumberDisplay"
+            );
 
 
-        document.getElementById(
-            "qNumHeader"
-        ).textContent =
-            q.originalId ??
-            q.id;
+        if (currentNumberDisplay) {
+
+            currentNumberDisplay.textContent =
+                q.originalId ??
+                q.id;
+        }
 
 
-        document.getElementById(
-            "qDifficultyBadge"
-        ).textContent =
-            q.difficulty;
+        const qNumHeader =
+            document.getElementById(
+                "qNumHeader"
+            );
 
 
-        document.getElementById(
-            "qPointsBadge"
-        ).textContent =
-            `+${q.points} Pts`;
+        if (qNumHeader) {
+
+            qNumHeader.textContent =
+                q.originalId ??
+                q.id;
+        }
 
 
-        document.getElementById(
-            "questionText"
-        ).textContent =
-            q.question;
+        const qDifficultyBadge =
+            document.getElementById(
+                "qDifficultyBadge"
+            );
+
+
+        if (qDifficultyBadge) {
+
+            qDifficultyBadge.textContent =
+                q.difficulty;
+        }
+
+
+        const qPointsBadge =
+            document.getElementById(
+                "qPointsBadge"
+            );
+
+
+        if (qPointsBadge) {
+
+            qPointsBadge.textContent =
+                `+${q.points} Pts`;
+        }
+
+
+        const questionText =
+            document.getElementById(
+                "questionText"
+            );
+
+
+        if (questionText) {
+
+            questionText.textContent =
+                q.question;
+        }
 
 
         const categoryBadge =
@@ -2180,29 +2675,32 @@ if (addTeamBtn) {
             );
 
 
-        const categoryName =
-            typeof q.category ===
-            "object"
+        if (categoryBadge) {
 
-                ? (
-                    q.category?.name ||
-                    q.category?.key ||
-                    "Kategori"
-                )
+            const categoryName =
+                typeof q.category ===
+                "object"
 
-                : (
-                    q.category ||
-                    "Kategori"
-                );
+                    ? (
+                        q.category?.name ||
+                        q.category?.key ||
+                        "Kategori"
+                    )
+
+                    : (
+                        q.category ||
+                        "Kategori"
+                    );
 
 
-        categoryBadge.textContent =
-            state.chapterId === "all" &&
-            q.sourceChapterLabel
+            categoryBadge.textContent =
+                state.chapterId === "all" &&
+                q.sourceChapterLabel
 
-                ? `${q.sourceChapterLabel} • ${categoryName}`
+                    ? `${q.sourceChapterLabel} • ${categoryName}`
 
-                : categoryName;
+                    : categoryName;
+        }
 
 
         const stageStatus =
@@ -2211,12 +2709,17 @@ if (addTeamBtn) {
             );
 
 
-        stageStatus.textContent =
-            state.answeredQuestions[q.id]
+        if (stageStatus) {
 
-                ? "Soal ini telah dijawab!"
+            stageStatus.textContent =
+                state.answeredQuestions[
+                    q.id
+                ]
 
-                : "Soal siap dijawab!";
+                    ? "Soal ini telah dijawab!"
+
+                    : "Soal siap dijawab!";
+        }
 
 
         const optionsGrid =
@@ -2225,7 +2728,13 @@ if (addTeamBtn) {
             );
 
 
-        optionsGrid.innerHTML = "";
+        if (!optionsGrid) {
+            return;
+        }
+
+
+        optionsGrid.innerHTML =
+            "";
 
 
         const prefixes = [
@@ -2274,7 +2783,8 @@ if (addTeamBtn) {
                 if (answeredData) {
 
                     if (
-                        optIdx === q.answer
+                        optIdx ===
+                        q.answer
                     ) {
 
                         optBtn.classList.add(
@@ -2346,6 +2856,15 @@ if (addTeamBtn) {
             );
 
 
+        if (
+            !submitBtn ||
+            !expBox
+        ) {
+
+            return;
+        }
+
+
         if (answeredData) {
 
             submitBtn.disabled =
@@ -2367,42 +2886,74 @@ if (addTeamBtn) {
                 );
 
 
-            fbHeader.className =
-                `feedback-header ${
+            if (fbHeader) {
+
+                fbHeader.className =
+                    `feedback-header ${
+                        isCorr
+                            ? "feedback-correct"
+                            : "feedback-wrong"
+                    }`;
+            }
+
+
+            const feedbackIcon =
+                document.getElementById(
+                    "feedbackIcon"
+                );
+
+
+            if (feedbackIcon) {
+
+                feedbackIcon.textContent =
                     isCorr
-                        ? "feedback-correct"
-                        : "feedback-wrong"
-                }`;
+                        ? "✓"
+                        : "✕";
+            }
 
 
-            document.getElementById(
-                "feedbackIcon"
-            ).textContent =
-                isCorr
-                    ? "✓"
-                    : "✕";
+            const feedbackTitle =
+                document.getElementById(
+                    "feedbackTitle"
+                );
 
 
-            document.getElementById(
-                "feedbackTitle"
-            ).textContent =
-                isCorr
-                    ? "JAWABAN BENAR!"
-                    : "JAWABAN KURANG TEPAT";
+            if (feedbackTitle) {
+
+                feedbackTitle.textContent =
+                    isCorr
+                        ? "JAWABAN BENAR!"
+                        : "JAWABAN KURANG TEPAT";
+            }
 
 
-            document.getElementById(
-                "feedbackPts"
-            ).textContent =
-                isCorr
-                    ? `+${answeredData.points} POIN`
-                    : "+0 POIN";
+            const feedbackPts =
+                document.getElementById(
+                    "feedbackPts"
+                );
 
 
-            document.getElementById(
-                "explanationText"
-            ).textContent =
-                q.explanation || "";
+            if (feedbackPts) {
+
+                feedbackPts.textContent =
+                    isCorr
+                        ? `+${answeredData.points} POIN`
+                        : "+0 POIN";
+            }
+
+
+            const explanationText =
+                document.getElementById(
+                    "explanationText"
+                );
+
+
+            if (explanationText) {
+
+                explanationText.textContent =
+                    q.explanation ||
+                    "";
+            }
 
         }
 
@@ -2422,14 +2973,18 @@ if (addTeamBtn) {
     // PILIH OPSI
     // ======================================================================
 
-    function selectOption(optIdx) {
+    function selectOption(
+        optIdx
+    ) {
 
         if (state.gameFinished) {
             return;
         }
 
 
-        playSound("click");
+        playSound(
+            "click"
+        );
 
 
         state.selectedOptionIndex =
@@ -2448,7 +3003,10 @@ if (addTeamBtn) {
                 idx
             ) => {
 
-                if (idx === optIdx) {
+                if (
+                    idx ===
+                    optIdx
+                ) {
 
                     btn.classList.add(
                         "selected"
@@ -2484,7 +3042,9 @@ if (addTeamBtn) {
             ];
 
 
-        if (!q) return;
+        if (!q) {
+            return;
+        }
 
 
         if (
@@ -2492,6 +3052,7 @@ if (addTeamBtn) {
                 q.id
             ]
         ) {
+
             return;
         }
 
@@ -2523,10 +3084,12 @@ if (addTeamBtn) {
 
         const pointsAwarded =
             isCorrect
+
                 ? (
                     Number(q.points) ||
                     0
                 )
+
                 : 0;
 
 
@@ -2562,13 +3125,22 @@ if (addTeamBtn) {
             };
 
 
-            playSound("correct");
+            playSound(
+                "correct"
+            );
 
 
             if (currentTeam) {
 
                 currentTeam.score +=
                     pointsAwarded;
+
+                currentTeam.correct =
+                    (
+                        Number(
+                            currentTeam.correct
+                        ) || 0
+                    ) + 1;
             }
 
 
@@ -2605,11 +3177,13 @@ if (addTeamBtn) {
 
                 saveLocalStorage();
 
+
                 setTimeout(
                     () =>
                         finishGame(),
                     900
                 );
+
 
                 return;
             }
@@ -2631,44 +3205,57 @@ if (addTeamBtn) {
 
             if (autoNext) {
 
-                setTimeout(() => {
+                setTimeout(
+                    () => {
 
-                    const nextIndex =
-                        findNextUnansweredQuestion();
+                        if (
+                            state.gameFinished
+                        ) {
 
-
-                    if (
-                        nextIndex !== -1
-                    ) {
-
-                        state.currentQuestionIndex =
-                            nextIndex;
+                            return;
+                        }
 
 
-                        renderQuestion(
-                            nextIndex
-                        );
+                        const nextIndex =
+                            findNextUnansweredQuestion();
 
 
-                        updateProgress();
+                        if (
+                            nextIndex !== -1
+                        ) {
 
-                        startPlayerTimer();
+                            state.currentQuestionIndex =
+                                nextIndex;
 
-                        saveLocalStorage();
-                    }
 
-                }, 700);
+                            renderQuestion(
+                                nextIndex
+                            );
+
+
+                            updateProgress();
+
+
+                            startPlayerTimer();
+
+
+                            saveLocalStorage();
+                        }
+
+                    },
+                    700
+                );
 
             }
 
             else {
 
-                // Tim berikutnya langsung mendapat waktu
+                // Timer tim berikutnya sudah di-reset
+                // oleh nextTeam().
                 startPlayerTimer();
 
                 saveLocalStorage();
             }
-
         }
 
 
@@ -2678,7 +3265,9 @@ if (addTeamBtn) {
 
         else {
 
-            playSound("wrong");
+            playSound(
+                "wrong"
+            );
 
 
             // --------------------------------------------------------------
@@ -2706,7 +3295,7 @@ if (addTeamBtn) {
                 updateProgress();
 
 
-                // Tim baru mendapat waktu baru
+                // Tim baru mendapatkan timer baru.
                 startPlayerTimer();
 
 
@@ -2720,17 +3309,20 @@ if (addTeamBtn) {
                 );
 
 
-                setTimeout(() => {
+                setTimeout(
+                    () => {
 
-                    if (
-                        !state.isSpinning &&
-                        !state.gameFinished
-                    ) {
+                        if (
+                            !state.isSpinning &&
+                            !state.gameFinished
+                        ) {
 
-                        spinWheel();
-                    }
+                            spinWheel();
+                        }
 
-                }, 1300);
+                    },
+                    1300
+                );
             }
 
 
@@ -2760,6 +3352,17 @@ if (addTeamBtn) {
                 };
 
 
+                if (currentTeam) {
+
+                    currentTeam.wrong =
+                        (
+                            Number(
+                                currentTeam.wrong
+                            ) || 0
+                        ) + 1;
+                }
+
+
                 nextTeam();
 
 
@@ -2784,17 +3387,20 @@ if (addTeamBtn) {
 
                     saveLocalStorage();
 
+
                     setTimeout(
                         () =>
                             finishGame(),
                         1000
                     );
 
+
                     return;
                 }
 
 
-                // Timer tim berikutnya dimulai
+                // Timer tim berikutnya sudah di-reset
+                // oleh nextTeam().
                 startPlayerTimer();
 
 
@@ -2815,6 +3421,10 @@ if (addTeamBtn) {
         }
 
 
+        // ==============================================================
+        // PINDAH INDEX TIM
+        // ==============================================================
+
         state.activeTeamIndex =
             (
                 state.activeTeamIndex +
@@ -2823,13 +3433,23 @@ if (addTeamBtn) {
             state.teams.length;
 
 
+        // ==============================================================
+        // RESET TIMER MENJAWAB SAJA
+        //
+        // TIMER PERMAINAN TIDAK DISENTUH.
+        // ==============================================================
+
         state.playerTimeSeconds =
-            state.playerTimeMaxSeconds;
+            Number(
+                state.playerTimeMaxSeconds
+            ) || 30;
 
 
         renderTeamScores();
 
         updateTimerDisplay();
+
+        saveLocalStorage();
     }
 
 
@@ -2902,7 +3522,10 @@ if (addTeamBtn) {
             );
 
 
-        if (activeTeam) {
+        if (
+            activeTeam &&
+            nameEl
+        ) {
 
             nameEl.textContent =
                 activeTeam.name;
@@ -2911,6 +3534,10 @@ if (addTeamBtn) {
                 activeTeam.name;
         }
 
+
+        // ==============================================================
+        // TIMER TIM AKTIF
+        // ==============================================================
 
         const activeTimeEl =
             document.getElementById(
@@ -2933,7 +3560,13 @@ if (addTeamBtn) {
             );
 
 
-        container.innerHTML = "";
+        if (!container) {
+            return;
+        }
+
+
+        container.innerHTML =
+            "";
 
 
         state.teams.forEach(
@@ -2969,7 +3602,13 @@ if (addTeamBtn) {
                             class="team-avatar"
                             style="
                                 background:
-                                ${t.color};
+                                ${
+                                    t.color ||
+                                    TEAM_COLORS[
+                                        idx %
+                                        TEAM_COLORS.length
+                                    ]
+                                };
                                 color: #000;
                             "
                         >
@@ -3008,7 +3647,10 @@ if (addTeamBtn) {
 
         const sorted =
             [...state.teams].sort(
-                (a, b) =>
+                (
+                    a,
+                    b
+                ) =>
                     b.score -
                     a.score
             );
@@ -3020,7 +3662,13 @@ if (addTeamBtn) {
             );
 
 
-        tbody.innerHTML = "";
+        if (!tbody) {
+            return;
+        }
+
+
+        tbody.innerHTML =
+            "";
 
 
         sorted.forEach(
@@ -3037,7 +3685,9 @@ if (addTeamBtn) {
 
                 const crown =
                     rank === 0
+
                         ? '<span class="rank-crown">👑</span>'
+
                         : "";
 
 
@@ -3104,74 +3754,135 @@ if (addTeamBtn) {
                 : 0;
 
 
-        let correctCount = 0;
+        let correctCount =
+            0;
 
-        let wrongCount = 0;
+
+        let wrongCount =
+            0;
 
 
         Object.values(
             state.answeredQuestions
-        ).forEach(ans => {
+        ).forEach(
+            ans => {
 
-            if (ans.isCorrect) {
+                if (ans.isCorrect) {
 
-                correctCount++;
+                    correctCount++;
 
+                }
+
+                else {
+
+                    wrongCount++;
+                }
             }
-
-            else {
-
-                wrongCount++;
-            }
-        });
+        );
 
 
-        document.getElementById(
-            "progressTextSide"
-        ).textContent =
-            `${answeredCount} / ${total} Soal`;
+        const progressTextSide =
+            document.getElementById(
+                "progressTextSide"
+            );
 
 
-        document.getElementById(
-            "progressBarSide"
-        ).style.width =
-            `${pct}%`;
+        if (progressTextSide) {
+
+            progressTextSide.textContent =
+                `${answeredCount} / ${total} Soal`;
+        }
 
 
-        document.getElementById(
-            "fTotal"
-        ).textContent =
-            total;
+        const progressBarSide =
+            document.getElementById(
+                "progressBarSide"
+            );
 
 
-        document.getElementById(
-            "fAnswered"
-        ).textContent =
-            answeredCount;
+        if (progressBarSide) {
+
+            progressBarSide.style.width =
+                `${pct}%`;
+        }
 
 
-        document.getElementById(
-            "fCorrect"
-        ).textContent =
-            correctCount;
+        const fTotal =
+            document.getElementById(
+                "fTotal"
+            );
 
 
-        document.getElementById(
-            "fWrong"
-        ).textContent =
-            wrongCount;
+        if (fTotal) {
+
+            fTotal.textContent =
+                total;
+        }
 
 
-        document.getElementById(
-            "fProgressPct"
-        ).textContent =
-            `${pct}%`;
+        const fAnswered =
+            document.getElementById(
+                "fAnswered"
+            );
 
 
-        document.getElementById(
-            "progressBarFooter"
-        ).style.width =
-            `${pct}%`;
+        if (fAnswered) {
+
+            fAnswered.textContent =
+                answeredCount;
+        }
+
+
+        const fCorrect =
+            document.getElementById(
+                "fCorrect"
+            );
+
+
+        if (fCorrect) {
+
+            fCorrect.textContent =
+                correctCount;
+        }
+
+
+        const fWrong =
+            document.getElementById(
+                "fWrong"
+            );
+
+
+        if (fWrong) {
+
+            fWrong.textContent =
+                wrongCount;
+        }
+
+
+        const fProgressPct =
+            document.getElementById(
+                "fProgressPct"
+            );
+
+
+        if (fProgressPct) {
+
+            fProgressPct.textContent =
+                `${pct}%`;
+        }
+
+
+        const progressBarFooter =
+            document.getElementById(
+                "progressBarFooter"
+            );
+
+
+        if (progressBarFooter) {
+
+            progressBarFooter.style.width =
+                `${pct}%`;
+        }
     }
 
 
@@ -3187,7 +3898,13 @@ if (addTeamBtn) {
             );
 
 
-        grid.innerHTML = "";
+        if (!grid) {
+            return;
+        }
+
+
+        grid.innerHTML =
+            "";
 
 
         const allBtn =
@@ -3209,6 +3926,7 @@ if (addTeamBtn) {
 
 
         allBtn.innerHTML = `
+
             <span class="cat-icon">
                 🌐
             </span>
@@ -3216,6 +3934,7 @@ if (addTeamBtn) {
             <span class="cat-name">
                 Semua Kategori
             </span>
+
         `;
 
 
@@ -3250,7 +3969,9 @@ if (addTeamBtn) {
                             cat.name
                         )
 
-                        : String(cat);
+                        : String(
+                            cat
+                        );
 
 
                 const name =
@@ -3262,7 +3983,9 @@ if (addTeamBtn) {
                             cat.key
                         )
 
-                        : String(cat);
+                        : String(
+                            cat
+                        );
 
 
                 const icon =
@@ -3282,6 +4005,7 @@ if (addTeamBtn) {
 
 
                 btn.innerHTML = `
+
                     <span class="cat-icon">
                         ${icon}
                     </span>
@@ -3289,6 +4013,7 @@ if (addTeamBtn) {
                     <span class="cat-name">
                         ${name}
                     </span>
+
                 `;
 
 
@@ -3339,7 +4064,8 @@ if (addTeamBtn) {
 
 
                     if (
-                        cat !== "all"
+                        cat !==
+                        "all"
                     ) {
 
                         const firstMatch =
@@ -3367,7 +4093,8 @@ if (addTeamBtn) {
 
 
                         if (
-                            firstMatch !== -1
+                            firstMatch !==
+                            -1
                         ) {
 
                             state.currentQuestionIndex =
@@ -3389,7 +4116,9 @@ if (addTeamBtn) {
     // FORMAT WAKTU
     // ======================================================================
 
-    function formatTime(seconds) {
+    function formatTime(
+        seconds
+    ) {
 
         seconds =
             Math.max(
@@ -3400,18 +4129,26 @@ if (addTeamBtn) {
 
         const m =
             Math.floor(
-                seconds / 60
+                seconds /
+                60
             )
                 .toString()
-                .padStart(2, "0");
+                .padStart(
+                    2,
+                    "0"
+                );
 
 
         const s =
             (
-                seconds % 60
+                seconds %
+                60
             )
                 .toString()
-                .padStart(2, "0");
+                .padStart(
+                    2,
+                    "0"
+                );
 
 
         return `${m}:${s}`;
@@ -3424,15 +4161,31 @@ if (addTeamBtn) {
 
     function updateTimerDisplay() {
 
-        // --------------------------------------------------------------
-        // Yang ditampilkan di header adalah WAKTU TIM
-        // --------------------------------------------------------------
+        // ==============================================================
+        // TIMER 1
+        // WAKTU TOTAL PERMAINAN
+        // ==============================================================
+
+        const gameTime =
+            formatTime(
+                state.timerSeconds
+            );
+
+
+        // ==============================================================
+        // TIMER 2
+        // WAKTU MENJAWAB TIM AKTIF
+        // ==============================================================
 
         const teamTime =
             formatTime(
                 state.playerTimeSeconds
             );
 
+
+        // ==============================================================
+        // DISPLAY TIMER TOTAL
+        // ==============================================================
 
         const timerDisplay =
             document.getElementById(
@@ -3442,28 +4195,32 @@ if (addTeamBtn) {
 
         const footerTimer =
             document.getElementById(
-                "fTimer"
-            );
-
-
-        const activeTeamTime =
-            document.getElementById(
-                "activeTeamTime"
+                "footerTimer"
             );
 
 
         if (timerDisplay) {
 
             timerDisplay.textContent =
-                teamTime;
+                gameTime;
         }
 
 
         if (footerTimer) {
 
             footerTimer.textContent =
-                teamTime;
+                gameTime;
         }
+
+
+        // ==============================================================
+        // DISPLAY TIMER TIM AKTIF
+        // ==============================================================
+
+        const activeTeamTime =
+            document.getElementById(
+                "activeTeamTime"
+            );
 
 
         if (activeTeamTime) {
@@ -3473,56 +4230,9 @@ if (addTeamBtn) {
         }
 
 
-        // --------------------------------------------------------------
-        // Visual peringatan waktu
-        // --------------------------------------------------------------
-
-        const timerElements = [
-            timerDisplay,
-            footerTimer,
-            activeTeamTime
-        ];
-
-
-        timerElements.forEach(
-            el => {
-
-                if (!el) return;
-
-
-                el.classList.remove(
-                    "timer-warning",
-                    "timer-danger"
-                );
-
-
-                if (
-                    state.playerTimeSeconds <=
-                    5
-                ) {
-
-                    el.classList.add(
-                        "timer-danger"
-                    );
-
-                }
-
-                else if (
-                    state.playerTimeSeconds <=
-                    10
-                ) {
-
-                    el.classList.add(
-                        "timer-warning"
-                    );
-                }
-            }
-        );
-
-
-        // --------------------------------------------------------------
-        // Label
-        // --------------------------------------------------------------
+        // ==============================================================
+        // LABEL TIMER PERMAINAN
+        // ==============================================================
 
         const timerLabel =
             document.getElementById(
@@ -3533,23 +4243,89 @@ if (addTeamBtn) {
         if (timerLabel) {
 
             timerLabel.textContent =
-                `WAKTU ${(
-                    state.teams[
-                        state.activeTeamIndex
-                    ]?.name ||
-                    "TIM"
-                ).toUpperCase()}`;
+                "WAKTU PERMAINAN";
+        }
+
+
+        // ==============================================================
+        // WARNING TIMER PERMAINAN
+        // ==============================================================
+
+        if (timerDisplay) {
+
+            timerDisplay.classList.remove(
+                "warning",
+                "danger"
+            );
+
+
+            if (
+                state.timerSeconds <= 10 &&
+                state.timerSeconds > 5
+            ) {
+
+                timerDisplay.classList.add(
+                    "warning"
+                );
+            }
+
+
+            if (
+                state.timerSeconds <= 5
+            ) {
+
+                timerDisplay.classList.add(
+                    "danger"
+                );
+            }
+        }
+
+
+        // ==============================================================
+        // WARNING TIMER TIM
+        // ==============================================================
+
+        if (activeTeamTime) {
+
+            activeTeamTime.classList.remove(
+                "warning",
+                "danger"
+            );
+
+
+            if (
+                state.playerTimeSeconds <= 10 &&
+                state.playerTimeSeconds > 5
+            ) {
+
+                activeTeamTime.classList.add(
+                    "warning"
+                );
+            }
+
+
+            if (
+                state.playerTimeSeconds <= 5
+            ) {
+
+                activeTeamTime.classList.add(
+                    "danger"
+                );
+            }
         }
     }
 
 
     // ======================================================================
-    // MULAI TIMER
+    // DUA TIMER — BENAR-BENAR TERPISAH
     // ======================================================================
 
     function startTimers() {
 
-        // Hapus timer lama
+        // ==============================================================
+        // HENTIKAN INTERVAL LAMA
+        // ==============================================================
+
         stopTimers();
 
 
@@ -3558,13 +4334,74 @@ if (addTeamBtn) {
         }
 
 
-        state.isTimerRunning =
-            true;
+        // ==============================================================
+        // VALIDASI TIMER TOTAL
+        // ==============================================================
+
+        state.timerSeconds =
+            Math.max(
+                0,
+                Number(
+                    state.timerSeconds
+                ) || 0
+            );
 
 
-        // Pastikan waktu tim valid
+        // ==============================================================
+        // VALIDASI TIMER TIM
+        // ==============================================================
+
+        state.playerTimeMaxSeconds =
+            Math.max(
+                1,
+                Number(
+                    state.playerTimeMaxSeconds
+                ) || 30
+            );
+
+
+        state.playerTimeSeconds =
+            Math.max(
+                0,
+                Number(
+                    state.playerTimeSeconds
+                ) || 0
+            );
+
+
+        // ==============================================================
+        // TIMER PERMAINAN SUDAH HABIS
+        // ==============================================================
+
         if (
-            !state.playerTimeSeconds ||
+            state.timerSeconds <= 0
+        ) {
+
+            state.timerSeconds =
+                0;
+
+
+            state.playerTimeSeconds =
+                0;
+
+
+            updateTimerDisplay();
+
+
+            finishGame(
+                "timeup"
+            );
+
+
+            return;
+        }
+
+
+        // ==============================================================
+        // TIMER TIM HABIS
+        // ==============================================================
+
+        if (
             state.playerTimeSeconds <= 0
         ) {
 
@@ -3573,86 +4410,187 @@ if (addTeamBtn) {
         }
 
 
+        state.isTimerRunning =
+            true;
+
+
         updateTimerDisplay();
 
 
+        // ==============================================================
+        // INTERVAL DUA TIMER
+        //
+        // Keduanya berkurang bersama-sama,
+        // tetapi masing-masing menggunakan variabel berbeda.
+        // ==============================================================
+
         state.timerInterval =
-            setInterval(() => {
+            setInterval(
+                () => {
 
-                if (
-                    state.gameFinished
-                ) {
+                    if (
+                        state.gameFinished
+                    ) {
 
-                    stopTimers();
+                        stopTimers();
 
-                    return;
-                }
-
-
-                // ======================================================
-                // TIMER TOTAL PERMAINAN
-                // ======================================================
-
-                if (
-                    state.timerSeconds > 0
-                ) {
-
-                    state.timerSeconds--;
-
-                }
-
-                else {
-
-                    stopTimers();
-
-                    finishGame(
-                        "timeup"
-                    );
-
-                    return;
-                }
+                        return;
+                    }
 
 
-                // ======================================================
-                // TIMER TIM AKTIF
-                // ======================================================
+                    // ==================================================
+                    // TIMER 1
+                    // TOTAL WAKTU PERMAINAN
+                    // ==================================================
 
-                if (
-                    state.playerTimeSeconds > 0
-                ) {
+                    if (
+                        state.timerSeconds >
+                        0
+                    ) {
 
-                    state.playerTimeSeconds--;
-
-                }
-
-
-                updateTimerDisplay();
+                        state.timerSeconds--;
+                    }
 
 
-                // ------------------------------------------------------
-                // WAKTU TIM HABIS
-                // ------------------------------------------------------
+                    // ==================================================
+                    // TIMER 2
+                    // WAKTU MENJAWAB TIM AKTIF
+                    // ==================================================
 
-                if (
-                    state.playerTimeSeconds <=
-                    0
-                ) {
+                    if (
+                        state.playerTimeSeconds >
+                        0
+                    ) {
 
-                    handlePlayerTimeUp();
-
-                    return;
-                }
+                        state.playerTimeSeconds--;
+                    }
 
 
-                // Simpan berkala
-                saveLocalStorage();
+                    // ==================================================
+                    // UPDATE DISPLAY
+                    // ==================================================
 
-            }, 1000);
+                    updateTimerDisplay();
+
+                    renderTeamScores();
+
+                    saveLocalStorage();
+
+
+                    // ==================================================
+                    // PRIORITAS 1
+                    // WAKTU PERMAINAN HABIS
+                    // ==================================================
+
+                    if (
+                        state.timerSeconds <=
+                        0
+                    ) {
+
+                        state.timerSeconds =
+                            0;
+
+
+                        state.playerTimeSeconds =
+                            0;
+
+
+                        updateTimerDisplay();
+
+
+                        stopTimers();
+
+
+                        finishGame(
+                            "timeup"
+                        );
+
+
+                        return;
+                    }
+
+
+                    // ==================================================
+                    // PRIORITAS 2
+                    // WAKTU MENJAWAB TIM HABIS
+                    // ==================================================
+
+                    if (
+                        state.playerTimeSeconds <=
+                        0
+                    ) {
+
+                        state.playerTimeSeconds =
+                            0;
+
+
+                        updateTimerDisplay();
+
+
+                        // ------------------------------------------------
+                        // PINDAH KE TIM BERIKUTNYA
+                        // ------------------------------------------------
+
+                        nextTeam();
+
+
+                        // ------------------------------------------------
+                        // PUTAR RODA OTOMATIS
+                        // ------------------------------------------------
+
+                        setTimeout(
+                            () => {
+
+                                if (
+                                    state.gameFinished
+                                ) {
+
+                                    return;
+                                }
+
+
+                                if (
+                                    state.isSpinning
+                                ) {
+
+                                    return;
+                                }
+
+
+                                const nextIndex =
+                                    findNextUnansweredQuestion();
+
+
+                                if (
+                                    nextIndex ===
+                                    -1
+                                ) {
+
+                                    finishGame();
+
+                                    return;
+                                }
+
+
+                                state.currentQuestionIndex =
+                                    nextIndex;
+
+
+                                spinWheel();
+
+                            },
+                            300
+                        );
+                    }
+
+                },
+                1000
+            );
     }
 
 
     // ======================================================================
-    // START / RESET TIMER TIM
+    // START TIMER TIM
     // ======================================================================
 
     function startPlayerTimer() {
@@ -3662,16 +4600,58 @@ if (addTeamBtn) {
         }
 
 
-        state.playerTimeSeconds =
-            state.playerTimeMaxSeconds;
+        // ==============================================================
+        // PASTIKAN MAKSIMUM TIMER TIM VALID
+        // ==============================================================
 
+        if (
+            !Number.isFinite(
+                Number(
+                    state.playerTimeMaxSeconds
+                )
+            ) ||
+            Number(
+                state.playerTimeMaxSeconds
+            ) <= 0
+        ) {
+
+            state.playerTimeMaxSeconds =
+                30;
+        }
+
+
+        // ==============================================================
+        // JIKA TIMER TIM TIDAK VALID
+        // GUNAKAN WAKTU MAKSIMUM TIMER TIM
+        // ==============================================================
+
+        if (
+            !Number.isFinite(
+                Number(
+                    state.playerTimeSeconds
+                )
+            ) ||
+            Number(
+                state.playerTimeSeconds
+            ) <= 0
+        ) {
+
+            state.playerTimeSeconds =
+                state.playerTimeMaxSeconds;
+        }
+
+
+        // ==============================================================
+        // JANGAN SENTUH TIMER PERMAINAN
+        // ==============================================================
 
         updateTimerDisplay();
 
 
-        // Jika interval sudah berjalan,
-        // tidak perlu membuat interval kedua.
-        if (!state.timerInterval) {
+        // Timer utama belum berjalan.
+        if (
+            !state.timerInterval
+        ) {
 
             startTimers();
         }
@@ -3687,11 +4667,14 @@ if (addTeamBtn) {
 
     function stopTimers() {
 
-        if (state.timerInterval) {
+        if (
+            state.timerInterval
+        ) {
 
             clearInterval(
                 state.timerInterval
             );
+
 
             state.timerInterval =
                 null;
@@ -3714,8 +4697,9 @@ if (addTeamBtn) {
         }
 
 
-        playSound("wrong");
-
+        // ==============================================================
+        // TIMER TIM HABIS
+        // ==============================================================
 
         state.playerTimeSeconds =
             0;
@@ -3724,79 +4708,19 @@ if (addTeamBtn) {
         updateTimerDisplay();
 
 
-        showToast(
-            `${
-                state.teams[
-                    state.activeTeamIndex
-                ]?.name || "Tim"
-            } kehabisan waktu! Giliran berpindah.`,
-            "warning",
-            1500
-        );
-
-
-        // --------------------------------------------------------------
-        // Cari soal yang masih belum dijawab
-        // --------------------------------------------------------------
-
-        const nextIndex =
-            findNextUnansweredQuestion();
-
-
-        // Jika tidak ada soal lagi
-        if (nextIndex === -1) {
-
-            finishGame();
-
-            return;
-        }
-
-
-        // --------------------------------------------------------------
-        // Pindah tim
-        // --------------------------------------------------------------
+        // ==============================================================
+        // PINDAH TIM
+        // ==============================================================
 
         nextTeam();
 
 
-        // --------------------------------------------------------------
-        // Tampilkan status
-        // --------------------------------------------------------------
-
-        renderTeamScores();
-
-
-        renderQuestion(
-            state.currentQuestionIndex
-        );
-
-
-        updateProgress();
-
-
         saveLocalStorage();
-
-
-        // --------------------------------------------------------------
-        // Tim berikutnya mendapat soal baru melalui roda
-        // --------------------------------------------------------------
-
-        setTimeout(() => {
-
-            if (
-                !state.gameFinished &&
-                !state.isSpinning
-            ) {
-
-                spinWheel();
-            }
-
-        }, 1000);
     }
 
 
     // ======================================================================
-    // MODAL KONFIRMASI
+    // CONFIRM MODAL
     // ======================================================================
 
     function showConfirmModal(
@@ -3817,7 +4741,10 @@ if (addTeamBtn) {
             );
 
 
-        if (!overlay || !card) {
+        if (
+            !overlay ||
+            !card
+        ) {
 
             console.error(
                 "Elemen toastOverlay atau toastCard tidak ditemukan."
@@ -3828,6 +4755,7 @@ if (addTeamBtn) {
 
 
         if (toastTimeout) {
+
             clearTimeout(
                 toastTimeout
             );
@@ -3879,6 +4807,7 @@ if (addTeamBtn) {
                 </div>
 
             </div>
+
         `;
 
 
@@ -3906,9 +4835,11 @@ if (addTeamBtn) {
 
                     event.stopPropagation();
 
+
                     overlay.classList.add(
                         "hidden"
                     );
+
 
                     card.onclick =
                         null;
@@ -3923,9 +4854,11 @@ if (addTeamBtn) {
 
                     event.stopPropagation();
 
+
                     overlay.classList.add(
                         "hidden"
                     );
+
 
                     card.onclick =
                         null;
@@ -3947,7 +4880,8 @@ if (addTeamBtn) {
     // EVENT LISTENERS
     // ======================================================================
 
-    let listenersBound = false;
+    let listenersBound =
+        false;
 
 
     function setupEventListeners() {
@@ -3957,121 +4891,175 @@ if (addTeamBtn) {
         }
 
 
-        listenersBound = true;
+        listenersBound =
+            true;
 
 
         // --------------------------------------------------------------
         // SPIN
         // --------------------------------------------------------------
 
-        document.getElementById(
-            "spinBtn"
-        ).onclick =
-            spinWheel;
+        const spinBtn =
+            document.getElementById(
+                "spinBtn"
+            );
+
+
+        if (spinBtn) {
+
+            spinBtn.onclick =
+                spinWheel;
+        }
 
 
         // --------------------------------------------------------------
         // SUBMIT
         // --------------------------------------------------------------
 
-        document.getElementById(
-            "submitAnswerBtn"
-        ).onclick =
-            submitAnswer;
+        const submitBtn =
+            document.getElementById(
+                "submitAnswerBtn"
+            );
+
+
+        if (submitBtn) {
+
+            submitBtn.onclick =
+                submitAnswer;
+        }
 
 
         // --------------------------------------------------------------
         // PREVIOUS
         // --------------------------------------------------------------
 
-        document.getElementById(
-            "prevQuestionBtn"
-        ).onclick =
-            () => {
-
-                playSound("click");
+        const prevQuestionBtn =
+            document.getElementById(
+                "prevQuestionBtn"
+            );
 
 
-                const total =
-                    state.questionsData.length;
+        if (prevQuestionBtn) {
+
+            prevQuestionBtn.onclick =
+                () => {
+
+                    playSound(
+                        "click"
+                    );
 
 
-                if (!total) return;
+                    const total =
+                        state.questionsData.length;
 
 
-                state.currentQuestionIndex =
-                    (
-                        state.currentQuestionIndex -
-                        1 +
-                        total
-                    ) %
-                    total;
+                    if (!total) {
+                        return;
+                    }
 
 
-                renderQuestion(
-                    state.currentQuestionIndex
-                );
-            };
+                    state.currentQuestionIndex =
+                        (
+                            state.currentQuestionIndex -
+                            1 +
+                            total
+                        ) %
+                        total;
+
+
+                    renderQuestion(
+                        state.currentQuestionIndex
+                    );
+                };
+        }
 
 
         // --------------------------------------------------------------
         // NEXT
         // --------------------------------------------------------------
 
-        document.getElementById(
-            "nextQuestionBtn"
-        ).onclick =
-            () => {
-
-                playSound("click");
+        const nextQuestionBtn =
+            document.getElementById(
+                "nextQuestionBtn"
+            );
 
 
-                const total =
-                    state.questionsData.length;
+        if (nextQuestionBtn) {
+
+            nextQuestionBtn.onclick =
+                () => {
+
+                    playSound(
+                        "click"
+                    );
 
 
-                if (!total) return;
+                    const total =
+                        state.questionsData.length;
 
 
-                state.currentQuestionIndex =
-                    (
-                        state.currentQuestionIndex +
-                        1
-                    ) %
-                    total;
+                    if (!total) {
+                        return;
+                    }
 
 
-                renderQuestion(
-                    state.currentQuestionIndex
-                );
-            };
+                    state.currentQuestionIndex =
+                        (
+                            state.currentQuestionIndex +
+                            1
+                        ) %
+                        total;
+
+
+                    renderQuestion(
+                        state.currentQuestionIndex
+                    );
+                };
+        }
 
 
         // --------------------------------------------------------------
         // SOUND
         // --------------------------------------------------------------
 
-        document.getElementById(
-            "soundToggleBtn"
-        ).onclick =
-            () => {
-
-                state.soundEnabled =
-                    !state.soundEnabled;
+        const soundToggleBtn =
+            document.getElementById(
+                "soundToggleBtn"
+            );
 
 
-                document.getElementById(
-                    "soundIcon"
-                ).textContent =
-                    state.soundEnabled
-                        ? "🔊"
-                        : "🔇";
+        if (soundToggleBtn) {
+
+            soundToggleBtn.onclick =
+                () => {
+
+                    state.soundEnabled =
+                        !state.soundEnabled;
 
 
-                playSound("click");
+                    const soundIcon =
+                        document.getElementById(
+                            "soundIcon"
+                        );
 
-                saveLocalStorage();
-            };
+
+                    if (soundIcon) {
+
+                        soundIcon.textContent =
+                            state.soundEnabled
+                                ? "🔊"
+                                : "🔇";
+                    }
+
+
+                    playSound(
+                        "click"
+                    );
+
+
+                    saveLocalStorage();
+                };
+        }
 
 
         // --------------------------------------------------------------
@@ -4084,220 +5072,326 @@ if (addTeamBtn) {
             );
 
 
-        document.getElementById(
-            "settingsBtn"
-        ).onclick =
-            () => {
-
-                playSound("click");
+        const settingsBtn =
+            document.getElementById(
+                "settingsBtn"
+            );
 
 
-                document.getElementById(
-                    "setSound"
-                ).checked =
-                    state.soundEnabled;
+        if (
+            settingsBtn &&
+            settingsModal
+        ) {
 
+            settingsBtn.onclick =
+                () => {
 
-                document.getElementById(
-                    "setAnimation"
-                ).checked =
-                    state.animationEnabled;
-
-
-                document.getElementById(
-                    "setConfetti"
-                ).checked =
-                    state.confettiEnabled;
-
-
-                const autoNextSetting =
-                    document.getElementById(
-                        "setAutoNextCorrect"
+                    playSound(
+                        "click"
                     );
 
 
-                if (
-                    autoNextSetting
-                ) {
-
-                    autoNextSetting.checked =
-                        localStorage.getItem(
-                            AUTO_NEXT_CORRECT_KEY
-                        ) ===
-                        "true";
-                }
+                    const setSound =
+                        document.getElementById(
+                            "setSound"
+                        );
 
 
-                settingsModal.classList.remove(
-                    "hidden"
-                );
-            };
+                    const setAnimation =
+                        document.getElementById(
+                            "setAnimation"
+                        );
+
+
+                    const setConfetti =
+                        document.getElementById(
+                            "setConfetti"
+                        );
+
+
+                    if (setSound) {
+
+                        setSound.checked =
+                            state.soundEnabled;
+                    }
+
+
+                    if (setAnimation) {
+
+                        setAnimation.checked =
+                            state.animationEnabled;
+                    }
+
+
+                    if (setConfetti) {
+
+                        setConfetti.checked =
+                            state.confettiEnabled;
+                    }
+
+
+                    const autoNextSetting =
+                        document.getElementById(
+                            "setAutoNextCorrect"
+                        );
+
+
+                    if (
+                        autoNextSetting
+                    ) {
+
+                        autoNextSetting.checked =
+                            localStorage.getItem(
+                                AUTO_NEXT_CORRECT_KEY
+                            ) ===
+                            "true";
+                    }
+
+
+                    settingsModal.classList.remove(
+                        "hidden"
+                    );
+                };
+        }
 
 
         // --------------------------------------------------------------
         // CLOSE SETTINGS
         // --------------------------------------------------------------
 
-        document.getElementById(
-            "closeSettingsBtn"
-        ).onclick =
-            () => {
+        const closeSettingsBtn =
+            document.getElementById(
+                "closeSettingsBtn"
+            );
 
-                settingsModal.classList.add(
-                    "hidden"
-                );
-            };
+
+        if (
+            closeSettingsBtn &&
+            settingsModal
+        ) {
+
+            closeSettingsBtn.onclick =
+                () => {
+
+                    settingsModal.classList.add(
+                        "hidden"
+                    );
+                };
+        }
 
 
         // --------------------------------------------------------------
         // SAVE SETTINGS
         // --------------------------------------------------------------
 
-        document.getElementById(
-            "saveSettingsBtn"
-        ).onclick =
-            () => {
-
-                playSound("click");
+        const saveSettingsBtn =
+            document.getElementById(
+                "saveSettingsBtn"
+            );
 
 
-                state.soundEnabled =
-                    document.getElementById(
-                        "setSound"
-                    ).checked;
+        if (saveSettingsBtn) {
 
+            saveSettingsBtn.onclick =
+                () => {
 
-                state.animationEnabled =
-                    document.getElementById(
-                        "setAnimation"
-                    ).checked;
-
-
-                state.confettiEnabled =
-                    document.getElementById(
-                        "setConfetti"
-                    ).checked;
-
-
-                const autoNextSetting =
-                    document.getElementById(
-                        "setAutoNextCorrect"
+                    playSound(
+                        "click"
                     );
 
 
-                state.autoNextCorrect =
-                    autoNextSetting
-                        ? autoNextSetting.checked
-                        : false;
+                    const setSound =
+                        document.getElementById(
+                            "setSound"
+                        );
 
 
-                localStorage.setItem(
-                    AUTO_NEXT_CORRECT_KEY,
-                    state.autoNextCorrect
-                        ? "true"
-                        : "false"
-                );
+                    const setAnimation =
+                        document.getElementById(
+                            "setAnimation"
+                        );
 
 
-                saveLocalStorage();
+                    const setConfetti =
+                        document.getElementById(
+                            "setConfetti"
+                        );
 
 
-                settingsModal.classList.add(
-                    "hidden"
-                );
+                    state.soundEnabled =
+                        setSound
+                            ? setSound.checked
+                            : true;
 
 
-                showToast(
-                    state.autoNextCorrect
-                        ? "Mode lanjut otomatis AKTIF."
-                        : "Mode lanjut otomatis NONAKTIF.",
-                    "success",
-                    1800
-                );
-            };
+                    state.animationEnabled =
+                        setAnimation
+                            ? setAnimation.checked
+                            : true;
+
+
+                    state.confettiEnabled =
+                        setConfetti
+                            ? setConfetti.checked
+                            : true;
+
+
+                    const autoNextSetting =
+                        document.getElementById(
+                            "setAutoNextCorrect"
+                        );
+
+
+                    state.autoNextCorrect =
+                        autoNextSetting
+                            ? autoNextSetting.checked
+                            : false;
+
+
+                    localStorage.setItem(
+                        AUTO_NEXT_CORRECT_KEY,
+                        state.autoNextCorrect
+                            ? "true"
+                            : "false"
+                    );
+
+
+                    saveLocalStorage();
+
+
+                    if (settingsModal) {
+
+                        settingsModal.classList.add(
+                            "hidden"
+                        );
+                    }
+
+
+                    showToast(
+                        state.autoNextCorrect
+                            ? "Mode lanjut otomatis AKTIF."
+                            : "Mode lanjut otomatis NONAKTIF.",
+                        "success",
+                        1800
+                    );
+                };
+        }
 
 
         // --------------------------------------------------------------
         // RESET
         // --------------------------------------------------------------
 
-        document.getElementById(
-            "resetGameBtn"
-        ).onclick =
-            () => {
+        const resetGameBtn =
+            document.getElementById(
+                "resetGameBtn"
+            );
 
-                showConfirmModal(
 
-                    "Apakah Anda yakin ingin meriset seluruh permainan? Semua progres saat ini akan dihapus.",
+        if (resetGameBtn) {
 
-                    () => {
+            resetGameBtn.onclick =
+                () => {
 
-                        stopTimers();
+                    showConfirmModal(
 
-                        localStorage.removeItem(
-                            STORAGE_KEY
-                        );
+                        "Apakah Anda yakin ingin meriset seluruh permainan? Semua progres saat ini akan dihapus.",
 
-                        location.reload();
-                    },
+                        () => {
 
-                    {
-                        icon: "⚠️",
-                        confirmText: "Ya, Reset"
-                    }
-                );
-            };
+                            stopTimers();
+
+
+                            localStorage.removeItem(
+                                STORAGE_KEY
+                            );
+
+
+                            location.reload();
+                        },
+
+                        {
+                            icon:
+                                "⚠️",
+
+                            confirmText:
+                                "Ya, Reset"
+                        }
+                    );
+                };
+        }
 
 
         // --------------------------------------------------------------
         // GANTI SETUP
         // --------------------------------------------------------------
 
-        document.getElementById(
-            "changeSetupBtn"
-        ).onclick =
-            () => {
+        const changeSetupBtn =
+            document.getElementById(
+                "changeSetupBtn"
+            );
 
-                showConfirmModal(
 
-                    "Ganti bab, tim, atau waktu? Progress kuis saat ini akan direset.",
+        if (changeSetupBtn) {
 
-                    () => {
+            changeSetupBtn.onclick =
+                () => {
 
-                        stopTimers();
+                    showConfirmModal(
 
-                        localStorage.removeItem(
-                            STORAGE_KEY
-                        );
+                        "Ganti bab, tim, atau waktu? Progress kuis saat ini akan direset.",
 
-                        location.reload();
-                    },
+                        () => {
 
-                    {
-                        icon: "🔄",
-                        confirmText: "Ya, Ganti"
-                    }
-                );
-            };
+                            stopTimers();
+
+
+                            localStorage.removeItem(
+                                STORAGE_KEY
+                            );
+
+
+                            location.reload();
+                        },
+
+                        {
+                            icon:
+                                "🔄",
+
+                            confirmText:
+                                "Ya, Ganti"
+                        }
+                    );
+                };
+        }
 
 
         // --------------------------------------------------------------
         // MAIN LAGI
         // --------------------------------------------------------------
 
-        document.getElementById(
-            "playAgainBtn"
-        ).onclick =
-            () => {
+        const playAgainBtn =
+            document.getElementById(
+                "playAgainBtn"
+            );
 
-                stopTimers();
 
-                localStorage.removeItem(
-                    STORAGE_KEY
-                );
+        if (playAgainBtn) {
 
-                location.reload();
-            };
+            playAgainBtn.onclick =
+                () => {
+
+                    stopTimers();
+
+
+                    localStorage.removeItem(
+                        STORAGE_KEY
+                    );
+
+
+                    location.reload();
+                };
+        }
     }
 
 
@@ -4327,19 +5421,29 @@ if (addTeamBtn) {
             );
 
 
-        document.getElementById(
-            "resultModalTitle"
-        ).textContent =
-            reason === "timeup"
+        const resultModalTitle =
+            document.getElementById(
+                "resultModalTitle"
+            );
 
-                ? "⏰ WAKTU HABIS!"
 
-                : "🏆 KUIS SELESAI!";
+        if (resultModalTitle) {
+
+            resultModalTitle.textContent =
+                reason === "timeup"
+
+                    ? "⏰ WAKTU HABIS!"
+
+                    : "🏆 KUIS SELESAI!";
+        }
 
 
         const sorted =
             [...state.teams].sort(
-                (a, b) =>
+                (
+                    a,
+                    b
+                ) =>
                     b.score -
                     a.score
             );
@@ -4351,39 +5455,58 @@ if (addTeamBtn) {
 
         if (winner) {
 
-            document.getElementById(
-                "winnerTeamName"
-            ).textContent =
-                `${winner.name.toUpperCase()} JUARA!`;
+            const winnerTeamName =
+                document.getElementById(
+                    "winnerTeamName"
+                );
 
 
-            document.getElementById(
-                "winnerScoreTag"
-            ).textContent =
-                `${winner.score} Poin`;
+            if (winnerTeamName) {
+
+                winnerTeamName.textContent =
+                    `${winner.name.toUpperCase()} JUARA!`;
+            }
+
+
+            const winnerScoreTag =
+                document.getElementById(
+                    "winnerScoreTag"
+                );
+
+
+            if (winnerScoreTag) {
+
+                winnerScoreTag.textContent =
+                    `${winner.score} Poin`;
+            }
         }
 
 
-        let totalCorrect = 0;
+        let totalCorrect =
+            0;
 
-        let totalWrong = 0;
+
+        let totalWrong =
+            0;
 
 
         Object.values(
             state.answeredQuestions
-        ).forEach(a => {
+        ).forEach(
+            a => {
 
-            if (a.isCorrect) {
+                if (a.isCorrect) {
 
-                totalCorrect++;
+                    totalCorrect++;
 
+                }
+
+                else {
+
+                    totalWrong++;
+                }
             }
-
-            else {
-
-                totalWrong++;
-            }
-        });
+        );
 
 
         const total =
@@ -4401,22 +5524,43 @@ if (addTeamBtn) {
             );
 
 
-        document.getElementById(
-            "finalCorrect"
-        ).textContent =
-            totalCorrect;
+        const finalCorrect =
+            document.getElementById(
+                "finalCorrect"
+            );
 
 
-        document.getElementById(
-            "finalWrong"
-        ).textContent =
-            totalWrong;
+        if (finalCorrect) {
+
+            finalCorrect.textContent =
+                totalCorrect;
+        }
 
 
-        document.getElementById(
-            "finalAccuracy"
-        ).textContent =
-            `${accuracy}%`;
+        const finalWrong =
+            document.getElementById(
+                "finalWrong"
+            );
+
+
+        if (finalWrong) {
+
+            finalWrong.textContent =
+                totalWrong;
+        }
+
+
+        const finalAccuracy =
+            document.getElementById(
+                "finalAccuracy"
+            );
+
+
+        if (finalAccuracy) {
+
+            finalAccuracy.textContent =
+                `${accuracy}%`;
+        }
 
 
         const rankList =
@@ -4425,57 +5569,66 @@ if (addTeamBtn) {
             );
 
 
-        rankList.innerHTML = "";
+        if (rankList) {
+
+            rankList.innerHTML =
+                "";
 
 
-        sorted.forEach(
-            (
-                team,
-                r
-            ) => {
+            sorted.forEach(
+                (
+                    team,
+                    r
+                ) => {
 
-                const item =
-                    document.createElement(
-                        "div"
+                    const item =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    item.className =
+                        "final-rank-item";
+
+
+                    item.innerHTML = `
+
+                        <span>
+
+                            <strong>
+                                #${r + 1}
+                            </strong>
+
+                            ${team.name}
+
+                        </span>
+
+                        <span
+                            style="
+                                color:var(--primary-cyan);
+                                font-weight:bold;
+                            "
+                        >
+                            ${team.score} Pts
+                        </span>
+
+                    `;
+
+
+                    rankList.appendChild(
+                        item
                     );
+                }
+            );
+        }
 
 
-                item.className =
-                    "final-rank-item";
+        if (resultModal) {
 
-
-                item.innerHTML = `
-
-                    <span>
-                        <strong>
-                            #${r + 1}
-                        </strong>
-
-                        ${team.name}
-                    </span>
-
-                    <span
-                        style="
-                            color:var(--primary-cyan);
-                            font-weight:bold;
-                        "
-                    >
-                        ${team.score} Pts
-                    </span>
-
-                `;
-
-
-                rankList.appendChild(
-                    item
-                );
-            }
-        );
-
-
-        resultModal.classList.remove(
-            "hidden"
-        );
+            resultModal.classList.remove(
+                "hidden"
+            );
+        }
 
 
         if (
@@ -4502,7 +5655,9 @@ if (addTeamBtn) {
             );
 
 
-        if (!canvas) return;
+        if (!canvas) {
+            return;
+        }
 
 
         const ctx =
@@ -4519,7 +5674,8 @@ if (addTeamBtn) {
             window.innerHeight;
 
 
-        const pieces = [];
+        const pieces =
+            [];
 
 
         const colors = [
@@ -4649,6 +5805,82 @@ if (addTeamBtn) {
         loadLocalStorage();
 
 
+        // ==============================================================
+        // VALIDASI TIMER TOTAL
+        // ==============================================================
+
+        if (
+            !Number.isFinite(
+                Number(
+                    state.timerMaxSeconds
+                )
+            ) ||
+            Number(
+                state.timerMaxSeconds
+            ) <= 0
+        ) {
+
+            state.timerMaxSeconds =
+                300;
+        }
+
+
+        if (
+            !Number.isFinite(
+                Number(
+                    state.timerSeconds
+                )
+            ) ||
+            Number(
+                state.timerSeconds
+            ) < 0
+        ) {
+
+            state.timerSeconds =
+                state.timerMaxSeconds;
+        }
+
+
+        // ==============================================================
+        // VALIDASI TIMER TIM
+        // ==============================================================
+
+        if (
+            !Number.isFinite(
+                Number(
+                    state.playerTimeMaxSeconds
+                )
+            ) ||
+            Number(
+                state.playerTimeMaxSeconds
+            ) <= 0
+        ) {
+
+            state.playerTimeMaxSeconds =
+                30;
+        }
+
+
+        if (
+            !Number.isFinite(
+                Number(
+                    state.playerTimeSeconds
+                )
+            ) ||
+            Number(
+                state.playerTimeSeconds
+            ) < 0
+        ) {
+
+            state.playerTimeSeconds =
+                state.playerTimeMaxSeconds;
+        }
+
+
+        // ==============================================================
+        // SESI LAMA / SESI TERSIMPAN
+        // ==============================================================
+
         if (
             state.setupComplete &&
             state.chapterId &&
@@ -4716,24 +5948,16 @@ if (addTeamBtn) {
                 `${state.teams.length} Tim`;
 
 
-            // Pastikan player timer valid
-            if (
-                !state.playerTimeMaxSeconds
-            ) {
-
-                state.playerTimeMaxSeconds =
-                    30;
-            }
-
-
-            if (
-                !state.playerTimeSeconds ||
-                state.playerTimeSeconds < 0
-            ) {
-
-                state.playerTimeSeconds =
-                    state.playerTimeMaxSeconds;
-            }
+            // ==========================================================
+            // PENTING:
+            //
+            // Tidak ada:
+            //
+            // state.playerTimeSeconds =
+            //     state.timerSeconds;
+            //
+            // Timer tim dipertahankan secara independen.
+            // ==========================================================
 
 
             buildWheel();
@@ -4755,8 +5979,13 @@ if (addTeamBtn) {
             setupEventListeners();
 
 
-            // Jika sesi sebelumnya belum selesai
-            if (!state.gameFinished) {
+            // ----------------------------------------------------------
+            // LANJUTKAN DUA TIMER
+            // ----------------------------------------------------------
+
+            if (
+                !state.gameFinished
+            ) {
 
                 startTimers();
             }
