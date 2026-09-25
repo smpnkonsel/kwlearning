@@ -25,7 +25,7 @@ const CHAPTERS = [
     },
         {
         id: "perkalian",
-        file: "soal/bab-1-perkalian.html",
+        file: "soal/bab-1-perkalian copy.html",
         label: "Penjumlahan Angka-Angka",
         icon: "+"
     }
