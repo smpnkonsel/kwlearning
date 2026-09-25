@@ -23,6 +23,12 @@ const CHAPTERS = [
         label: "Perkalian Angka-Angka",
         icon: "✖️"
     },
+        {
+        id: "perkalian",
+        file: "soal/bab-1-perkalian.html",
+        label: "Penjumlahan Angka-Angka",
+        icon: "+"
+    }
 ];
 
 
