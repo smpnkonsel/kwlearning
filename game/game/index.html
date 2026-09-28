@@ -20,7 +20,7 @@
 
     <!-- ==========================================================================
          MODAL SETUP
-         Pilih Bab/Materi, Waktu Total, Waktu Tiap Tim, dan Nama Tim
+         Pilih Bab/Materi, Waktu Total, Waktu Tiap Pemain, dan Nama Pemain
          ========================================================================== -->
 
     <div class="setup-overlay" id="setupScreen">
@@ -35,7 +35,7 @@
                 </h1>
 
                 <p>
-                    Atur materi, waktu, dan tim sebelum permainan dimulai
+                    Atur materi, waktu, dan pemain sebelum permainan dimulai
                 </p>
             </div>
 
@@ -133,13 +133,13 @@
 
 
                     <!-- =========================
-                         WAKTU MENJAWAB TIAP TIM
+                         WAKTU MENJAWAB TIAP PEMAIN
                          ========================= -->
 
                     <div class="setup-field">
 
                         <label for="setupPlayerTimeInput">
-                            ⏳ Waktu Menjawab Tiap Tim (detik)
+                            ⏳ Waktu Menjawab Tiap Pemain (detik)
                         </label>
 
                         <input
@@ -198,19 +198,19 @@
 
 
             <!-- =========================
-                 NAMA TIM
+                 NAMA PEMAIN
                  ========================= -->
 
             <div class="setup-section">
 
-                <h3>🏆 NAMA TIM</h3>
+                <h3>🏆 NAMA PEMAIN</h3>
 
                 <div
                     class="team-setup-list"
                     id="teamSetupList"
                 >
                     <!--
-                        Baris input nama tim
+                        Baris input nama pemain
                         di-generate oleh JavaScript
                     -->
                 </div>
@@ -220,8 +220,54 @@
                     class="add-team-btn"
                     id="addTeamBtn"
                 >
-                    + TAMBAH TIM
+                    + TAMBAH PEMAIN
                 </button>
+
+            </div>
+
+
+            <!-- =========================
+                 MODE SOAL OTOMATIS
+                 ========================= -->
+
+            <div class="setup-section">
+
+                <h3>⚙️ MODE SOAL</h3>
+
+                <div class="setting-group auto-next-setting">
+
+                    <div class="auto-next-info">
+
+                        <div class="auto-next-title">
+                            🚀 Lanjut Otomatis Jika Benar
+                        </div>
+
+                        <div class="auto-next-description">
+
+                            Jika aktif, jawaban benar langsung ke soal berikutnya.
+                            Jawaban salah menghentikan soal dan memutar roda lagi.
+                            Bisa diubah lagi kapan saja lewat Pengaturan.
+
+                        </div>
+
+                    </div>
+
+
+                    <label
+                        class="switch"
+                        aria-label="Lanjut otomatis jika benar"
+                    >
+
+                        <input
+                            type="checkbox"
+                            id="setupAutoNextCorrect"
+                        >
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
 
             </div>
 
@@ -377,7 +423,7 @@
             </div>
 
 
-            <!-- TIMER TIM AKTIF -->
+            <!-- TIMER PEMAIN AKTIF -->
 
             <div class="header-timer">
 
@@ -391,7 +437,7 @@
                         class="timer-label"
                         id="timerLabel"
                     >
-                        WAKTU TIM
+                        WAKTU PEMAIN
                     </div>
 
                     <div
@@ -422,14 +468,14 @@
                             class="mode-label"
                             id="modeLabel"
                         >
-                            Mode: Tim
+                            Mode: Pemain
                         </span>
 
                         <span
                             class="mode-sub"
                             id="modeSub"
                         >
-                            2 Tim
+                            2 Pemain
                         </span>
 
                     </div>
@@ -825,7 +871,7 @@
 
 
                 <!-- =========================
-                     TIM AKTIF
+                     PEMAIN AKTIF
                      ========================= -->
 
                 <div
@@ -834,14 +880,14 @@
                 >
 
                     <span class="card-label">
-                        GILIRAN TIM AKTIF:
+                        GILIRAN PEMAIN AKTIF:
                     </span>
 
                     <h2
                         class="active-team-name"
                         id="activeTeamName"
                     >
-                        TIM 1
+                        PEMAIN 1
                     </h2>
 
                     <span class="active-team-indicator">
@@ -849,7 +895,7 @@
                     </span>
 
 
-                    <!-- WAKTU TIM AKTIF -->
+                    <!-- WAKTU PEMAIN AKTIF -->
 
                     <div class="active-team-time">
 
@@ -860,28 +906,6 @@
                         </strong>
 
                     </div>
-
-                </div>
-
-
-                <!-- =========================
-                     SKOR TIM
-                     ========================= -->
-
-                <div class="panel-section team-scores-section">
-
-                    <div class="section-header">
-
-                        <h3>
-                            SKOR TIM
-                        </h3>
-
-                    </div>
-
-                    <div
-                        class="team-list"
-                        id="teamListContainer"
-                    ></div>
 
                 </div>
 
@@ -909,7 +933,7 @@
 
                                 <tr>
                                     <th>#</th>
-                                    <th>TIM</th>
+                                    <th>PEMAIN</th>
                                     <th style="text-align: right;">
                                         POIN
                                     </th>
@@ -1042,12 +1066,12 @@
                     <span>
                         💡 Mode:
                         <strong>
-                            Tim
+                            Pemain
                         </strong>
                     </span>
 
                     <span>
-                        ⏳ Waktu Tim:
+                        ⏳ Waktu Pemain:
                         <strong id="fTimer">
                             00:30
                         </strong>
@@ -1227,9 +1251,9 @@
 
                         <div class="auto-next-description">
 
-                            Setiap tim memiliki waktu menjawab sendiri.
+                            Setiap pemain memiliki waktu menjawab sendiri.
                             Saat giliran berpindah, waktu akan disesuaikan
-                            dengan pengaturan waktu tiap tim.
+                            dengan pengaturan waktu tiap pemain.
 
                         </div>
 
@@ -1251,7 +1275,7 @@
                         class="btn btn-secondary"
                         id="changeSetupBtn"
                     >
-                        🔁 GANTI BAB/TIM/WAKTU
+                        🔁 GANTI BAB/PEMAIN/WAKTU
                     </button>
 
                 </div>
@@ -1284,7 +1308,7 @@
                 <div class="settings-save-row">
 
                     <a
-                        href="../../materi-kelas9-matematika.html"
+                        href="../../game.html"
                         class="btn-selesai"
                         id="btnSelesaiSettings"
                     >
@@ -1333,7 +1357,7 @@
                     class="winner-team-title"
                     id="winnerTeamName"
                 >
-                    TIM 1 JUARA!
+                    PEMAIN 1 JUARA!
                 </h3>
 
 
@@ -1421,6 +1445,14 @@
                 >
                     🎮 MAIN LAGI
                 </button>
+
+                <a
+                    href="../../game.html"
+                    class="btn btn-secondary btn-lg"
+                    id="btnSelesaiResult"
+                >
+                    ✅ SELESAI
+                </a>
 
             </div>
 
