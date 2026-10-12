@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Risiko Membagikan Data Pribadi — 7.3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#100c0a;
+    --bg-soft:#181210;
+    --panel:#211915;
+    --panel-2:#2a1f19;
+    --line: rgba(220,180,150,0.14);
+    --text:#f5efe9;
+    --text-dim:#b3a196;
+    --text-faint:#6b5f57;
+    --amber:#ffab5c;
+    --coral:#ff7a6b;
+    --gold:#ffd166;
+    --safe:#5fd6a0;
+    --danger:#ff6b6b;
+    --accent: #ffab5c;
+    --radius: 18px;
+    --radius-sm: 10px;
+    --shadow: 0 20px 50px -20px rgba(0,0,0,0.65);
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0; padding:0; height:100%;
+    background:
+      radial-gradient(ellipse 900px 600px at 10% -10%, rgba(255,171,92,0.13), transparent 60%),
+      radial-gradient(ellipse 800px 500px at 100% 110%, rgba(255,122,107,0.10), transparent 60%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Plus Jakarta Sans', sans-serif;
+    overflow:hidden;
+  }
+  h1,h2,h3,.font-head{ font-family:'Fredoka', sans-serif; font-weight:600; letter-spacing:0.2px; }
+  .mono{ font-family:'JetBrains Mono', monospace; }
+  ::selection{ background: rgba(255,171,92,0.32); }
+
+  #app{ position:relative; width:100vw; height:100vh; display:flex; flex-direction:column; }
+
+  #topbar{ display:flex; align-items:center; gap:14px; padding:14px 24px 10px 24px; flex-shrink:0; }
+  #topbar .kode{ font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--text-faint); border:1px solid var(--line); padding:3px 9px; border-radius:999px; }
+  #topbar .judul-mini{ font-size:13px; color:var(--text-dim); }
+  #progress-wrap{ flex:1; height:6px; background:var(--panel); border-radius:999px; overflow:hidden; margin:0 6px; }
+  #progress-bar{ height:100%; width:0%; background: linear-gradient(90deg, var(--amber), var(--coral)); border-radius:999px; transition: width .45s cubic-bezier(.65,0,.35,1); }
+  #slide-counter{ font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--text-faint); min-width:52px; text-align:right; }
+
+  #stage{ position:relative; flex:1; overflow:hidden; }
+  .slide{
+    position:absolute; inset:0; display:flex; flex-direction:column; justify-content:center;
+    padding: 28px 56px 34px 56px;
+    opacity:0; visibility:hidden; transform: translateY(14px) scale(0.99);
+    transition: opacity .5s cubic-bezier(.65,0,.35,1), transform .5s cubic-bezier(.65,0,.35,1);
+    overflow-y:auto;
+  }
+  .slide.active{ opacity:1; visibility:visible; transform:translateY(0) scale(1); }
+  .slide-inner{ max-width:980px; margin:0 auto; width:100%; }
+  .eyebrow{ display:inline-flex; align-items:center; gap:8px; font-size:12.5px; color:var(--text-dim); margin-bottom:10px; }
+  .eyebrow .dot{ width:7px; height:7px; border-radius:50%; background:var(--accent); }
+  .slide h2{ font-size:clamp(22px,3.4vw,34px); margin:0 0 6px 0; line-height:1.15; }
+  .lead{ color:var(--text-dim); font-size:15px; margin:0 0 22px 0; max-width:660px; line-height:1.55; }
+
+  .card{ background: linear-gradient(180deg, var(--panel), var(--panel-2)); border:1px solid var(--line); border-radius: var(--radius); padding:20px 22px; box-shadow: var(--shadow); }
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .grid3{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .grid4{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+  @media (max-width:820px){ .grid2,.grid3,.grid4{ grid-template-columns:1fr; } }
+
+  .chip{ display:inline-block; font-size:12px; padding:3px 10px; border-radius:999px; border:1px solid var(--line); color:var(--text-dim); margin-bottom:10px; }
+
+  .acc-item{ border:1px solid var(--line); border-radius:var(--radius-sm); margin-bottom:10px; overflow:hidden; background:var(--bg-soft); }
+  .acc-head{ display:flex; align-items:center; justify-content:space-between; padding:13px 16px; cursor:pointer; user-select:none; font-size:14.5px; font-weight:600; }
+  .acc-head:hover{ background:rgba(255,255,255,0.03); }
+  .acc-head .arrow{ transition: transform .3s; color:var(--text-faint); }
+  .acc-item.open .acc-head .arrow{ transform:rotate(180deg); }
+  .acc-body{ max-height:0; overflow:hidden; transition:max-height .35s ease; }
+  .acc-item.open .acc-body{ max-height:420px; }
+  .acc-body-inner{ padding:0 16px 15px 16px; font-size:14px; color:var(--text-dim); line-height:1.6; }
+
+  button{ font-family:inherit; cursor:pointer; }
+  .btn{ border:1px solid var(--line); background:var(--panel-2); color:var(--text); padding:9px 16px; border-radius:10px; font-size:13.5px; font-weight:600; transition: all .2s; display:inline-flex; align-items:center; gap:6px; }
+  .btn:hover{ border-color:rgba(255,171,92,0.5); transform:translateY(-1px); }
+  .btn:active{ transform:translateY(0); }
+  .btn-accent{ background: linear-gradient(135deg, var(--amber), #e0793c); border:none; color:#180f08; }
+  .btn-accent:hover{ filter:brightness(1.08); }
+  .btn:disabled{ opacity:.4; cursor:not-allowed; transform:none; }
+
+  .reveal-box{ border:1px dashed var(--line); border-radius:var(--radius-sm); padding:14px 16px; background:var(--bg-soft); }
+  .reveal-content{ max-height:0; overflow:hidden; transition:max-height .4s ease; }
+  .reveal-content.open{ max-height:600px; margin-top:10px; }
+
+  .opt{ display:block; width:100%; text-align:left; border:1px solid var(--line); background:var(--bg-soft); color:var(--text); padding:11px 15px; border-radius:12px; margin-bottom:9px; font-size:14px; transition: all .18s; }
+  .opt:hover:not(:disabled){ border-color:var(--accent); background:rgba(255,171,92,0.08); }
+  .opt.correct{ border-color:var(--safe); background:rgba(95,214,160,0.14); }
+  .opt.wrong{ border-color:var(--danger); background:rgba(255,107,107,0.14); }
+  .opt:disabled{ cursor:default; }
+
+  .feedback{ font-size:13.5px; margin-top:10px; padding:10px 13px; border-radius:10px; display:none; }
+  .feedback.show{ display:block; }
+  .feedback.good{ background:rgba(95,214,160,0.12); color:var(--safe); border:1px solid rgba(95,214,160,0.3); }
+  .feedback.bad{ background:rgba(255,107,107,0.12); color:var(--danger); border:1px solid rgba(255,107,107,0.3); }
+
+  .cover-icons{ display:flex; gap:14px; margin:22px 0 6px 0; }
+  .cover-icons .ic{ width:56px; height:56px; border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:24px; border:1px solid var(--line); }
+
+  .match-card{ border:1px solid var(--line); background:var(--bg-soft); border-radius:12px; padding:12px 14px; margin-bottom:8px; cursor:pointer; font-size:13.5px; transition:all .18s; }
+  .match-card.selected{ border-color:var(--accent); background:rgba(255,171,92,0.1); }
+  .match-card.matched{ border-color:var(--safe); background:rgba(95,214,160,0.1); opacity:0.75; cursor:default; }
+  .match-card.shake{ animation: shake .35s; border-color:var(--danger); }
+  @keyframes shake{ 0%,100%{transform:translateX(0);} 25%{transform:translateX(-5px);} 75%{transform:translateX(5px);} }
+
+  .score-circle{ width:150px; height:150px; border-radius:50%; margin:16px auto; display:flex; align-items:center; justify-content:center; flex-direction:column; background: conic-gradient(var(--safe) calc(var(--pct,0) * 1%), var(--panel) 0); position:relative; }
+  .score-circle::before{ content:''; position:absolute; inset:9px; border-radius:50%; background:var(--bg-soft); }
+  .score-circle .val{ position:relative; font-family:'Fredoka'; font-size:30px; font-weight:600; }
+  .score-circle .lbl{ position:relative; font-size:11px; color:var(--text-dim); }
+
+  #navbar{ flex-shrink:0; display:flex; align-items:center; justify-content:space-between; padding:14px 24px 20px 24px; gap:14px; }
+  #dots{ display:flex; gap:6px; flex-wrap:wrap; justify-content:center; max-width:60%; }
+  .dot-btn{ width:7px; height:7px; border-radius:50%; background:var(--line); border:none; padding:0; cursor:pointer; transition:all .25s; }
+  .dot-btn.active{ width:20px; border-radius:5px; background:var(--accent); }
+  .navbtn{ width:42px; height:42px; border-radius:50%; border:1px solid var(--line); background:var(--panel); color:var(--text); font-size:17px; display:flex; align-items:center; justify-content:center; transition:all .2s; }
+  .navbtn:hover:not(:disabled){ background:var(--panel-2); border-color:var(--accent); }
+  .navbtn:disabled{ opacity:.3; cursor:not-allowed; }
+
+  .badge-good{ color:var(--safe); font-weight:700; }
+  .badge-bad{ color:var(--danger); font-weight:700; }
+  ul.spaced li{ margin-bottom:6px; }
+
+  /* jejak digital simulasi */
+  .post-card{ border:1px solid var(--line); background:var(--bg-soft); border-radius:14px; padding:14px 16px; margin-bottom:10px; cursor:pointer; transition:all .18s; }
+  .post-card:hover{ border-color:var(--accent); }
+  .post-card .post-txt{ font-size:13.5px; line-height:1.5; }
+  .post-card .reveal-info{ max-height:0; overflow:hidden; transition:max-height .35s ease; }
+  .post-card.open .reveal-info{ max-height:200px; margin-top:10px; }
+  .post-card .reveal-info-inner{ font-size:12.5px; color:var(--coral); border-top:1px solid var(--line); padding-top:9px; line-height:1.6; }
+
+  /* scenario buttons */
+  .scenario-card{ margin-bottom:16px; }
+
+  /* impact grid */
+  .impact-card{ border-radius:16px; padding:16px 18px; border:1px solid var(--line); }
+
+  @media (max-width:720px){
+    .slide{ padding:20px 18px 24px 18px; }
+    #topbar{ padding:12px 16px 8px 16px; }
+    #navbar{ padding:10px 16px 16px 16px; }
+    #dots{ display:none; }
+    .grid3,.grid4{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="topbar">
+    <span class="kode mono">7.3</span>
+    <span class="judul-mini">Risiko Membagikan Data Pribadi</span>
+    <div id="progress-wrap"><div id="progress-bar"></div></div>
+    <span id="slide-counter" class="mono">1 / 1</span>
+  </div>
+
+  <div id="stage"></div>
+
+  <div id="navbar">
+    <button class="navbtn" id="btn-prev" onclick="prevSlide()">‹</button>
+    <div id="dots"></div>
+    <button class="navbtn" id="btn-next" onclick="nextSlide()">›</button>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   SLIDE DEFINITIONS
+   ========================================================= */
+const slides = [];
+
+/* ---- 1. PEMBUKA ---- */
+slides.push({title:'Pembuka', html:`
+  <div class="eyebrow"><span class="dot"></span>Informatika · Bab 7 · Membagikan Informasi dan Perlindungan Data Pribadi</div>
+  <h2>7.3 Risiko Membagikan Data Pribadi</h2>
+  <p class="lead">Mempelajari penyalahgunaan data, pencurian identitas, penipuan daring, dan dampak membagikan data secara sembarangan.</p>
+  <div class="cover-icons">
+    <div class="ic" style="background:rgba(255,171,92,0.12); color:var(--amber);">⚠</div>
+    <div class="ic" style="background:rgba(255,122,107,0.12); color:var(--coral);">🕵</div>
+    <div class="ic" style="background:rgba(255,209,102,0.12); color:var(--gold);">📤</div>
+    <div class="ic" style="background:rgba(95,214,160,0.12); color:var(--safe);">🛡</div>
+  </div>
+  <p style="color:var(--text-faint); font-size:13px; margin-top:18px;">Geser dengan tombol di bawah, atau gunakan tombol panah keyboard.</p>
+`});
+
+/* ---- 2. APERSEPSI ---- */
+slides.push({title:'Apersepsi', html:`
+  <div class="eyebrow"><span class="dot"></span>Apersepsi</div>
+  <h2>Pernah dengar cerita seperti ini?</h2>
+  <p class="lead">Perhatikan tiga cerita berikut sebelum kita mulai.</p>
+  <div class="grid3">
+    <div class="card"><div class="chip">Cerita 1</div><p style="font-size:13.5px; color:var(--text-dim); line-height:1.6;">Seseorang tiba-tiba ditelepon dan diminta transfer uang karena "menang undian" — padahal ia tidak pernah ikut undian apa pun.</p></div>
+    <div class="card"><div class="chip">Cerita 2</div><p style="font-size:13.5px; color:var(--text-dim); line-height:1.6;">Foto liburan seseorang lengkap dengan lokasi rumah ternyata dipakai orang lain untuk membuat akun palsu atas namanya.</p></div>
+    <div class="card"><div class="chip">Cerita 3</div><p style="font-size:13.5px; color:var(--text-dim); line-height:1.6;">Data e-KTP yang difoto dan dikirim ke toko online abal-abal ternyata dijual ke pihak lain tanpa sepengetahuannya.</p></div>
+  </div>
+  <div class="reveal-box" style="margin-top:18px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onclick="toggleReveal('rv-aper')">
+      <strong style="font-size:14px;">🤔 Apa kesamaan dari ketiga cerita ini?</strong>
+      <span class="btn" style="pointer-events:none;">Lihat gambaran</span>
+    </div>
+    <div class="reveal-content" id="rv-aper">
+      <p style="font-size:13.5px; color:var(--text-dim); line-height:1.6; padding-top:10px;">
+      Ketiganya bermula dari data pribadi yang dibagikan secara sembarangan, lalu disalahgunakan oleh pihak yang tidak bertanggung jawab. Inilah yang disebut <strong>risiko membagikan data pribadi</strong> — topik yang akan kita pelajari hari ini.
+      </p>
+    </div>
+  </div>
+`});
+
+/* ---- 3. TUJUAN ---- */
+slides.push({title:'Tujuan Pembelajaran', html:`
+  <div class="eyebrow"><span class="dot"></span>Tujuan Pembelajaran</div>
+  <h2>Setelah pembelajaran ini, kamu mampu:</h2>
+  <div class="card">
+    <ul class="spaced" style="font-size:14.5px; line-height:1.7; padding-left:20px; margin:0;">
+      <li>Menjelaskan pengertian <strong>penyalahgunaan data</strong>.</li>
+      <li>Menjelaskan bagaimana <strong>pencurian identitas</strong> dapat terjadi.</li>
+      <li>Mengenali berbagai jenis <strong>penipuan daring</strong>.</li>
+      <li>Menganalisis <strong>dampak</strong> membagikan data pribadi secara sembarangan.</li>
+      <li>Menentukan sikap yang tepat sebelum membagikan informasi pribadi di dunia digital.</li>
+    </ul>
+  </div>
+`});
+
+/* ---- 4. KONSEP DASAR ---- */
+slides.push({title:'Konsep Dasar', html:`
+  <div class="eyebrow"><span class="dot"></span>Konsep Dasar</div>
+  <h2>Mengapa membagikan data punya risiko?</h2>
+  <p class="lead">Setiap kali kita membagikan data pribadi — di media sosial, formulir daring, atau kepada orang yang belum kita kenal — data itu berpotensi digunakan oleh pihak lain tanpa izin kita.</p>
+  <div class="card">
+    <div class="chip">Alur sederhana</div>
+    <p style="font-size:13.5px; color:var(--text-dim); line-height:1.8;">
+    <span style="color:var(--gold);">Data dibagikan sembarangan</span> → <span style="color:var(--amber);">disalahgunakan pihak tak bertanggung jawab</span> → <span style="color:var(--coral);">berujung pada pencurian identitas atau penipuan daring</span> → <span style="color:var(--danger);">menimbulkan kerugian bagi korban</span>.
+    </p>
+  </div>
+`});
+
+/* ---- 5. PENYALAHGUNAAN DATA ---- */
+slides.push({title:'Penyalahgunaan Data', html:`
+  <div class="eyebrow"><span class="dot"></span>Penyalahgunaan Data</div>
+  <h2>Apa itu penyalahgunaan data?</h2>
+  <p class="lead"><strong>Penyalahgunaan data</strong> terjadi ketika data pribadi seseorang digunakan tanpa izin, di luar tujuan awal saat data itu diberikan.</p>
+  <div class="grid2">
+    <div class="acc-item" id="pd-1"><div class="acc-head" onclick="toggleAcc('pd-1')"><span>Contoh penyalahgunaan data</span><span class="arrow">▾</span></div>
+      <div class="acc-body"><div class="acc-body-inner">Nomor HP yang diberikan untuk mendaftar aplikasi, ternyata dijual ke pihak lain dan dipakai untuk mengirim pesan promosi atau penipuan.</div></div></div>
+    <div class="acc-item" id="pd-2"><div class="acc-head" onclick="toggleAcc('pd-2')"><span>Mengapa ini bisa terjadi?</span><span class="arrow">▾</span></div>
+      <div class="acc-body"><div class="acc-body-inner">Karena kita jarang membaca izin/ketentuan sebelum membagikan data, atau data disimpan oleh pihak yang tidak menjaga keamanannya dengan baik.</div></div></div>
+  </div>
+`});
+
+/* ---- 6. PENCURIAN IDENTITAS: pengertian ---- */
+slides.push({title:'Pencurian Identitas — Pengertian', html:`
+  <div class="eyebrow"><span class="dot"></span>Pencurian Identitas</div>
+  <h2>Apa itu pencurian identitas?</h2>
+  <p class="lead"><strong>Pencurian identitas (identity theft)</strong> adalah tindakan seseorang menggunakan data pribadi orang lain — seperti nama, NIK, atau foto — untuk berpura-pura menjadi orang tersebut, biasanya demi keuntungan pribadi.</p>
+  <div class="card">
+    <div class="chip">Contoh nyata</div>
+    <p style="font-size:13.5px; color:var(--text-dim); line-height:1.7;">Foto e-KTP yang dibagikan untuk keperluan pinjaman daring digunakan orang lain untuk mengajukan pinjaman atas nama pemilik KTP, tanpa sepengetahuannya.</p>
+  </div>
+`});
+
+/* ---- 7. PENCURIAN IDENTITAS: bagaimana terjadi ---- */
+slides.push({title:'Pencurian Identitas — Bagaimana Terjadi', html:`
+  <div class="eyebrow"><span class="dot"></span>Pencurian Identitas</div>
+  <h2>Bagaimana data bisa dicuri untuk pencurian identitas?</h2>
+  <div class="grid2">
+    <div class="card"><div class="chip" style="color:var(--coral); border-color:rgba(255,122,107,0.4);">Melalui unggahan</div><p style="font-size:13px; color:var(--text-dim);">Foto KTP/KK diunggah atau dikirim ke pihak yang tidak terpercaya.</p></div>
+    <div class="card"><div class="chip" style="color:var(--coral); border-color:rgba(255,122,107,0.4);">Melalui kebocoran data</div><p style="font-size:13px; color:var(--text-dim);">Data yang tersimpan di suatu aplikasi bocor akibat sistem keamanannya diretas.</p></div>
+    <div class="card"><div class="chip" style="color:var(--coral); border-color:rgba(255,122,107,0.4);">Melalui penipuan</div><p style="font-size:13px; color:var(--text-dim);">Korban ditipu untuk memberikan data secara langsung, misalnya lewat pesan phishing.</p></div>
+    <div class="card"><div class="chip" style="color:var(--coral); border-color:rgba(255,122,107,0.4);">Melalui berbagi berlebihan</div><p style="font-size:13px; color:var(--text-dim);">Informasi pribadi lengkap dibagikan secara terbuka di media sosial.</p></div>
+  </div>
+`});
+
+/* ---- 8. PENIPUAN DARING: pengertian & jenis ---- */
+slides.push({title:'Penipuan Daring — Jenis-jenis', html:`
+  <div class="eyebrow"><span class="dot"></span>Penipuan Daring</div>
+  <h2>Berbagai jenis penipuan daring</h2>
+  <p class="lead"><strong>Penipuan daring</strong> adalah tindakan menipu seseorang secara daring untuk mendapatkan uang, data, atau keuntungan lain secara tidak sah.</p>
+  <div class="acc-item" id="pn-1"><div class="acc-head" onclick="toggleAcc('pn-1')"><span>🎁 Modus hadiah palsu</span><span class="arrow">▾</span></div>
+    <div class="acc-body"><div class="acc-body-inner">Korban diberi tahu memenangkan hadiah, lalu diminta membayar "biaya administrasi" atau memberikan data pribadi untuk klaim hadiah.</div></div></div>
+  <div class="acc-item" id="pn-2"><div class="acc-head" onclick="toggleAcc('pn-2')"><span>🛒 Toko online palsu</span><span class="arrow">▾</span></div>
+    <div class="acc-body"><div class="acc-body-inner">Toko daring menawarkan barang dengan harga sangat murah, korban membayar tapi barang tidak pernah dikirim.</div></div></div>
+  <div class="acc-item" id="pn-3"><div class="acc-head" onclick="toggleAcc('pn-3')"><span>💳 Penipuan pinjaman online</span><span class="arrow">▾</span></div>
+    <div class="acc-body"><div class="acc-body-inner">Korban ditawari pinjaman cepat tanpa syarat rumit, namun diminta membayar biaya di muka atau data pribadinya disalahgunakan.</div></div></div>
+  <div class="acc-item" id="pn-4"><div class="acc-head" onclick="toggleAcc('pn-4')"><span>👤 Penyamaran identitas</span><span class="arrow">▾</span></div>
+    <div class="acc-body"><div class="acc-body-inner">Pelaku berpura-pura menjadi kerabat atau pejabat resmi untuk meminta uang atau data secara mendesak.</div></div></div>
+`});
+
+/* ---- 9. SPOT THE SCAM interaktif ---- */
+slides.push({title:'Kenali Modus Penipuan', html:`
+  <div class="eyebrow"><span class="dot"></span>Latihan Mengenali Modus</div>
+  <h2>Penipuan atau bukan?</h2>
+  <p class="lead">Klik setiap pesan untuk melihat apakah itu termasuk penipuan daring.</p>
+  <div id="scam-list"></div>
+`});
+
+/* ---- 10. DAMPAK MEMBAGIKAN DATA SEMBARANGAN ---- */
+slides.push({title:'Dampak Membagikan Data Sembarangan', html:`
+  <div class="eyebrow"><span class="dot"></span>Dampak</div>
+  <h2>Apa dampaknya bagi korban?</h2>
+  <div class="grid2">
+    <div class="impact-card" style="background:rgba(255,107,107,0.08); border-color:rgba(255,107,107,0.3);">
+      <div class="chip" style="color:var(--danger); border-color:rgba(255,107,107,0.4);">Dampak Finansial</div>
+      <p style="font-size:13px; color:var(--text-dim);">Kehilangan uang akibat penipuan, atau menanggung utang pinjaman online yang bukan miliknya.</p>
+    </div>
+    <div class="impact-card" style="background:rgba(255,171,92,0.08); border-color:rgba(255,171,92,0.3);">
+      <div class="chip" style="color:var(--amber); border-color:rgba(255,171,92,0.4);">Dampak Sosial</div>
+      <p style="font-size:13px; color:var(--text-dim);">Nama baik tercoreng karena identitasnya dipakai untuk hal yang tidak dilakukannya.</p>
+    </div>
+    <div class="impact-card" style="background:rgba(255,209,102,0.08); border-color:rgba(255,209,102,0.3);">
+      <div class="chip" style="color:var(--gold); border-color:rgba(255,209,102,0.4);">Dampak Psikologis</div>
+      <p style="font-size:13px; color:var(--text-dim);">Merasa cemas, tidak aman, atau kehilangan kepercayaan terhadap dunia digital.</p>
+    </div>
+    <div class="impact-card" style="background:rgba(255,122,107,0.08); border-color:rgba(255,122,107,0.3);">
+      <div class="chip" style="color:var(--coral); border-color:rgba(255,122,107,0.4);">Dampak Hukum</div>
+      <p style="font-size:13px; color:var(--text-dim);">Identitas yang dicuri dipakai untuk tindakan ilegal, sehingga korban bisa ikut terseret masalah hukum.</p>
+    </div>
+  </div>
+`});
+
+/* ---- 11. SIMULASI JEJAK DIGITAL ---- */
+slides.push({title:'Simulasi Jejak Digital', html:`
+  <div class="eyebrow"><span class="dot"></span>Coba Sendiri</div>
+  <h2>Apa yang bisa diketahui orang dari unggahanmu?</h2>
+  <p class="lead">Klik setiap contoh unggahan untuk melihat informasi apa saja yang sebenarnya bisa diketahui orang lain darinya.</p>
+  <div id="post-list"></div>
+`});
+
+/* ---- 12. LATIHAN SKENARIO ---- */
+slides.push({title:'Latihan Skenario', html:`
+  <div class="eyebrow"><span class="dot"></span>Latihan Skenario</div>
+  <h2>Apa yang sebaiknya kamu lakukan?</h2>
+  <div id="scenario-list"></div>
+`});
+
+/* ---- 13. LATIHAN MATCHING ---- */
+slides.push({title:'Latihan — Risiko & Pencegahan', html:`
+  <div class="eyebrow"><span class="dot"></span>Latihan Mencocokkan</div>
+  <h2>Pasangkan risiko dengan cara mencegahnya</h2>
+  <p class="lead">Klik satu kartu risiko di kiri, lalu klik cara pencegahan yang paling cocok di kanan.</p>
+  <div class="grid2">
+    <div><div class="chip">Risiko</div><div id="match-left"></div></div>
+    <div><div class="chip">Cara pencegahan</div><div id="match-right"></div></div>
+  </div>
+  <div class="feedback" id="match-feedback"></div>
+`});
+
+/* ---- 14. KUIS ---- */
+slides.push({title:'Kuis', html:`
+  <div class="eyebrow"><span class="dot"></span>Kuis Akhir</div>
+  <h2>Uji Pemahamanmu</h2>
+  <div id="quiz-area"></div>
+`});
+
+/* ---- 15. REFLEKSI ---- */
+slides.push({title:'Refleksi', html:`
+  <div class="eyebrow"><span class="dot"></span>Refleksi</div>
+  <h2>Sebelum lanjut, coba renungkan</h2>
+  <div class="grid2">
+    <div class="acc-item" id="r1"><div class="acc-head" onclick="toggleAcc('r1')"><span>Data pribadi apa yang pernah kamu bagikan tanpa berpikir panjang?</span><span class="arrow">▾</span></div>
+      <div class="acc-body"><div class="acc-body-inner">Coba ingat kembali — apakah kamu tahu ke mana data itu digunakan, dan apakah kamu merasa itu aman?</div></div></div>
+    <div class="acc-item" id="r2"><div class="acc-head" onclick="toggleAcc('r2')"><span>Apa yang akan kamu lakukan berbeda mulai sekarang?</span><span class="arrow">▾</span></div>
+      <div class="acc-body"><div class="acc-body-inner">Misalnya lebih selektif membagikan data, memeriksa keaslian penawaran, atau bertanya kepada orang tua/guru sebelum mengisi formulir asing.</div></div></div>
+  </div>
+`});
+
+/* ---- 16. RANGKUMAN ---- */
+slides.push({title:'Rangkuman', html:`
+  <div class="eyebrow"><span class="dot"></span>Rangkuman</div>
+  <h2>Yang telah kita pelajari</h2>
+  <div class="grid2">
+    <div class="card"><div class="chip" style="color:var(--amber); border-color:rgba(255,171,92,0.4);">Penyalahgunaan Data</div><p style="font-size:13.5px; color:var(--text-dim);">Data pribadi digunakan tanpa izin, di luar tujuan awal saat diberikan.</p></div>
+    <div class="card"><div class="chip" style="color:var(--coral); border-color:rgba(255,122,107,0.4);">Pencurian Identitas</div><p style="font-size:13.5px; color:var(--text-dim);">Data seseorang dipakai untuk berpura-pura menjadi orang tersebut demi keuntungan pribadi.</p></div>
+    <div class="card"><div class="chip" style="color:var(--gold); border-color:rgba(255,209,102,0.4);">Penipuan Daring</div><p style="font-size:13.5px; color:var(--text-dim);">Tindakan menipu secara daring untuk mendapatkan uang atau data secara tidak sah.</p></div>
+    <div class="card"><div class="chip" style="color:var(--danger); border-color:rgba(255,107,107,0.4);">Dampaknya</div><p style="font-size:13.5px; color:var(--text-dim);">Kerugian finansial, sosial, psikologis, hingga masalah hukum bagi korban.</p></div>
+  </div>
+  <p class="lead" style="margin-top:16px;">Kunci utamanya: <strong>pikirkan dulu sebelum membagikan data pribadi</strong>, dan selalu curigai penawaran atau permintaan yang terkesan terlalu mudah dan mendesak.</p>
+`});
+
+/* ---- 17. PENUTUP ---- */
+slides.push({title:'Penutup', html:`
+  <div class="eyebrow"><span class="dot"></span>Penutup</div>
+  <h2>Selesai! 🎉</h2>
+  <p class="lead">Kamu telah menyelesaikan materi <strong>7.3 Risiko Membagikan Data Pribadi</strong>: penyalahgunaan data, pencurian identitas, penipuan daring, dan dampak membagikan data secara sembarangan.</p>
+  <div class="card">
+    <p style="font-size:13.5px; color:var(--text-dim); line-height:1.7;">Mulai sekarang, coba biasakan diri untuk selalu bertanya: "Apakah aku benar-benar perlu membagikan data ini, dan kepada siapa?" sebelum menekan tombol kirim atau unggah.</p>
+  </div>
+  <button class="btn btn-accent" style="margin-top:18px;" onclick="goTo(0)">↺ Ulangi dari awal</button>
+`});
+
+/* =========================================================
+   RENDER SLIDES
+   ========================================================= */
+const stage = document.getElementById('stage');
+slides.forEach((s,i)=>{
+  const div = document.createElement('div');
+  div.className = 'slide';
+  div.id = 'slide-'+i;
+  div.innerHTML = `<div class="slide-inner">${s.html}</div>`;
+  stage.appendChild(div);
+});
+const dotsWrap = document.getElementById('dots');
+slides.forEach((s,i)=>{
+  const b = document.createElement('button');
+  b.className='dot-btn';
+  b.title = s.title;
+  b.onclick = ()=>goTo(i);
+  dotsWrap.appendChild(b);
+});
+
+let current = 0;
+function render(){
+  slides.forEach((s,i)=>{
+    document.getElementById('slide-'+i).classList.toggle('active', i===current);
+  });
+  document.querySelectorAll('.dot-btn').forEach((d,i)=>d.classList.toggle('active', i===current));
+  document.getElementById('progress-bar').style.width = ((current+1)/slides.length*100)+'%';
+  document.getElementById('slide-counter').textContent = (current+1)+' / '+slides.length;
+  document.getElementById('btn-prev').disabled = current===0;
+  document.getElementById('btn-next').disabled = current===slides.length-1;
+}
+function goTo(i){ current = Math.max(0, Math.min(slides.length-1, i)); render(); }
+function nextSlide(){ goTo(current+1); }
+function prevSlide(){ goTo(current-1); }
+document.addEventListener('keydown', e=>{
+  if(e.key==='ArrowRight') nextSlide();
+  if(e.key==='ArrowLeft') prevSlide();
+});
+render();
+
+/* =========================================================
+   ACCORDION + REVEAL
+   ========================================================= */
+function toggleAcc(id){ document.getElementById(id).classList.toggle('open'); }
+function toggleReveal(id){ document.getElementById(id).classList.toggle('open'); }
+
+/* =========================================================
+   SPOT THE SCAM
+   ========================================================= */
+const scamItems = [
+  {txt:'"Selamat! Anda mendapat cashback Rp500.000, klik tautan ini dan masukkan PIN ATM Anda untuk mencairkan."', isScam:true, why:'Meminta PIN ATM adalah tanda pasti penipuan — bank atau layanan resmi tidak pernah meminta PIN lewat pesan.'},
+  {txt:'Email dari sekolah berisi pengumuman jadwal ujian, dikirim dari alamat email resmi sekolah yang sudah dikenal.', isScam:false, why:'Ini adalah komunikasi resmi dan wajar, dikirim dari sumber yang jelas dan dapat diverifikasi.'},
+  {txt:'"Kak, ini aku pakai nomor baru. Tolong transferin 200rb dulu ya, nanti aku ganti." (dari nomor tak dikenal, mengaku saudara)', isScam:true, why:'Modus ini memanfaatkan urgensi dan mengaku sebagai kerabat — selalu verifikasi lewat kontak resmi sebelum mentransfer.'},
+  {txt:'Notifikasi resmi dari aplikasi belanja bahwa pesananmu sedang dikirim, lengkap dengan nomor resi yang bisa dilacak.', isScam:false, why:'Ini adalah notifikasi transaksi yang wajar karena sesuai dengan pesanan yang benar-benar kamu buat.'},
+];
+function renderScam(){
+  const wrap = document.getElementById('scam-list');
+  if(!wrap) return;
+  wrap.innerHTML='';
+  scamItems.forEach((item,i)=>{
+    const el = document.createElement('div');
+    el.className='reveal-box';
+    el.style.marginBottom='10px';
+    el.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:center; cursor:pointer; gap:12px;" onclick="toggleReveal('scam-${i}')">
+        <span style="font-size:13.5px;">${item.txt}</span>
+        <span class="btn" style="pointer-events:none; font-size:12px; padding:5px 10px; flex-shrink:0;">Cek</span>
+      </div>
+      <div class="reveal-content" id="scam-${i}">
+        <p style="padding-top:8px; font-size:13.5px; color:var(--text-dim);"><span class="${item.isScam?'badge-bad':'badge-good'}">${item.isScam?'⚠ INI PENIPUAN':'✓ INI WAJAR'}</span> — ${item.why}</p>
+      </div>
+    `;
+    wrap.appendChild(el);
+  });
+}
+renderScam();
+
+/* =========================================================
+   SIMULASI JEJAK DIGITAL
+   ========================================================= */
+const postItems = [
+  {txt:'📸 "Liburan seru di rumah baru kami! #rumahimpian" (foto rumah lengkap dengan nomor plat mobil dan papan nama jalan terlihat jelas)', info:'Orang lain bisa mengetahui alamat rumahmu, kendaraan yang kamu miliki, dan bahwa rumahmu sedang kosong saat kamu berlibur.'},
+  {txt:'🎂 "Sweet seventeen! Terima kasih semuanya 🎉" (mencantumkan tanggal lahir lengkap dan nama sekolah di keterangan)', info:'Tanggal lahir dan nama sekolah bisa dipakai untuk menebak jawaban pertanyaan keamanan akun, atau menyamar sebagai dirimu.'},
+  {txt:'✈️ "Otw ke bandara, liburan 5 hari ke luar kota bareng keluarga!" (diunggah saat masih di rumah, sebelum berangkat)', info:'Ini memberi tahu orang bahwa rumah akan kosong selama 5 hari — informasi yang berisiko jika dilihat orang yang tidak dikenal.'},
+];
+function renderPosts(){
+  const wrap = document.getElementById('post-list');
+  if(!wrap) return;
+  wrap.innerHTML='';
+  postItems.forEach((item,i)=>{
+    const el = document.createElement('div');
+    el.className='post-card';
+    el.id='post-'+i;
+    el.onclick=()=>{ el.classList.toggle('open'); };
+    el.innerHTML = `
+      <div class="post-txt">${item.txt}</div>
+      <div class="reveal-info"><div class="reveal-info-inner">⚠ Yang bisa diketahui orang lain: ${item.info}</div></div>
+    `;
+    wrap.appendChild(el);
+  });
+}
+renderPosts();
+
+/* =========================================================
+   LATIHAN SKENARIO
+   ========================================================= */
+const scenarioItems = [
+  {
+    situasi:'Sebuah aplikasi kuis daring meminta kamu memasukkan NIK dan nomor kartu keluarga hanya untuk "mengikuti kuis berhadiah".',
+    options:['Isi saja, kan cuma kuis', 'Tidak perlu diisi, kuis tidak butuh data sepenting itu', 'Isi tapi dengan data palsu'],
+    correct:1,
+    exp:'Kuis biasa tidak pernah butuh NIK atau nomor KK. Permintaan data sensitif untuk hal sepele adalah tanda bahaya.'
+  },
+  {
+    situasi:'Seseorang yang belum pernah kamu kenal di media sosial memintamu mengirimkan foto KTP untuk "verifikasi hadiah".',
+    options:['Kirim, karena hadiahnya besar', 'Tolak dan blokir, ini ciri penipuan', 'Kirim tapi minta bukti dulu'],
+    correct:1,
+    exp:'Verifikasi hadiah yang sah tidak pernah meminta foto KTP dari orang asing di media sosial. Ini adalah modus pencurian identitas.'
+  },
+];
+function renderScenario(){
+  const wrap = document.getElementById('scenario-list');
+  if(!wrap) return;
+  wrap.innerHTML='';
+  scenarioItems.forEach((item,i)=>{
+    const card = document.createElement('div');
+    card.className='card scenario-card';
+    card.innerHTML = `
+      <p style="font-size:13.5px; margin:0 0 14px 0;">${item.situasi}</p>
+      <div id="scen-opts-${i}">
+        ${item.options.map((o,oi)=>`<button class="opt" onclick="answerScenario(${i},${oi})">${o}</button>`).join('')}
+      </div>
+      <div class="feedback" id="scen-fb-${i}"></div>
+    `;
+    wrap.appendChild(card);
+  });
+}
+function answerScenario(qi, oi){
+  const item = scenarioItems[qi];
+  const optsWrap = document.getElementById('scen-opts-'+qi);
+  const opts = optsWrap.querySelectorAll('.opt');
+  opts.forEach((o,idx)=>{
+    o.disabled=true;
+    if(idx===item.correct) o.classList.add('correct');
+    else if(idx===oi) o.classList.add('wrong');
+  });
+  const fb = document.getElementById('scen-fb-'+qi);
+  const isCorrect = oi===item.correct;
+  fb.className='feedback show '+(isCorrect?'good':'bad');
+  fb.textContent = (isCorrect?'✓ Tepat! ':'✗ Belum tepat. ')+item.exp;
+}
+renderScenario();
+
+/* =========================================================
+   MATCHING LATIHAN
+   ========================================================= */
+const matchPairs = [
+  {id:'a', situasi:'Diminta mengirim foto KTP oleh orang asing di media sosial', bentuk:'ktp'},
+  {id:'b', situasi:'Tawaran pinjaman online tanpa syarat, minta biaya di muka', bentuk:'pinjol'},
+  {id:'c', situasi:'Mengunggah foto rumah lengkap dengan alamat saat sedang berlibur', bentuk:'lokasi'},
+  {id:'d', situasi:'Pesan mengaku dari bank meminta kode OTP untuk "verifikasi"', bentuk:'otp'},
+];
+const bentukLabel = {ktp:'Tolak dan jangan pernah kirim dokumen identitas ke orang asing', pinjol:'Periksa legalitas & jangan bayar biaya di muka', lokasi:'Hindari membagikan lokasi/alamat secara terbuka', otp:'Jangan pernah bagikan kode OTP ke siapa pun'};
+let selectedSituasi = null;
+let matchedCount = 0;
+
+function renderMatch(){
+  const left = document.getElementById('match-left');
+  const right = document.getElementById('match-right');
+  if(!left) return;
+  left.innerHTML=''; right.innerHTML='';
+  matchPairs.forEach(p=>{
+    const el = document.createElement('div');
+    el.className='match-card';
+    el.id='sit-'+p.id;
+    el.textContent = p.situasi;
+    el.onclick = ()=>selectSituasi(p.id, el);
+    left.appendChild(el);
+  });
+  const bentukOrder = ['ktp','pinjol','lokasi','otp'];
+  bentukOrder.forEach(b=>{
+    const el = document.createElement('div');
+    el.className='match-card';
+    el.id='bnt-'+b;
+    el.textContent = bentukLabel[b];
+    el.onclick = ()=>selectBentuk(b, el);
+    right.appendChild(el);
+  });
+}
+function selectSituasi(id, el){
+  if(el.classList.contains('matched')) return;
+  document.querySelectorAll('#match-left .match-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedSituasi = id;
+}
+function selectBentuk(bentuk, el){
+  if(el.classList.contains('matched') || !selectedSituasi) return;
+  const pair = matchPairs.find(p=>p.id===selectedSituasi);
+  const fb = document.getElementById('match-feedback');
+  if(pair.bentuk === bentuk){
+    document.getElementById('sit-'+selectedSituasi).classList.add('matched');
+    document.getElementById('sit-'+selectedSituasi).classList.remove('selected');
+    el.classList.add('matched');
+    matchedCount++;
+    fb.className='feedback show good';
+    fb.textContent = '✓ Tepat! Cara terbaik menghadapi "'+pair.situasi+'" adalah: '+bentukLabel[bentuk]+'.';
+    if(matchedCount===matchPairs.length){ fb.textContent += ' 🎉 Semua pasangan sudah tepat!'; }
+  } else {
+    el.classList.add('shake');
+    setTimeout(()=>el.classList.remove('shake'), 350);
+    fb.className='feedback show bad';
+    fb.textContent = '✗ Belum tepat, coba pikirkan lagi risiko apa yang paling sesuai dengan cara pencegahan itu.';
+  }
+  selectedSituasi = null;
+}
+renderMatch();
+
+/* =========================================================
+   KUIS
+   ========================================================= */
+const quizData = [
+  {q:'Tindakan menggunakan data pribadi seseorang untuk berpura-pura menjadi orang tersebut disebut…', options:['Penyalahgunaan data','Pencurian identitas','Privasi digital','Autentikasi'], correct:1, exp:'Pencurian identitas adalah tindakan memakai data pribadi orang lain untuk berpura-pura menjadi orang tersebut.'},
+  {q:'Manakah ciri khas penipuan daring?', options:['Meminta OTP atau PIN secara mendesak','Mengirim informasi resmi dari sumber terverifikasi','Meminta konfirmasi ulang lewat aplikasi resmi','Mengirim notifikasi transaksi yang sesuai pesanan'], correct:0, exp:'Permintaan OTP/PIN secara mendesak adalah ciri khas penipuan daring — layanan resmi tidak pernah memintanya.'},
+  {q:'Mengunggah foto rumah lengkap dengan alamat saat sedang berlibur berisiko karena…', options:['Fotonya jadi kurang bagus','Memberi tahu bahwa rumah sedang kosong','Membuat baterai HP boros','Tidak ada risikonya sama sekali'], correct:1, exp:'Unggahan seperti itu memberi tahu orang lain bahwa rumah kosong, yang berisiko disalahgunakan.'},
+  {q:'Dampak yang termasuk dampak HUKUM dari pencurian identitas adalah…', options:['Merasa cemas dan tidak aman', 'Kehilangan uang karena penipuan', 'Identitas dipakai untuk tindakan ilegal sehingga korban ikut terseret masalah', 'Nama baik tercoreng di media sosial'], correct:2, exp:'Jika identitas dipakai untuk tindakan ilegal, korban bisa ikut terseret masalah hukum meski tidak melakukannya.'},
+  {q:'Sikap paling tepat sebelum membagikan data pribadi adalah…', options:['Langsung membagikan agar cepat selesai','Berpikir dulu: perlu tidak, dan kepada siapa data ini dibagikan','Membagikan ke sebanyak mungkin orang agar aman','Membagikan hanya jika diminta dengan mendesak'], correct:1, exp:'Selalu pikirkan dulu apakah data itu benar-benar perlu dibagikan dan kepada siapa, sebelum menekan tombol kirim.'},
+];
+let quizIndex=0, quizScore=0, quizAnswered=false;
+function renderQuiz(){
+  const area = document.getElementById('quiz-area');
+  if(!area) return;
+  if(quizIndex >= quizData.length){
+    const pct = Math.round(quizScore/quizData.length*100);
+    area.innerHTML = `
+      <div class="card" style="text-align:center;">
+        <div class="score-circle" style="--pct:${pct};">
+          <div class="val">${quizScore}/${quizData.length}</div>
+          <div class="lbl">skor kamu</div>
+        </div>
+        <p style="font-size:14px; color:var(--text-dim);">${pct>=80?'Luar biasa! Kamu sudah memahami risiko membagikan data pribadi dengan baik. 🌟':pct>=60?'Bagus! Sedikit lagi kamu akan menguasai materi ini. 👍':'Yuk pelajari lagi bagian yang belum dipahami, lalu coba lagi. 💪'}</p>
+        <button class="btn btn-accent" onclick="restartQuiz()">↺ Ulangi Kuis</button>
+      </div>`;
+    return;
+  }
+  const q = quizData[quizIndex];
+  area.innerHTML = `
+    <div class="chip">Soal ${quizIndex+1} dari ${quizData.length}</div>
+    <div class="card">
+      <p style="font-size:15px; margin:0 0 16px 0;">${q.q}</p>
+      <div id="quiz-opts">${q.options.map((o,i)=>`<button class="opt" data-i="${i}" onclick="answerQuiz(${i})">${o}</button>`).join('')}</div>
+      <div class="feedback" id="quiz-fb"></div>
+    </div>`;
+  quizAnswered=false;
+}
+function answerQuiz(i){
+  if(quizAnswered) return;
+  quizAnswered=true;
+  const q = quizData[quizIndex];
+  const opts = document.querySelectorAll('#quiz-opts .opt');
+  opts.forEach((o,idx)=>{
+    o.disabled=true;
+    if(idx===q.correct) o.classList.add('correct');
+    else if(idx===i) o.classList.add('wrong');
+  });
+  const fb = document.getElementById('quiz-fb');
+  const isCorrect = i===q.correct;
+  if(isCorrect) quizScore++;
+  fb.className='feedback show '+(isCorrect?'good':'bad');
+  fb.innerHTML=(isCorrect?'✓ Benar! ':'✗ Belum tepat. ')+q.exp+
+    `<div style="margin-top:10px;"><button class="btn btn-accent" onclick="nextQuiz()">${quizIndex<quizData.length-1?'Soal berikutnya →':'Lihat skor →'}</button></div>`;
+}
+function nextQuiz(){ quizIndex++; renderQuiz(); }
+function restartQuiz(){ quizIndex=0; quizScore=0; renderQuiz(); }
+renderQuiz();
+
+</script>
+</body>
+</html>

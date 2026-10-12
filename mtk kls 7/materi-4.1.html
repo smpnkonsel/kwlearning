@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Bab 4 — Konsep Bentuk Aljabar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-0:#0b0f1a;
+    --bg-1:#111729;
+    --bg-2:#161d33;
+    --card:#1a2138;
+    --card-border:#2a3352;
+    --text-hi:#f2f4fb;
+    --text-mid:#b7c0dc;
+    --text-low:#7c86a8;
+    --coral:#ff6b6b;
+    --teal:#4ecdc4;
+    --amber:#ffd166;
+    --violet:#8b7cf6;
+    --grad-1: linear-gradient(135deg, #ff6b6b 0%, #ffd166 100%);
+    --grad-2: linear-gradient(135deg, #4ecdc4 0%, #8b7cf6 100%);
+    --grad-3: linear-gradient(135deg, #8b7cf6 0%, #ff6b6b 100%);
+    --shadow: 0 20px 50px -12px rgba(0,0,0,0.5);
+    --radius: 22px;
+    --font-head:'Fredoka', sans-serif;
+    --font-body:'Plus Jakarta Sans', sans-serif;
+    --font-mono:'JetBrains Mono', monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family: var(--font-body);
+    background: radial-gradient(ellipse at top left, #171f38 0%, var(--bg-0) 55%), var(--bg-0);
+    color: var(--text-hi);
+    overflow:hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #app{
+    position:relative;
+    width:100vw;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+  }
+
+  /* ===== TOP BAR ===== */
+  #topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px clamp(14px,3vw,32px);
+    gap:14px;
+    z-index:20;
+  }
+  .brand{
+    display:flex; align-items:center; gap:10px;
+    font-family:var(--font-head);
+    font-weight:600;
+    font-size:clamp(13px,1.6vw,16px);
+    color:var(--text-mid);
+    white-space:nowrap;
+  }
+  .brand .dot{ width:10px; height:10px; border-radius:50%; background:var(--grad-1); flex-shrink:0;}
+  #progress-wrap{
+    flex:1;
+    height:8px;
+    background:var(--bg-2);
+    border-radius:99px;
+    overflow:hidden;
+    border:1px solid var(--card-border);
+    max-width:420px;
+  }
+  #progress-bar{
+    height:100%;
+    width:0%;
+    background:var(--grad-2);
+    border-radius:99px;
+    transition: width .45s cubic-bezier(.65,0,.35,1);
+  }
+  #slide-counter{
+    font-family:var(--font-mono);
+    font-size:clamp(11px,1.4vw,13px);
+    color:var(--text-low);
+    white-space:nowrap;
+  }
+
+  /* ===== SLIDES ===== */
+  #stage{
+    flex:1;
+    position:relative;
+    overflow:hidden;
+  }
+  .slide{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+    padding: clamp(14px,3vh,28px) clamp(16px,5vw,64px) clamp(90px,10vh,110px);
+    opacity:0;
+    transform: translateX(40px) scale(.98);
+    transition: opacity .5s ease, transform .5s cubic-bezier(.65,0,.35,1);
+    pointer-events:none;
+    overflow-y:auto;
+  }
+  .slide.active{
+    opacity:1;
+    transform: translateX(0) scale(1);
+    pointer-events:auto;
+  }
+  .slide.prev{
+    transform: translateX(-40px) scale(.98);
+  }
+  .slide-inner{
+    width:100%;
+    max-width:980px;
+    margin:0 auto;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+  }
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:clamp(11px,1.5vw,13px);
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--teal);
+    font-weight:500;
+  }
+  h1.slide-title{
+    font-family:var(--font-head);
+    font-weight:600;
+    font-size:clamp(24px,4.4vw,44px);
+    line-height:1.15;
+    background:var(--grad-2);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  h2.section-title{
+    font-family:var(--font-head);
+    font-weight:600;
+    font-size:clamp(20px,3vw,30px);
+    color:var(--text-hi);
+  }
+  p.lead{
+    font-size:clamp(14px,1.9vw,18px);
+    color:var(--text-mid);
+    line-height:1.65;
+    max-width:760px;
+  }
+  .card{
+    background:var(--card);
+    border:1px solid var(--card-border);
+    border-radius:var(--radius);
+    padding:clamp(16px,2.6vw,28px);
+    box-shadow: var(--shadow);
+  }
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  .grid3{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+  @media (max-width:760px){ .grid2, .grid3{grid-template-columns:1fr;} }
+
+  .badge{
+    display:inline-flex; align-items:center; gap:6px;
+    font-family:var(--font-mono);
+    font-size:12px;
+    padding:4px 12px;
+    border-radius:99px;
+    background:var(--bg-2);
+    border:1px solid var(--card-border);
+    color:var(--text-mid);
+    width:fit-content;
+  }
+
+  .expr{
+    font-family:var(--font-mono);
+    font-weight:700;
+    letter-spacing:.02em;
+  }
+
+  /* ===== NAV ===== */
+  #navbar{
+    position:absolute;
+    bottom:0; left:0; right:0;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    padding: 14px clamp(14px,4vw,40px) 18px;
+    background: linear-gradient(0deg, rgba(11,15,26,.92) 40%, rgba(11,15,26,0) 100%);
+    z-index:30;
+  }
+  .nav-btn{
+    display:flex; align-items:center; gap:8px;
+    font-family:var(--font-body);
+    font-weight:600;
+    font-size:clamp(13px,1.6vw,15px);
+    color:var(--text-hi);
+    background:var(--card);
+    border:1px solid var(--card-border);
+    padding:10px 18px;
+    border-radius:14px;
+    cursor:pointer;
+    transition: transform .15s ease, background .2s ease, opacity .2s ease;
+    user-select:none;
+  }
+  .nav-btn:hover{ transform:translateY(-2px); background:var(--bg-2); }
+  .nav-btn:active{ transform:translateY(0); }
+  .nav-btn.primary{ background:var(--grad-2); color:#0b0f1a; border:none; }
+  .nav-btn:disabled{ opacity:.35; cursor:not-allowed; transform:none; }
+
+  #dots{
+    display:flex; gap:6px; flex-wrap:wrap; justify-content:center; max-width:46vw;
+  }
+  .dot-i{
+    width:8px; height:8px; border-radius:50%;
+    background:var(--card-border);
+    cursor:pointer;
+    transition: all .25s ease;
+    flex-shrink:0;
+  }
+  .dot-i.active{ background:var(--teal); width:22px; border-radius:5px;}
+  .dot-i.done{ background:var(--text-low); }
+  @media (max-width:640px){ #dots{display:none;} }
+
+  /* ===== INTERACTIVE WIDGETS ===== */
+  .reveal-btn{
+    font-family:var(--font-body);
+    font-weight:700;
+    font-size:14px;
+    color:#0b0f1a;
+    background:var(--amber);
+    border:none;
+    padding:10px 18px;
+    border-radius:12px;
+    cursor:pointer;
+    transition: transform .15s ease, filter .2s ease;
+  }
+  .reveal-btn:hover{ filter:brightness(1.08); transform:translateY(-1px); }
+  .hidden-box{
+    display:none;
+    margin-top:12px;
+    padding:14px 16px;
+    background:var(--bg-2);
+    border-left:3px solid var(--teal);
+    border-radius:10px;
+    font-size:14px;
+    color:var(--text-mid);
+    line-height:1.6;
+  }
+  .hidden-box.show{ display:block; animation: fadein .35s ease; }
+  @keyframes fadein{ from{opacity:0; transform:translateY(-6px);} to{opacity:1; transform:translateY(0);} }
+
+  .term-token{
+    font-family:var(--font-mono);
+    font-weight:700;
+    font-size:clamp(20px,4vw,34px);
+    padding:6px 10px;
+    border-radius:10px;
+    cursor:pointer;
+    border:2px solid transparent;
+    transition: all .2s ease;
+    display:inline-block;
+  }
+  .term-token:hover{ border-color:var(--card-border); background:var(--bg-2); }
+  .term-token.picked-coef{ background:rgba(255,107,107,.18); border-color:var(--coral); color:var(--coral); }
+  .term-token.picked-var{ background:rgba(78,205,196,.18); border-color:var(--teal); color:var(--teal); }
+  .term-token.picked-const{ background:rgba(255,209,102,.18); border-color:var(--amber); color:var(--amber); }
+  .term-token.picked-op{ background:rgba(139,124,246,.18); border-color:var(--violet); color:var(--violet); }
+
+  .legend{ display:flex; flex-wrap:wrap; gap:10px; margin-top:14px; }
+  .legend-chip{ display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-mid); }
+  .legend-swatch{ width:14px; height:14px; border-radius:4px; }
+
+  .choice-row{ display:flex; flex-direction:column; gap:10px; margin-top:14px; }
+  .choice-btn{
+    text-align:left;
+    font-family:var(--font-body);
+    font-size:14px;
+    color:var(--text-hi);
+    background:var(--bg-2);
+    border:1.5px solid var(--card-border);
+    padding:13px 16px;
+    border-radius:13px;
+    cursor:pointer;
+    transition: all .2s ease;
+  }
+  .choice-btn:hover{ border-color:var(--teal); transform:translateX(3px); }
+  .choice-btn.correct{ border-color:var(--teal); background:rgba(78,205,196,.15); }
+  .choice-btn.wrong{ border-color:var(--coral); background:rgba(255,107,107,.15); }
+  .choice-btn:disabled{ cursor:default; }
+
+  .feedback-msg{ font-size:14px; margin-top:10px; font-weight:600; }
+  .feedback-msg.ok{ color:var(--teal); }
+  .feedback-msg.bad{ color:var(--coral); }
+
+  .match-wrap{ display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:16px; }
+  @media (max-width:700px){ .match-wrap{grid-template-columns:1fr;} }
+  .match-col{ display:flex; flex-direction:column; gap:10px; }
+  .match-item{
+    padding:12px 14px;
+    background:var(--bg-2);
+    border:1.5px solid var(--card-border);
+    border-radius:12px;
+    font-size:13.5px;
+    cursor:grab;
+    user-select:none;
+  }
+  .match-item.term-src{ font-family:var(--font-mono); font-weight:700; text-align:center; cursor:pointer; }
+  .match-item.selected{ border-color:var(--amber); background:rgba(255,209,102,.12); }
+  .match-item.matched-ok{ border-color:var(--teal); background:rgba(78,205,196,.15); cursor:default; }
+  .match-item.matched-bad{ border-color:var(--coral); }
+  .match-item.drop-target{ min-height:50px; display:flex; align-items:center; }
+
+  .term-box{
+    display:inline-flex; align-items:center; justify-content:center;
+    font-family:var(--font-mono); font-weight:700; font-size:clamp(24px,5vw,40px);
+    padding:16px 26px; border-radius:16px; background:var(--bg-2);
+    border:1.5px solid var(--card-border); gap:4px; flex-wrap:wrap;
+  }
+
+  .step-list{ counter-reset:step; display:flex; flex-direction:column; gap:12px; margin-top:12px; }
+  .step-item{
+    display:flex; gap:14px; align-items:flex-start;
+    background:var(--bg-2); border:1px solid var(--card-border); border-radius:14px; padding:14px 16px;
+  }
+  .step-num{
+    counter-increment:step;
+    font-family:var(--font-head); font-weight:600;
+    width:28px; height:28px; border-radius:50%;
+    background:var(--grad-1); color:#1a0d0d;
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0; font-size:13px;
+  }
+  .step-num::before{ content: counter(step); }
+
+  input.answer-input{
+    font-family:var(--font-mono);
+    font-size:15px;
+    padding:10px 14px;
+    border-radius:10px;
+    border:1.5px solid var(--card-border);
+    background:var(--bg-1);
+    color:var(--text-hi);
+    width:140px;
+    outline:none;
+  }
+  input.answer-input:focus{ border-color:var(--teal); }
+  .check-btn{
+    font-family:var(--font-body); font-weight:700; font-size:13px;
+    background:var(--grad-2); color:#0b0f1a; border:none;
+    padding:10px 16px; border-radius:10px; cursor:pointer; margin-left:8px;
+  }
+
+  .tf-row{ display:flex; gap:12px; margin-top:14px; flex-wrap:wrap;}
+  .tf-btn{
+    font-family:var(--font-body); font-weight:700; font-size:14px;
+    padding:12px 26px; border-radius:12px; border:1.5px solid var(--card-border);
+    background:var(--bg-2); color:var(--text-hi); cursor:pointer; transition:all .2s ease;
+  }
+  .tf-btn.correct{ background:rgba(78,205,196,.18); border-color:var(--teal); }
+  .tf-btn.wrong{ background:rgba(255,107,107,.18); border-color:var(--coral); }
+
+  .quiz-progress{ font-family:var(--font-mono); font-size:12px; color:var(--text-low); }
+  .score-ring{
+    width:140px; height:140px; margin:0 auto;
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
+  .score-ring svg{ transform:rotate(-90deg); }
+  .score-num{ position:absolute; font-family:var(--font-head); font-size:30px; font-weight:600; }
+
+  ::-webkit-scrollbar{ width:8px; }
+  ::-webkit-scrollbar-thumb{ background:var(--card-border); border-radius:99px; }
+
+  .kbd{
+    font-family:var(--font-mono); font-size:11px; background:var(--bg-2);
+    border:1px solid var(--card-border); padding:2px 6px; border-radius:6px; color:var(--text-low);
+  }
+
+  .icon-cover{
+    width:84px; height:84px; border-radius:22px;
+    background:var(--grad-2); display:flex; align-items:center; justify-content:center;
+    font-size:38px; box-shadow: var(--shadow);
+  }
+  ul.plain{ padding-left:20px; color:var(--text-mid); font-size:14.5px; line-height:1.8; }
+  ul.plain li::marker{ color:var(--teal); }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="topbar">
+    <div class="brand"><span class="dot"></span>Bab 4 · Bentuk Aljabar</div>
+    <div id="progress-wrap"><div id="progress-bar"></div></div>
+    <div id="slide-counter"><span id="cur-num">1</span> / <span id="tot-num">1</span></div>
+  </div>
+
+  <div id="stage"></div>
+
+  <div id="navbar">
+    <button class="nav-btn" id="btnPrev">← Sebelumnya</button>
+    <div id="dots"></div>
+    <button class="nav-btn primary" id="btnNext">Berikutnya →</button>
+  </div>
+</div>
+
+<script>
+/* ======================================================
+   DATA SOAL KUIS
+====================================================== */
+const quizData = [
+  {
+    q: "Perhatikan bentuk aljabar 5x + 3. Manakah yang merupakan variabel?",
+    opts: ["5", "x", "3", "+"],
+    correct: 1,
+    explain: "Variabel adalah huruf yang mewakili nilai yang belum diketahui. Pada 5x + 3, huruf x adalah variabelnya."
+  },
+  {
+    q: "Pada bentuk aljabar 7y − 4, nilai −4 disebut...",
+    opts: ["Variabel", "Koefisien", "Konstanta", "Suku sejenis"],
+    correct: 2,
+    explain: "Konstanta adalah bilangan yang nilainya tetap dan tidak diikuti variabel. −4 tidak memiliki variabel, sehingga disebut konstanta."
+  },
+  {
+    q: "Koefisien dari variabel p pada bentuk 9p adalah...",
+    opts: ["p", "9", "9p", "Tidak ada"],
+    correct: 1,
+    explain: "Koefisien adalah bilangan yang mengalikan variabel dalam satu suku. Pada 9p, angka 9 adalah koefisiennya."
+  },
+  {
+    q: "Berapa banyak suku pada bentuk aljabar 4x² − 2x + 7?",
+    opts: ["1 suku", "2 suku", "3 suku", "4 suku"],
+    correct: 2,
+    explain: "Suku dipisahkan oleh tanda + atau −. Bentuk ini memiliki 3 suku, yaitu: 4x², −2x, dan 7."
+  },
+  {
+    q: "Manakah pasangan suku sejenis?",
+    opts: ["3x dan 3y", "5a² dan 5a", "6m dan −2m", "8 dan 8n"],
+    correct: 2,
+    explain: "Suku sejenis memiliki variabel dan pangkat yang sama. 6m dan −2m sama-sama memuat variabel m berpangkat 1."
+  },
+  {
+    q: "Bentuk aljabar 2x + 3y − 5 disebut...",
+    opts: ["Monomial (1 suku)", "Binomial (2 suku)", "Trinomial (3 suku)", "Bukan bentuk aljabar"],
+    correct: 2,
+    explain: "Karena memiliki 3 suku (2x, 3y, dan −5), bentuk ini disebut trinomial."
+  },
+  {
+    q: "Seorang pedagang menjual x kg apel dengan harga Rp15.000 per kg. Bentuk aljabar untuk total harga adalah...",
+    opts: ["15000 + x", "15000x", "x − 15000", "15000/x"],
+    correct: 1,
+    explain: "Total harga = harga per kg × banyak kg = 15.000 × x, ditulis 15000x."
+  },
+  {
+    q: "Pada bentuk aljabar −3x² + x − 9, koefisien dari x adalah...",
+    opts: ["−3", "1", "−9", "2"],
+    correct: 1,
+    explain: "Suku 'x' sama dengan '1x', sehingga koefisiennya adalah 1 (tanda di depannya positif)."
+  }
+];
+
+/* ======================================================
+   BANGUN SLIDE
+====================================================== */
+const stage = document.getElementById('stage');
+let slides = [];
+let currentIndex = 0;
+
+function addSlide(html){
+  const div = document.createElement('div');
+  div.className = 'slide';
+  div.innerHTML = `<div class="slide-inner">${html}</div>`;
+  stage.appendChild(div);
+  slides.push(div);
+  return div;
+}
+
+/* ---------- 1. COVER ---------- */
+addSlide(`
+  <div style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:22px; margin-top:6vh;">
+    <div class="icon-cover">🧮</div>
+    <div class="eyebrow">Matematika · Kelas VII · Kurikulum Merdeka</div>
+    <h1 class="slide-title" style="font-size:clamp(28px,6vw,52px);">Bab 4 — Bentuk Aljabar</h1>
+    <p class="lead">Submateri: <b style="color:var(--text-hi)">Konsep Bentuk Aljabar</b></p>
+    <p class="lead">Materi Pokok: Variabel, Konstanta, Koefisien, Suku, dan Bentuk Aljabar</p>
+    <div class="badge">👉 Gunakan tombol <b>Berikutnya</b> atau tanda panah <span class="kbd">←</span> <span class="kbd">→</span> untuk menjelajah</div>
+  </div>
+`);
+
+/* ---------- 2. APERSEPSI ---------- */
+addSlide(`
+  <div class="eyebrow">Apersepsi</div>
+  <h2 class="section-title">Aljabar Ada di Sekitar Kita</h2>
+  <p class="lead">Sebelum masuk ke materi, coba perhatikan situasi berikut ini.</p>
+  <div class="grid2">
+    <div class="card">
+      <div style="font-size:30px;">🍎</div>
+      <p style="margin-top:10px; color:var(--text-mid); font-size:14.5px; line-height:1.6;">Andi membeli <b style="color:var(--text-hi)">beberapa</b> apel dengan harga Rp8.000 per kg. Karena banyak apel belum diketahui, kita bisa menuliskannya sebagai <span class="expr" style="color:var(--teal)">8000x</span>, dengan x mewakili banyak kilogram apel.</p>
+    </div>
+    <div class="card">
+      <div style="font-size:30px;">📐</div>
+      <p style="margin-top:10px; color:var(--text-mid); font-size:14.5px; line-height:1.6;">Keliling sebuah persegi panjang dengan panjang p dan lebar 5 dapat ditulis sebagai <span class="expr" style="color:var(--coral)">2p + 10</span>. Bentuk seperti inilah yang disebut <b style="color:var(--text-hi)">bentuk aljabar</b>.</p>
+    </div>
+  </div>
+  <p class="lead" style="margin-top:6px;">Dalam kehidupan sehari-hari, kita sering menemui besaran yang <i>belum diketahui</i> atau <i>berubah-ubah</i> nilainya. Aljabar membantu kita menuliskan besaran seperti itu dengan simbol.</p>
+`);
+
+/* ---------- 3. TUJUAN PEMBELAJARAN ---------- */
+addSlide(`
+  <div class="eyebrow">Tujuan Pembelajaran</div>
+  <h2 class="section-title">Setelah mempelajari bagian ini, kalian mampu:</h2>
+  <div class="step-list">
+    <div class="step-item"><div class="step-num"></div><div>Menjelaskan pengertian variabel, konstanta, koefisien, dan suku dalam bentuk aljabar.</div></div>
+    <div class="step-item"><div class="step-num"></div><div>Mengidentifikasi variabel, konstanta, koefisien, dan suku pada suatu bentuk aljabar.</div></div>
+    <div class="step-item"><div class="step-num"></div><div>Membedakan suku sejenis dan suku tidak sejenis.</div></div>
+    <div class="step-item"><div class="step-num"></div><div>Menyusun bentuk aljabar dari suatu permasalahan sehari-hari.</div></div>
+    <div class="step-item"><div class="step-num"></div><div>Mengklasifikasikan bentuk aljabar berdasarkan banyak sukunya (monomial, binomial, trinomial, polinomial).</div></div>
+  </div>
+`);
+
+/* ---------- 4. PERTANYAAN PEMANTIK ---------- */
+addSlide(`
+  <div class="eyebrow">Pertanyaan Pemantik</div>
+  <h2 class="section-title">Coba pikirkan dahulu...</h2>
+  <div class="card" style="display:flex; flex-direction:column; gap:16px;">
+    <p class="lead" style="font-size:clamp(16px,2.2vw,20px); color:var(--text-hi);">"Jika umur Rani sekarang tidak diketahui, tetapi umur adiknya 3 tahun lebih muda, bagaimana cara menuliskan umur adik Rani menggunakan simbol matematika?"</p>
+    <button class="reveal-btn" onclick="toggleReveal(this)">💡 Lihat Arah Jawaban</button>
+    <div class="hidden-box">
+      Misalkan umur Rani = <b>u</b> (variabel, karena belum diketahui nilainya).<br>
+      Maka umur adik Rani = <b>u − 3</b>.<br>
+      Inilah salah satu contoh <b>bentuk aljabar</b> — kombinasi variabel dan bilangan yang mewakili suatu besaran. Mari kita pelajari bagian-bagiannya lebih dalam!
+    </div>
+  </div>
+`);
+
+/* ---------- 5. KONSEP DASAR: APA ITU BENTUK ALJABAR ---------- */
+addSlide(`
+  <div class="eyebrow">Konsep Dasar</div>
+  <h2 class="section-title">Apa itu Bentuk Aljabar?</h2>
+  <div class="card">
+    <p class="lead"><b style="color:var(--text-hi)">Bentuk aljabar</b> adalah bentuk matematika yang memuat kombinasi antara angka (bilangan), huruf (variabel), dan operasi hitung (+, −, ×, ÷), yang digunakan untuk mewakili suatu besaran yang nilainya belum diketahui atau dapat berubah-ubah.</p>
+    <div style="margin-top:18px; display:flex; justify-content:center;">
+      <div class="term-box"><span style="color:var(--coral)">3</span><span style="color:var(--teal)">x</span><span style="color:var(--violet)">&nbsp;+&nbsp;</span><span style="color:var(--amber)">5</span></div>
+    </div>
+    <p class="lead" style="margin-top:16px; text-align:center;">Bentuk di atas terdiri dari empat komponen penting yang akan kita pelajari satu per satu: <b style="color:var(--coral)">koefisien</b>, <b style="color:var(--teal)">variabel</b>, <b style="color:var(--violet)">operator</b>, dan <b style="color:var(--amber)">konstanta</b>.</p>
+  </div>
+`);
+
+/* ---------- 6. VARIABEL ---------- */
+addSlide(`
+  <div class="eyebrow">Konsep 1 dari 4</div>
+  <h2 class="section-title">Variabel</h2>
+  <div class="card">
+    <p class="lead"><b style="color:var(--teal)">Variabel</b> (peubah) adalah lambang atau huruf yang digunakan untuk mewakili suatu nilai yang belum diketahui atau dapat berubah-ubah. Biasanya dilambangkan dengan huruf kecil seperti <span class="expr">x, y, n, a, p</span>, dsb.</p>
+    <div class="grid2" style="margin-top:16px;">
+      <div style="background:var(--bg-2); border-radius:14px; padding:14px;">
+        <div style="font-family:var(--font-mono); font-size:22px; color:var(--teal); font-weight:700;">2<span style="color:var(--text-hi)">n</span> + 7</div>
+        <p style="color:var(--text-mid); font-size:13.5px; margin-top:6px;">Variabelnya adalah <b>n</b></p>
+      </div>
+      <div style="background:var(--bg-2); border-radius:14px; padding:14px;">
+        <div style="font-family:var(--font-mono); font-size:22px; color:var(--teal); font-weight:700;"><span style="color:var(--text-hi)">a</span> + <span style="color:var(--text-hi)">b</span> − 4</div>
+        <p style="color:var(--text-mid); font-size:13.5px; margin-top:6px;">Variabelnya adalah <b>a</b> dan <b>b</b></p>
+      </div>
+    </div>
+    <button class="reveal-btn" style="margin-top:16px;" onclick="toggleReveal(this)">🔎 Kenapa disebut "berubah-ubah"?</button>
+    <div class="hidden-box">
+      Karena nilai variabel bisa diganti dengan bilangan berapa pun. Misalnya pada 2n + 7: jika n = 1, hasilnya 9; jika n = 4, hasilnya 15. Nilai n dapat berubah, itulah sebabnya disebut variabel.
+    </div>
+  </div>
+`);
+
+/* ---------- 7. KONSTANTA ---------- */
+addSlide(`
+  <div class="eyebrow">Konsep 2 dari 4</div>
+  <h2 class="section-title">Konstanta</h2>
+  <div class="card">
+    <p class="lead"><b style="color:var(--amber)">Konstanta</b> adalah suku pada bentuk aljabar yang berupa bilangan saja, tidak diikuti oleh variabel apa pun. Nilainya tetap, tidak berubah-ubah.</p>
+    <div class="grid2" style="margin-top:16px;">
+      <div style="background:var(--bg-2); border-radius:14px; padding:14px;">
+        <div style="font-family:var(--font-mono); font-size:22px; font-weight:700;">4x + <span style="color:var(--amber)">9</span></div>
+        <p style="color:var(--text-mid); font-size:13.5px; margin-top:6px;">Konstantanya adalah <b style="color:var(--amber)">9</b></p>
+      </div>
+      <div style="background:var(--bg-2); border-radius:14px; padding:14px;">
+        <div style="font-family:var(--font-mono); font-size:22px; font-weight:700;">5y − <span style="color:var(--amber)">3</span></div>
+        <p style="color:var(--text-mid); font-size:13.5px; margin-top:6px;">Konstantanya adalah <b style="color:var(--amber)">−3</b> (tanda negatif ikut dihitung)</p>
+      </div>
+    </div>
+    <div class="badge" style="margin-top:16px;">⚠️ Perhatikan tanda (+/−) sebelum bilangan — tanda tersebut adalah bagian dari nilai konstanta.</div>
+  </div>
+`);
+
+/* ---------- 8. KOEFISIEN ---------- */
+addSlide(`
+  <div class="eyebrow">Konsep 3 dari 4</div>
+  <h2 class="section-title">Koefisien</h2>
+  <div class="card">
+    <p class="lead"><b style="color:var(--coral)">Koefisien</b> adalah bilangan yang mengalikan atau menyertai suatu variabel pada satu suku. Koefisien terletak tepat di depan variabelnya.</p>
+    <div class="grid2" style="margin-top:16px;">
+      <div style="background:var(--bg-2); border-radius:14px; padding:14px;">
+        <div style="font-family:var(--font-mono); font-size:22px; font-weight:700;"><span style="color:var(--coral)">6</span>p − 2</div>
+        <p style="color:var(--text-mid); font-size:13.5px; margin-top:6px;">Koefisien p adalah <b style="color:var(--coral)">6</b></p>
+      </div>
+      <div style="background:var(--bg-2); border-radius:14px; padding:14px;">
+        <div style="font-family:var(--font-mono); font-size:22px; font-weight:700;">y + 8 <span style="color:var(--text-low)">(= 1y + 8)</span></div>
+        <p style="color:var(--text-mid); font-size:13.5px; margin-top:6px;">Koefisien y adalah <b style="color:var(--coral)">1</b> (tidak ditulis, tapi tetap ada)</p>
+      </div>
+    </div>
+    <button class="reveal-btn" style="margin-top:16px;" onclick="toggleReveal(this)">🔎 Bagaimana dengan −x ?</button>
+    <div class="hidden-box">
+      Bentuk −x sama artinya dengan −1x, sehingga koefisiennya adalah −1. Ini sering menjadi kesalahan umum siswa — jangan lupa tanda negatifnya ya!
+    </div>
+  </div>
+`);
+
+/* ---------- 9. SUKU ---------- */
+addSlide(`
+  <div class="eyebrow">Konsep 4 dari 4</div>
+  <h2 class="section-title">Suku (Term)</h2>
+  <div class="card">
+    <p class="lead"><b style="color:var(--violet)">Suku</b> adalah bagian dari bentuk aljabar yang dipisahkan oleh tanda operasi jumlah (+) atau kurang (−). Setiap suku dapat berupa variabel dengan koefisiennya, atau berupa konstanta.</p>
+    <div style="margin-top:16px; background:var(--bg-2); border-radius:14px; padding:18px; text-align:center;">
+      <div class="expr" style="font-size:clamp(20px,3.5vw,30px);">
+        <span style="color:var(--coral)">4x</span><span style="color:var(--text-low)"> + </span><span style="color:var(--teal)">5y</span><span style="color:var(--text-low)"> − </span><span style="color:var(--amber)">7</span>
+      </div>
+      <p style="color:var(--text-mid); font-size:13.5px; margin-top:10px;">Bentuk ini memiliki <b style="color:var(--text-hi)">3 suku</b>: <span style="color:var(--coral)">4x</span>, <span style="color:var(--teal)">5y</span>, dan <span style="color:var(--amber)">−7</span></p>
+    </div>
+  </div>
+`);
+
+/* ---------- 10. INTERAKTIF: IDENTIFIKASI BAGIAN (klik token) ---------- */
+addSlide(`
+  <div class="eyebrow">Aktivitas Interaktif</div>
+  <h2 class="section-title">Klik Setiap Bagian untuk Mengenalinya!</h2>
+  <p class="lead">Klik pada tiap angka/huruf di bawah ini untuk melihat namanya (koefisien, variabel, operator, atau konstanta).</p>
+  <div class="card" style="text-align:center;">
+    <div class="term-box" id="identifyBox" style="font-size:clamp(26px,5vw,42px); justify-content:center;">
+      <span class="term-token" data-type="coef" onclick="pickToken(this,'coef')">6</span><span class="term-token" data-type="var" onclick="pickToken(this,'var')">x</span><span class="term-token" data-type="op" onclick="pickToken(this,'op')">&nbsp;−&nbsp;</span><span class="term-token" data-type="const" onclick="pickToken(this,'const')">9</span>
+    </div>
+    <div id="identifyFeedback" class="hidden-box" style="text-align:left;"></div>
+    <div class="legend">
+      <div class="legend-chip"><div class="legend-swatch" style="background:var(--coral)"></div>Koefisien</div>
+      <div class="legend-chip"><div class="legend-swatch" style="background:var(--teal)"></div>Variabel</div>
+      <div class="legend-chip"><div class="legend-swatch" style="background:var(--violet)"></div>Operator</div>
+      <div class="legend-chip"><div class="legend-swatch" style="background:var(--amber)"></div>Konstanta</div>
+    </div>
+  </div>
+`);
+
+/* ---------- 11. SUKU SEJENIS VS TIDAK SEJENIS ---------- */
+addSlide(`
+  <div class="eyebrow">Konsep Lanjutan</div>
+  <h2 class="section-title">Suku Sejenis dan Tidak Sejenis</h2>
+  <div class="card">
+    <p class="lead"><b style="color:var(--text-hi)">Suku sejenis</b> adalah suku-suku yang memiliki variabel yang sama dan pangkat yang sama. Suku sejenis dapat dijumlahkan atau dikurangkan secara langsung.</p>
+    <div class="grid2" style="margin-top:16px;">
+      <div style="background:rgba(78,205,196,.1); border:1px solid var(--teal); border-radius:14px; padding:14px;">
+        <div style="font-weight:700; color:var(--teal); margin-bottom:6px;">✅ Sejenis</div>
+        <div class="expr" style="font-size:16px;">3x dan 5x</div>
+        <div class="expr" style="font-size:16px; margin-top:4px;">2a² dan −7a²</div>
+      </div>
+      <div style="background:rgba(255,107,107,.1); border:1px solid var(--coral); border-radius:14px; padding:14px;">
+        <div style="font-weight:700; color:var(--coral); margin-bottom:6px;">❌ Tidak Sejenis</div>
+        <div class="expr" style="font-size:16px;">3x dan 3y</div>
+        <div class="expr" style="font-size:16px; margin-top:4px;">5a² dan 5a</div>
+      </div>
+    </div>
+  </div>
+`);
+
+/* ---------- 12. INTERAKTIF: BENAR/SALAH SUKU SEJENIS ---------- */
+addSlide(`
+  <div class="eyebrow">Latihan Cepat</div>
+  <h2 class="section-title">Sejenis atau Tidak?</h2>
+  <div class="card" id="tfGame">
+    <p class="lead" id="tfQuestion" style="font-size:clamp(18px,2.6vw,24px); text-align:center;"></p>
+    <div class="tf-row" style="justify-content:center;">
+      <button class="tf-btn" onclick="answerTF(true)">Sejenis</button>
+      <button class="tf-btn" onclick="answerTF(false)">Tidak Sejenis</button>
+    </div>
+    <p id="tfFeedback" class="feedback-msg" style="text-align:center;"></p>
+    <div style="text-align:center; margin-top:10px;">
+      <button class="reveal-btn" onclick="nextTF()">Soal Berikutnya ➜</button>
+    </div>
+    <p class="quiz-progress" style="text-align:center; margin-top:8px;" id="tfProgress"></p>
+  </div>
+`);
+
+/* ---------- 13. JENIS BENTUK ALJABAR BERDASARKAN JUMLAH SUKU ---------- */
+addSlide(`
+  <div class="eyebrow">Klasifikasi</div>
+  <h2 class="section-title">Jenis Bentuk Aljabar Berdasarkan Banyak Suku</h2>
+  <div class="grid2">
+    <div class="card">
+      <div class="badge" style="background:rgba(78,205,196,.15); border-color:var(--teal); color:var(--teal);">1 Suku</div>
+      <h3 style="font-family:var(--font-head); margin-top:10px;">Monomial</h3>
+      <p class="expr" style="margin-top:6px; color:var(--text-mid);">Contoh: 5x, −3y², 8</p>
+    </div>
+    <div class="card">
+      <div class="badge" style="background:rgba(255,209,102,.15); border-color:var(--amber); color:var(--amber);">2 Suku</div>
+      <h3 style="font-family:var(--font-head); margin-top:10px;">Binomial</h3>
+      <p class="expr" style="margin-top:6px; color:var(--text-mid);">Contoh: 3x + 4, 2a − 5b</p>
+    </div>
+    <div class="card">
+      <div class="badge" style="background:rgba(255,107,107,.15); border-color:var(--coral); color:var(--coral);">3 Suku</div>
+      <h3 style="font-family:var(--font-head); margin-top:10px;">Trinomial</h3>
+      <p class="expr" style="margin-top:6px; color:var(--text-mid);">Contoh: x² + 2x − 1</p>
+    </div>
+    <div class="card">
+      <div class="badge" style="background:rgba(139,124,246,.15); border-color:var(--violet); color:var(--violet);">&gt;3 Suku</div>
+      <h3 style="font-family:var(--font-head); margin-top:10px;">Polinomial</h3>
+      <p class="expr" style="margin-top:6px; color:var(--text-mid);">Contoh: x³ + 2x² − 3x + 7</p>
+    </div>
+  </div>
+`);
+
+/* ---------- 14. MENYUSUN BENTUK ALJABAR DARI SOAL CERITA ---------- */
+addSlide(`
+  <div class="eyebrow">Penerapan</div>
+  <h2 class="section-title">Menyusun Bentuk Aljabar dari Cerita</h2>
+  <div class="card">
+    <p class="lead">"Sebuah kotak berisi buku sebanyak <b style="color:var(--text-hi)">b</b> buah. Dina menambahkan 5 buku lagi ke dalam kotak tersebut. Berapa banyak buku dalam kotak sekarang?"</p>
+    <button class="reveal-btn" style="margin-top:6px;" onclick="toggleReveal(this)">🧩 Susun Langkah demi Langkah</button>
+    <div class="hidden-box">
+      <div class="step-list">
+        <div class="step-item"><div class="step-num"></div><div>Banyak buku mula-mula belum diketahui pastinya → misalkan sebagai variabel <b>b</b>.</div></div>
+        <div class="step-item"><div class="step-num"></div><div>Ditambahkan 5 buku lagi → artinya ditambah dengan bilangan 5.</div></div>
+        <div class="step-item"><div class="step-num"></div><div>Bentuk aljabarnya menjadi: <span class="expr" style="color:var(--teal)">b + 5</span></div></div>
+      </div>
+    </div>
+  </div>
+`);
+
+/* ---------- 15. CONTOH SOAL - MUDAH ---------- */
+addSlide(`
+  <div class="eyebrow">Contoh Soal · Tingkat Mudah</div>
+  <h2 class="section-title">Contoh 1</h2>
+  <div class="card">
+    <p class="lead">Tentukan variabel, koefisien, dan konstanta dari bentuk aljabar: <span class="expr" style="color:var(--text-hi)">4a + 6</span></p>
+    <button class="reveal-btn" onclick="toggleReveal(this)">Lihat Pembahasan</button>
+    <div class="hidden-box">
+      <b>Petunjuk:</b> Cari huruf (variabel), angka di depan huruf (koefisien), dan angka tanpa huruf (konstanta).<br><br>
+      <b>Pembahasan:</b><br>
+      • Variabel = a<br>
+      • Koefisien dari a = 4<br>
+      • Konstanta = 6
+    </div>
+  </div>
+`);
+
+/* ---------- 16. CONTOH SOAL - SEDANG ---------- */
+addSlide(`
+  <div class="eyebrow">Contoh Soal · Tingkat Sedang</div>
+  <h2 class="section-title">Contoh 2</h2>
+  <div class="card">
+    <p class="lead">Diketahui bentuk aljabar: <span class="expr" style="color:var(--text-hi)">7m − 2n + 3</span>. Tentukan banyak suku, dan sebutkan masing-masing sukunya beserta koefisiennya.</p>
+    <button class="reveal-btn" onclick="toggleReveal(this)">Lihat Pembahasan</button>
+    <div class="hidden-box">
+      <b>Petunjuk:</b> Pisahkan berdasarkan tanda + atau − yang muncul.<br><br>
+      <b>Pembahasan:</b><br>
+      • Suku 1: 7m → koefisien = 7, variabel = m<br>
+      • Suku 2: −2n → koefisien = −2, variabel = n<br>
+      • Suku 3: 3 → konstanta<br>
+      Jadi terdapat <b>3 suku</b> (trinomial).
+    </div>
+  </div>
+`);
+
+/* ---------- 17. CONTOH SOAL - MENANTANG ---------- */
+addSlide(`
+  <div class="eyebrow">Contoh Soal · Tingkat Menantang</div>
+  <h2 class="section-title">Contoh 3</h2>
+  <div class="card">
+    <p class="lead">Sebuah toko menjual pensil seharga Rp2.000 per batang dan buku seharga Rp5.000 per buah. Jika Beni membeli <b>x</b> pensil dan <b>y</b> buku, tuliskan bentuk aljabar total harga yang harus dibayar Beni. Kemudian sebutkan suku, koefisien, dan variabelnya.</p>
+    <button class="reveal-btn" onclick="toggleReveal(this)">Lihat Pembahasan</button>
+    <div class="hidden-box">
+      <b>Langkah penyelesaian:</b>
+      <div class="step-list">
+        <div class="step-item"><div class="step-num"></div><div>Harga pensil = 2000 × banyak pensil = 2000x</div></div>
+        <div class="step-item"><div class="step-num"></div><div>Harga buku = 5000 × banyak buku = 5000y</div></div>
+        <div class="step-item"><div class="step-num"></div><div>Total harga = 2000x + 5000y</div></div>
+      </div>
+      <br>
+      • Suku: 2000x dan 5000y (binomial)<br>
+      • Koefisien x = 2000, koefisien y = 5000<br>
+      • Variabel: x dan y
+    </div>
+  </div>
+`);
+
+/* ---------- 18. LATIHAN INTERAKTIF: ISIAN ---------- */
+addSlide(`
+  <div class="eyebrow">Latihan Mandiri</div>
+  <h2 class="section-title">Isi Jawabanmu</h2>
+  <div class="card">
+    <p class="lead">Perhatikan bentuk aljabar: <span class="expr" style="color:var(--text-hi); font-size:22px;">8k − 5</span></p>
+    <div style="margin-top:14px; display:flex; flex-direction:column; gap:14px;">
+      <div>
+        <label style="font-size:13.5px; color:var(--text-mid);">Berapakah koefisien dari k?</label><br>
+        <input type="text" class="answer-input" id="ans1" placeholder="Jawaban">
+        <button class="check-btn" onclick="checkAnswer('ans1','fb1', ['8'])">Cek</button>
+        <div id="fb1" class="feedback-msg"></div>
+      </div>
+      <div>
+        <label style="font-size:13.5px; color:var(--text-mid);">Berapakah nilai konstantanya?</label><br>
+        <input type="text" class="answer-input" id="ans2" placeholder="Jawaban">
+        <button class="check-btn" onclick="checkAnswer('ans2','fb2', ['-5','−5'])">Cek</button>
+        <div id="fb2" class="feedback-msg"></div>
+      </div>
+    </div>
+  </div>
+`);
+
+/* ---------- 19. MATCHING: ISTILAH & DEFINISI ---------- */
+addSlide(`
+  <div class="eyebrow">Aktivitas Interaktif</div>
+  <h2 class="section-title">Pasangkan Istilah dengan Definisinya</h2>
+  <p class="lead">Klik satu istilah, lalu klik definisi yang sesuai.</p>
+  <div class="match-wrap" id="matchGame">
+    <div class="match-col" id="matchTerms"></div>
+    <div class="match-col" id="matchDefs"></div>
+  </div>
+  <p id="matchStatus" class="feedback-msg" style="margin-top:10px;"></p>
+`);
+
+/* ---------- 20. KUIS ---------- */
+addSlide(`
+  <div class="eyebrow">Kuis Akhir</div>
+  <h2 class="section-title">Uji Pemahamanmu!</h2>
+  <div class="card" id="quizCard">
+    <p class="quiz-progress" id="quizProgress"></p>
+    <p class="lead" id="quizQuestion" style="font-size:clamp(16px,2.2vw,20px); color:var(--text-hi); margin-top:8px;"></p>
+    <div class="choice-row" id="quizChoices"></div>
+    <div id="quizExplain" class="hidden-box"></div>
+  </div>
+  <div class="card" id="quizResult" style="display:none; text-align:center;">
+    <h2 class="section-title">Hasil Kuis</h2>
+    <div class="score-ring">
+      <svg width="140" height="140">
+        <circle cx="70" cy="70" r="60" stroke="var(--bg-2)" stroke-width="12" fill="none"/>
+        <circle id="scoreCircle" cx="70" cy="70" r="60" stroke="var(--teal)" stroke-width="12" fill="none" stroke-linecap="round" stroke-dasharray="377" stroke-dashoffset="377"/>
+      </svg>
+      <div class="score-num" id="scoreNum">0%</div>
+    </div>
+    <p class="lead" id="scoreMsg" style="text-align:center; margin:12px auto 0;"></p>
+    <button class="nav-btn primary" style="margin:16px auto 0;" onclick="restartQuiz()">🔄 Ulangi Kuis</button>
+  </div>
+`);
+
+/* ---------- 21. REFLEKSI ---------- */
+addSlide(`
+  <div class="eyebrow">Refleksi</div>
+  <h2 class="section-title">Mari Berefleksi</h2>
+  <div class="card">
+    <ul class="plain">
+      <li>Bagian mana dari materi bentuk aljabar yang menurutmu paling mudah dipahami?</li>
+      <li>Bagian mana yang masih terasa sulit atau membingungkan?</li>
+      <li>Bisakah kamu memberi satu contoh bentuk aljabar dari kehidupan sehari-harimu sendiri?</li>
+      <li>Apa perbedaan mendasar antara koefisien dan konstanta menurut pemahamanmu sendiri?</li>
+    </ul>
+    <p class="lead" style="margin-top:14px;">Cobalah diskusikan jawabanmu dengan teman sebangku atau tuliskan di buku catatan.</p>
+  </div>
+`);
+
+/* ---------- 22. RANGKUMAN ---------- */
+addSlide(`
+  <div class="eyebrow">Rangkuman</div>
+  <h2 class="section-title">Yang Perlu Kamu Ingat</h2>
+  <div class="grid2">
+    <div class="card"><b style="color:var(--teal)">Variabel</b><p style="color:var(--text-mid); font-size:13.5px; margin-top:6px;">Huruf yang mewakili nilai yang belum diketahui/berubah-ubah.</p></div>
+    <div class="card"><b style="color:var(--amber)">Konstanta</b><p style="color:var(--text-mid); font-size:13.5px; margin-top:6px;">Bilangan tetap tanpa variabel dalam bentuk aljabar.</p></div>
+    <div class="card"><b style="color:var(--coral)">Koefisien</b><p style="color:var(--text-mid); font-size:13.5px; margin-top:6px;">Bilangan yang menyertai/mengalikan variabel.</p></div>
+    <div class="card"><b style="color:var(--violet)">Suku</b><p style="color:var(--text-mid); font-size:13.5px; margin-top:6px;">Bagian bentuk aljabar yang dipisahkan tanda + atau −.</p></div>
+  </div>
+  <div class="card" style="margin-top:16px;">
+    <p class="lead">Bentuk aljabar diklasifikasikan berdasarkan banyak sukunya menjadi <b>monomial (1 suku)</b>, <b>binomial (2 suku)</b>, <b>trinomial (3 suku)</b>, dan <b>polinomial (&gt;3 suku)</b>. Dua suku disebut <b>sejenis</b> jika memiliki variabel dan pangkat yang sama.</p>
+  </div>
+`);
+
+/* ---------- 23. PENUTUP ---------- */
+addSlide(`
+  <div style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:18px; margin-top:8vh;">
+    <div class="icon-cover" style="background:var(--grad-1);">🎉</div>
+    <h1 class="slide-title">Kerja Bagus!</h1>
+    <p class="lead">Kamu telah menyelesaikan pembelajaran Konsep Bentuk Aljabar. Lanjutkan ke submateri berikutnya: <b style="color:var(--text-hi)">Operasi Hitung Bentuk Aljabar</b>.</p>
+    <div class="badge">🙌 Sampai jumpa di pembelajaran berikutnya!</div>
+  </div>
+`);
+
+/* ======================================================
+   NAVIGASI SLIDE
+====================================================== */
+const totalSlides = slides.length;
+document.getElementById('tot-num').textContent = totalSlides;
+const dotsWrap = document.getElementById('dots');
+slides.forEach((_, i) => {
+  const d = document.createElement('div');
+  d.className = 'dot-i';
+  d.onclick = () => goToSlide(i);
+  dotsWrap.appendChild(d);
+});
+
+function updateUI(){
+  slides.forEach((s, i) => {
+    s.classList.remove('active','prev');
+    if(i === currentIndex) s.classList.add('active');
+    else if(i < currentIndex) s.classList.add('prev');
+  });
+  document.getElementById('cur-num').textContent = currentIndex + 1;
+  document.getElementById('progress-bar').style.width = ((currentIndex+1)/totalSlides*100) + '%';
+  document.querySelectorAll('.dot-i').forEach((d,i) => {
+    d.classList.toggle('active', i === currentIndex);
+    d.classList.toggle('done', i < currentIndex);
+  });
+  document.getElementById('btnPrev').disabled = currentIndex === 0;
+  document.getElementById('btnNext').textContent = currentIndex === totalSlides - 1 ? 'Selesai ✓' : 'Berikutnya →';
+  stage.scrollTop = 0;
+  slides[currentIndex].scrollTop = 0;
+}
+
+function goToSlide(i){
+  if(i < 0 || i >= totalSlides) return;
+  currentIndex = i;
+  updateUI();
+  if(i === 19) initQuizIfNeeded();
+  if(i === 11) initTF();
+  if(i === 18) initMatch();
+}
+
+document.getElementById('btnNext').onclick = () => { if(currentIndex < totalSlides-1) goToSlide(currentIndex+1); };
+document.getElementById('btnPrev').onclick = () => { if(currentIndex > 0) goToSlide(currentIndex-1); };
+
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'ArrowRight') goToSlide(currentIndex+1);
+  if(e.key === 'ArrowLeft') goToSlide(currentIndex-1);
+});
+
+/* swipe support */
+let touchStartX = 0;
+stage.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX, {passive:true});
+stage.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].screenX - touchStartX;
+  if(dx > 60) goToSlide(currentIndex-1);
+  else if(dx < -60) goToSlide(currentIndex+1);
+}, {passive:true});
+
+updateUI();
+
+/* ======================================================
+   WIDGET: reveal toggle
+====================================================== */
+function toggleReveal(btn){
+  const box = btn.nextElementSibling;
+  box.classList.toggle('show');
+}
+
+/* ======================================================
+   WIDGET: identify tokens (slide 10)
+====================================================== */
+const tokenLabels = {
+  coef: {name:'Koefisien', cls:'picked-coef', desc:'Bilangan yang mengalikan/menyertai variabel dalam satu suku.'},
+  var: {name:'Variabel', cls:'picked-var', desc:'Huruf yang mewakili nilai yang belum diketahui atau berubah-ubah.'},
+  op: {name:'Operator', cls:'picked-op', desc:'Simbol operasi hitung yang menghubungkan antar suku (+ atau −).'},
+  const: {name:'Konstanta', cls:'picked-const', desc:'Bilangan tetap yang tidak diikuti variabel.'}
+};
+function pickToken(el, type){
+  document.querySelectorAll('#identifyBox .term-token').forEach(t => {
+    t.classList.remove('picked-coef','picked-var','picked-const','picked-op');
+  });
+  el.classList.add(tokenLabels[type].cls);
+  const fb = document.getElementById('identifyFeedback');
+  fb.innerHTML = `<b>${tokenLabels[type].name}</b> — ${tokenLabels[type].desc}`;
+  fb.classList.add('show');
+}
+
+/* ======================================================
+   WIDGET: True/False suku sejenis (slide 12)
+====================================================== */
+const tfData = [
+  {a:'3x', b:'5x', sejenis:true},
+  {a:'4a', b:'4b', sejenis:false},
+  {a:'2m²', b:'-6m²', sejenis:true},
+  {a:'7y', b:'7y²', sejenis:false},
+  {a:'-p', b:'9p', sejenis:true},
+  {a:'6', b:'6x', sejenis:false}
+];
+let tfIndex = 0;
+let tfAnswered = false;
+function initTF(){
+  tfIndex = 0; tfAnswered = false; renderTF();
+}
+function renderTF(){
+  const item = tfData[tfIndex];
+  document.getElementById('tfQuestion').innerHTML = `<span class="expr">${item.a}</span> &nbsp;dan&nbsp; <span class="expr">${item.b}</span>`;
+  document.getElementById('tfFeedback').textContent = '';
+  document.getElementById('tfFeedback').className = 'feedback-msg';
+  document.getElementById('tfProgress').textContent = `Soal ${tfIndex+1} dari ${tfData.length}`;
+  document.querySelectorAll('#tfGame .tf-btn').forEach(b => b.classList.remove('correct','wrong'));
+  tfAnswered = false;
+}
+function answerTF(guessSejenis){
+  if(tfAnswered) return;
+  tfAnswered = true;
+  const item = tfData[tfIndex];
+  const correct = guessSejenis === item.sejenis;
+  const fb = document.getElementById('tfFeedback');
+  const btns = document.querySelectorAll('#tfGame .tf-btn');
+  btns[item.sejenis ? 0 : 1].classList.add('correct');
+  if(!correct) btns[guessSejenis ? 0 : 1].classList.add('wrong');
+  fb.textContent = correct ? '✅ Benar!' : '❌ Belum tepat, perhatikan lagi variabel dan pangkatnya.';
+  fb.className = 'feedback-msg ' + (correct ? 'ok' : 'bad');
+}
+function nextTF(){
+  tfIndex = (tfIndex + 1) % tfData.length;
+  renderTF();
+}
+
+/* ======================================================
+   WIDGET: matching istilah & definisi (slide 19)
+====================================================== */
+const matchPairs = [
+  {term:'Variabel', def:'Huruf yang mewakili nilai yang belum diketahui'},
+  {term:'Konstanta', def:'Bilangan tetap tanpa variabel'},
+  {term:'Koefisien', def:'Bilangan yang menyertai variabel'},
+  {term:'Suku', def:'Bagian yang dipisahkan tanda + atau −'}
+];
+let matchInitialized = false;
+let selectedTerm = null;
+let matchedCount = 0;
+function initMatch(){
+  if(matchInitialized) return;
+  matchInitialized = true;
+  const termsWrap = document.getElementById('matchTerms');
+  const defsWrap = document.getElementById('matchDefs');
+  const shuffledTerms = [...matchPairs].sort(() => Math.random()-0.5);
+  const shuffledDefs = [...matchPairs].sort(() => Math.random()-0.5);
+  shuffledTerms.forEach(p => {
+    const el = document.createElement('div');
+    el.className = 'match-item term-src';
+    el.textContent = p.term;
+    el.dataset.term = p.term;
+    el.onclick = () => selectTerm(el, p.term);
+    termsWrap.appendChild(el);
+  });
+  shuffledDefs.forEach(p => {
+    const el = document.createElement('div');
+    el.className = 'match-item';
+    el.textContent = p.def;
+    el.dataset.def = p.def;
+    el.dataset.term = p.term;
+    el.onclick = () => selectDef(el);
+    defsWrap.appendChild(el);
+  });
+}
+function selectTerm(el, term){
+  if(el.classList.contains('matched-ok')) return;
+  document.querySelectorAll('#matchTerms .match-item').forEach(t => t.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedTerm = {el, term};
+}
+function selectDef(el){
+  if(!selectedTerm || el.classList.contains('matched-ok')) return;
+  const status = document.getElementById('matchStatus');
+  if(el.dataset.term === selectedTerm.term){
+    el.classList.add('matched-ok');
+    selectedTerm.el.classList.add('matched-ok');
+    selectedTerm.el.classList.remove('selected');
+    matchedCount++;
+    status.textContent = '✅ Cocok!';
+    status.className = 'feedback-msg ok';
+    selectedTerm = null;
+    if(matchedCount === matchPairs.length){
+      status.textContent = '🎉 Semua pasangan berhasil dicocokkan!';
+    }
+  } else {
+    el.classList.add('matched-bad');
+    status.textContent = '❌ Belum cocok, coba lagi.';
+    status.className = 'feedback-msg bad';
+    setTimeout(() => el.classList.remove('matched-bad'), 500);
+  }
+}
+
+/* ======================================================
+   WIDGET: isian jawaban (slide 18)
+====================================================== */
+function checkAnswer(inputId, fbId, validAnswers){
+  const val = document.getElementById(inputId).value.trim().toLowerCase().replace(/\s+/g,'');
+  const fb = document.getElementById(fbId);
+  const isCorrect = validAnswers.some(a => a.toLowerCase().replace(/\s+/g,'') === val);
+  fb.textContent = isCorrect ? '✅ Benar!' : '❌ Coba periksa lagi.';
+  fb.className = 'feedback-msg ' + (isCorrect ? 'ok' : 'bad');
+}
+
+/* ======================================================
+   WIDGET: kuis (slide 20)
+====================================================== */
+let quizIndex = 0;
+let quizScore = 0;
+let quizInitialized = false;
+function initQuizIfNeeded(){
+  if(quizInitialized) return;
+  quizInitialized = true;
+  quizIndex = 0; quizScore = 0;
+  renderQuiz();
+}
+function renderQuiz(){
+  document.getElementById('quizCard').style.display = 'block';
+  document.getElementById('quizResult').style.display = 'none';
+  const item = quizData[quizIndex];
+  document.getElementById('quizProgress').textContent = `Soal ${quizIndex+1} dari ${quizData.length} · Skor sementara: ${quizScore}`;
+  document.getElementById('quizQuestion').textContent = item.q;
+  const choicesWrap = document.getElementById('quizChoices');
+  choicesWrap.innerHTML = '';
+  document.getElementById('quizExplain').classList.remove('show');
+  item.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.textContent = opt;
+    btn.onclick = () => selectQuizAnswer(i, btn);
+    choicesWrap.appendChild(btn);
+  });
+}
+function selectQuizAnswer(i, btn){
+  const item = quizData[quizIndex];
+  const allBtns = document.querySelectorAll('#quizChoices .choice-btn');
+  allBtns.forEach(b => b.disabled = true);
+  if(i === item.correct){
+    btn.classList.add('correct');
+    quizScore++;
+  } else {
+    btn.classList.add('wrong');
+    allBtns[item.correct].classList.add('correct');
+  }
+  const exp = document.getElementById('quizExplain');
+  exp.innerHTML = `<b>Pembahasan:</b> ${item.explain}`;
+  exp.classList.add('show');
+  setTimeout(() => {
+    if(quizIndex < quizData.length - 1){
+      quizIndex++;
+      renderQuiz();
+    } else {
+      showQuizResult();
+    }
+  }, 1800);
+}
+function showQuizResult(){
+  document.getElementById('quizCard').style.display = 'none';
+  document.getElementById('quizResult').style.display = 'block';
+  const pct = Math.round((quizScore / quizData.length) * 100);
+  document.getElementById('scoreNum').textContent = pct + '%';
+  const circle = document.getElementById('scoreCircle');
+  const circumference = 377;
+  circle.style.strokeDashoffset = circumference - (circumference * pct / 100);
+  let msg = '';
+  if(pct >= 90) msg = `Luar biasa! Skor kamu ${quizScore}/${quizData.length}. Kamu sangat menguasai konsep bentuk aljabar!`;
+  else if(pct >= 70) msg = `Bagus! Skor kamu ${quizScore}/${quizData.length}. Sedikit lagi untuk menguasai sepenuhnya.`;
+  else if(pct >= 50) msg = `Cukup baik. Skor kamu ${quizScore}/${quizData.length}. Coba pelajari kembali bagian yang masih sulit.`;
+  else msg = `Skor kamu ${quizScore}/${quizData.length}. Yuk, ulangi materi variabel, konstanta, koefisien, dan suku sekali lagi!`;
+  document.getElementById('scoreMsg').textContent = msg;
+}
+function restartQuiz(){
+  quizIndex = 0; quizScore = 0;
+  renderQuiz();
+}
+</script>
+</body>
+</html>

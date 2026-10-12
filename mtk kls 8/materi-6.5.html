@@ -1,0 +1,4393 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Bab 6 — Teori Peluang | Peluang Empirik & Teoretik</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+    --bg:#080d1c;
+    --bg2:#0d1428;
+    --panel:#121b33;
+    --panel2:#182443;
+    --panel3:#202e52;
+    --text:#f4f7ff;
+    --muted:#9ca9c8;
+    --primary:#6c8cff;
+    --primary2:#8d6cff;
+    --cyan:#35d8e8;
+    --green:#42d392;
+    --yellow:#ffc857;
+    --red:#ff6874;
+    --orange:#ff9b5e;
+    --line:rgba(255,255,255,.09);
+    --shadow:0 18px 55px rgba(0,0,0,.30);
+    --radius:22px;
+    --sidebar:265px;
+    --topbar:72px;
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html,body{
+    width:100%;
+    height:100%;
+}
+
+body{
+    font-family:"Plus Jakarta Sans",sans-serif;
+    background:
+        radial-gradient(circle at 10% 10%,rgba(108,140,255,.12),transparent 30%),
+        radial-gradient(circle at 90% 90%,rgba(141,108,255,.10),transparent 28%),
+        var(--bg);
+    color:var(--text);
+    overflow:hidden;
+}
+
+button,
+input{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+    border:none;
+}
+
+.app{
+    width:100%;
+    height:100vh;
+    display:flex;
+}
+
+/* ================= SIDEBAR ================= */
+
+.sidebar{
+    position:fixed;
+    z-index:30;
+    left:0;
+    top:0;
+    bottom:0;
+    width:var(--sidebar);
+    background:rgba(11,17,34,.97);
+    border-right:1px solid var(--line);
+    padding:22px 16px;
+    display:flex;
+    flex-direction:column;
+    transition:.3s ease;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:6px 8px 22px;
+}
+
+.brand-icon{
+    width:43px;
+    height:43px;
+    border-radius:14px;
+    display:grid;
+    place-items:center;
+    background:linear-gradient(135deg,var(--primary),var(--primary2));
+    box-shadow:0 10px 25px rgba(108,140,255,.25);
+    font-size:22px;
+}
+
+.brand-text strong{
+    display:block;
+    font-family:"Fredoka",sans-serif;
+    font-size:19px;
+}
+
+.brand-text span{
+    font-size:10px;
+    color:var(--muted);
+    display:block;
+    margin-top:2px;
+}
+
+.chapter-box{
+    background:linear-gradient(145deg,rgba(108,140,255,.13),rgba(141,108,255,.07));
+    border:1px solid rgba(108,140,255,.20);
+    border-radius:17px;
+    padding:14px;
+    margin-bottom:18px;
+}
+
+.chapter-box .label{
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:var(--primary);
+    font-weight:800;
+}
+
+.chapter-box h3{
+    font-family:"Fredoka",sans-serif;
+    font-size:17px;
+    margin-top:5px;
+}
+
+.chapter-box p{
+    color:var(--muted);
+    font-size:11px;
+    line-height:1.55;
+    margin-top:5px;
+}
+
+.nav-title{
+    color:#687695;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:1.3px;
+    font-weight:800;
+    padding:0 10px 8px;
+}
+
+.slide-nav{
+    flex:1;
+    overflow:auto;
+    padding-right:3px;
+}
+
+.slide-nav::-webkit-scrollbar{
+    width:4px;
+}
+
+.slide-nav::-webkit-scrollbar-thumb{
+    background:#293654;
+    border-radius:20px;
+}
+
+.nav-item{
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color:#aeb9d3;
+    background:transparent;
+    padding:10px;
+    border-radius:12px;
+    margin-bottom:3px;
+    text-align:left;
+    transition:.2s;
+    font-size:11px;
+}
+
+.nav-item:hover{
+    background:rgba(255,255,255,.05);
+    color:#fff;
+}
+
+.nav-item.active{
+    background:linear-gradient(90deg,rgba(108,140,255,.18),rgba(108,140,255,.05));
+    color:#fff;
+    border:1px solid rgba(108,140,255,.17);
+}
+
+.nav-num{
+    min-width:25px;
+    height:25px;
+    border-radius:8px;
+    display:grid;
+    place-items:center;
+    background:#18223c;
+    font-family:"JetBrains Mono",monospace;
+    font-size:9px;
+}
+
+.nav-item.active .nav-num{
+    background:var(--primary);
+    color:white;
+}
+
+.sidebar-bottom{
+    padding-top:12px;
+    border-top:1px solid var(--line);
+}
+
+.home-btn{
+    width:100%;
+    padding:11px;
+    background:#151f38;
+    color:#bdc8df;
+    border:1px solid var(--line);
+    border-radius:12px;
+    font-size:11px;
+    transition:.2s;
+}
+
+.home-btn:hover{
+    background:#1c2948;
+    color:#fff;
+}
+
+/* ================= MAIN ================= */
+
+.main{
+    margin-left:var(--sidebar);
+    width:calc(100% - var(--sidebar));
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    min-width:0;
+}
+
+.topbar{
+    height:var(--topbar);
+    flex:none;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    padding:0 28px;
+    border-bottom:1px solid var(--line);
+    background:rgba(8,13,28,.76);
+    backdrop-filter:blur(14px);
+    position:relative;
+    z-index:10;
+}
+
+.menu-btn{
+    display:none;
+    width:39px;
+    height:39px;
+    border-radius:11px;
+    background:#18223c;
+    color:#fff;
+}
+
+.progress-wrap{
+    flex:1;
+    max-width:700px;
+}
+
+.progress-info{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:7px;
+}
+
+.progress-info span{
+    font-size:10px;
+    color:var(--muted);
+}
+
+.progress-info strong{
+    font-size:10px;
+    color:#fff;
+}
+
+.progress{
+    height:5px;
+    background:#1b2742;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.progress-bar{
+    width:0%;
+    height:100%;
+    background:linear-gradient(90deg,var(--primary),var(--cyan));
+    transition:.4s ease;
+    border-radius:20px;
+}
+
+.top-actions{
+    margin-left:auto;
+    display:flex;
+    gap:8px;
+}
+
+.top-btn{
+    width:38px;
+    height:38px;
+    border-radius:11px;
+    background:#151f37;
+    color:#bdc8df;
+    border:1px solid var(--line);
+    transition:.2s;
+}
+
+.top-btn:hover{
+    color:#fff;
+    transform:translateY(-1px);
+}
+
+/* ================= CONTENT ================= */
+
+.content{
+    flex:1;
+    min-height:0;
+    position:relative;
+}
+
+.slides{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+}
+
+.slide{
+    width:100%;
+    height:100%;
+    overflow-y:auto;
+    overflow-x:hidden;
+    display:none;
+    padding:38px 6%;
+    animation:slideIn .35s ease;
+}
+
+.slide.active{
+    display:block;
+}
+
+.slide::-webkit-scrollbar{
+    width:7px;
+}
+
+.slide::-webkit-scrollbar-track{
+    background:transparent;
+}
+
+.slide::-webkit-scrollbar-thumb{
+    background:#263452;
+    border-radius:20px;
+}
+
+@keyframes slideIn{
+    from{
+        opacity:0;
+        transform:translateX(18px);
+    }
+    to{
+        opacity:1;
+        transform:translateX(0);
+    }
+}
+
+.container{
+    max-width:1100px;
+    margin:auto;
+}
+
+.kicker{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    color:var(--primary);
+    background:rgba(108,140,255,.10);
+    border:1px solid rgba(108,140,255,.18);
+    border-radius:30px;
+    padding:7px 12px;
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:.5px;
+    text-transform:uppercase;
+}
+
+h1,h2,h3{
+    font-family:"Fredoka",sans-serif;
+}
+
+h1{
+    font-size:clamp(34px,5vw,67px);
+    line-height:1.02;
+    letter-spacing:-1px;
+}
+
+h2{
+    font-size:clamp(27px,3.5vw,44px);
+    line-height:1.08;
+}
+
+h3{
+    font-size:20px;
+}
+
+.gradient-text{
+    background:linear-gradient(90deg,#8fa8ff,#67e7ef);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+}
+
+.lead{
+    color:#b7c1d8;
+    font-size:15px;
+    line-height:1.8;
+    max-width:760px;
+}
+
+.muted{
+    color:var(--muted);
+}
+
+.grid{
+    display:grid;
+    gap:18px;
+}
+
+.grid-2{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+}
+
+.grid-3{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+}
+
+.card{
+    background:linear-gradient(145deg,rgba(24,36,67,.94),rgba(15,24,46,.94));
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:24px;
+    box-shadow:var(--shadow);
+}
+
+.card:hover{
+    border-color:rgba(108,140,255,.23);
+}
+
+.card-title{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:12px;
+}
+
+.icon-box{
+    width:42px;
+    height:42px;
+    border-radius:13px;
+    display:grid;
+    place-items:center;
+    background:rgba(108,140,255,.12);
+    color:var(--primary);
+    flex:none;
+}
+
+.card p{
+    color:#aeb9d0;
+    font-size:13px;
+    line-height:1.75;
+}
+
+.spacer{
+    height:22px;
+}
+
+.center{
+    text-align:center;
+}
+
+.center .lead{
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.hero{
+    min-height:calc(100vh - 150px);
+    display:flex;
+    align-items:center;
+}
+
+.hero-content{
+    width:100%;
+    text-align:center;
+}
+
+.hero-badge{
+    display:inline-flex;
+    padding:9px 16px;
+    border-radius:30px;
+    background:rgba(66,211,146,.09);
+    border:1px solid rgba(66,211,146,.22);
+    color:var(--green);
+    font-size:11px;
+    font-weight:800;
+    margin-bottom:20px;
+}
+
+.hero h1{
+    max-width:900px;
+    margin:0 auto 20px;
+}
+
+.hero .lead{
+    margin:0 auto;
+    max-width:760px;
+}
+
+.hero-visual{
+    margin:36px auto 0;
+    max-width:720px;
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:12px;
+}
+
+.mini-stat{
+    background:#111b33;
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:17px;
+}
+
+.mini-stat strong{
+    display:block;
+    font-family:"Fredoka";
+    font-size:26px;
+    color:#fff;
+}
+
+.mini-stat span{
+    color:var(--muted);
+    font-size:10px;
+}
+
+/* ================= THEORY ================= */
+
+.definition{
+    border-left:4px solid var(--primary);
+    background:rgba(108,140,255,.08);
+    padding:19px 22px;
+    border-radius:0 17px 17px 0;
+    margin-top:20px;
+}
+
+.definition p{
+    font-size:14px;
+    line-height:1.8;
+    color:#d2d9e9;
+}
+
+.formula{
+    font-family:"JetBrains Mono",monospace;
+    background:#090f20;
+    border:1px solid rgba(108,140,255,.16);
+    border-radius:17px;
+    padding:19px;
+    text-align:center;
+    color:#9fb4ff;
+    font-size:clamp(14px,2vw,19px);
+    margin:15px 0;
+    overflow:auto;
+}
+
+.formula small{
+    display:block;
+    color:#7785a6;
+    font-family:"Plus Jakarta Sans";
+    font-size:10px;
+    margin-top:8px;
+}
+
+.term{
+    color:#fff;
+    font-weight:800;
+}
+
+.highlight{
+    color:var(--cyan);
+    font-weight:800;
+}
+
+.example-number{
+    width:35px;
+    height:35px;
+    border-radius:10px;
+    background:linear-gradient(135deg,var(--primary),var(--primary2));
+    display:grid;
+    place-items:center;
+    font-family:"JetBrains Mono";
+    font-size:12px;
+    flex:none;
+}
+
+.steps{
+    display:grid;
+    gap:10px;
+    margin-top:16px;
+}
+
+.step{
+    display:flex;
+    gap:13px;
+    align-items:flex-start;
+    background:#101a31;
+    border:1px solid var(--line);
+    border-radius:15px;
+    padding:14px;
+}
+
+.step-num{
+    width:28px;
+    height:28px;
+    border-radius:50%;
+    background:#222f51;
+    display:grid;
+    place-items:center;
+    color:var(--primary);
+    font-weight:800;
+    font-size:11px;
+    flex:none;
+}
+
+.step-content strong{
+    display:block;
+    font-size:12px;
+    margin-bottom:3px;
+}
+
+.step-content span{
+    color:#98a5c2;
+    font-size:11px;
+    line-height:1.6;
+}
+
+/* ================= INTERACTION ================= */
+
+.reveal{
+    background:#101a31;
+    border:1px dashed #33436a;
+    border-radius:17px;
+    padding:16px;
+}
+
+.reveal-answer{
+    display:none;
+    margin-top:12px;
+    padding-top:12px;
+    border-top:1px solid var(--line);
+    color:#bfc9dd;
+    font-size:12px;
+    line-height:1.7;
+}
+
+.reveal.open .reveal-answer{
+    display:block;
+}
+
+.reveal-btn{
+    background:#202e50;
+    color:#cbd5ec;
+    padding:9px 13px;
+    border-radius:10px;
+    font-size:11px;
+}
+
+.reveal-btn:hover{
+    background:#293a63;
+}
+
+.choice-grid{
+    display:grid;
+    gap:10px;
+    margin-top:15px;
+}
+
+.choice{
+    padding:14px 16px;
+    border:1px solid var(--line);
+    background:#111b32;
+    border-radius:14px;
+    color:#bfc9dd;
+    text-align:left;
+    transition:.2s;
+    font-size:12px;
+}
+
+.choice:hover{
+    border-color:rgba(108,140,255,.4);
+    transform:translateX(2px);
+}
+
+.choice.correct{
+    background:rgba(66,211,146,.10);
+    border-color:rgba(66,211,146,.45);
+    color:#7ceab2;
+}
+
+.choice.wrong{
+    background:rgba(255,104,116,.08);
+    border-color:rgba(255,104,116,.4);
+    color:#ff8d97;
+}
+
+.feedback{
+    min-height:20px;
+    margin-top:11px;
+    font-size:11px;
+    line-height:1.6;
+}
+
+.feedback.good{
+    color:var(--green);
+}
+
+.feedback.bad{
+    color:var(--red);
+}
+
+/* ================= SIMULATION ================= */
+
+.simulation{
+    background:#0c1428;
+    border:1px solid var(--line);
+    border-radius:24px;
+    padding:22px;
+}
+
+.coin{
+    width:105px;
+    height:105px;
+    margin:10px auto 18px;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    font-family:"Fredoka";
+    font-size:19px;
+    color:#fff;
+    background:linear-gradient(145deg,#384e83,#1c2b50);
+    border:5px solid #26375f;
+    box-shadow:0 15px 30px rgba(0,0,0,.3);
+    transition:.35s;
+}
+
+.coin.flip{
+    animation:flip .65s ease;
+}
+
+@keyframes flip{
+    0%{transform:rotateY(0) scale(1)}
+    50%{transform:rotateY(180deg) scale(1.08)}
+    100%{transform:rotateY(360deg) scale(1)}
+}
+
+.sim-buttons{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.btn{
+    padding:11px 16px;
+    border-radius:12px;
+    font-size:11px;
+    font-weight:800;
+    color:#fff;
+    background:#1d2a4a;
+    border:1px solid var(--line);
+    transition:.2s;
+}
+
+.btn:hover{
+    transform:translateY(-1px);
+    background:#26385f;
+}
+
+.btn.primary{
+    background:linear-gradient(135deg,var(--primary),var(--primary2));
+    border:none;
+}
+
+.btn.green{
+    background:rgba(66,211,146,.13);
+    color:#74e6ac;
+    border-color:rgba(66,211,146,.22);
+}
+
+.sim-result{
+    margin-top:15px;
+    text-align:center;
+    color:#b7c2da;
+    font-size:11px;
+}
+
+.tally{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-top:18px;
+}
+
+.tally-box{
+    background:#121c34;
+    border:1px solid var(--line);
+    border-radius:15px;
+    padding:14px;
+}
+
+.tally-box strong{
+    display:block;
+    font-family:"JetBrains Mono";
+    font-size:20px;
+    margin-top:5px;
+}
+
+.tally-box span{
+    color:var(--muted);
+    font-size:10px;
+}
+
+/* ================= BAR CHART ================= */
+
+.chart{
+    height:260px;
+    display:flex;
+    align-items:flex-end;
+    gap:18px;
+    padding:20px 20px 36px;
+    background:#0c1427;
+    border-radius:18px;
+    border:1px solid var(--line);
+    position:relative;
+}
+
+.chart::before,
+.chart::after{
+    content:"";
+    position:absolute;
+    left:20px;
+    right:20px;
+    border-top:1px dashed rgba(255,255,255,.08);
+}
+
+.chart::before{top:50%}
+.chart::after{top:25%}
+
+.bar-group{
+    flex:1;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    align-items:center;
+    position:relative;
+    z-index:1;
+}
+
+.bar{
+    width:min(55px,70%);
+    min-height:3px;
+    border-radius:8px 8px 3px 3px;
+    background:linear-gradient(180deg,var(--cyan),var(--primary));
+    transition:height .5s ease;
+    position:relative;
+}
+
+.bar-value{
+    position:absolute;
+    top:-20px;
+    font-size:9px;
+    color:#cbd5e9;
+    font-family:"JetBrains Mono";
+}
+
+.bar-label{
+    position:absolute;
+    bottom:-25px;
+    font-size:9px;
+    color:#8290ad;
+}
+
+/* ================= TABLE ================= */
+
+.table-wrap{
+    overflow:auto;
+    border:1px solid var(--line);
+    border-radius:16px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:520px;
+}
+
+th,td{
+    padding:12px 14px;
+    text-align:left;
+    border-bottom:1px solid var(--line);
+    font-size:11px;
+}
+
+th{
+    background:#182442;
+    color:#b9c8e8;
+}
+
+td{
+    color:#aab6cf;
+}
+
+tr:last-child td{
+    border-bottom:none;
+}
+
+.good-text{
+    color:var(--green);
+}
+
+.warn-text{
+    color:var(--yellow);
+}
+
+/* ================= INPUT ================= */
+
+.answer-input{
+    width:100%;
+    background:#0b1326;
+    color:#fff;
+    border:1px solid #2b3b60;
+    border-radius:13px;
+    padding:13px;
+    outline:none;
+    font-size:13px;
+}
+
+.answer-input:focus{
+    border-color:var(--primary);
+    box-shadow:0 0 0 3px rgba(108,140,255,.1);
+}
+
+.input-row{
+    display:flex;
+    gap:9px;
+    margin-top:12px;
+}
+
+.input-row .answer-input{
+    flex:1;
+}
+
+/* ================= SORT / MATCH ================= */
+
+.match-item{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    align-items:center;
+    margin-bottom:9px;
+}
+
+.match-item .term-card{
+    padding:12px;
+    background:#101a31;
+    border:1px solid var(--line);
+    border-radius:12px;
+    font-size:11px;
+}
+
+.match-select{
+    width:100%;
+    background:#111b31;
+    color:#cbd5e7;
+    border:1px solid #2a3b60;
+    border-radius:12px;
+    padding:11px;
+    font-size:11px;
+}
+
+/* ================= QUIZ ================= */
+
+.quiz-question{
+    margin-bottom:20px;
+    padding-bottom:20px;
+    border-bottom:1px solid var(--line);
+}
+
+.quiz-question:last-child{
+    border-bottom:none;
+}
+
+.quiz-number{
+    color:var(--primary);
+    font-size:10px;
+    font-weight:800;
+    margin-bottom:7px;
+}
+
+.quiz-text{
+    font-size:14px;
+    line-height:1.7;
+    margin-bottom:10px;
+}
+
+.quiz-options{
+    display:grid;
+    gap:7px;
+}
+
+.quiz-option{
+    padding:12px 14px;
+    border-radius:12px;
+    border:1px solid var(--line);
+    background:#0e172c;
+    color:#adb9d0;
+    text-align:left;
+    font-size:11px;
+}
+
+.quiz-option.selected{
+    border-color:var(--primary);
+    background:rgba(108,140,255,.11);
+    color:#fff;
+}
+
+.quiz-option.correct{
+    border-color:var(--green);
+    background:rgba(66,211,146,.10);
+    color:#7ce8b0;
+}
+
+.quiz-option.incorrect{
+    border-color:var(--red);
+    background:rgba(255,104,116,.08);
+    color:#ff8d98;
+}
+
+.quiz-explanation{
+    display:none;
+    margin-top:8px;
+    padding:11px;
+    background:#101a31;
+    border-radius:11px;
+    color:#9eabc5;
+    font-size:10px;
+    line-height:1.65;
+}
+
+.quiz-question.answered .quiz-explanation{
+    display:block;
+}
+
+.score-box{
+    text-align:center;
+    padding:30px;
+    background:linear-gradient(145deg,rgba(108,140,255,.12),rgba(141,108,255,.10));
+    border:1px solid rgba(108,140,255,.20);
+    border-radius:23px;
+}
+
+.score-number{
+    font-family:"Fredoka";
+    font-size:60px;
+    line-height:1;
+    margin:10px 0;
+}
+
+.score-message{
+    color:#adb9d1;
+    font-size:12px;
+}
+
+/* ================= REFLECTION ================= */
+
+.reflection-card{
+    padding:20px;
+    background:#101a31;
+    border:1px solid var(--line);
+    border-radius:17px;
+}
+
+.reflection-card label{
+    display:block;
+    color:#c7d0e2;
+    font-size:12px;
+    margin-bottom:9px;
+}
+
+textarea{
+    width:100%;
+    min-height:90px;
+    resize:vertical;
+    background:#0a1224;
+    color:#fff;
+    border:1px solid #2b3a5b;
+    border-radius:13px;
+    padding:12px;
+    font:11px "Plus Jakarta Sans";
+    outline:none;
+}
+
+textarea:focus{
+    border-color:var(--primary);
+}
+
+/* ================= NAV FOOTER ================= */
+
+.slide-footer{
+    position:fixed;
+    z-index:20;
+    bottom:0;
+    left:var(--sidebar);
+    right:0;
+    height:68px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+    background:linear-gradient(to top,rgba(8,13,28,.98),rgba(8,13,28,.80));
+    backdrop-filter:blur(12px);
+    border-top:1px solid var(--line);
+}
+
+.nav-control{
+    min-width:115px;
+    height:40px;
+    padding:0 16px;
+    border-radius:12px;
+    background:#17223d;
+    color:#c5d0e6;
+    border:1px solid var(--line);
+    font-size:11px;
+    font-weight:800;
+    transition:.2s;
+}
+
+.nav-control:hover:not(:disabled){
+    background:#223253;
+    color:#fff;
+    transform:translateY(-1px);
+}
+
+.nav-control.primary{
+    background:linear-gradient(135deg,var(--primary),var(--primary2));
+    border:none;
+    color:#fff;
+}
+
+.nav-control:disabled{
+    opacity:.35;
+    cursor:not-allowed;
+}
+
+.slide-indicator{
+    color:#7f8ca8;
+    font-family:"JetBrains Mono";
+    font-size:10px;
+    min-width:70px;
+    text-align:center;
+}
+
+/* ================= OVERLAY ================= */
+
+.overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.6);
+    z-index:25;
+}
+
+.overlay.show{
+    display:block;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:900px){
+    :root{
+        --sidebar:245px;
+    }
+
+    .sidebar{
+        transform:translateX(-100%);
+    }
+
+    .sidebar.open{
+        transform:translateX(0);
+    }
+
+    .main{
+        margin-left:0;
+        width:100%;
+    }
+
+    .menu-btn{
+        display:block;
+    }
+
+    .slide-footer{
+        left:0;
+    }
+
+    .slide{
+        padding:28px 22px 92px;
+    }
+
+    .topbar{
+        padding:0 16px;
+    }
+
+    .grid-3{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:650px){
+    .grid-2{
+        grid-template-columns:1fr;
+    }
+
+    .hero{
+        min-height:calc(100vh - 150px);
+    }
+
+    .hero-visual{
+        grid-template-columns:1fr;
+        max-width:300px;
+    }
+
+    h1{
+        font-size:39px;
+    }
+
+    h2{
+        font-size:30px;
+    }
+
+    .lead{
+        font-size:13px;
+    }
+
+    .card{
+        padding:18px;
+        border-radius:18px;
+    }
+
+    .slide{
+        padding-left:15px;
+        padding-right:15px;
+    }
+
+    .top-actions{
+        display:none;
+    }
+
+    .nav-control{
+        min-width:95px;
+        font-size:10px;
+    }
+
+    .match-item{
+        grid-template-columns:1fr;
+    }
+
+    .input-row{
+        flex-direction:column;
+    }
+
+    .chart{
+        gap:8px;
+    }
+}
+
+/* ================= SPECIAL VISUAL ================= */
+
+.comparison{
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    gap:14px;
+    align-items:stretch;
+}
+
+.compare-box{
+    padding:23px;
+    border-radius:20px;
+    border:1px solid var(--line);
+}
+
+.compare-box.empirik{
+    background:linear-gradient(145deg,rgba(53,216,232,.08),rgba(53,216,232,.02));
+    border-color:rgba(53,216,232,.18);
+}
+
+.compare-box.teoretik{
+    background:linear-gradient(145deg,rgba(141,108,255,.09),rgba(141,108,255,.02));
+    border-color:rgba(141,108,255,.18);
+}
+
+.compare-icon{
+    font-size:29px;
+    margin-bottom:10px;
+}
+
+.compare-box h3{
+    margin-bottom:8px;
+}
+
+.compare-box p{
+    color:#aab6cd;
+    font-size:12px;
+    line-height:1.7;
+}
+
+.vs{
+    align-self:center;
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    background:#202d4c;
+    color:#fff;
+    font-family:"Fredoka";
+    font-size:12px;
+}
+
+.pill{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:9px;
+    font-weight:800;
+    margin-top:10px;
+}
+
+.pill.cyan{
+    background:rgba(53,216,232,.10);
+    color:var(--cyan);
+}
+
+.pill.purple{
+    background:rgba(141,108,255,.12);
+    color:#b29cff;
+}
+
+.infinity{
+    font-size:60px;
+    font-family:"Fredoka";
+    color:var(--primary);
+}
+
+.trial-track{
+    display:flex;
+    gap:4px;
+    flex-wrap:wrap;
+    margin-top:15px;
+}
+
+.trial{
+    width:19px;
+    height:19px;
+    border-radius:5px;
+    background:#263452;
+    display:grid;
+    place-items:center;
+    font-size:8px;
+}
+
+.trial.success{
+    background:rgba(66,211,146,.7);
+}
+
+.trial.fail{
+    background:rgba(255,104,116,.55);
+}
+
+.slider-wrap{
+    padding:18px;
+    background:#0c1428;
+    border-radius:18px;
+    border:1px solid var(--line);
+}
+
+input[type="range"]{
+    width:100%;
+    accent-color:var(--primary);
+}
+
+.slider-value{
+    text-align:center;
+    font-family:"JetBrains Mono";
+    color:#aab9dd;
+    margin-top:10px;
+    font-size:12px;
+}
+
+.conclusion{
+    background:linear-gradient(135deg,rgba(66,211,146,.10),rgba(53,216,232,.06));
+    border:1px solid rgba(66,211,146,.18);
+    border-radius:21px;
+    padding:22px;
+}
+
+.conclusion strong{
+    color:var(--green);
+}
+
+.tip{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    background:rgba(255,200,87,.07);
+    border:1px solid rgba(255,200,87,.17);
+    border-radius:16px;
+    padding:15px;
+}
+
+.tip-icon{
+    color:var(--yellow);
+    font-size:20px;
+}
+
+.tip p{
+    color:#b6bfd2;
+    font-size:11px;
+    line-height:1.7;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">🎲</div>
+            <div class="brand-text">
+                <strong>Peluang Interaktif</strong>
+                <span>Media Pembelajaran Matematika</span>
+            </div>
+        </div>
+
+        <div class="chapter-box">
+            <div class="label">Materi</div>
+            <h3 id="sideChapter">BAB 6 — TEORI PELUANG</h3>
+            <p id="sideSubchapter">
+                Perbandingan Peluang Empirik & Teoretik
+            </p>
+        </div>
+
+        <div class="nav-title">Daftar Pembelajaran</div>
+
+        <div class="slide-nav" id="slideNav"></div>
+
+        <div class="sidebar-bottom">
+            <button class="home-btn" onclick="goHome()">⌂ Kembali ke Awal</button>
+        </div>
+
+    </aside>
+
+    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <header class="topbar">
+
+            <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+
+            <div class="progress-wrap">
+                <div class="progress-info">
+                    <span id="sectionName">Pembuka</span>
+                    <strong id="progressText">1 / 22</strong>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+            </div>
+
+            <div class="top-actions">
+                <button class="top-btn" title="Kembali ke awal" onclick="goHome()">⌂</button>
+                <button class="top-btn" title="Fullscreen" onclick="toggleFullscreen()">⛶</button>
+            </div>
+
+        </header>
+
+        <section class="content">
+
+            <div class="slides" id="slides">
+
+                <!-- =====================================================
+                     SLIDE 1
+                ====================================================== -->
+                <article class="slide active" data-title="Pembuka">
+
+                    <div class="container hero">
+
+                        <div class="hero-content">
+
+                            <div class="hero-badge">
+                                ✦ PEMBELAJARAN INTERAKTIF MATEMATIKA
+                            </div>
+
+                            <h1>
+                                BAB 6<br>
+                                <span class="gradient-text">TEORI PELUANG</span>
+                            </h1>
+
+                            <p class="lead">
+                                Perbandingan Peluang Empirik & Teoretik
+                                <br>
+                                <span class="muted">
+                                    Membandingkan hasil percobaan dengan perhitungan.
+                                </span>
+                            </p>
+
+                            <div class="hero-visual">
+
+                                <div class="mini-stat">
+                                    <strong>🎯</strong>
+                                    <span>Percobaan</span>
+                                </div>
+
+                                <div class="mini-stat">
+                                    <strong>📊</strong>
+                                    <span>Data Hasil</span>
+                                </div>
+
+                                <div class="mini-stat">
+                                    <strong>🧮</strong>
+                                    <span>Perhitungan</span>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+                <!-- =====================================================
+                     SLIDE 2
+                ====================================================== -->
+                <article class="slide" data-title="Apersepsi">
+
+                    <div class="container">
+
+                        <span class="kicker">01 · Apersepsi</span>
+
+                        <div class="spacer"></div>
+
+                        <h2>
+                            Pernah melempar <span class="gradient-text">koin</span>?
+                        </h2>
+
+                        <p class="lead">
+                            Bayangkan sebuah koin dilempar berkali-kali.
+                            Apakah jumlah munculnya gambar dan angka akan selalu sama?
+                        </p>
+
+                        <div class="spacer"></div>
+
+                        <div class="grid grid-2">
+
+                            <div class="card">
+                                <div class="card-title">
+                                    <div class="icon-box">🪙</div>
+                                    <h3>Percobaan nyata</h3>
+                                </div>
+
+                                <p>
+                                    Misalnya koin dilempar 20 kali dan sisi gambar muncul
+                                    sebanyak 13 kali. Hasil tersebut diperoleh dari
+                                    <b>percobaan yang benar-benar dilakukan</b>.
+                                </p>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-title">
+                                    <div class="icon-box">📐</div>
+                                    <h3>Perhitungan matematis</h3>
+                                </div>
+
+                                <p>
+                                    Untuk koin yang seimbang, secara matematis peluang
+                                    muncul gambar adalah <b>1 dari 2 kemungkinan</b>,
+                                    atau 50%.
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <div class="spacer"></div>
+
+                        <div class="reveal" id="apersepsiReveal">
+
+                            <strong>🤔 Pertanyaan pemantik</strong>
+
+                            <p class="muted" style="font-size:12px;margin:7px 0 12px;">
+                                Mengapa hasil percobaan bisa berbeda dari hasil perhitungan?
+                            </p>
+
+                            <button class="reveal-btn" onclick="toggleReveal('apersepsiReveal')">
+                                Lihat petunjuk
+                            </button>
+
+                            <div class="reveal-answer">
+                                Karena percobaan nyata memiliki unsur variasi acak.
+                                Semakin banyak percobaan dilakukan, hasil empirik biasanya
+                                semakin mendekati peluang teoretik.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+                <!-- =====================================================
+                     SLIDE 3
+                ====================================================== -->
+                <article class="slide" data-title="Tujuan Pembelajaran">
+
+                    <div class="container">
+
+                        <span class="kicker">02 · Tujuan</span>
+
+                        <div class="spacer"></div>
+
+                        <h2>
+                            Setelah belajar, kamu dapat...
+                        </h2>
+
+                        <p class="lead">
+                            Memahami perbedaan antara hasil percobaan dan hasil perhitungan
+                            peluang serta membandingkan keduanya.
+                        </p>
+
+                        <div class="spacer"></div>
+
+                        <div class="grid grid-2">
+
+                            <div class="card">
+                                <div class="card-title">
+                                    <div class="icon-box">1</div>
+                                    <h3>Menjelaskan</h3>
+                                </div>
+                                <p>
+                                    Menjelaskan pengertian peluang empirik dan peluang
+                                    teoretik menggunakan bahasa sendiri.
+                                </p>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-title">
+                                    <div class="icon-box">2</div>
+                                    <h3>Menghitung</h3>
+                                </div>
+                                <p>
+                                    Menghitung peluang empirik berdasarkan frekuensi kejadian
+                                    dalam suatu percobaan.
+                                </p>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-title">
+                                    <div class="icon-box">3</div>
+                                    <h3>Menentukan</h3>
+                                </div>
+                                <p>
+                                    Menentukan peluang teoretik berdasarkan banyaknya hasil
+                                    yang mungkin dan hasil yang diinginkan.
+                                </p>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-title">
+                                    <div class="icon-box">4</div>
+                                    <h3>Membandingkan</h3>
+                                </div>
+                                <p>
+                                    Membandingkan hasil empirik dengan hasil teoretik dan
+                                    menjelaskan mengapa keduanya dapat berbeda.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+                <!-- =====================================================
+                     SLIDE 4
+                ====================================================== -->
+                <article class="slide" data-title="Konsep Peluang">
+
+                    <div class="container">
+
+                        <span class="kicker">03 · Konsep Dasar</span>
+
+                        <div class="spacer"></div>
+
+                        <h2>
+                            Apa itu <span class="gradient-text">peluang</span>?
+                        </h2>
+
+                        <div class="definition">
+
+                            <p>
+                                <span class="term">Peluang</span> adalah ukuran yang menyatakan
+                                seberapa besar kemungkinan suatu kejadian terjadi.
+                                Nilai peluang berada antara <b>0 dan 1</b>, atau dapat
+                                dinyatakan antara <b>0% dan 100%</b>.
+                            </p>
+
+                        </div>
+
+                        <div class="spacer"></div>
+
+                        <div class="grid grid-3">
+
+                            <div class="card center">
+                                <div class="infinity">0</div>
+                                <h3>Tidak mungkin</h3>
+                                <p>
+                                    Kejadian tidak dapat terjadi.
+                                </p>
+                            </div>
+
+                            <div class="card center">
+                                <div class="infinity">½</div>
+                                <h3>Mungkin</h3>
+                                <p>
+                                    Peluang sebesar 50%.
+                                </p>
+                            </div>
+
+                            <div class="card center">
+                                <div class="infinity">1</div>
+                                <h3>Pasti</h3>
+                                <p>
+                                    Kejadian pasti terjadi.
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <div class="spacer"></div>
+
+                        <div class="formula">
+                            0 ≤ P(A) ≤ 1
+                            <small>P(A) menyatakan peluang kejadian A.</small>
+                        </div>
+
+                    </div>
+
+                </article>
+
+                <!-- =====================================================
+                     SLIDE 5
+                ====================================================== -->
+                <article class="slide" data-title="Peluang Teoretik">
+
+                    <div class="container">
+
+                        <span class="kicker">04 · Konsep</span>
+
+                        <div class="spacer"></div>
+
+                        <h2>
+                            Peluang <span class="gradient-text">Teoretik</span>
+                        </h2>
+
+                        <p class="lead">
+                            Peluang yang diperoleh melalui perhitungan berdasarkan
+                            semua hasil yang mungkin terjadi.
+                        </p>
+
+                        <div class="spacer"></div>
+
+                        <div class="card">
+
+                            <div class="card-title">
+                                <div class="icon-box">🧮</div>
+                                <h3>Rumus dasar</h3>
+                            </div>
+
+                            <div class="formula">
+                                P(A) = n(A) / n(S)
+
+                                <small>
+                                    n(A) = banyak hasil yang diinginkan
+                                    &nbsp;|&nbsp;
+                                    n(S) = banyak seluruh hasil yang mungkin
+                                </small>
+                            </div>
+
+                        </div>
+
+                        <div class="spacer"></div>
+
+                        <div class="grid grid-2">
+
+                            <div class="card">
+
+                                <div class="card-title">
+                                    <div class="example-number">A</div>
+                                    <h3>Koin</h3>
+                                </div>
+
+                                <p>
+                                    Sebuah koin memiliki dua sisi: angka dan gambar.
+                                    Peluang teoretik muncul gambar adalah:
+                                </p>
+
+                                <div class="formula">
+                                    P(Gambar) = 1 / 2 = 0,5 = 50%
+                                </div>
+
+                            </div>
+
+                            <div class="card">
+
+                                <div class="card-title">
+                                    <div class="example-number">B</div>
+                                    <h3>Dadu</h3>
+                                </div>
+
+                                <p>
+                                    Sebuah dadu memiliki enam hasil yang mungkin.
+                                    Peluang teoretik muncul angka 4 adalah:
+                                </p>
+
+                                <div class="formula">
+                                    P(4) = 1 / 6 ≈ 16,67%
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+                <!-- =====================================================
+                     SLIDE 6
+                ====================================================== -->
+                <article class="slide" data-title="Peluang Empirik">
+
+                    <div class="container">
+
+                        <span class="kicker">05 · Konsep</span>
+
+                        <div class="spacer"></div>
+
+                        <h2>
+                            Peluang <span class="gradient-text">Empirik</span>
+                        </h2>
+
+                        <p class="lead">
+                            Peluang yang diperoleh berdasarkan hasil percobaan
+                            yang benar-benar dilakukan.
+                        </p>
+
+                        <div class="spacer"></div>
+
+                        <div class="card">
+
+                            <div class="card-title">
+                                <div class="icon-box">📊</div>
+                                <h3>Rumus peluang empirik</h3>
+                            </div>
+
+                            <div class="formula">
+                                P(A) = frekuensi kejadian A / jumlah percobaan
+
+                                <small>
+                                    Frekuensi kejadian = berapa kali kejadian tersebut muncul.
+                                </small>
+                            </div>
+
+                        </div>
+
+                        <div class="spacer"></div>
+
+                        <div class="card">
+
+                            <div class="card-title">
+                                <div class="example-number">1</div>
+                                <h3>Contoh</h3>
+                            </div>
+
+                            <p>
+                                Sebuah koin dilempar <b>20 kali</b>.
+                                Sisi gambar muncul sebanyak <b>13 kali</b>.
+                                Berapakah peluang empirik muncul gambar?
+                            </p>
+
+                            <div class="formula">
+                                P(Gambar) = 13 / 20 = 0,65 = 65%
+                            </div>
+
+                            <div class="conclusion">
+                                <strong>Jadi:</strong>
+                                berdasarkan percobaan tersebut, peluang empirik muncul
+                                gambar adalah <b>65%</b>.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+                <!-- =====================================================
+                     SLIDE 7
+                ====================================================== -->
+                <article class="slide" data-title="Perbandingan Utama">
+
+                    <div class="container">
+
+                        <span class="kicker">06 · Perbandingan</span>
+
+                        <div class="spacer"></div>
+
+                        <h2>
+                            Empirik vs Teoretik
+                        </h2>
+
+                        <p class="lead">
+                            Keduanya sama-sama menyatakan peluang, tetapi diperoleh
+                            dengan cara yang berbeda.
+                        </p>
+
+                        <div class="spacer"></div>
+
+                        <div class="comparison">
+
+                            <div class="compare-box empirik">
+
+                                <div class="compare-icon">📊</div>
+
+                                <h3>Peluang Empirik</h3>
+
+                                <p>
+                                    Berdasarkan <b>hasil percobaan nyata</b>.
+                                </p>
+
+                                <span class="pill cyan">
+                                    DATA PERCOBAAN
+                                </span>
+
+                            </div>
+
+                            <div class="vs">VS</div>
+
+                            <div class="compare-box teoretik">
+
+                                <div class="compare-icon">🧮</div>
+
+                                <h3>Peluang Teoretik</h3>
+
+                                <p>
+                                    Berdasarkan <b>perhitungan matematis</b> dari
+                                    kemungkinan hasil.
+                                </p>
+
+                                <span class="pill purple">
+                                    PERHITUNGAN
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <div class="spacer"></div>
+
+                        <div class="table-wrap">
+
+                            <table>
+
+                                <thead>
+                                    <tr>
+                                        <th>Aspek</th>
+                                        <th>Empirik</th>
+                                        <th>Teoretik</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    <tr>
+                                        <td>Sumber</td>
+                                        <td>Hasil percobaan</td>
+                                        <td>Perhitungan</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Data</td>
+                                        <td>Frekuensi kejadian</td>
+                                        <td>Jumlah kemungkinan</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Hasil</td>
+                                        <td>Dapat berubah</td>
+                                        <td>Ditentukan secara matematis</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Semakin banyak percobaan</td>
+                                        <td class="good-text">Cenderung mendekati teoretik</td>
+                                        <td class="good-text">Menjadi nilai pembanding</td>
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+                <!-- =====================================================
+                     SLIDE 8
+                ====================================================== -->
+                <article class="slide" data-title="Contoh Perbandingan">
+
+                    <div class="container">
+
+                        <span class="kicker">07 · Contoh</span>
+
+                        <div class="spacer"></div>
+
+                        <h2>
+                            Membandingkan dua hasil
+                        </h2>
+
+                        <p class="lead">
+                            Mari gunakan percobaan pelemparan sebuah koin.
+                        </p>
+
+                        <div class="spacer"></div>
+
+                        <div class="grid grid-2">
+
+                            <div class="card">
+
+                                <div class="card-title">
+                                    <div class="example-number">1</div>
+                                    <h3>Hasil teoretik</h3>
+                                </div>
+
+                                <p>
+                                    Koin seimbang memiliki dua sisi. Hanya satu sisi
+                                    yang kita inginkan, yaitu gambar.
+                                </p>
+
+                                <div class="formula">
+                                    P(Gambar) = 1 / 2 = 50%
+                                </div>
+
+                            </div>
+
+                            <div class="card">
+
+                                <div class="card-title">
+                                    <div class="example-number">2</div>
+                                    <h3>Hasil empirik</h3>
+                                </div>
+
+                                <p>
+                                    Koin dilempar 40 kali dan gambar muncul sebanyak
+                                    18 kali.
+                                </p>
+
+                                <div class="formula">
+                                    P(Gambar) = 18 / 40 = 45%
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="spacer"></div>
+
+                        <div class="card">
+
+                            <h3>Perbandingan</h3>
+
+                            <div class="grid grid-2" style="margin-top:15px;">
+
+                                <div class="reveal" id="compareReveal1">
+
+                                    <b>Teoretik</b>
+
+                                    <p class="muted" style="margin:7px 0;">
+                                        50%
+                                    </p>
+
+                                    <button class="reveal-btn"
+                                        onclick="toggleReveal('compareReveal1')">
+                                        Tampilkan
+                                    </button>
+
+                                    <div class="reveal-answer">
+                                        Nilai teoretik adalah 50%.
+                                    </div>
+
+                                </div>
+
+                                <div class="reveal" id="compareReveal2">
+
+                                    <b>Empirik</b>
+
+                                    <p class="muted" style="margin:7px 0;">
+                                        45%
+                                    </p>
+
+                                    <button class="reveal-btn"
+                                        onclick="toggleReveal('compareReveal2')">
+                                        Tampilkan
+                                    </button>
+
+                                    <div class="reveal-answer">
+                                        Nilai empirik adalah 45%.
+                                        Selisihnya dari nilai teoretik adalah 5 poin persentase.
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+                <!-- =====================================================
+                     SLIDE 9
+                ====================================================== -->
+                <article class="slide" data-title="Mengapa Berbeda?">
+
+                    <div class="container">
+
+                        <span class="kicker">08 · Penalaran</span>
+
+                        <div class="spacer"></div>
+
+                        <h2>
+                            Mengapa hasilnya bisa <span class="gradient-text">berbeda?</span>
+                        </h2>
+
+                        <p class="lead">
+                            Peluang teoretik tidak selalu sama persis dengan hasil
+                            satu percobaan atau sekumpulan percobaan.
+                        </p>
+
+                        <div class="spacer"></div>
+
+                        <div class="grid grid-3">
+
+                            <div class="card">
+                                <div class="card-title">
+                                    <div class="icon-box">🎲</div>
+                                    <h3>Keacakan</h3>
+                                </div>
+                                <p>
+                                    Hasil setiap percobaan bersifat acak sehingga urutan
+                                    hasil tidak dapat dipastikan.
+                                </p>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-title">
+                                    <div class="icon-box">🔢</div>
+                                    <h3>Jumlah percobaan</h3>
+                                </div>
+                                <p>
+                                    Percobaan yang sedikit dapat menghasilkan penyimpangan
+                                    yang lebih besar.
+                                </p>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-title">
+                                    <div class="icon-box">📈</div>
+                                    <h3>Banyak percobaan</h3>
+                                </div>
+                                <p>
+                                    Ketika jumlah percobaan bertambah, frekuensi relatif
+                                    cenderung mendekati peluang teoretik.
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <div class="spacer"></div>
+
+                        <div class="tip">
+
+                            <div class="tip-icon">💡</div>
+
+                            <p>
+                                <b>Ingat:</b> mendekati bukan berarti harus sama persis.
+                                Hasil percobaan tetap dapat berbeda karena sifat acak
+                                dari percobaan.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+                <!-- =====================================================
+                     SLIDE 10
+                ====================================================== -->
+                <article class="slide" data-title="Simulasi Koin">
+
+                    <div class="container">
+
+                        <span class="kicker">09 · Simulasi</span>
+
+                        <div class="spacer"></div>
+
+                        <h2>
+                            Coba sendiri: lempar koin
+                        </h2>
+
+                        <p class="lead">
+                            Klik tombol untuk melakukan percobaan. Amati bagaimana
+                            peluang empirik berubah ketika jumlah percobaan bertambah.
+                        </p>
+
+                        <div class="spacer"></div>
+
+                        <div class="grid grid-2">
+
+                            <div class="simulation">
+
+                                <div class="coin" id="coin">
+                                    ?
+                                </div>
+
+                                <div class="sim-buttons">
+
+                                    <button class="btn primary" onclick="flipCoin(1)">
+                                        Lempar 1×
+                                    </button>
+
+                                    <button class="btn" onclick="flipCoin(10)">
+                                        Lempar 10×
+                                    </button>
+
+                                    <button class="btn" onclick="flipCoin(50)">
+                                        Lempar 50×
+                                    </button>
+
+                                    <button class="btn green" onclick="resetCoin()">
+                                        Reset
+                                    </button>
+
+                                </div>
+
+                                <div class="sim-result" id="coinResult">
+                                    Belum ada percobaan.
+                                </div>
+
+                            </div>
+
+                            <div class="card">
+
+                                <h3>Data percobaan</h3>
+
+                                <div class="tally">
+
+                                    <div class="tally-box">
+                                        <span>Gambar</span>
+                                        <strong id="headsCount">0</strong>
+                                    </div>
+
+                                    <div class="tally-box">
+                                        <span>Angka</span>
+                                        <strong id="tailsCount">0</strong>
+                                    </div>
+
+                                </div>
+
+                                <div class="formula" style="font-size:13px;margin-top:15px;">
+                                    Empirik Gambar =
+                                    <span id="empCoin">0%</span>
+                                </div>
+
+                                <p>
+                                    Nilai teoretik koin seimbang:
+                                    <b>50%</b>.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+                <!-- =====================================================
+                     SLIDE 11
+                ====================================================== -->
+                <article class="slide" data-title="Membaca Simulasi">
+
+                    <div class="container">
+
+                        <span class="kicker">10 · Analisis</span>
+
+                        <div class="spacer"></div>
+
+                        <h2>
+                            Apa yang terjadi pada simulasi?
+                        </h2>
+
+                        <div class="spacer"></div>
+
+                        <div class="grid grid-2">
+
+                            <div class="card">
+
+                                <div class="card-title">
+                                    <div class="icon-box">🔍</div>
+                                    <h3>Jika baru sedikit percobaan</h3>
+                                </div>
+
+                                <p>
+                                    Peluang empirik dapat jauh dari 50%.
+                                    Misalnya dalam 5 lemparan, gambar bisa muncul 4 kali
+                                    sehingga peluang empiriknya 80%.
+                                </p>
+
+                                <div class="formula">
+                                    4 / 5 = 80%
+                                </div>
+
+                            </div>
+
+                            <div class="card">
+
+                                <div class="card-title">
+                                    <div class="icon-box">📊</div>
+                                    <h3>Jika percobaan bertambah</h3>
+                                </div>
+
+                                <p>
+                                    Hasil empirik cenderung semakin dekat dengan 50%,
+                                    meskipun tidak dijamin tepat sama.
+                                </p>
+
+                                <div class="formula">
+                                    51 / 100 = 51%
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="spacer"></div>
+
+                        <div class="conclusion">
+
+                            <strong>Kesimpulan penting:</strong>
+
+                            <p style="margin-top:7px;color:#aebbd1;font-size:12px;line-height:1.7;">
+                                Jumlah percobaan yang lebih besar biasanya memberikan
+                                gambaran yang lebih stabil mengenai peluang suatu kejadian.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+                <!-- =====================================================
+                     SLIDE 12
+                ====================================================== -->
+                <article class="slide" data-title="Visualisasi Konvergensi">
+
+                    <div class="container">
+
+                        <span class="kicker">11 · Visualisasi</span>
+
+                        <div class="spacer"></div>
+
+                        <h2>
+                            Empirik mendekati teoretik
+                        </h2>
+
+                        <p class="lead">
+                            Perhatikan contoh data simulasi berikut.
+                            Nilai teoretik untuk muncul gambar adalah 50%.
+                        </p>
+
+                        <div class="spacer"></div>
+
+                        <div class="card">
+
+                            <div class="chart" id="coinChart">
+
+                                <div class="bar-group">
+                                    <div class="bar" style="height:78%;">
+                                        <span class="bar-value">78%</span>
+                                    </div>
+                                    <span class="bar-label">5×</span>
+                                </div>
+
+                                <div class="bar-group">
+                                    <div class="bar" style="height:62%;">
+                                        <span class="bar-value">62%</span>
+                                    </div>
+                                    <span class="bar-label">10×</span>
+                                </div>
+
+                                <div class="bar-group">
+                                    <div class="bar" style="height:56%;">
+                                        <span class="bar-value">56%</span>
+                                    </div>
+                                    <span class="bar-label">25×</span>
+                                </div>
+
+                                <div class="bar-group">
+                                    <div class="bar" style="height:53%;">
+                                        <span class="bar-value">53%</span>
+                                    </div>
+                                    <span class="bar-label">50×</span>
+                                </div>
+
+                                <div class="bar-group">
+                                    <div class="bar" style="height:51%;">
+                                        <span class="bar-value">51%</span>
+                                    </div>
+                                    <span class="bar-label">100×</span>
+                                </div>
+
+                                <div class="bar-group">
+                                    <div class="bar" style="height:50%;">
+                                        <span class="bar-value">50%</span>
+                                    </div>
+                                    <span class="bar-label">500×</span>
+                                </div>
+
+                            </div>
+
+                            <div style="margin-top:15px;text-align:center;">
+                                <span class="pill cyan">PELUANG EMPIRIK</span>
+                                <span style="margin:0 7px;color:#5c6b8c;">→</span>
+                                <span class="pill purple">50% TEORETIK</span>
+                            </div>
+
+                        </div>
+
+                        <div class="spacer"></div>
+
+                        <div class="tip">
+
+                            <div class="tip-icon">📌</div>
+
+                            <p>
+                                Grafik tersebut adalah ilustrasi. Setiap simulasi nyata
+                                dapat menghasilkan angka yang berbeda karena hasil
+                                percobaan bersifat acak.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+                <!-- =====================================================
+                     SLIDE 13
+                ====================================================== -->
+                <article class="slide" data-title="Contoh Dadu">
+
+                    <div class="container">
+
+                        <span class="kicker">12 · Contoh</span>
+
+                        <div class="spacer"></div>
+
+                        <h2>
+                            Contoh pada <span class="gradient-text">dadu</span>
+                        </h2>
+
+                        <p class="lead">
+                            Sekarang kita bandingkan peluang teoretik dan empirik
+                            pada pelemparan dadu.
+                        </p>
+
+                        <div class="spacer"></div>
+
+                        <div class="card">
+
+                            <div class="card-title">
+                                <div class="example-number">1</div>
+                                <h3>Peluang teoretik muncul angka 6</h3>
+                            </div>
+
+                            <p>
+                                Dadu memiliki 6 sisi dan hanya satu sisi bernilai 6.
+                            </p>
+
+                            <div class="formula">
+                                P(6) = 1 / 6 ≈ 16,67%
+                            </div>
+
+                        </div>
+
+                        <div class="spacer"></div>
+
+                        <div class="card">
+
+                            <div class="card-title">
+                                <div class="example-number">2</div>
+                                <h3>Hasil percobaan</h3>
+                            </div>
+
+                            <p>
+                                Dadu dilempar 60 kali. Angka 6 muncul sebanyak 12 kali.
+                            </p>
+
+                            <div class="formula">
+                                P empirik(6) = 12 / 60 = 20%
+                            </div>
+
+                        </div>
+
+                        <div class="spacer"></div>
+
+                        <div class="conclusion">
+
+                            <strong>Membandingkan:</strong>
+
+                            <p style="margin-top:7px;color:#b5c0d6;font-size:12px;">
+                                Teoretik ≈ <b>16,67%</b>
+                                &nbsp;&nbsp;|&nbsp;&nbsp;
+                                Empirik = <b>20%</b>
+                            </p>
+
+                            <p style="margin-top:7px;color:#9daac4;font-size:11px;">
+                                Hasil empirik lebih besar sekitar 3,33 poin persentase,
+                                tetapi masih dapat terjadi secara wajar dalam percobaan acak.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+                <!-- =====================================================
+                     SLIDE 14
+                ====================================================== -->
+                <article class="slide" data-title="Latihan Terbimbing">
+
+                    <div class="container">
+
+                        <span class="kicker">13 · Latihan</span>
+
+                        <div class="spacer"></div>
+
+                        <h2>
+                            Latihan terbimbing
+                        </h2>
+
+                        <p class="lead">
+                            Coba selesaikan sebelum membuka pembahasan.
+                        </p>
+
+                        <div class="spacer"></div>
+
+                        <div class="card">
+
+                            <div class="card-title">
+                                <div class="example-number">A</div>
+                                <h3>Soal 1 — Mudah</h3>
+                            </div>
+
+                            <p>
+                                Sebuah dadu dilempar 30 kali.
+                                Angka 4 muncul sebanyak 7 kali.
+                                Tentukan peluang empirik muncul angka 4.
+                            </p>
+
+                            <div class="formula">
+                                P(A) = frekuensi kejadian / jumlah percobaan
+                            </div>
+
+                            <div class="reveal" id="guided1">
+
+                                <button class="reveal-btn"
+                                    onclick="toggleReveal('guided1')">
+                                    Buka pembahasan
+                                </button>
+
+                                <div class="reveal-answer">
+
+                                    <b>Langkah 1:</b>
+                                    Frekuensi angka 4 = 7.
+
+                                    <br><br>
+
+                                    <b>Langkah 2:</b>
+                                    Jumlah percobaan = 30.
+
+                                    <br><br>
+
+                                    <b>Langkah 3:</b>
+
+                                    <div class="formula">
+                                        P(4) = 7 / 30 ≈ 0,2333 = 23,33%
+                                    </div>
+
+                                    <b>Jawaban:</b>
+                                    peluang empirik muncul angka 4 adalah sekitar
+                                    <b>23,33%</b>.
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="spacer"></div>
+
+                        <div class="card">
+
+                            <div class="card-title">
+                                <div class="example-number">B</div>
+                                <h3>Soal 2 — Sedang</h3>
+                            </div>
+
+                            <p>
+                                Sebuah koin dilempar 80 kali.
+                                Sisi gambar muncul 44 kali.
+                                Bandingkan peluang empirik dengan peluang teoretik
+                                koin seimbang.
+                            </p>
+
+                            <div class="reveal" id="guided2">
+
+                                <button class="reveal-btn"
+                                    onclick="toggleReveal('guided2')">
+                                    Buka pembahasan
+                                </button>
+
+                                <div class="reveal-answer">
+
+                                    <div class="formula">
+                                        Empirik = 44 / 80 = 55%
+                                        <br><br>
+                                        Teoretik = 1 / 2 = 50%
+                                    </div>
+
+                                    Jadi peluang empirik lebih besar
+                                    <b>5 poin persentase</b> daripada peluang teoretik.
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+                <!-- =====================================================
+                     SLIDE 15
+                ====================================================== -->
+                <article class="slide" data-title="Latihan Input">
+
+                    <div class="container">
+
+                        <span class="kicker">14 · Latihan Mandiri</span>
+
+                        <div class="spacer"></div>
+
+                        <h2>
+                            Hitung sendiri
+                        </h2>
+
+                        <p class="lead">
+                            Masukkan jawabanmu. Gunakan bentuk persen.
+                        </p>
+
+                        <div class="spacer"></div>
+
+                        <div class="card">
+
+                            <div class="card-title">
+                                <div class="example-number">1</div>
+                                <h3>Peluang empirik</h3>
+                            </div>
+
+                            <p>
+                                Sebuah spinner diputar 50 kali.
+                                Warna biru muncul 22 kali.
+                                Berapa peluang empirik warna biru?
+                            </p>
+
+                            <div class="input-row">
+
+                                <input
+                                    class="answer-input"
+                                    id="inputEmpirik"
+                                    type="number"
+                                    min="0"
+                                    max="100"
+                                    placeholder="Contoh: 44"
+                                >
+
+                                <button class="btn primary" onclick="checkEmpirik()">
+                                    Periksa
+                                </button>
+
+                            </div>
+
+                            <div class="feedback" id="feedbackEmpirik"></div>
+
+                        </div>
+
+                        <div class="spacer"></div>
+
+                        <div class="card">
+
+                            <div class="card-title">
+                                <div class="example-number">2</div>
+                                <h3>Peluang teoretik</h3>
+                            </div>
+
+                            <p>
+                                Sebuah dadu bersisi enam dilempar.
+                                Berapa peluang teoretik muncul bilangan genap?
+                            </p>
+
+                            <div class="input-row">
+
+                                <input
+                                    class="answer-input"
+                                    id="inputTeoretik"
+                                    type="number"
+                                    min="0"
+                                    max="100"
+                                    placeholder="Dalam persen"
+                                >
+
+                                <button class="btn primary" onclick="checkTeoretik()">
+                                    Periksa
+                                </button>
+
+                            </div>
+
+                            <div class="feedback" id="feedbackTeoretik"></div>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+                <!-- =====================================================
+                     SLIDE 16
+                ====================================================== -->
+                <article class="slide" data-title="Aktivitas Analisis">
+
+                    <div class="container">
+
+                        <span class="kicker">15 · Analisis</span>
+
+                        <div class="spacer"></div>
+
+                        <h2>
+                            Apakah hasil ini masuk akal?
+                        </h2>
+
+                        <p class="lead">
+                            Tentukan apakah pernyataan berikut benar atau salah.
+                        </p>
+
+                        <div class="spacer"></div>
+
+                        <div class="card">
+
+                            <div class="card-title">
+                                <div class="icon-box">🔎</div>
+                                <h3>Pernyataan</h3>
+                            </div>
+
+                            <p style="font-size:14px;">
+                                Sebuah koin seimbang dilempar 10 kali.
+                                Jika gambar muncul 8 kali, maka peluang teoretik
+                                gambar adalah 80%.
+                            </p>
+
+                            <div class="choice-grid">
+
+                                <button class="choice"
+                                    onclick="judgeStatement(this,false)">
+                                    ❌ Benar
+                                </button>
+
+                                <button class="choice"
+                                    onclick="judgeStatement(this,true)">
+                                    ✓ Salah
+                                </button>
+
+                            </div>
+
+                            <div class="feedback" id="statementFeedback"></div>
+
+                        </div>
+
+                        <div class="spacer"></div>
+
+                        <div class="reveal" id="analysisExplain">
+
+                            <strong>Penjelasan</strong>
+
+                            <button class="reveal-btn"
+                                style="float:right;"
+                                onclick="toggleReveal('analysisExplain')">
+                                Buka
+                            </button>
+
+                            <div class="reveal-answer">
+                                Pernyataan tersebut salah.
+                                Nilai 80% adalah <b>peluang empirik</b> dari percobaan
+                                tersebut. Untuk koin seimbang, peluang teoretiknya tetap
+                                <b>50%</b>.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+                <!-- =====================================================
+                     SLIDE 17
+                ====================================================== -->
+                <article class="slide" data-title="Matching Konsep">
+
+                    <div class="container">
+
+                        <span class="kicker">16 · Cocokkan</span>
+
+                        <div class="spacer"></div>
+
+                        <h2>
+                            Cocokkan istilahnya
+                        </h2>
+
+                        <p class="lead">
+                            Pilih definisi yang sesuai untuk setiap istilah.
+                        </p>
+
+                        <div class="spacer"></div>
+
+                        <div class="card">
+
+                            <div class="match-item">
+
+                                <div class="term-card">
+                                    <b>Peluang empirik</b>
+                                </div>
+
+                                <select class="match-select" data-answer="1">
+                                    <option value="">Pilih...</option>
+                                    <option value="1">
+                                        Diperoleh dari hasil percobaan
+                                    </option>
+                                    <option value="2">
+                                        Diperoleh dari kemungkinan matematis
+                                    </option>
+                                    <option value="3">
+                                        Banyak seluruh hasil
+                                    </option>
+                                </select>
+
+                            </div>
+
+                            <div class="match-item">
+
+                                <div class="term-card">
+                                    <b>Peluang teoretik</b>
+                                </div>
+
+                                <select class="match-select" data-answer="2">
+                                    <option value="">Pilih...</option>
+                                    <option value="1">
+                                        Diperoleh dari hasil percobaan
+                                    </option>
+                                    <option value="2">
+                                        Diperoleh dari kemungkinan matematis
+                                    </option>
+                                    <option value="3">
+                                        Banyak seluruh hasil
+                                    </option>
+                                </select>
+
+                            </div>
+
+                            <div class="match-item">
+
+                                <div class="term-card">
+                                    <b>Ruang sampel</b>
+                                </div>
+
+                                <select class="match-select" data-answer="3">
+                                    <option value="">Pilih...</option>
+                                    <option value="1">
+                                        Diperoleh dari hasil percobaan
+                                    </option>
+                                    <option value="2">
+                                        Diperoleh dari kemungkinan matematis
+                                    </option>
+                                    <option value="3">
+                                        Kumpulan seluruh hasil yang mungkin
+                                    </option>
+                                </select>
+
+                            </div>
+
+                            <button class="btn primary" onclick="checkMatching()">
+                                Periksa Jawaban
+                            </button>
+
+                            <div class="feedback" id="matchingFeedback"></div>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+                <!-- =====================================================
+                     SLIDE 18
+                ====================================================== -->
+                <article class="slide" data-title="Tantangan">
+
+                    <div class="container">
+
+                        <span class="kicker">17 · Menantang</span>
+
+                        <div class="spacer"></div>
+
+                        <h2>
+                            Tantangan: bandingkan data
+                        </h2>
+
+                        <p class="lead">
+                            Gunakan data percobaan berikut untuk membuat kesimpulan.
+                        </p>
+
+                        <div class="spacer"></div>
+
+                        <div class="card">
+
+                            <div class="table-wrap">
+
+                                <table>
+
+                                    <thead>
+                                        <tr>
+                                            <th>Jumlah Lemparan</th>
+                                            <th>Gambar</th>
+                                            <th>Peluang Empirik</th>
+                                            <th>Teoretik</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                        <tr>
+                                            <td>10</td>
+                                            <td>7</td>
+                                            <td>70%</td>
+                                            <td>50%</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>50</td>
+                                            <td>28</td>
+                                            <td>56%</td>
+                                            <td>50%</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>100</td>
+                                            <td>48</td>
+                                            <td>48%</td>
+                                            <td>50%</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>500</td>
+                                            <td>247</td>
+                                            <td>49,4%</td>
+                                            <td>50%</td>
+                                        </tr>
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                            <div class="spacer"></div>
+
+                            <div class="reveal" id="challengeReveal">
+
+                                <strong>Pertanyaan:</strong>
+
+                                <p class="muted" style="font-size:12px;margin:7px 0 12px;">
+                                    Pada data tersebut, kapan peluang empirik paling dekat
+                                    dengan peluang teoretik?
+                                </p>
+
+                                <button class="reveal-btn"
+                                    onclick="toggleReveal('challengeReveal')">
+                                    Lihat jawaban
+                                </button>
+
+                                <div class="reveal-answer">
+                                    Pada <b>500 lemparan</b>, peluang empirik adalah 49,4%,
+                                    hanya berbeda 0,6 poin persentase dari nilai teoretik 50%.
+                                    Data ini menunjukkan bahwa dengan semakin banyak
+                                    percobaan, hasil empirik dapat semakin mendekati
+                                    hasil teoretik.
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+                <!-- =====================================================
+                     SLIDE 19
+                ====================================================== -->
+                <article class="slide" data-title="Kuis">
+
+                    <div class="container">
+
+                        <span class="kicker">18 · Kuis Akhir</span>
+
+                        <div class="spacer"></div>
+
+                        <h2>
+                            Uji pemahamanmu
+                        </h2>
+
+                        <p class="lead">
+                            Jawablah semua soal. Setelah selesai, tekan
+                            <b>Periksa Kuis</b>.
+                        </p>
+
+                        <div class="spacer"></div>
+
+                        <div class="card" id="quizContainer">
+
+                            <!-- QUESTION 1 -->
+                            <div class="quiz-question" data-correct="B">
+
+                                <div class="quiz-number">SOAL 1</div>
+
+                                <div class="quiz-text">
+                                    Peluang yang diperoleh berdasarkan hasil percobaan
+                                    disebut...
+                                </div>
+
+                                <div class="quiz-options">
+
+                                    <button class="quiz-option" data-value="A">
+                                        A. Peluang pasti
+                                    </button>
+
+                                    <button class="quiz-option" data-value="B">
+                                        B. Peluang empirik
+                                    </button>
+
+                                    <button class="quiz-option" data-value="C">
+                                        C. Peluang teoretik
+                                    </button>
+
+                                    <button class="quiz-option" data-value="D">
+                                        D. Ruang sampel
+                                    </button>
+
+                                </div>
+
+                                <div class="quiz-explanation">
+                                    Peluang empirik diperoleh dari frekuensi kejadian
+                                    dibandingkan dengan jumlah percobaan.
+                                </div>
+
+                            </div>
+
+                            <!-- QUESTION 2 -->
+                            <div class="quiz-question" data-correct="C">
+
+                                <div class="quiz-number">SOAL 2</div>
+
+                                <div class="quiz-text">
+                                    Sebuah koin dilempar 40 kali dan gambar muncul
+                                    22 kali. Peluang empirik gambar adalah...
+                                </div>
+
+                                <div class="quiz-options">
+
+                                    <button class="quiz-option" data-value="A">
+                                        A. 22%
+                                    </button>
+
+                                    <button class="quiz-option" data-value="B">
+                                        B. 45%
+                                    </button>
+
+                                    <button class="quiz-option" data-value="C">
+                                        C. 55%
+                                    </button>
+
+                                    <button class="quiz-option" data-value="D">
+                                        D. 60%
+                                    </button>
+
+                                </div>
+
+                                <div class="quiz-explanation">
+                                    P = 22/40 = 0,55 = 55%.
+                                </div>
+
+                            </div>
+
+                            <!-- QUESTION 3 -->
+                            <div class="quiz-question" data-correct="A">
+
+                                <div class="quiz-number">SOAL 3</div>
+
+                                <div class="quiz-text">
+                                    Peluang teoretik muncul angka 5 pada dadu biasa adalah...
+                                </div>
+
+                                <div class="quiz-options">
+
+                                    <button class="quiz-option" data-value="A">
+                                        A. 1/6
+                                    </button>
+
+                                    <button class="quiz-option" data-value="B">
+                                        B. 1/5
+                                    </button>
+
+                                    <button class="quiz-option" data-value="C">
+                                        C. 5/6
+                                    </button>
+
+                                    <button class="quiz-option" data-value="D">
+                                        D. 50%
+                                    </button>
+
+                                </div>
+
+                                <div class="quiz-explanation">
+                                    Ada 6 kemungkinan hasil dan hanya satu yang bernilai 5,
+                                    sehingga P(5) = 1/6.
+                                </div>
+
+                            </div>
+
+                            <!-- QUESTION 4 -->
+                            <div class="quiz-question" data-correct="D">
+
+                                <div class="quiz-number">SOAL 4</div>
+
+                                <div class="quiz-text">
+                                    Jika sebuah koin dilempar 10 kali dan gambar muncul
+                                    8 kali, maka 80% merupakan...
+                                </div>
+
+                                <div class="quiz-options">
+
+                                    <button class="quiz-option" data-value="A">
+                                        A. Peluang teoretik
+                                    </button>
+
+                                    <button class="quiz-option" data-value="B">
+                                        B. Peluang pasti
+                                    </button>
+
+                                    <button class="quiz-option" data-value="C">
+                                        C. Ruang sampel
+                                    </button>
+
+                                    <button class="quiz-option" data-value="D">
+                                        D. Peluang empirik
+                                    </button>
+
+                                </div>
+
+                                <div class="quiz-explanation">
+                                    Nilai 80% diperoleh dari hasil percobaan:
+                                    8/10 = 80%, sehingga merupakan peluang empirik.
+                                </div>
+
+                            </div>
+
+                            <!-- QUESTION 5 -->
+                            <div class="quiz-question" data-correct="B">
+
+                                <div class="quiz-number">SOAL 5</div>
+
+                                <div class="quiz-text">
+                                    Mengapa peluang empirik dapat berbeda dengan
+                                    peluang teoretik?
+                                </div>
+
+                                <div class="quiz-options">
+
+                                    <button class="quiz-option" data-value="A">
+                                        A. Rumus peluang selalu salah
+                                    </button>
+
+                                    <button class="quiz-option" data-value="B">
+                                        B. Karena hasil percobaan bersifat acak
+                                    </button>
+
+                                    <button class="quiz-option" data-value="C">
+                                        C. Karena peluang teoretik berubah setiap percobaan
+                                    </button>
+
+                                    <button class="quiz-option" data-value="D">
+                                        D. Karena semua hasil harus sama
+                                    </button>
+
+                                </div>
+
+                                <div class="quiz-explanation">
+                                    Hasil percobaan bersifat acak sehingga frekuensi relatif
+                                    dalam percobaan tertentu dapat berbeda dari nilai teoretik.
+                                </div>
+
+                            </div>
+
+                            <!-- QUESTION 6 -->
+                            <div class="quiz-question" data-correct="C">
+
+                                <div class="quiz-number">SOAL 6</div>
+
+                                <div class="quiz-text">
+                                    Jika jumlah percobaan semakin banyak, peluang empirik
+                                    biasanya...
+                                </div>
+
+                                <div class="quiz-options">
+
+                                    <button class="quiz-option" data-value="A">
+                                        A. Selalu menjadi 0
+                                    </button>
+
+                                    <button class="quiz-option" data-value="B">
+                                        B. Selalu menjadi 100%
+                                    </button>
+
+                                    <button class="quiz-option" data-value="C">
+                                        C. Cenderung mendekati peluang teoretik
+                                    </button>
+
+                                    <button class="quiz-option" data-value="D">
+                                        D. Tidak dapat dihitung
+                                    </button>
+
+                                </div>
+
+                                <div class="quiz-explanation">
+                                    Dengan semakin banyak percobaan, frekuensi relatif
+                                    cenderung mendekati peluang teoretik.
+                                </div>
+
+                            </div>
+
+                            <div style="margin-top:10px;text-align:center;">
+
+                                <button class="btn primary"
+                                    onclick="checkQuiz()">
+                                    ✓ Periksa Kuis
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+                <!-- =====================================================
+                     SLIDE 20
+                ====================================================== -->
+                <article class="slide" data-title="Hasil Kuis">
+
+                    <div class="container">
+
+                        <span class="kicker">19 · Hasil</span>
+
+                        <div class="spacer"></div>
+
+                        <div class="score-box">
+
+                            <div class="muted" style="font-size:11px;">
+                                SKOR KUIS
+                            </div>
+
+                            <div class="score-number" id="scoreNumber">
+                                —
+                            </div>
+
+                            <div class="score-message" id="scoreMessage">
+                                Kerjakan kuis terlebih dahulu.
+                            </div>
+
+                            <div style="margin-top:20px;">
+
+                                <button class="btn primary"
+                                    onclick="repeatQuiz()">
+                                    ↻ Ulangi Kuis
+                                </button>
+
+                                <button class="btn"
+                                    onclick="nextSlide()">
+                                    Lanjut
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        <div class="spacer"></div>
+
+                        <div class="grid grid-3">
+
+                            <div class="card center">
+                                <h3>≥ 85</h3>
+                                <p>Sangat baik. Pemahamanmu sudah kuat.</p>
+                            </div>
+
+                            <div class="card center">
+                                <h3>70–84</h3>
+                                <p>Baik. Tinjau kembali bagian yang masih ragu.</p>
+                            </div>
+
+                            <div class="card center">
+                                <h3>&lt; 70</h3>
+                                <p>Pelajari kembali konsep dan contoh.</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+                <!-- =====================================================
+                     SLIDE 21
+                ====================================================== -->
+                <article class="slide" data-title="Refleksi">
+
+                    <div class="container">
+
+                        <span class="kicker">20 · Refleksi</span>
+
+                        <div class="spacer"></div>
+
+                        <h2>
+                            Berhenti sejenak & refleksi
+                        </h2>
+
+                        <p class="lead">
+                            Tuliskan pemahamanmu setelah mempelajari materi ini.
+                        </p>
+
+                        <div class="spacer"></div>
+
+                        <div class="grid grid-2">
+
+                            <div class="reflection-card">
+
+                                <label>
+                                    1. Apa perbedaan utama peluang empirik
+                                    dan peluang teoretik?
+                                </label>
+
+                                <textarea
+                                    id="reflection1"
+                                    placeholder="Tuliskan dengan bahasamu sendiri..."></textarea>
+
+                            </div>
+
+                            <div class="reflection-card">
+
+                                <label>
+                                    2. Mengapa hasil empirik tidak selalu sama
+                                    dengan hasil teoretik?
+                                </label>
+
+                                <textarea
+                                    id="reflection2"
+                                    placeholder="Tuliskan pemikiranmu..."></textarea>
+
+                            </div>
+
+                            <div class="reflection-card">
+
+                                <label>
+                                    3. Apa yang terjadi jika jumlah percobaan
+                                    diperbanyak?
+                                </label>
+
+                                <textarea
+                                    id="reflection3"
+                                    placeholder="Tuliskan kesimpulanmu..."></textarea>
+
+                            </div>
+
+                            <div class="reflection-card">
+
+                                <label>
+                                    4. Bagian mana yang paling kamu pahami?
+                                </label>
+
+                                <textarea
+                                    id="reflection4"
+                                    placeholder="Ceritakan singkat..."></textarea>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+                <!-- =====================================================
+                     SLIDE 22
+                ====================================================== -->
+                <article class="slide" data-title="Rangkuman">
+
+                    <div class="container">
+
+                        <span class="kicker">21 · Rangkuman</span>
+
+                        <div class="spacer"></div>
+
+                        <h2>
+                            Inti pembelajaran
+                        </h2>
+
+                        <p class="lead">
+                            Lima hal penting yang perlu kamu ingat.
+                        </p>
+
+                        <div class="spacer"></div>
+
+                        <div class="grid grid-2">
+
+                            <div class="card">
+
+                                <div class="card-title">
+                                    <div class="example-number">1</div>
+                                    <h3>Peluang</h3>
+                                </div>
+
+                                <p>
+                                    Menyatakan seberapa besar kemungkinan suatu kejadian
+                                    terjadi dan nilainya berada dari 0 sampai 1.
+                                </p>
+
+                            </div>
+
+                            <div class="card">
+
+                                <div class="card-title">
+                                    <div class="example-number">2</div>
+                                    <h3>Empirik</h3>
+                                </div>
+
+                                <p>
+                                    Diperoleh dari hasil percobaan nyata:
+                                    frekuensi kejadian dibagi jumlah percobaan.
+                                </p>
+
+                            </div>
+
+                            <div class="card">
+
+                                <div class="card-title">
+                                    <div class="example-number">3</div>
+                                    <h3>Teoretik</h3>
+                                </div>
+
+                                <p>
+                                    Diperoleh dari perhitungan matematis:
+                                    banyak hasil yang diinginkan dibagi seluruh
+                                    hasil yang mungkin.
+                                </p>
+
+                            </div>
+
+                            <div class="card">
+
+                                <div class="card-title">
+                                    <div class="example-number">4</div>
+                                    <h3>Perbandingan</h3>
+                                </div>
+
+                                <p>
+                                    Hasil empirik dapat berbeda dari hasil teoretik
+                                    karena percobaan memiliki unsur keacakan.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="spacer"></div>
+
+                        <div class="conclusion">
+
+                            <strong>5. Ide utama:</strong>
+
+                            <p style="margin-top:8px;color:#b8c3d9;font-size:12px;line-height:1.8;">
+                                Semakin banyak percobaan dilakukan, peluang empirik
+                                pada umumnya semakin mendekati peluang teoretik,
+                                meskipun tidak harus sama persis.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+                <!-- =====================================================
+                     SLIDE 23
+                ====================================================== -->
+                <article class="slide" data-title="Penutup">
+
+                    <div class="container hero">
+
+                        <div class="hero-content">
+
+                            <div class="hero-badge">
+                                ✓ PEMBELAJARAN SELESAI
+                            </div>
+
+                            <h1>
+                                Kamu sudah belajar<br>
+                                <span class="gradient-text">Teori Peluang!</span>
+                            </h1>
+
+                            <p class="lead">
+                                Sekarang kamu dapat membedakan peluang empirik
+                                dan teoretik serta membandingkan hasil percobaan
+                                dengan perhitungan matematis.
+                            </p>
+
+                            <div class="spacer"></div>
+
+                            <div class="conclusion" style="max-width:700px;margin:auto;text-align:left;">
+
+                                <strong>Pesan untuk diingat:</strong>
+
+                                <p style="margin-top:8px;color:#b6c2d8;font-size:12px;line-height:1.8;">
+                                    Jangan takut jika hasil percobaan tidak langsung sama
+                                    dengan hasil teoretik. Dalam peluang, keacakan adalah
+                                    bagian dari proses. Lakukan lebih banyak percobaan,
+                                    catat datanya, lalu bandingkan dengan perhitungan.
+                                </p>
+
+                            </div>
+
+                            <div style="margin-top:25px;">
+
+                                <button class="btn primary"
+                                    onclick="goHome()">
+                                    ↻ Mulai Lagi
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+        </section>
+
+        <!-- NAVIGATION -->
+        <footer class="slide-footer">
+
+            <button
+                class="nav-control"
+                id="prevBtn"
+                onclick="prevSlide()">
+                ← Sebelumnya
+            </button>
+
+            <div class="slide-indicator" id="slideIndicator">
+                1 / 23
+            </div>
+
+            <button
+                class="nav-control primary"
+                id="nextBtn"
+                onclick="nextSlide()">
+                Berikutnya →
+            </button>
+
+        </footer>
+
+    </main>
+
+</div>
+
+<script>
+/* ============================================================
+   DATA DASAR
+   Materi dan submateri hanya ditentukan di satu tempat.
+============================================================ */
+
+const LEARNING_INFO = {
+    materi: "BAB 6 — TEORI PELUANG",
+    submateri: "Perbandingan Peluang Empirik & Teoretik",
+    fokus: "Membandingkan hasil percobaan dengan perhitungan"
+};
+
+
+/* ============================================================
+   NAVIGASI SLIDE
+============================================================ */
+
+const slides = Array.from(document.querySelectorAll(".slide"));
+const totalSlides = slides.length;
+
+let currentSlide = 0;
+
+const slideNav = document.getElementById("slideNav");
+const progressBar = document.getElementById("progressBar");
+const progressText = document.getElementById("progressText");
+const slideIndicator = document.getElementById("slideIndicator");
+const sectionName = document.getElementById("sectionName");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+
+function buildNavigation(){
+
+    slideNav.innerHTML = "";
+
+    slides.forEach((slide,index)=>{
+
+        const button = document.createElement("button");
+
+        button.className = "nav-item";
+
+        button.innerHTML = `
+            <span class="nav-num">${String(index + 1).padStart(2,"0")}</span>
+            <span>${slide.dataset.title || "Slide " + (index + 1)}</span>
+        `;
+
+        button.addEventListener("click",()=>{
+            showSlide(index);
+            closeSidebarMobile();
+        });
+
+        slideNav.appendChild(button);
+    });
+}
+
+function showSlide(index){
+
+    if(index < 0) index = 0;
+    if(index >= totalSlides) index = totalSlides - 1;
+
+    slides.forEach((slide,i)=>{
+        slide.classList.toggle("active",i === index);
+    });
+
+    currentSlide = index;
+
+    const percentage =
+        ((currentSlide + 1) / totalSlides) * 100;
+
+    progressBar.style.width = percentage + "%";
+
+    progressText.textContent =
+        `${currentSlide + 1} / ${totalSlides}`;
+
+    slideIndicator.textContent =
+        `${currentSlide + 1} / ${totalSlides}`;
+
+    sectionName.textContent =
+        slides[currentSlide].dataset.title || "Pembelajaran";
+
+    prevBtn.disabled = currentSlide === 0;
+
+    nextBtn.textContent =
+        currentSlide === totalSlides - 1
+            ? "Selesai ✓"
+            : "Berikutnya →";
+
+    const navItems =
+        document.querySelectorAll(".nav-item");
+
+    navItems.forEach((item,i)=>{
+        item.classList.toggle("active",i === currentSlide);
+    });
+
+    const activeNav = navItems[currentSlide];
+
+    if(activeNav){
+        activeNav.scrollIntoView({
+            block:"nearest",
+            behavior:"smooth"
+        });
+    }
+
+    const activeSlide = slides[currentSlide];
+
+    if(activeSlide){
+        activeSlide.scrollTop = 0;
+    }
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+}
+
+function nextSlide(){
+
+    if(currentSlide < totalSlides - 1){
+        showSlide(currentSlide + 1);
+    }else{
+        showSlide(0);
+    }
+}
+
+function prevSlide(){
+
+    if(currentSlide > 0){
+        showSlide(currentSlide - 1);
+    }
+}
+
+function goHome(){
+    showSlide(0);
+}
+
+
+/* ============================================================
+   KEYBOARD NAVIGATION
+============================================================ */
+
+document.addEventListener("keydown",(event)=>{
+
+    const tag =
+        document.activeElement.tagName.toLowerCase();
+
+    if(tag === "input" ||
+       tag === "textarea" ||
+       tag === "select"){
+        return;
+    }
+
+    if(event.key === "ArrowRight"){
+        event.preventDefault();
+        nextSlide();
+    }
+
+    if(event.key === "ArrowLeft"){
+        event.preventDefault();
+        prevSlide();
+    }
+
+    if(event.key === "Home"){
+        event.preventDefault();
+        goHome();
+    }
+});
+
+
+/* ============================================================
+   SIDEBAR
+============================================================ */
+
+function toggleSidebar(){
+
+    const sidebar =
+        document.getElementById("sidebar");
+
+    const overlay =
+        document.getElementById("overlay");
+
+    sidebar.classList.toggle("open");
+    overlay.classList.toggle("show");
+}
+
+function closeSidebarMobile(){
+
+    const sidebar =
+        document.getElementById("sidebar");
+
+    const overlay =
+        document.getElementById("overlay");
+
+    sidebar.classList.remove("open");
+    overlay.classList.remove("show");
+}
+
+
+/* ============================================================
+   FULLSCREEN
+============================================================ */
+
+function toggleFullscreen(){
+
+    if(!document.fullscreenElement){
+
+        document.documentElement
+            .requestFullscreen()
+            .catch(()=>{});
+
+    }else{
+
+        document.exitFullscreen()
+            .catch(()=>{});
+
+    }
+}
+
+
+/* ============================================================
+   REVEAL
+============================================================ */
+
+function toggleReveal(id){
+
+    const element =
+        document.getElementById(id);
+
+    if(!element) return;
+
+    element.classList.toggle("open");
+
+    const button =
+        element.querySelector(".reveal-btn");
+
+    if(button){
+
+        button.textContent =
+            element.classList.contains("open")
+                ? "Tutup"
+                : "Lihat jawaban";
+
+    }
+}
+
+
+/* ============================================================
+   SIMULASI KOIN
+============================================================ */
+
+let heads = 0;
+let tails = 0;
+
+function flipCoin(times = 1){
+
+    const coin =
+        document.getElementById("coin");
+
+    coin.classList.remove("flip");
+
+    void coin.offsetWidth;
+
+    coin.classList.add("flip");
+
+    let lastResult = "";
+
+    for(let i = 0;i < times;i++){
+
+        const result =
+            Math.random() < .5
+                ? "Gambar"
+                : "Angka";
+
+        if(result === "Gambar"){
+            heads++;
+        }else{
+            tails++;
+        }
+
+        lastResult = result;
+    }
+
+    setTimeout(()=>{
+
+        coin.textContent =
+            lastResult === "Gambar"
+                ? "GAMBAR"
+                : "ANGKA";
+
+        updateCoinStats();
+
+    },250);
+}
+
+function updateCoinStats(){
+
+    const total =
+        heads + tails;
+
+    document.getElementById("headsCount")
+        .textContent = heads;
+
+    document.getElementById("tailsCount")
+        .textContent = tails;
+
+    const percentage =
+        total === 0
+            ? 0
+            : (heads / total) * 100;
+
+    document.getElementById("empCoin")
+        .textContent = percentage.toFixed(1) + "%";
+
+    document.getElementById("coinResult")
+        .textContent =
+        total === 0
+            ? "Belum ada percobaan."
+            : `Total ${total} percobaan. Gambar muncul ${heads} kali dan angka ${tails} kali.`;
+}
+
+function resetCoin(){
+
+    heads = 0;
+    tails = 0;
+
+    document.getElementById("coin")
+        .textContent = "?";
+
+    updateCoinStats();
+}
+
+
+/* ============================================================
+   LATIHAN INPUT
+============================================================ */
+
+function checkEmpirik(){
+
+    const input =
+        document.getElementById("inputEmpirik");
+
+    const feedback =
+        document.getElementById("feedbackEmpirik");
+
+    const value =
+        Number(input.value);
+
+    if(input.value === ""){
+
+        feedback.className = "feedback bad";
+
+        feedback.textContent =
+            "Masukkan jawaban terlebih dahulu.";
+
+        return;
+    }
+
+    const correct = 44;
+
+    if(Math.abs(value - correct) < 0.01){
+
+        feedback.className = "feedback good";
+
+        feedback.textContent =
+            "✓ Benar! 22/50 = 44%.";
+
+    }else{
+
+        feedback.className = "feedback bad";
+
+        feedback.textContent =
+            "✗ Belum tepat. Coba hitung 22 ÷ 50 × 100%.";
+
+    }
+}
+
+function checkTeoretik(){
+
+    const input =
+        document.getElementById("inputTeoretik");
+
+    const feedback =
+        document.getElementById("feedbackTeoretik");
+
+    const value =
+        Number(input.value);
+
+    if(input.value === ""){
+
+        feedback.className = "feedback bad";
+
+        feedback.textContent =
+            "Masukkan jawaban terlebih dahulu.";
+
+        return;
+    }
+
+    if(Math.abs(value - 50) < 0.01){
+
+        feedback.className = "feedback good";
+
+        feedback.textContent =
+            "✓ Benar! Bilangan genap pada dadu adalah 2, 4, dan 6: 3/6 = 50%.";
+
+    }else{
+
+        feedback.className = "feedback bad";
+
+        feedback.textContent =
+            "✗ Belum tepat. Ada 3 bilangan genap dari 6 kemungkinan.";
+
+    }
+}
+
+
+/* ============================================================
+   BENAR / SALAH
+============================================================ */
+
+function judgeStatement(button,isCorrect){
+
+    const parent =
+        button.closest(".card");
+
+    const buttons =
+        parent.querySelectorAll(".choice");
+
+    buttons.forEach(btn=>{
+        btn.classList.remove("correct","wrong");
+        btn.disabled = true;
+    });
+
+    const feedback =
+        document.getElementById("statementFeedback");
+
+    if(isCorrect){
+
+        button.classList.add("correct");
+
+        feedback.className = "feedback good";
+
+        feedback.textContent =
+            "✓ Benar! Pernyataan tersebut memang salah karena 80% adalah peluang empirik, bukan teoretik.";
+
+    }else{
+
+        button.classList.add("wrong");
+
+        feedback.className = "feedback bad";
+
+        feedback.textContent =
+            "✗ Pilihanmu belum tepat. Ingat, peluang teoretik koin seimbang tetap 50%.";
+
+    }
+}
+
+
+/* ============================================================
+   MATCHING
+============================================================ */
+
+function checkMatching(){
+
+    const selects =
+        document.querySelectorAll(".match-select");
+
+    let score = 0;
+
+    selects.forEach(select=>{
+
+        if(select.value === select.dataset.answer){
+            score++;
+            select.style.borderColor =
+                "rgba(66,211,146,.55)";
+        }else{
+            select.style.borderColor =
+                "rgba(255,104,116,.5)";
+        }
+
+    });
+
+    const feedback =
+        document.getElementById("matchingFeedback");
+
+    if(score === selects.length){
+
+        feedback.className = "feedback good";
+
+        feedback.textContent =
+            `✓ Semua benar! Skor ${score}/${selects.length}.`;
+
+    }else{
+
+        feedback.className = "feedback bad";
+
+        feedback.textContent =
+            `Kamu mendapat ${score}/${selects.length}. Periksa kembali pilihan yang salah.`;
+
+    }
+}
+
+
+/* ============================================================
+   QUIZ
+============================================================ */
+
+let quizScore = null;
+let quizAnswered = false;
+
+document.querySelectorAll(".quiz-option")
+.forEach(option=>{
+
+    option.addEventListener("click",()=>{
+
+        const question =
+            option.closest(".quiz-question");
+
+        if(question.classList.contains("answered")){
+            return;
+        }
+
+        const options =
+            question.querySelectorAll(".quiz-option");
+
+        options.forEach(item=>{
+            item.classList.remove("selected");
+        });
+
+        option.classList.add("selected");
+
+    });
+
+});
+
+function checkQuiz(){
+
+    const questions =
+        document.querySelectorAll(".quiz-question");
+
+    let answered = 0;
+    let correct = 0;
+
+    questions.forEach(question=>{
+
+        const selected =
+            question.querySelector(".quiz-option.selected");
+
+        if(!selected){
+            return;
+        }
+
+        answered++;
+
+        const correctValue =
+            question.dataset.correct;
+
+        question.classList.add("answered");
+
+        const options =
+            question.querySelectorAll(".quiz-option");
+
+        options.forEach(option=>{
+
+            option.disabled = true;
+
+            if(option.dataset.value === correctValue){
+                option.classList.add("correct");
+            }
+
+        });
+
+        if(selected.dataset.value === correctValue){
+
+            correct++;
+
+        }else{
+
+            selected.classList.add("incorrect");
+
+        }
+
+    });
+
+    if(answered < questions.length){
+
+        alert(
+            `Masih ada ${questions.length - answered} soal yang belum dijawab.`
+        );
+
+        return;
+    }
+
+    quizScore =
+        Math.round((correct / questions.length) * 100);
+
+    quizAnswered = true;
+
+    updateQuizResult();
+
+    showSlide(19);
+}
+
+function updateQuizResult(){
+
+    const number =
+        document.getElementById("scoreNumber");
+
+    const message =
+        document.getElementById("scoreMessage");
+
+    if(!quizAnswered){
+
+        number.textContent = "—";
+
+        message.textContent =
+            "Kerjakan kuis terlebih dahulu.";
+
+        return;
+    }
+
+    number.textContent =
+        quizScore;
+
+    if(quizScore >= 85){
+
+        message.textContent =
+            "Sangat baik! Pemahamanmu tentang peluang sudah kuat.";
+
+    }else if(quizScore >= 70){
+
+        message.textContent =
+            "Baik! Tinjau kembali beberapa konsep untuk semakin mantap.";
+
+    }else{
+
+        message.textContent =
+            "Tetap semangat! Pelajari kembali konsep empirik dan teoretik.";
+
+    }
+}
+
+function repeatQuiz(){
+
+    const questions =
+        document.querySelectorAll(".quiz-question");
+
+    questions.forEach(question=>{
+
+        question.classList.remove("answered");
+
+        question.querySelectorAll(".quiz-option")
+            .forEach(option=>{
+
+                option.disabled = false;
+
+                option.classList.remove(
+                    "selected",
+                    "correct",
+                    "incorrect"
+                );
+
+            });
+
+    });
+
+    quizScore = null;
+    quizAnswered = false;
+
+    updateQuizResult();
+
+    showSlide(18);
+}
+
+
+/* ============================================================
+   RESPONSIVE / RESIZE
+============================================================ */
+
+window.addEventListener("resize",()=>{
+
+    if(window.innerWidth > 900){
+
+        document.getElementById("sidebar")
+            .classList.remove("open");
+
+        document.getElementById("overlay")
+            .classList.remove("show");
+
+    }
+
+});
+
+
+/* ============================================================
+   INISIALISASI
+============================================================ */
+
+function initialize(){
+
+    document.getElementById("sideChapter")
+        .textContent = LEARNING_INFO.materi;
+
+    document.getElementById("sideSubchapter")
+        .textContent =
+            LEARNING_INFO.submateri;
+
+    buildNavigation();
+
+    showSlide(0);
+
+    updateCoinStats();
+
+    updateQuizResult();
+}
+
+initialize();
+
+</script>
+
+</body>
+</html>

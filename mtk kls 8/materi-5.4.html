@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>5.4 Persamaan Garis dari Grafik</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark;--bg:#0a0f26;--card:#0f1633;--ink:#f2f5ff;--mut:#8d9bd0;--line:#171f45;--bd:#2b3566;--acc:#ff9a3c;--accs:rgba(255,154,60,.14);--pop:#7dd3fc;--ok:#4ade80;--bad:#f87171}
+*,*:before,*:after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font:17px/1.6 "Inter",system-ui,sans-serif;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:28px 28px;background-attachment:fixed}
+h1,h2,h3{font-family:"Space Grotesk",system-ui,sans-serif;line-height:1.15;margin:0 0 .5em}
+h1{font-size:clamp(2rem,6vw,3.4rem);font-weight:800}h2{font-size:clamp(1.5rem,4vw,2.1rem);font-weight:800}h3{font-size:1.1rem}
+#bar{position:sticky;top:env(safe-area-inset-top,0px);height:6px;background:var(--line);z-index:5}
+#bar i{display:block;height:100%;width:0;background:var(--acc);transition:width .3s}
+main{max-width:860px;margin:0 auto;padding:20px 16px 110px}
+.slide{display:none}.slide.on{display:block}
+.card{background:var(--card);border:2px solid var(--bd);border-radius:14px;padding:18px;margin:14px 0}
+.eq{font:800 clamp(1.6rem,6vw,2.6rem)/1.2 "Space Grotesk",sans-serif;text-align:center;margin:8px 0}
+.row{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}.row>*{flex:1 1 280px;min-width:0}
+button,.btn{font:700 1rem "Inter",sans-serif;color:var(--ink);background:var(--card);border:2px solid var(--bd);border-radius:10px;padding:9px 16px;cursor:pointer;min-height:44px}
+button:hover{background:var(--accs)}button:focus-visible,input:focus-visible{outline:3px solid var(--pop);outline-offset:2px}
+button.pri{background:var(--acc);color:#0a0f26;border-color:var(--acc)}
+.chip{font:800 2rem "Space Grotesk",sans-serif;padding:2px 12px;border-radius:10px;border:2px dashed var(--mut);background:transparent;min-height:0}
+.chip.s{background:var(--accs);border-style:solid;border-color:var(--acc)}
+input[type=range]{width:100%;accent-color:var(--acc)}
+input[type=number]{width:70px;font:700 1rem inherit;padding:6px;border:2px solid var(--bd);border-radius:8px;background:var(--card);color:var(--ink)}
+textarea{width:100%;min-height:80px;font:inherit;padding:10px;border:2px solid var(--bd);border-radius:10px;background:var(--card);color:var(--ink)}
+.note{background:var(--accs);border-left:6px solid var(--acc);padding:10px 14px;border-radius:8px;margin:10px 0}
+.ok{color:var(--ok);font-weight:700}.no{color:var(--bad);font-weight:700}
+svg.pl{width:100%;max-width:340px;height:auto;display:block;margin:auto;background:var(--card);border:2px solid var(--bd);border-radius:8px;touch-action:manipulation}
+.g{stroke:var(--line);stroke-width:1}.ax{stroke:var(--ink);stroke-width:2}.t{fill:var(--mut);font-size:10px}
+.ln{stroke:var(--acc);stroke-width:3}.pt{fill:var(--pop);stroke:var(--ink);stroke-width:2}
+table{border-collapse:collapse;margin:8px auto}td,th{border:2px solid var(--bd);padding:6px 12px;text-align:center}th{background:var(--accs)}
+.opt{display:block;width:100%;text-align:left;margin:6px 0}.opt.r{background:var(--ok);color:#0a0f26;border-color:var(--ok)}.opt.w{background:var(--bad);color:#0a0f26;border-color:var(--bad)}
+.cl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}.cl b{flex:1 1 150px;font-size:1.2rem}
+nav{position:fixed;left:0;right:0;bottom:0;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:var(--card);border-top:2px solid var(--bd);display:flex;justify-content:space-between;align-items:center;gap:10px;z-index:6}
+#ct{font:500 .95rem "JetBrains Mono",monospace;color:var(--mut)}
+.wrap{overflow-x:auto}nav button:disabled{opacity:.35;cursor:default}
+.l2{stroke:var(--pop);stroke-width:3}.pt{fill:var(--ink)}details summary{cursor:pointer;font-weight:700}details p{margin:10px 0 0}ol,ul{padding-left:22px}
+.lb{fill:var(--ink);font-size:11px;font-weight:700}
+</style>
+</head>
+<body>
+<div id="bar"><i></i></div>
+<main>
+<section class="slide on">
+<h1>Persamaan Garis dari Grafik</h1>
+<p>Bab 5 · 5.4 · Fase D</p>
+<div class="note"><b>Capaian Pembelajaran:</b> Peserta didik mampu membaca grafik garis lurus untuk menentukan titik, titik potong sumbu, gradien, dan persamaan garisnya.</div>
+<div class="card"><h3>Tujuan belajar</h3><ul><li>Membaca titik-titik yang dilalui garis.</li><li>Menentukan titik potong sumbu-x dan sumbu-y.</li><li>Menentukan gradien dari grafik.</li><li>Menyusun persamaan garis dari grafik atau dari dua titik.</li></ul></div>
+<div class="note"><b>Pertanyaan pemantik:</b> Jika kamu hanya diberi gambar sebuah garis, bisakah kamu menebak rumusnya? Informasi apa saja yang perlu kamu baca?</div>
+</section>
+
+<section class="slide">
+<h2>Titik-titik yang dilalui garis</h2>
+<p>Setiap titik pada garis memenuhi persamaannya. Grafik di bawah adalah garis <b>y = 2x − 1</b>. Geser x untuk membaca titiknya.</p>
+<div class="row"><svg class="pl" id="p2" viewBox="0 0 308 308" role="img" aria-label="Garis y = 2x − 1"></svg>
+<div class="card"><label>x = <b id="x2"></b><input type="range" id="r2" min="-3" max="4" value="1" aria-label="Nilai x"></label><p id="t2" class="eq" style="font-size:1.3rem"></p>
+<h3>Uji sebuah titik</h3><p>(<input type="number" id="ia" value="2" aria-label="x"> , <input type="number" id="ib" value="3" aria-label="y">)</p><p><button class="pri" id="kc">Apakah dilalui garis?</button></p><p id="fc"></p></div></div>
+</section>
+
+<section class="slide">
+<h2>Titik potong dengan sumbu</h2>
+<p>Titik potong sumbu-y: garis memotong sumbu-y, jadi x = 0, titiknya (0, c). Titik potong sumbu-x: garis memotong sumbu-x, jadi y = 0, titiknya (−c/m, 0).</p>
+<div class="row"><svg class="pl" id="p3" viewBox="0 0 308 308" role="img" aria-label="Titik potong sumbu"></svg>
+<div class="card"><div class="eq" style="font-size:1.3rem" id="e3"></div><label>m = <b id="m3"></b><input type="range" id="s3m" min="-3" max="3" step="0.5" value="1" aria-label="m"></label><label>c = <b id="c3"></b><input type="range" id="s3c" min="-5" max="5" value="-3" aria-label="c"></label><div class="note" id="n3"></div></div></div>
+</section>
+
+<section class="slide">
+<h2>Gradien dari grafik</h2>
+<p>Pilih dua titik A dan B pada garis, lalu hitung gradien dengan rumus:</p>
+<div class="eq">m = (y₂ − y₁) / (x₂ − x₁)</div>
+<div class="row"><svg class="pl" id="p4" viewBox="0 0 308 308" role="img" aria-label="Dua titik pada garis"></svg>
+<div class="card"><div class="eq" style="font-size:1.3rem" id="e4"></div>
+<label>Garis: m = <b id="m4"></b><input type="range" id="s4m" min="-1.5" max="1.5" step="0.5" value="1" aria-label="m"></label>
+<label>c = <b id="c4"></b><input type="range" id="s4c" min="-1" max="1" value="0" aria-label="c"></label>
+<label>x titik A = <b id="a4"></b><input type="range" id="s4a" min="-3" max="0" value="-2" aria-label="x A"></label>
+<label>x titik B = <b id="b4"></b><input type="range" id="s4b" min="1" max="3" value="2" aria-label="x B"></label>
+<div class="note" id="n4"></div></div></div>
+<p>Di mana pun A dan B dipilih, hasilnya selalu sama dengan m.</p>
+</section>
+
+<section class="slide">
+<h2>Persamaan dari grafik</h2>
+<div class="card"><h3>Langkah</h3><ol><li>Baca titik potong sumbu-y, itu nilai c.</li><li>Pilih satu titik lain, hitung gradien m = Δy/Δx dari dua titik.</li><li>Tulis y = mx + c.</li></ol></div>
+<details class="card"><summary>Contoh: garis melalui (0, −1) dan (2, 3)</summary><p>Titik potong sumbu-y di (0, −1), jadi c = −1.<br>m = (3 − (−1)) / (2 − 0) = 4/2 = 2.<br><span class="ok">Persamaannya y = 2x − 1.</span></p></details>
+<div class="card"><h3>Baca grafik, tulis persamaannya</h3><svg class="pl" id="p5" viewBox="0 0 308 308" role="img" aria-label="Grafik garis"></svg>
+<p>y = <input type="number" id="m5" aria-label="m"> x + <input type="number" id="c5" aria-label="c"></p>
+<p><button class="pri" id="k5">Periksa</button> <button id="h5">Petunjuk</button> <button id="n5">Grafik baru</button></p><p id="f5"></p></div>
+</section>
+
+<section class="slide">
+<h2>Persamaan dari dua titik</h2>
+<p>Jika garis melalui A(x₁, y₁) dan B(x₂, y₂), hitung dulu gradiennya, lalu pakai rumus:</p>
+<div class="eq" style="font-size:1.4rem">y − y₁ = m(x − x₁)</div>
+<details class="card"><summary>Contoh: garis melalui (1, 2) dan (3, 8)</summary><p>m = (8 − 2) / (3 − 1) = 6/2 = 3.<br>y − 2 = 3(x − 1), sehingga y = 3x − 3 + 2 = 3x − 1.<br><span class="ok">Persamaannya y = 3x − 1.</span></p></details>
+<div class="card"><h3>Coba sendiri</h3><p id="q6"></p><p>y = <input type="number" id="m6" aria-label="m"> x + <input type="number" id="c6" aria-label="c"></p>
+<p><button class="pri" id="k6">Periksa</button> <button id="n6">Soal baru</button></p><p id="f6"></p><svg class="pl" id="p6" viewBox="0 0 308 308" role="img" aria-label="Garis melalui dua titik"></svg></div>
+</section>
+
+<section class="slide"><h2>Latihan membaca grafik</h2><div class="card" id="qz"></div></section>
+
+<section class="slide">
+<h2>Refleksi dan rangkuman</h2>
+<div class="card"><h3>Rangkuman</h3><ul><li>Titik pada garis memenuhi persamaannya.</li><li>Titik potong sumbu-y: (0, c). Titik potong sumbu-x: (−c/m, 0).</li><li>Gradien m = (y₂ − y₁)/(x₂ − x₁).</li><li>Dari grafik: baca c, hitung m, tulis y = mx + c.</li><li>Dari dua titik: hitung m, lalu y − y₁ = m(x − x₁).</li></ul></div>
+<div class="card"><h3>Centang yang sudah kamu pahami</h3>
+<label><input type="checkbox" class="rf"> Saya bisa membaca titik yang dilalui garis.</label><br>
+<label><input type="checkbox" class="rf"> Saya bisa menentukan titik potong sumbu.</label><br>
+<label><input type="checkbox" class="rf"> Saya bisa menghitung gradien dari grafik.</label><br>
+<label><input type="checkbox" class="rf"> Saya bisa menulis persamaan dari grafik.</label><br>
+<label><input type="checkbox" class="rf"> Saya bisa menulis persamaan dari dua titik.</label>
+<p id="rfo" class="ok"></p><h3>Satu hal yang masih membingungkan</h3><textarea aria-label="Refleksi"></textarea></div>
+</section>
+</main>
+<nav><button id="pv">Sebelumnya</button><span id="ct"></span><button id="nxt" class="pri">Lanjut</button></nav>
+<script>
+var $=function(s){return document.querySelector(s)},S=document.querySelectorAll('.slide'),cur=0;
+function fm(n){return String(n).replace('-','−')}
+function f(n){return fm(+(+n).toFixed(2))}
+function eqs(m,c){if(m==0)return 'y = '+fm(c);var s='y = '+(m==1?'':m==-1?'−':fm(m))+'x';return s+(c>0?' + '+c:c<0?' − '+(-c):'')}
+function ri(a,b){return a+Math.floor(Math.random()*(b-a+1))}
+function nz(a,b){var v;do{v=ri(a,b)}while(!v);return v}
+function show(i){cur=Math.max(0,Math.min(S.length-1,i));S.forEach(function(s,j){s.classList.toggle('on',j==cur)});$('#bar i').style.width=((cur+1)/S.length*100)+'%';$('#ct').textContent=(cur+1)+' / '+S.length;$('#pv').disabled=cur==0;$('#nxt').disabled=cur==S.length-1;window.scrollTo(0,0)}
+$('#pv').onclick=function(){show(cur-1)};$('#nxt').onclick=function(){show(cur+1)};
+document.onkeydown=function(e){if(/INPUT|TEXTAREA/.test(e.target.tagName))return;if(e.key=='ArrowRight')show(cur+1);if(e.key=='ArrowLeft')show(cur-1)};
+var U=22,O=154,R=7;
+function plane(el,L,pts){var s='',i,p;for(i=-R;i<=R;i++){p=O+i*U;s+='<line x1="'+p+'" y1="0" x2="'+p+'" y2="308" class="g"/><line x1="0" y1="'+p+'" x2="308" y2="'+p+'" class="g"/>';if(i&&i%2==0)s+='<text x="'+p+'" y="'+(O+13)+'" class="t" text-anchor="middle">'+fm(i)+'</text><text x="'+(O-5)+'" y="'+(p+4)+'" class="t" text-anchor="end">'+fm(-i)+'</text>'}
+s+='<line x1="0" y1="'+O+'" x2="308" y2="'+O+'" class="ax"/><line x1="'+O+'" y1="0" x2="'+O+'" y2="308" class="ax"/>';
+L.forEach(function(l,k){s+='<line x1="0" y1="'+(O-(l[0]*-R+l[1])*U)+'" x2="308" y2="'+(O-(l[0]*R+l[1])*U)+'" class="'+(k?'l2':'ln')+'"/>'});
+(pts||[]).forEach(function(q){var X=O+q[0]*U,Y=O-q[1]*U;s+='<circle cx="'+X+'" cy="'+Y+'" r="6" class="pt"/>';if(q[2])s+='<text x="'+(X+9)+'" y="'+(Y-8)+'" class="lb">'+q[2]+'</text>'})
+el.innerHTML=s}
+function g(id){return +$(id).value}
+function P(x,y){return '('+f(x)+', '+f(y)+')'}
+/* 2 */
+function u2(){var x=g('#r2'),y=2*x-1;$('#x2').textContent=f(x);$('#t2').textContent='Titik '+P(x,y);plane($('#p2'),[[2,-1]],[[x,y,P(x,y)]])}
+$('#r2').oninput=u2;u2();
+$('#kc').onclick=function(){var a=g('#ia'),b=g('#ib'),ok=b==2*a-1;$('#fc').innerHTML=ok?'<span class="ok">Ya.</span> 2×'+fm(a)+' − 1 = '+fm(b)+'.':'<span class="no">Tidak.</span> Untuk x = '+fm(a)+', y seharusnya '+fm(2*a-1)+'.';plane($('#p2'),[[2,-1]],[[a,b,P(a,b)]])};
+/* 3 */
+function u3(){var m=g('#s3m'),c=g('#s3c'),pts=[[0,c,P(0,c)]],t='Titik potong sumbu-y: (0, '+fm(c)+'). ';$('#m3').textContent=fm(m);$('#c3').textContent=fm(c);$('#e3').textContent=eqs(m,c);
+if(m==0)t+=c==0?'Garis berimpit dengan sumbu-x.':'Garis mendatar, tidak memotong sumbu-x.';else{var x=-c/m;pts.push([x,0,P(x,0)]);t+='Titik potong sumbu-x: '+P(x,0)+', dari y = 0 → x = −c/m.'}
+$('#n3').textContent=t;plane($('#p3'),[[m,c]],pts)}
+$('#s3m').oninput=u3;$('#s3c').oninput=u3;u3();
+/* 4 */
+function u4(){var m=g('#s4m'),c=g('#s4c'),a=g('#s4a'),b=g('#s4b'),y1=m*a+c,y2=m*b+c;$('#m4').textContent=f(m);$('#c4').textContent=fm(c);$('#a4').textContent=fm(a);$('#b4').textContent=fm(b);$('#e4').textContent=eqs(m,c);
+$('#n4').innerHTML='A'+P(a,y1)+', B'+P(b,y2)+'<br>m = ('+f(y2)+' − ('+f(y1)+')) / ('+f(b)+' − ('+f(a)+')) = <b>'+f((y2-y1)/(b-a))+'</b>';plane($('#p4'),[[m,c]],[[a,y1,'A'],[b,y2,'B']])}
+['#s4m','#s4c','#s4a','#s4b'].forEach(function(s){$(s).oninput=u4});u4();
+/* 5 */
+var M5,C5;
+function n5(){M5=nz(-3,3);C5=ri(-3,3);$('#m5').value='';$('#c5').value='';$('#f5').textContent='';plane($('#p5'),[[M5,C5]],[[0,C5],[1,M5+C5]])}
+$('#k5').onclick=function(){var ok=$('#m5').value!==''&&$('#c5').value!==''&&+$('#m5').value==M5&&+$('#c5').value==C5;$('#f5').innerHTML=ok?'<span class="ok">Benar! '+eqs(M5,C5)+'.</span>':'<span class="no">Belum tepat.</span> Coba lagi, atau lihat petunjuk.'};
+$('#h5').onclick=function(){$('#f5').innerHTML='Garis melalui '+P(0,C5)+' dan '+P(1,M5+C5)+'. c = '+fm(C5)+', m = ('+fm(M5+C5)+' − ('+fm(C5)+')) / (1 − 0) = '+fm(M5)+'. Jadi '+eqs(M5,C5)+'.';plane($('#p5'),[[M5,C5]],[[0,C5,P(0,C5)],[1,M5+C5,P(1,M5+C5)]])};
+$('#n5').onclick=n5;n5();
+/* 6 */
+var M6,C6,X1,X2;
+function n6(){M6=[-2,-1,1,2][ri(0,3)];C6=ri(-2,2);X1=ri(-2,1);X2=ri(X1+1,2);$('#q6').innerHTML='Garis melalui titik <b>A'+P(X1,M6*X1+C6)+'</b> dan <b>B'+P(X2,M6*X2+C6)+'</b>. Tentukan persamaannya.';$('#m6').value='';$('#c6').value='';$('#f6').textContent='';plane($('#p6'),[],[])}
+$('#k6').onclick=function(){var ok=$('#m6').value!==''&&$('#c6').value!==''&&+$('#m6').value==M6&&+$('#c6').value==C6,y1=M6*X1+C6,y2=M6*X2+C6;$('#f6').innerHTML=(ok?'<span class="ok">Benar! ':'<span class="no">Belum tepat.</span> ')+'m = ('+fm(y2)+' − ('+fm(y1)+')) / ('+fm(X2)+' − ('+fm(X1)+')) = '+fm(M6)+'. y − ('+fm(y1)+') = '+fm(M6)+'(x − ('+fm(X1)+')), sehingga '+eqs(M6,C6)+'.'+(ok?'</span>':'');plane($('#p6'),[[M6,C6]],[[X1,y1,'A'],[X2,y2,'B']])};
+$('#n6').onclick=n6;n6();
+/* 7 */
+var Q=[[2,3,[],'Titik potong garis dengan sumbu-y adalah …',['(3, 0)','(0, 3)','(0, −3)','(−1,5; 0)'],1,'Garis memotong sumbu-y saat x = 0, yaitu di y = 3.'],
+[-1,4,[],'Titik potong garis dengan sumbu-x adalah …',['(0, 4)','(−4, 0)','(4, 0)','(0, −4)'],2,'Garis memotong sumbu-x saat y = 0, yaitu di x = 4.'],
+[-2,1,[[0,1,'(0, 1)'],[1,-1,'(1, −1)']],'Gradien garis adalah …',['2','−½','−2','½'],2,'m = (−1 − 1)/(1 − 0) = −2.'],
+[3,-2,[[0,-2,'(0, −2)'],[1,1,'(1, 1)']],'Persamaan garis tersebut adalah …',['y = −2x + 3','y = 3x + 2','y = x − 2','y = 3x − 2'],3,'c = −2 dan m = (1 + 2)/(1 − 0) = 3, jadi y = 3x − 2.'],
+[2,-1,[[-1,-3,'(−1, −3)'],[2,3,'(2, 3)']],'Persamaan garis melalui kedua titik adalah …',['y = 2x + 1','y = 2x − 1','y = −2x − 1','y = 3x − 1'],1,'m = (3 + 3)/(2 + 1) = 2. y − 3 = 2(x − 2), sehingga y = 2x − 1.'],
+[-2,2,[],'Titik yang dilalui garis adalah …',['(1, 2)','(0, −2)','(2, −2)','(−1, 1)'],2,'Untuk x = 2, y = −2(2) + 2 = −2.'],
+[1,1,[[-2,-1,'(−2, −1)'],[2,3,'(2, 3)']],'Persamaan garis melalui kedua titik adalah …',['y = x − 1','y = −x + 1','y = 2x + 1','y = x + 1'],3,'m = (3 + 1)/(2 + 2) = 1. y − 3 = 1(x − 2), sehingga y = x + 1.']],qi=0,sc=0;
+function rq(){var q=Q[qi];if(!q){$('#qz').innerHTML='<h3>Skor kamu: '+sc+' dari '+Q.length+'</h3><p>'+(sc>=6?'Hebat, kamu sudah mahir membaca grafik.':'Ulangi slide yang masih membingungkan, lalu coba lagi.')+'</p><button class="pri" id="rs">Ulangi</button>';$('#rs').onclick=function(){qi=0;sc=0;rq()};return}
+$('#qz').innerHTML='<p><b>Soal '+(qi+1)+' / '+Q.length+'</b></p><svg class="pl" id="qg" viewBox="0 0 308 308" role="img" aria-label="Grafik soal"></svg><p>'+q[3]+'</p>'+q[4].map(function(o,i){return '<button class="opt" data-i="'+i+'">'+o+'</button>'}).join('')+'<p id="qf"></p>';plane($('#qg'),[[q[0],q[1]]],q[2]);
+document.querySelectorAll('.opt').forEach(function(b){b.onclick=function(){var ok=+b.dataset.i==q[5];if(ok)sc++;document.querySelectorAll('.opt').forEach(function(o,i){o.disabled=true;if(i==q[5])o.classList.add('r')});if(!ok)b.classList.add('w');$('#qf').innerHTML=q[6]+'<br><button class="pri" id="qn">'+(qi==Q.length-1?'Lihat skor':'Soal berikutnya')+'</button>';$('#qn').onclick=function(){qi++;rq()}}})}
+rq();
+document.querySelectorAll('.rf').forEach(function(c){c.onchange=function(){var n=document.querySelectorAll('.rf:checked').length;$('#rfo').textContent=n+' dari 5 tujuan sudah kamu kuasai.'+(n==5?' Mantap!':'')}});
+show(0);
+</script>
+</body>
+</html>

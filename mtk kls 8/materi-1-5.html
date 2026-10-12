@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BAB 1: Bilangan Berpangkat dan Bentuk Akar - Presentasi Interaktif</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        .slide-card {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.4s ease-in-out;
+        }
+        .slide-card.active {
+            display: flex;
+            opacity: 1;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .interactive-card {
+            transition: all 0.25s ease;
+        }
+        .interactive-card:hover {
+            transform: translateY(-3px);
+            border-color: #38bdf8;
+        }
+        .appl-tab-btn.active {
+            background: linear-gradient(90deg,#a855f7,#6366f1);
+            color: #fff;
+            box-shadow: 0 8px 20px -6px rgba(168,85,247,0.5);
+        }
+        .appl-tab-btn {
+            background: rgba(15,23,42,0.9);
+            color: #cbd5e1;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden flex flex-col justify-between p-3 md:p-6 bg-slate-950">
+
+    <!-- Header / Top Bar -->
+    <header class="glass-panel rounded-2xl px-5 py-3 flex justify-between items-center z-10">
+        <div class="flex items-center gap-3">
+            <span class="bg-indigo-600 text-white font-extrabold px-3 py-1 rounded-xl text-xs md:text-sm tracking-wide shadow-lg shadow-indigo-500/30">
+                MATEMATIKA SMP
+            </span>
+            <h1 class="text-sm md:text-lg font-bold text-slate-200 truncate">
+                Bab 1: Bilangan Berpangkat & Bentuk Akar
+            </h1>
+        </div>
+        <div class="text-xs md:text-sm font-semibold text-indigo-300 bg-indigo-950/60 border border-indigo-500/30 px-4 py-1.5 rounded-full">
+            Slide <span id="current-slide">1</span> / <span id="total-slides">8</span>
+        </div>
+    </header>
+
+    <!-- Main Slide Viewer Container -->
+    <main class="flex-1 my-3 md:my-4 relative overflow-hidden flex items-center justify-center">
+
+        <!-- Slide 1: Sampul & Pengenalan -->
+        <div class="slide-card active w-full h-full glass-panel rounded-3xl p-6 md:p-10 flex-col justify-between overflow-y-auto">
+            <div class="max-w-4xl mx-auto my-auto text-center space-y-6">
+                <div class="inline-block bg-gradient-to-r from-cyan-500 to-blue-600 text-white p-4 rounded-3xl shadow-xl shadow-cyan-500/20 mb-2">
+                    <i class="fa-solid fa-square-root-variable text-4xl md:text-6xl"></i>
+                </div>
+                <h2 class="text-3xl md:text-5xl font-extrabold bg-gradient-to-r from-cyan-400 via-sky-300 to-indigo-400 bg-clip-text text-transparent leading-tight">
+                    Bilangan Berpangkat & Bentuk Akar
+                </h2>
+                <p class="text-slate-300 text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
+                    Media Pembelajaran Interaktif Matematika Kelas 9 SMP. Pelajari konsep, sifat-sifat, merasionalkan penyebut, hingga penerapan dalam kehidupan nyata.
+                </p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 pt-4 text-left">
+                    <div class="p-3 bg-slate-800/80 rounded-2xl border border-slate-700">
+                        <div class="text-cyan-400 font-bold text-sm">1. Eksponen</div>
+                        <div class="text-xs text-slate-400">Konsep & Sifat</div>
+                    </div>
+                    <div class="p-3 bg-slate-800/80 rounded-2xl border border-slate-700">
+                        <div class="text-sky-400 font-bold text-sm">2. Bentuk Akar</div>
+                        <div class="text-xs text-slate-400">Penyederhanaan</div>
+                    </div>
+                    <div class="p-3 bg-slate-800/80 rounded-2xl border border-slate-700">
+                        <div class="text-indigo-400 font-bold text-sm">3. Rasionalkan</div>
+                        <div class="text-xs text-slate-400">Bentuk Sekawan</div>
+                    </div>
+                    <div class="p-3 bg-slate-800/80 rounded-2xl border border-slate-700">
+                        <div class="text-purple-400 font-bold text-sm">4. Penerapan</div>
+                        <div class="text-xs text-slate-400">Soal Cerita & Kuis</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Konsep Bilangan Berpangkat -->
+        <div class="slide-card w-full h-full glass-panel rounded-3xl p-6 md:p-10 flex-col justify-between overflow-y-auto">
+            <div class="max-w-4xl mx-auto w-full space-y-6">
+                <div class="border-b border-slate-700 pb-3">
+                    <span class="text-cyan-400 text-xs font-bold uppercase tracking-wider">Materi 1</span>
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-100">Konsep Bilangan Berpangkat (Eksponen)</h2>
+                </div>
+                <div class="grid md:grid-cols-2 gap-6 items-center">
+                    <div class="bg-slate-800/90 p-5 rounded-2xl border border-slate-700 space-y-3">
+                        <h3 class="font-semibold text-lg text-cyan-300">Definisi Eksponen</h3>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            Perkalian berulang dari suatu bilangan yang sama. Jika $a$ adalah bilangan real dan $n$ adalah bilangan bulat positif:
+                        </p>
+                        <div class="bg-slate-950 p-4 rounded-xl text-center border border-cyan-500/30">
+                            <span class="text-xl md:text-2xl font-mono text-cyan-400 font-bold">aⁿ = a × a × a × ... × a</span>
+                            <div class="text-xs text-slate-400 mt-1">(sebanyak n faktor)</div>
+                        </div>
+                    </div>
+                    <div class="bg-indigo-950/40 p-5 rounded-2xl border border-indigo-500/30 space-y-3">
+                        <h3 class="font-semibold text-lg text-indigo-300">Contoh Interaktif (Klik Tombol)</h3>
+                        <div id="expo-demo" class="bg-slate-900 p-4 rounded-xl text-center font-mono text-lg text-emerald-400">
+                            2⁴ = 2 × 2 × 2 × 2 = 16
+                        </div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button onclick="updateExpo(2,4)" class="px-3 py-2 bg-slate-800 hover:bg-cyan-600 rounded-lg text-xs font-bold transition">2⁴</button>
+                            <button onclick="updateExpo(3,3)" class="px-3 py-2 bg-slate-800 hover:bg-cyan-600 rounded-lg text-xs font-bold transition">3³</button>
+                            <button onclick="updateExpo(5,2)" class="px-3 py-2 bg-slate-800 hover:bg-cyan-600 rounded-lg text-xs font-bold transition">5²</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Sifat-Sifat Eksponen -->
+        <div class="slide-card w-full h-full glass-panel rounded-3xl p-6 md:p-10 flex-col justify-between overflow-y-auto">
+            <div class="max-w-4xl mx-auto w-full space-y-4">
+                <div class="border-b border-slate-700 pb-2">
+                    <span class="text-cyan-400 text-xs font-bold uppercase tracking-wider">Materi 2</span>
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-100">Sifat-Sifat Operasi Perpangkatan</h2>
+                    <p class="text-xs text-slate-400">Klik kartu untuk melihat contoh perhitungan!</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div onclick="toggleDetail('sifat1')" class="interactive-card bg-slate-800/90 p-4 rounded-2xl border border-slate-700 cursor-pointer">
+                        <div class="flex justify-between items-center">
+                            <span class="text-cyan-400 font-bold text-sm">Perkalian: aᵐ × aⁿ = aᵐ⁺ⁿ</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-slate-400"></i>
+                        </div>
+                        <div id="sifat1" class="hidden mt-2 pt-2 border-t border-slate-700 text-xs text-slate-300">
+                            <strong>Contoh:</strong> 2³ × 2² = 2³⁺² = 2⁵ = 32
+                        </div>
+                    </div>
+                    <div onclick="toggleDetail('sifat2')" class="interactive-card bg-slate-800/90 p-4 rounded-2xl border border-slate-700 cursor-pointer">
+                        <div class="flex justify-between items-center">
+                            <span class="text-cyan-400 font-bold text-sm">Pembagian: aᵐ ÷ aⁿ = aᵐ⁻ⁿ</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-slate-400"></i>
+                        </div>
+                        <div id="sifat2" class="hidden mt-2 pt-2 border-t border-slate-700 text-xs text-slate-300">
+                            <strong>Contoh:</strong> 5⁶ ÷ 5⁴ = 5⁶⁻⁴ = 5² = 25
+                        </div>
+                    </div>
+                    <div onclick="toggleDetail('sifat3')" class="interactive-card bg-slate-800/90 p-4 rounded-2xl border border-slate-700 cursor-pointer">
+                        <div class="flex justify-between items-center">
+                            <span class="text-cyan-400 font-bold text-sm">Pemangkatan: (aᵐ)ⁿ = aᵐˣⁿ</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-slate-400"></i>
+                        </div>
+                        <div id="sifat3" class="hidden mt-2 pt-2 border-t border-slate-700 text-xs text-slate-300">
+                            <strong>Contoh:</strong> (3²)³ = 3²ˣ³ = 3⁶ = 729
+                        </div>
+                    </div>
+                    <div onclick="toggleDetail('sifat4')" class="interactive-card bg-slate-800/90 p-4 rounded-2xl border border-slate-700 cursor-pointer">
+                        <div class="flex justify-between items-center">
+                            <span class="text-cyan-400 font-bold text-sm">Pangkat Nol: a⁰ = 1 (a ≠ 0)</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-slate-400"></i>
+                        </div>
+                        <div id="sifat4" class="hidden mt-2 pt-2 border-t border-slate-700 text-xs text-slate-300">
+                            <strong>Contoh:</strong> 100⁰ = 1, (xy)⁰ = 1
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Merasionalkan Penyebut Bentuk Akar -->
+        <div class="slide-card w-full h-full glass-panel rounded-3xl p-6 md:p-10 flex-col justify-between overflow-y-auto">
+            <div class="max-w-4xl mx-auto w-full space-y-4">
+                <div class="border-b border-slate-700 pb-2">
+                    <span class="text-sky-400 text-xs font-bold uppercase tracking-wider">Materi 3</span>
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-100">Merasionalkan Penyebut Bentuk Akar</h2>
+                </div>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="bg-slate-800/90 p-4 rounded-2xl border border-slate-700 space-y-2">
+                        <h3 class="font-bold text-sky-300 text-sm">1. Bentuk a / √b</h3>
+                        <p class="text-xs text-slate-300">Kalikan pembilang dan penyebut dengan <strong>√b</strong>.</p>
+                        <div class="bg-slate-950 p-3 rounded-xl text-center font-mono text-xs text-sky-400">
+                            (a / √b) × (√b / √b) = (a√b) / b
+                        </div>
+                    </div>
+                    <div class="bg-slate-800/90 p-4 rounded-2xl border border-slate-700 space-y-2">
+                        <h3 class="font-bold text-sky-300 text-sm">2. Bentuk Sekawan: c / (a + √b)</h3>
+                        <p class="text-xs text-slate-300">Kalikan dengan bentuk sekawan <strong>(a - √b)</strong>.</p>
+                        <div class="bg-slate-950 p-3 rounded-xl text-center font-mono text-xs text-sky-400">
+                            c/(a + √b) × (a - √b)/(a - √b) = c(a - √b) / (a² - b)
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-indigo-950/40 p-4 rounded-2xl border border-indigo-500/30">
+                    <h4 class="text-xs font-bold text-indigo-300 uppercase mb-2">Simulasi Langkah Kerja: Rasionalkan 6 / √3</h4>
+                    <div class="flex flex-wrap gap-2 text-xs font-mono">
+                        <span class="bg-slate-900 px-3 py-2 rounded-lg border border-slate-700">Soal: 6 / √3</span>
+                        <span class="bg-slate-900 px-3 py-2 rounded-lg border border-slate-700">→ (6 / √3) × (√3 / √3)</span>
+                        <span class="bg-slate-900 px-3 py-2 rounded-lg border border-slate-700">→ 6√3 / 3</span>
+                        <span class="bg-emerald-950 text-emerald-400 border border-emerald-500/40 px-3 py-2 rounded-lg font-bold">Hasil: 2√3</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Penerapan - Bank Soal Olimpiade & HOTS -->
+        <div class="slide-card w-full h-full glass-panel rounded-3xl p-6 md:p-10 flex-col justify-between overflow-y-auto">
+            <div class="max-w-4xl mx-auto w-full space-y-4">
+                <div class="border-b border-slate-700 pb-2">
+                    <span class="text-purple-400 text-xs font-bold uppercase tracking-wider">Materi 4 — Penerapan</span>
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-100">Latihan Soal: Olimpiade & HOTS</h2>
+                    <p class="text-xs text-slate-400 mt-1">Peserta didik menerapkan konsep bilangan berpangkat dan bentuk akar untuk menyelesaikan masalah tingkat tinggi. Klik soal untuk melihat pembahasan.</p>
+                </div>
+
+                <!-- Tab Switcher -->
+                <div class="flex gap-2">
+                    <button id="tab-olim-btn" onclick="switchApplTab('olim')" class="appl-tab-btn active flex-1 py-2.5 rounded-xl text-xs md:text-sm font-bold border border-slate-700 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-medal"></i> Soal Olimpiade (5)
+                    </button>
+                    <button id="tab-hots-btn" onclick="switchApplTab('hots')" class="appl-tab-btn flex-1 py-2.5 rounded-xl text-xs md:text-sm font-bold border border-slate-700 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-brain"></i> Soal HOTS (5)
+                    </button>
+                </div>
+
+                <!-- Panel Olimpiade -->
+                <div id="panel-olim" class="space-y-2">
+                    <div onclick="toggleAppl('o1')" class="interactive-card bg-slate-800/90 p-3.5 rounded-2xl border border-slate-700 cursor-pointer">
+                        <div class="flex justify-between items-start gap-2">
+                            <span class="text-xs md:text-sm text-slate-200"><strong class="text-purple-400">No. 1.</strong> Tentukan nilai n jika 2ⁿ⁺¹ + 2ⁿ = 96.</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-slate-400 mt-1"></i>
+                        </div>
+                        <div id="o1" class="hidden mt-2 pt-2 border-t border-slate-700 text-xs text-emerald-400 font-mono leading-relaxed">
+                            2ⁿ(2 + 1) = 96 → 2ⁿ × 3 = 96 → 2ⁿ = 32 = 2⁵ → <strong>n = 5</strong>
+                        </div>
+                    </div>
+                    <div onclick="toggleAppl('o2')" class="interactive-card bg-slate-800/90 p-3.5 rounded-2xl border border-slate-700 cursor-pointer">
+                        <div class="flex justify-between items-start gap-2">
+                            <span class="text-xs md:text-sm text-slate-200"><strong class="text-purple-400">No. 2.</strong> Sederhanakan: √50 + √18 − √8.</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-slate-400 mt-1"></i>
+                        </div>
+                        <div id="o2" class="hidden mt-2 pt-2 border-t border-slate-700 text-xs text-emerald-400 font-mono leading-relaxed">
+                            5√2 + 3√2 − 2√2 = <strong>6√2</strong>
+                        </div>
+                    </div>
+                    <div onclick="toggleAppl('o3')" class="interactive-card bg-slate-800/90 p-3.5 rounded-2xl border border-slate-700 cursor-pointer">
+                        <div class="flex justify-between items-start gap-2">
+                            <span class="text-xs md:text-sm text-slate-200"><strong class="text-purple-400">No. 3.</strong> Jika x = 2 + √3, tentukan nilai x + 1/x.</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-slate-400 mt-1"></i>
+                        </div>
+                        <div id="o3" class="hidden mt-2 pt-2 border-t border-slate-700 text-xs text-emerald-400 font-mono leading-relaxed">
+                            1/x = (2−√3)/((2+√3)(2−√3)) = (2−√3)/1 = 2−√3<br>
+                            x + 1/x = (2+√3) + (2−√3) = <strong>4</strong>
+                        </div>
+                    </div>
+                    <div onclick="toggleAppl('o4')" class="interactive-card bg-slate-800/90 p-3.5 rounded-2xl border border-slate-700 cursor-pointer">
+                        <div class="flex justify-between items-start gap-2">
+                            <span class="text-xs md:text-sm text-slate-200"><strong class="text-purple-400">No. 4.</strong> Tentukan hasil dari (3¹⁰⁰ + 3¹⁰⁰ + 3¹⁰⁰) ÷ 3⁹⁹.</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-slate-400 mt-1"></i>
+                        </div>
+                        <div id="o4" class="hidden mt-2 pt-2 border-t border-slate-700 text-xs text-emerald-400 font-mono leading-relaxed">
+                            3 × 3¹⁰⁰ ÷ 3⁹⁹ = 3¹⁰¹ ÷ 3⁹⁹ = 3² = <strong>9</strong>
+                        </div>
+                    </div>
+                    <div onclick="toggleAppl('o5')" class="interactive-card bg-slate-800/90 p-3.5 rounded-2xl border border-slate-700 cursor-pointer">
+                        <div class="flex justify-between items-start gap-2">
+                            <span class="text-xs md:text-sm text-slate-200"><strong class="text-purple-400">No. 5.</strong> Jika 3^(2x−1) = 27^(x−2), tentukan nilai x.</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-slate-400 mt-1"></i>
+                        </div>
+                        <div id="o5" class="hidden mt-2 pt-2 border-t border-slate-700 text-xs text-emerald-400 font-mono leading-relaxed">
+                            27 = 3³ → 3^(2x−1) = 3^(3x−6) → 2x−1 = 3x−6 → <strong>x = 5</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Panel HOTS -->
+                <div id="panel-hots" class="hidden space-y-2">
+                    <div onclick="toggleAppl('h1')" class="interactive-card bg-slate-800/90 p-3.5 rounded-2xl border border-slate-700 cursor-pointer">
+                        <div class="flex justify-between items-start gap-2">
+                            <span class="text-xs md:text-sm text-slate-200"><strong class="text-indigo-400">No. 1.</strong> Sebuah sampel bakteri membelah menjadi dua setiap 20 menit. Jika mula-mula ada 50 bakteri, berapa banyak bakteri setelah 2 jam?</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-slate-400 mt-1"></i>
+                        </div>
+                        <div id="h1" class="hidden mt-2 pt-2 border-t border-slate-700 text-xs text-emerald-400 font-mono leading-relaxed">
+                            n = 120 ÷ 20 = 6 kali. N = 50 × 2⁶ = 50 × 64 = <strong>3.200 bakteri</strong>
+                        </div>
+                    </div>
+                    <div onclick="toggleAppl('h2')" class="interactive-card bg-slate-800/90 p-3.5 rounded-2xl border border-slate-700 cursor-pointer">
+                        <div class="flex justify-between items-start gap-2">
+                            <span class="text-xs md:text-sm text-slate-200"><strong class="text-indigo-400">No. 2.</strong> Luas sebuah persegi adalah (2 + √3) cm². Tentukan panjang sisi persegi dalam bentuk paling sederhana.</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-slate-400 mt-1"></i>
+                        </div>
+                        <div id="h2" class="hidden mt-2 pt-2 border-t border-slate-700 text-xs text-emerald-400 font-mono leading-relaxed">
+                            Sisi = √(2+√3). Bentuk ini dapat ditulis sebagai (√6+√2)/2, karena ((√6+√2)/2)² = (8+4√3)/4 = 2+√3.<br>
+                            Jadi sisi = <strong>(√6 + √2) / 2 cm</strong>
+                        </div>
+                    </div>
+                    <div onclick="toggleAppl('h3')" class="interactive-card bg-slate-800/90 p-3.5 rounded-2xl border border-slate-700 cursor-pointer">
+                        <div class="flex justify-between items-start gap-2">
+                            <span class="text-xs md:text-sm text-slate-200"><strong class="text-indigo-400">No. 3.</strong> Suatu zat radioaktif meluruh menjadi setengahnya setiap 10 tahun. Jika massa awal 800 gram, berapa massa zat yang tersisa setelah 40 tahun?</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-slate-400 mt-1"></i>
+                        </div>
+                        <div id="h3" class="hidden mt-2 pt-2 border-t border-slate-700 text-xs text-emerald-400 font-mono leading-relaxed">
+                            n = 40 ÷ 10 = 4. Massa = 800 × (1/2)⁴ = 800 ÷ 16 = <strong>50 gram</strong>
+                        </div>
+                    </div>
+                    <div onclick="toggleAppl('h4')" class="interactive-card bg-slate-800/90 p-3.5 rounded-2xl border border-slate-700 cursor-pointer">
+                        <div class="flex justify-between items-start gap-2">
+                            <span class="text-xs md:text-sm text-slate-200"><strong class="text-indigo-400">No. 4.</strong> Sebuah segitiga siku-siku memiliki panjang kedua sisi siku-siku √12 cm dan √24 cm. Tentukan panjang sisi miringnya.</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-slate-400 mt-1"></i>
+                        </div>
+                        <div id="h4" class="hidden mt-2 pt-2 border-t border-slate-700 text-xs text-emerald-400 font-mono leading-relaxed">
+                            c² = (√12)² + (√24)² = 12 + 24 = 36 → c = √36 = <strong>6 cm</strong>
+                        </div>
+                    </div>
+                    <div onclick="toggleAppl('h5')" class="interactive-card bg-slate-800/90 p-3.5 rounded-2xl border border-slate-700 cursor-pointer">
+                        <div class="flex justify-between items-start gap-2">
+                            <span class="text-xs md:text-sm text-slate-200"><strong class="text-indigo-400">No. 5.</strong> Sebuah kotak kubus memiliki volume 5⁶ cm³. Kotak diperbesar sehingga volumenya menjadi 5⁹ cm³. Berapa kali lipat panjang rusuk kubus bertambah?</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-slate-400 mt-1"></i>
+                        </div>
+                        <div id="h5" class="hidden mt-2 pt-2 border-t border-slate-700 text-xs text-emerald-400 font-mono leading-relaxed">
+                            Rasio volume = 5⁹ ÷ 5⁶ = 5³ = 125. Karena V = r³, rasio rusuk = ∛125 = <strong>5 kali lipat</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Latihan Soal Interaktif -->
+        <div class="slide-card w-full h-full glass-panel rounded-3xl p-6 md:p-10 flex-col justify-between overflow-y-auto">
+            <div class="max-w-4xl mx-auto w-full space-y-5">
+                <div class="border-b border-slate-700 pb-2">
+                    <span class="text-emerald-400 text-xs font-bold uppercase tracking-wider">Latihan</span>
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-100">Uji Pemahaman Singkat</h2>
+                </div>
+                <div class="bg-slate-800/90 p-5 rounded-2xl border border-slate-700 space-y-4">
+                    <p class="text-sm font-semibold text-slate-200">Soal 1: Berapakah bentuk sederhana dari (2³ × 2⁴) ÷ 2⁵ ?</p>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <button onclick="checkAnswer(this, false)" class="p-3 bg-slate-900 hover:bg-slate-700 rounded-xl text-xs font-bold border border-slate-700 transition">2 (Dua)</button>
+                        <button onclick="checkAnswer(this, true)" class="p-3 bg-slate-900 hover:bg-slate-700 rounded-xl text-xs font-bold border border-slate-700 transition">4 (Empat)</button>
+                        <button onclick="checkAnswer(this, false)" class="p-3 bg-slate-900 hover:bg-slate-700 rounded-xl text-xs font-bold border border-slate-700 transition">8 (Delapan)</button>
+                        <button onclick="checkAnswer(this, false)" class="p-3 bg-slate-900 hover:bg-slate-700 rounded-xl text-xs font-bold border border-slate-700 transition">16 (Enam Belas)</button>
+                    </div>
+                    <div id="quiz-feedback" class="hidden p-3 rounded-xl text-xs font-bold text-center"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Ringkasan & Modul Singkat -->
+        <div class="slide-card w-full h-full glass-panel rounded-3xl p-6 md:p-10 flex-col justify-between overflow-y-auto">
+            <div class="max-w-4xl mx-auto w-full space-y-5">
+                <div class="border-b border-slate-700 pb-2">
+                    <span class="text-indigo-400 text-xs font-bold uppercase tracking-wider">Rangkuman</span>
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-100">Poin Kunci Bab 1</h2>
+                </div>
+                <div class="grid md:grid-cols-3 gap-4 text-xs">
+                    <div class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700 space-y-2">
+                        <div class="font-bold text-cyan-400">Pangkatan Bulat</div>
+                        <p class="text-slate-300">Gunakan sifat eksponen untuk menyederhanakan operasi perkalian dan pembagian.</p>
+                    </div>
+                    <div class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700 space-y-2">
+                        <div class="font-bold text-sky-400">Bentuk Akar</div>
+                        <p class="text-slate-300">Akar adalah kebalikan dari pangkat dua. √a² = a untuk a ≥ 0.</p>
+                    </div>
+                    <div class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700 space-y-2">
+                        <div class="font-bold text-indigo-400">Rasionalkan</div>
+                        <p class="text-slate-300">Hilangkan akar di bagian penyebut dengan mengalikan pembilang dan penyebut memakai sekawan.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Slide Penutup + Tombol Navigasi Keluar -->
+        <div class="slide-card w-full h-full glass-panel rounded-3xl p-6 md:p-10 flex-col justify-between overflow-y-auto">
+            <div class="max-w-4xl mx-auto my-auto text-center space-y-6">
+                <div class="inline-block bg-emerald-500/20 text-emerald-400 p-4 rounded-full border border-emerald-500/30">
+                    <i class="fa-solid fa-circle-check text-4xl md:text-6xl"></i>
+                </div>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-slate-100">Selamat, Kamu Telah Menyelesaikan Presentasi!</h2>
+                <p class="text-slate-300 text-sm md:text-base max-w-xl mx-auto">
+                    Kamu telah mempelajari materi dasar hingga penerapan konsep Bilangan Berpangkat dan Bentuk Akar.
+                </p>
+                <div class="pt-4">
+                    <a href="matb-bab1.html" class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold rounded-2xl shadow-lg shadow-emerald-500/30 hover:scale-105 transition transform">
+                        <span>Selesai — Kembali ke Info Bab 1</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Navigation Controls / Footer -->
+    <footer class="glass-panel rounded-2xl p-3 flex justify-between items-center z-10">
+        <button id="prev-btn" onclick="changeSlide(-1)" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed rounded-xl text-xs md:text-sm font-bold flex items-center gap-2 transition">
+            <i class="fa-solid fa-chevron-left"></i>
+            <span>Sebelumnya</span>
+        </button>
+
+        <div class="hidden md:flex items-center gap-1.5" id="dots-container">
+            <!-- Dots generated dynamically via JS -->
+        </div>
+
+        <button id="next-btn" onclick="changeSlide(1)" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-xs md:text-sm font-bold flex items-center gap-2 transition shadow-lg shadow-indigo-600/30">
+            <span>Selanjutnya</span>
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+    </footer>
+
+    <!-- Script Kontrol Presentasi -->
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide-card');
+        const totalSlides = slides.length;
+
+        document.getElementById('total-slides').innerText = totalSlides;
+
+        function initDots() {
+            const container = document.getElementById('dots-container');
+            container.innerHTML = '';
+            for (let i = 0; i < totalSlides; i++) {
+                const dot = document.createElement('button');
+                dot.className = `w-2.5 h-2.5 rounded-full transition-all ${i === currentSlide ? 'bg-indigo-400 w-6' : 'bg-slate-700'}`;
+                dot.onclick = () => goToSlide(i);
+                container.appendChild(dot);
+            }
+        }
+
+        function updateSlideUI() {
+            slides.forEach((slide, idx) => {
+                slide.classList.toggle('active', idx === currentSlide);
+            });
+            document.getElementById('current-slide').innerText = currentSlide + 1;
+            document.getElementById('prev-btn').disabled = currentSlide === 0;
+
+            if (currentSlide === totalSlides - 1) {
+                document.getElementById('next-btn').style.display = 'none';
+            } else {
+                document.getElementById('next-btn').style.display = 'flex';
+            }
+            initDots();
+        }
+
+        function changeSlide(direction) {
+            currentSlide = Math.max(0, Math.min(totalSlides - 1, currentSlide + direction));
+            updateSlideUI();
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            updateSlideUI();
+        }
+
+        // Interaktivitas Slide 2
+        function updateExpo(base, exp) {
+            let res = Math.pow(base, exp);
+            let expanded = Array(exp).fill(base).join(' × ');
+            document.getElementById('expo-demo').innerText = `${base}^${exp} = ${expanded} = ${res}`;
+        }
+
+        // Interaktivitas Slide 3
+        function toggleDetail(id) {
+            const el = document.getElementById(id);
+            el.classList.toggle('hidden');
+        }
+
+        // Interaktivitas Slide 5 (Bank Soal Olimpiade & HOTS)
+        function switchApplTab(tab) {
+            const panelOlim = document.getElementById('panel-olim');
+            const panelHots = document.getElementById('panel-hots');
+            const btnOlim = document.getElementById('tab-olim-btn');
+            const btnHots = document.getElementById('tab-hots-btn');
+            if (tab === 'olim') {
+                panelOlim.classList.remove('hidden');
+                panelHots.classList.add('hidden');
+                btnOlim.classList.add('active');
+                btnHots.classList.remove('active');
+            } else {
+                panelOlim.classList.add('hidden');
+                panelHots.classList.remove('hidden');
+                btnOlim.classList.remove('active');
+                btnHots.classList.add('active');
+            }
+        }
+
+        function toggleAppl(id) {
+            const el = document.getElementById(id);
+            el.classList.toggle('hidden');
+        }
+
+        // Interaktivitas Slide 6 (Kuis)
+        function checkAnswer(btn, isCorrect) {
+            const feedback = document.getElementById('quiz-feedback');
+            feedback.classList.remove('hidden', 'bg-emerald-950', 'text-emerald-400', 'bg-rose-950', 'text-rose-400');
+            if (isCorrect) {
+                feedback.classList.add('bg-emerald-950', 'text-emerald-400', 'border', 'border-emerald-500/30');
+                feedback.innerText = 'Jawaban Benar! (2³ × 2⁴) ÷ 2⁵ = 2⁷ ÷ 2⁵ = 2² = 4';
+            } else {
+                feedback.classList.add('bg-rose-950', 'text-rose-400', 'border', 'border-rose-500/30');
+                feedback.innerText = 'Jawaban Belum Tepat. Coba ingat kembali sifat perkalian dan pembagian eksponen!';
+            }
+        }
+
+        // Keyboard Navigation (Panah Kiri & Kanan)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') changeSlide(1);
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+        });
+
+        // Initialize
+        updateSlideUI();
+    </script>
+</body>
+</html>

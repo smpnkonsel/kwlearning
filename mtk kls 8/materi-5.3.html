@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>5.3 Gradien Garis melalui Dua Titik</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#0A0F24;--line:rgba(255,255,255,.045);--line2:rgba(255,255,255,.14);--ink:#F3F5FC;--soft:#8D96B8;--white:#151B36;--white2:#1C2444;--coral:#FB923C;--coral-s:rgba(251,146,60,.14);--purple:#A78BFA;--teal:#2DD4BF;--teal-s:rgba(45,212,191,.14);--shadow:0 18px 40px -18px rgba(0,0,0,.65);--vh:1vh}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:'Inter',sans-serif;color:var(--ink);background:linear-gradient(var(--line) 1px,transparent 1px) 0 0/28px 28px,linear-gradient(90deg,var(--line) 1px,transparent 1px) 0 0/28px 28px,var(--paper);overflow:hidden;height:calc(var(--vh)*100);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.topbar{display:flex;align-items:center;gap:12px;padding:14px 20px 10px;flex-shrink:0}
+.brand-mark{width:26px;height:26px;border:2px solid var(--ink);position:relative;flex-shrink:0;transform:rotate(10deg)}
+.brand-mark::after{content:"";position:absolute;inset:5px;border:2px solid var(--coral)}
+.brand-text{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);white-space:nowrap}
+.brand-text b{color:var(--ink)}
+.track{flex:1;height:5px;background:var(--line2);border-radius:3px;overflow:hidden}
+.fill{height:100%;background:var(--coral);width:0;transition:width .4s;border-radius:3px}
+.cnt{font:10.5px 'JetBrains Mono';color:var(--soft);min-width:48px;text-align:right}
+main{flex:1;position:relative;overflow:hidden}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;padding:14px 7% 24px;opacity:0;transform:translateX(30px);pointer-events:none;transition:opacity .4s,transform .4s;overflow-y:auto}
+.slide.active{opacity:1;transform:none;pointer-events:auto}
+.inner{width:100%;max-width:960px;margin:auto;padding-block:6px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:10.5px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--coral);margin-bottom:12px}
+.eyebrow::before{content:"";width:14px;height:1.5px;background:var(--coral)}
+h1.big{font-size:clamp(28px,6vw,50px);line-height:1.05;font-weight:700;font-family:'Space Grotesk'}
+h2{font-size:clamp(21px,4vw,30px);font-weight:700;line-height:1.15;margin-bottom:6px;font-family:'Space Grotesk'}
+.sub{font-size:clamp(12.5px,2vw,14.5px);color:var(--soft);margin-bottom:18px;max-width:640px;line-height:1.55}
+.center{text-align:center;display:flex;flex-direction:column;align-items:center}
+.center .eyebrow{justify-content:center}
+.dim{display:inline-flex;gap:6px;font:600 11.5px 'JetBrains Mono';background:var(--white);border:1.5px dashed var(--line2);padding:5px 10px;border-radius:100px}
+.btn{font:600 14px 'Space Grotesk';padding:12px 20px;border-radius:10px;border:none;cursor:pointer;min-height:44px;transition:transform .15s}
+.btn:hover{transform:translateY(-2px)}
+.b1{background:var(--ink);color:var(--white);box-shadow:var(--shadow)}
+.b2{background:transparent;color:var(--ink);border:1.5px solid var(--line2)}
+.b3{background:var(--coral);color:#12121a}
+.cta{margin-top:24px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center}
+.cp-line{margin-top:18px;font-size:12.5px;color:var(--soft);max-width:560px;line-height:1.6;border-left:2px solid var(--coral);padding-left:14px;text-align:left}
+.pill{font:700 11.5px 'JetBrains Mono';padding:6px 12px;border-radius:100px;border:1.5px solid var(--teal);color:var(--teal);background:var(--teal-s)}
+.head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.cp-box{background:var(--white);border-radius:16px;padding:14px 18px;box-shadow:var(--shadow);margin-bottom:12px;border-left:3px solid var(--teal)}
+.cp-box b{color:var(--teal);font:700 11px 'Space Grotesk';letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:6px}
+.cp-box p{font-size:13.5px;line-height:1.55}
+.list{display:flex;flex-direction:column;gap:10px}
+.item{background:var(--white);border-radius:14px;padding:13px 16px;box-shadow:var(--shadow);display:flex;gap:14px;align-items:flex-start}
+.num{font:700 12px 'JetBrains Mono';color:var(--coral);flex-shrink:0;min-width:26px;height:26px;padding:0 4px;border-radius:8px;background:var(--coral-s);display:flex;align-items:center;justify-content:center}
+.item p{font-size:13.5px;color:var(--soft);line-height:1.5;padding-top:3px}
+.item p b{color:var(--ink)}
+.formula{background:var(--white);border:1.5px solid var(--coral);border-radius:16px;padding:16px;text-align:center;font:600 22px 'Space Grotesk';box-shadow:var(--shadow);margin-bottom:12px}
+.fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 8px;font-size:18px}
+.fr span:first-child{border-bottom:2px solid var(--coral);padding:0 8px 3px}
+.fr span:last-child{padding-top:3px}
+.tw{background:var(--white);border-radius:12px;padding:4px;overflow-x:auto;margin:8px 0}
+table{width:100%;border-collapse:collapse;min-width:260px}
+th,td{padding:7px 12px;font:600 13px 'JetBrains Mono';text-align:center;border-bottom:1px solid var(--line)}
+th{color:var(--coral);text-align:left}
+tr:last-child th,tr:last-child td{border:none}
+.prob{display:grid;grid-template-columns:1fr 1.15fr;gap:14px;align-items:start}
+.pic{background:radial-gradient(circle at 50% 42%,#3b3a9e,#0d1130 80%);border:1.5px solid var(--line2);border-radius:16px;padding:10px;text-align:center}
+.pic svg{width:100%;max-height:300px}
+.pic small{display:block;color:#c9ccff;font-size:11px;margin-top:2px}
+details{background:var(--white);border-radius:14px;padding:12px 16px;box-shadow:var(--shadow);font-size:13px;color:var(--soft);line-height:1.6}
+summary{cursor:pointer;color:var(--teal);font-weight:600}
+details p{margin:4px 0}details b{color:var(--ink)}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.gc{background:var(--white);border-radius:14px;padding:8px;box-shadow:var(--shadow);text-align:center}
+.gc svg{width:100%}
+.gc h5{font:700 13px 'Space Grotesk'}
+.gc p{font-size:11px;color:var(--soft);line-height:1.4;margin-top:3px}
+.gc .m{font:700 12px 'JetBrains Mono';color:var(--coral);margin-top:4px}
+.sl{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;margin-bottom:10px}
+.sl label{font:600 12px 'JetBrains Mono';color:var(--soft);display:flex;align-items:center;gap:8px}
+.sl input{flex:1;accent-color:var(--coral)}
+.sl b{color:var(--ink);min-width:20px}
+.out{background:var(--white);border-radius:14px;padding:12px 16px;font:600 14px 'JetBrains Mono';line-height:1.7;box-shadow:var(--shadow)}
+.out .r{color:var(--coral);font-size:17px}
+.quiz{background:var(--white);border-radius:20px;box-shadow:var(--shadow);padding:22px 24px;min-height:320px;display:flex;flex-direction:column}
+.qp{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:10px;font:11.5px 'JetBrains Mono';color:var(--soft)}
+.qb{flex:1;height:5px;background:var(--line);border-radius:3px;overflow:hidden}
+.qf{height:100%;background:var(--coral);width:0;transition:width .4s}
+#qs{color:var(--teal);font-weight:600}
+.qt{font:600 17px 'Space Grotesk';margin-bottom:16px;line-height:1.4}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{text-align:left;padding:12px 15px;border-radius:12px;border:1.5px solid var(--line2);background:var(--paper);color:var(--ink);font:500 13.5px 'Inter';cursor:pointer;display:flex;align-items:center;gap:10px;min-height:46px}
+.opt:hover{border-color:var(--soft)}
+.opt i{font:700 11px 'JetBrains Mono';width:22px;height:22px;border-radius:6px;background:var(--white2);display:flex;align-items:center;justify-content:center;border:1px solid var(--line2);font-style:normal}
+.opt.ok{background:var(--teal-s);border-color:var(--teal)}.opt.ok i{background:var(--teal);color:#12121a}
+.opt.no{background:var(--coral-s);border-color:var(--coral)}.opt.no i{background:var(--coral);color:#12121a}
+.opt.off{pointer-events:none}
+.fb{margin-top:12px;font-size:12.5px;color:var(--soft);background:var(--paper);border-left:3px solid var(--purple);padding:10px 14px;border-radius:8px;display:none;line-height:1.5}
+.fb.show{display:block}
+.qn{margin-top:14px;display:flex;justify-content:flex-end}
+#res{display:none;text-align:center;flex-direction:column;align-items:center;justify-content:center;flex:1}
+#res.show{display:flex}
+.rs{font:700 46px 'Space Grotesk'}.rs span{font-size:19px;color:var(--soft);font-weight:500}
+.rm{font-size:13px;color:var(--soft);margin:10px 0 20px;max-width:380px}
+.bottombar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 20px 16px;flex-shrink:0}
+.nav{background:var(--white);color:var(--ink);border:1.5px solid var(--line2);border-radius:10px;padding:10px 16px;font:600 13px 'Space Grotesk';cursor:pointer;min-height:44px}
+.nav:hover{border-color:var(--ink)}.nav:disabled{opacity:.35;pointer-events:none}.nav.p{background:var(--ink);color:var(--paper)}
+.sn{font-size:10.5px;color:var(--soft);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sn b{color:var(--ink)}
+@media(max-width:760px){.prob{grid-template-columns:1fr}.g4{grid-template-columns:1fr 1fr}.brand-text{display:none}.slide{padding:10px 5.5% 18px}.nav .l{display:none}.qt{font-size:15.5px}.formula{font-size:18px}}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="brand-mark"></div><div class="brand-text"><b>Matematika</b> · Bab 5 Persamaan Linear</div><div class="track"><div class="fill" id="pf"></div></div><div class="cnt" id="cnt"></div></div>
+<main id="main"></main>
+<div class="bottombar"><button class="nav" id="pv" onclick="goTo(cur-1)">← <span class="l">Sebelumnya</span></button><div class="sn" id="sn"></div><button class="nav p" id="nx" onclick="goTo(cur+1)"><span class="l">Selanjutnya</span> →</button></div>
+
+<script>
+const $=id=>document.getElementById(id);
+function setVh(){document.documentElement.style.setProperty('--vh',innerHeight*.01+'px')}setVh();addEventListener('resize',setVh);
+
+/* ===== Bidang koordinat (SVG) ===== */
+const U=18,C=120,X=x=>C+x*U,Y=y=>C-y*U;
+const tx=(x,y,s,c='#fff',a='middle')=>`<text x="${x}" y="${y}" fill="${c}" font-size="10" font-weight="700" font-family="JetBrains Mono,monospace" text-anchor="${a}" stroke="#0d1130" stroke-width="3" paint-order="stroke">${s}</text>`;
+function G(a,b,o={}){
+ let s='<svg viewBox="0 0 240 240">';
+ for(let i=-6;i<=6;i++)s+=`<line x1="${X(i)}" y1="0" x2="${X(i)}" y2="240" stroke="#fff" stroke-opacity="${i?.1:.7}" stroke-width="${i?1:1.6}"/><line x1="0" y1="${Y(i)}" x2="240" y2="${Y(i)}" stroke="#fff" stroke-opacity="${i?.1:.7}" stroke-width="${i?1:1.6}"/>`;
+ if(!o.s)for(let i=-6;i<=6;i+=2)if(i){s+=tx(X(i),C+12,i,'#9fa6d8');s+=tx(C-8,Y(i)+3,i,'#9fa6d8','end')}
+ if(a[0]===b[0])s+=`<line x1="${X(a[0])}" y1="0" x2="${X(a[0])}" y2="240" stroke="#FB923C" stroke-width="2.5"/>`;
+ else{const m=(b[1]-a[1])/(b[0]-a[0]),f=x=>a[1]+m*(x-a[0]);s+=`<line x1="${X(-8)}" y1="${Y(f(-8))}" x2="${X(8)}" y2="${Y(f(8))}" stroke="#FB923C" stroke-width="2.5"/>`}
+ if(o.t&&a[0]!==b[0]){const c=[b[0],a[1]];s+=`<polyline points="${X(a[0])},${Y(a[1])} ${X(c[0])},${Y(c[1])} ${X(b[0])},${Y(b[1])}" fill="none" stroke="#2DD4BF" stroke-width="2" stroke-dasharray="5 3"/>`;
+  s+=tx((X(a[0])+X(c[0]))/2,Y(a[1])+(b[1]>a[1]?14:-6),'Δx = '+(b[0]-a[0]),'#2DD4BF');s+=tx(X(c[0])+(b[0]>a[0]?6:-6),(Y(a[1])+Y(b[1]))/2,'Δy = '+(b[1]-a[1]),'#2DD4BF',b[0]>a[0]?'start':'end')}
+ (o.p||[]).forEach(p=>s+=`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="3.5" fill="#A78BFA"/>`);
+ [a,b].forEach((p,i)=>{if(o.nl)return;s+=`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="4.5" fill="#ffd60a" stroke="#000" stroke-width="1.2"/>`;s+=tx(X(p[0])+(p[0]>=0?7:-7),Y(p[1])+(p[1]>=0?-8:15),(o.n?o.n[i]:'')+`(${p[0]}, ${p[1]})`,'#fff',p[0]>=0?'start':'end')});
+ return s+tx(232,C-6,'x','#9fa6d8','end')+tx(C+8,10,'y','#9fa6d8','start')+'</svg>'}
+const fr=(a,b)=>`<span class="fr"><span>${a}</span><span>${b}</span></span>`;
+const prob=(ey,ti,sub,svg,cap,body)=>`<div class="inner"><div class="eyebrow">${ey}</div><h2>${ti}</h2><p class="sub">${sub}</p><div class="prob"><div class="pic">${svg}<small>${cap}</small></div><div>${body}</div></div></div>`;
+const box=(t,p)=>`<div class="cp-box"><b>${t}</b><p>${p}</p></div>`;
+const det=h=>`<details><summary>Lihat penyelesaian</summary>${h}</details>`;
+
+const S=[];
+S.push(`<div class="inner center"><div class="eyebrow">Bab 5 · 5.3 · Fase D</div><h1 class="big">Gradien Garis melalui Dua Titik</h1><p class="sub" style="margin:14px auto 0">Menentukan kemiringan garis dari dua titik, tabel koordinat, dan grafik.</p><div class="cp-line"><b>Capaian Pembelajaran:</b> Peserta didik mampu menentukan gradien garis lurus yang melalui dua titik.</div><div class="cta"><button class="btn b1" onclick="goTo(1)">Mulai Belajar →</button><span class="dim">↔ 13 slide</span></div></div>`);
+S.push(`<div class="inner"><div class="eyebrow">5.3 Gradien</div><div class="head"><h2 style="margin:0">Tujuan Pembelajaran</h2><span class="pill">5.3</span></div><div class="list">
+<div class="item"><div class="num">1</div><p>Menentukan gradien berdasarkan dua titik koordinat.</p></div>
+<div class="item"><div class="num">2</div><p>Menggunakan rumus gradien dua titik.</p></div>
+<div class="item"><div class="num">3</div><p>Menentukan gradien jika diketahui tabel koordinat.</p></div>
+<div class="item"><div class="num">4</div><p>Menentukan gradien dari grafik.</p></div>
+<div class="item"><div class="num">5</div><p>Membedakan gradien garis yang naik, turun, mendatar, dan tegak.</p></div>
+<div class="item"><div class="num">6</div><p>Mencari koordinat yang hilang dan menyelesaikan soal cerita tentang kemiringan.</p></div></div></div>`);
+S.push(prob('Rumus','Rumus Gradien Dua Titik','Gradien (m) adalah ukuran kemiringan garis: perubahan y dibagi perubahan x.',G([-2,-1],[3,3],{t:1,n:['A','B']}),'Garis melalui A(x₁, y₁) dan B(x₂, y₂)',
+`<div class="formula">m = ${fr('y₂ − y₁','x₂ − x₁')} = ${fr('Δy','Δx')}</div>`+box('Cara memakai','Pilih dua titik pada garis. Kurangkan koordinat y, lalu bagi dengan hasil pengurangan koordinat x. Urutan pengurangan harus sama di atas dan di bawah.')+`<div class="item"><div class="num">!</div><p>Titik pertama dan kedua boleh ditukar, hasilnya tetap sama selama konsisten.</p></div>`));
+S.push(prob('Dua titik','Gradien dari Dua Titik','Substitusikan koordinat ke rumus, hati-hati dengan bilangan negatif.',G([2,3],[5,6],{t:1,n:['A','B']}).replace(/<\/svg>/,'')+'</svg>','',
+box('Contoh 1','Tentukan gradien garis melalui A(2, 3) dan B(6, 11).')+det(`<p>m = ${fr('11 − 3','6 − 2')} = ${fr('8','4')} = <b>2</b></p>`)+`<div style="height:10px"></div>`+box('Contoh 2','Tentukan gradien garis melalui P(−1, 4) dan Q(3, −4).')+det(`<p>m = ${fr('−4 − 4','3 − (−1)')} = ${fr('−8','4')} = <b>−2</b></p><p>Garis turun dari kiri ke kanan, jadi gradiennya negatif.</p>`)));
+S[3]=prob('Dua titik','Gradien dari Dua Titik','Substitusikan koordinat ke rumus, hati-hati dengan bilangan negatif.',G([-1,4],[3,-4],{t:1,n:['P','Q']}),'Garis melalui P(−1, 4) dan Q(3, −4)',
+box('Contoh 1','Tentukan gradien garis melalui A(2, 3) dan B(6, 11).')+det(`<p>m = ${fr('11 − 3','6 − 2')} = ${fr('8','4')} = <b>2</b></p>`)+`<div style="height:10px"></div>`+box('Contoh 2 (lihat grafik)','Tentukan gradien garis melalui P(−1, 4) dan Q(3, −4).')+det(`<p>m = ${fr('−4 − 4','3 − (−1)')} = ${fr('−8','4')} = <b>−2</b></p><p>Garis turun dari kiri ke kanan, jadi gradiennya negatif.</p>`));
+S.push(prob('Tabel koordinat','Gradien dari Tabel','Ambil dua pasangan (x, y) dari tabel. Jika garis lurus, semua pasangan memberi gradien yang sama.',G([-2,-3],[-1,-1],{p:[[0,1],[1,3],[2,5]],nl:0,n:['','']}),'Titik-titik dari tabel terletak pada satu garis lurus',
+box('Soal','Tentukan gradien garis dari tabel berikut.')+`<div class="tw"><table><tr><th>x</th><td>−2</td><td>−1</td><td>0</td><td>1</td><td>2</td></tr><tr><th>y</th><td>−3</td><td>−1</td><td>1</td><td>3</td><td>5</td></tr></table></div>`+det(`<p>Ambil (−2, −3) dan (−1, −1):</p><p>m = ${fr('−1 − (−3)','−1 − (−2)')} = ${fr('2','1')} = <b>2</b></p><p>Cek pasangan lain: (5 − 1) ÷ (2 − 0) = 2. Hasilnya sama, jadi benar.</p>`)+`<div style="height:10px"></div>`+box('Latihan','Tabel: x = 0, 2, 4 dan y = 8, 5, 2.')+det(`<p>m = ${fr('5 − 8','2 − 0')} = <b>−3/2</b></p>`)));
+S.push(prob('Dari grafik','Gradien dari Grafik','Pilih dua titik yang tepat berada di perpotongan garis kisi, lalu hitung naik/turun dan ke kanan.',G([-2,-1],[2,5],{n:['A','B']}),'Grafik garis lurus',
+box('Soal','Tentukan gradien garis pada grafik di samping.')+det(`<p>Titik A(−2, −1) dan B(2, 5).</p><p>m = ${fr('5 − (−1)','2 − (−2)')} = ${fr('6','4')} = <b>3/2</b></p><p><b>Cara cepat:</b> dari A, geser 4 satuan ke kanan lalu naik 6 satuan, jadi m = 6/4 = 3/2.</p>`)+`<div style="height:10px"></div><div class="item"><div class="num">i</div><p>Ke kanan = Δx positif. Naik = Δy positif, turun = Δy negatif.</p></div>`));
+S.push(`<div class="inner"><div class="eyebrow">Naik atau turun</div><h2>Jenis Gradien Garis</h2><p class="sub">Lihat garis dari kiri ke kanan.</p><div class="g4">
+<div class="gc">${G([-3,-2],[3,4],{s:1,nl:1})}<h5>Naik</h5><p>Garis naik ke kanan</p><div class="m">m &gt; 0 (positif)</div></div>
+<div class="gc">${G([-3,4],[3,-2],{s:1,nl:1})}<h5>Turun</h5><p>Garis turun ke kanan</p><div class="m">m &lt; 0 (negatif)</div></div>
+<div class="gc">${G([-3,2],[3,2],{s:1,nl:1})}<h5>Mendatar</h5><p>y₂ = y₁, sehingga Δy = 0</p><div class="m">m = 0</div></div>
+<div class="gc">${G([2,-4],[2,4],{s:1,nl:1})}<h5>Tegak</h5><p>x₂ = x₁, sehingga Δx = 0</p><div class="m">tidak terdefinisi</div></div></div>
+<div class="cp-box" style="margin-top:14px"><b>Ingat</b><p>Semakin besar nilai |m|, semakin curam garisnya. Pembagian dengan nol tidak terdefinisi, sehingga garis tegak tidak punya gradien.</p></div></div>`);
+S.push(prob('Nilai yang belum diketahui','Mencari Koordinat yang Hilang','Jika gradien diketahui, masukkan ke rumus lalu selesaikan persamaannya.',G([1,-1],[3,3],{t:1,n:['A','B']}),'Garis dengan gradien 2 melalui A(1, −1) dan B(3, k)',
+box('Soal 1','Garis bergradien 2 melalui A(1, −1) dan B(3, k). Tentukan nilai k.')+det(`<p>2 = ${fr('k − (−1)','3 − 1')} = ${fr('k + 1','2')}</p><p>k + 1 = 4, sehingga <b>k = 3</b></p>`)+`<div style="height:10px"></div>`+box('Soal 2','Garis bergradien −3/2 melalui P(−2, 1) dan Q(p, −5). Tentukan nilai p.')+det(`<p>−3/2 = ${fr('−5 − 1','p − (−2)')} = ${fr('−6','p + 2')}</p><p>−3(p + 2) = −12, p + 2 = 4, sehingga <b>p = 2</b></p>`)));
+S.push(prob('Soal cerita','Gradien dalam Kehidupan Sehari-hari','Gradien menyatakan kemiringan: tangga, atap, dan jalan.',G([0,0],[3,4],{t:1,n:['K','U']}),'Model tangga: kaki K di dasar, ujung U menyentuh dinding',
+box('Soal 1 · Tangga','Kaki sebuah tangga berjarak 3 m dari dinding dan ujung atasnya menyentuh dinding pada ketinggian 4 m. Berapa kemiringan (gradien) tangga?')+det(`<p>m = ${fr('4','3')} = <b>4/3</b></p>`)+`<div style="height:10px"></div>`+box('Soal 2 · Jalan','Sebuah jalan naik 6 m setiap 80 m jarak mendatar. Berapa gradien jalan itu?')+det(`<p>m = ${fr('6','80')} = <b>3/40</b> = 0,075 (7,5%)</p><p>Semakin kecil nilainya, semakin landai jalannya.</p>`)));
+S.push(`<div class="inner"><div class="eyebrow">Hati-hati</div><h2>Kesalahan yang Sering Terjadi</h2><p class="sub">Contoh: gradien garis melalui A(1, 2) dan B(3, 8). Jawaban yang benar adalah 3.</p><div class="list">
+<div class="item"><div class="num">1</div><p><b>Membalik rumus.</b> Menulis Δx ÷ Δy = 2/6 = 1/3. Padahal gradien = Δy ÷ Δx = 6/2 = 3.</p></div>
+<div class="item"><div class="num">2</div><p><b>Urutan tidak konsisten.</b> Menulis (8 − 2) ÷ (1 − 3) = −3. Jika y₂ − y₁, maka pembagi harus x₂ − x₁.</p></div>
+<div class="item"><div class="num">3</div><p><b>Salah mengurangi bilangan negatif.</b> 3 − (−1) = 4, bukan 2. Ubah menjadi 3 + 1.</p></div>
+<div class="item"><div class="num">4</div><p><b>Salah menyimpulkan garis tegak.</b> Jika Δx = 0 gradien tidak terdefinisi, tetapi jika Δy = 0 gradiennya 0.</p></div></div>
+<div class="cp-box" style="margin-top:14px"><b>Tips</b><p>Setelah menghitung, cek dengan grafik: garis naik harus positif, garis turun harus negatif.</p></div></div>`);
+S.push(`<div class="inner"><div class="eyebrow">Eksplorasi</div><h2>Geser Titiknya</h2><p class="sub">Ubah koordinat A dan B, lalu amati gradiennya.</p><div class="prob"><div class="pic" id="gp"></div><div><div class="sl" id="sli"></div><div class="out" id="out"></div></div></div></div>`);
+S.push(`<div class="inner"><div class="eyebrow">Latihan</div><h2>Soal Latihan Gradien</h2><p class="sub">10 soal tentang gradien garis melalui dua titik.</p><div class="quiz"><div id="play"><div class="qp"><span id="qn">Soal 1/10</span><div class="qb"><div class="qf" id="qf"></div></div><span id="qs">Skor: 0</span></div><div class="qt" id="qt"></div><div class="opts" id="qo"></div><div class="fb" id="fb"></div><div class="qn"><button class="btn b1" id="qx" onclick="nextQ()" style="display:none">Lanjut →</button></div></div>
+<div id="res"><div class="rs"><span id="rsn" style="font-size:46px;color:var(--ink);font-weight:700">0</span><span>/10 benar</span></div><div class="rm" id="rm"></div><div class="cta" style="margin:0"><button class="btn b2" onclick="restartQ()">Ulangi</button><button class="btn b3" onclick="goTo(12)">Lanjut ke Penutup →</button></div></div></div></div>`);
+S.push(`<div class="inner center"><div class="eyebrow">Ringkasan</div><h2>Kerja Bagus! 🎉</h2><p class="sub" style="margin:0 auto 16px">Ringkasan gradien garis melalui dua titik:</p><div class="list" style="width:100%;max-width:560px;text-align:left;margin-bottom:22px"><div class="item"><div class="num">m</div><p><b>m = (y₂ − y₁) ÷ (x₂ − x₁)</b>, dengan urutan titik yang konsisten.</p></div><div class="item"><div class="num">±</div><p>Naik: positif. Turun: negatif. Mendatar: 0. Tegak: tidak terdefinisi.</p></div><div class="item"><div class="num">▦</div><p>Dari tabel atau grafik, ambil dua titik yang jelas lalu gunakan rumus yang sama.</p></div></div><button class="btn b1" onclick="location.href='bab5.html'">✓ Selesai — Kembali ke Bab 5</button></div>`);
+const names=["Sampul","Tujuan","Rumus","Dua Titik","Tabel","Grafik","Naik/Turun","Nilai Hilang","Soal Cerita","Kesalahan","Eksplorasi","Latihan","Penutup"];
+$('main').innerHTML=S.map((h,i)=>`<section class="slide" id="s${i}">${h}</section>`).join('');
+let cur=0;
+function goTo(i){if(i<0||i>=S.length)return;$('s'+cur).classList.remove('active');cur=i;$('s'+cur).classList.add('active');
+$('cnt').textContent=String(cur+1).padStart(2,'0')+'/'+String(S.length).padStart(2,'0');$('pf').style.width=(cur+1)/S.length*100+'%';
+$('sn').innerHTML=`${cur+1}/${S.length} · <b>${names[cur]}</b>`;$('pv').disabled=!cur;$('nx').disabled=cur===S.length-1}
+
+/* eksplorasi */
+const V={x1:-3,y1:-2,x2:3,y2:4};
+$('sli').innerHTML=Object.keys(V).map(k=>`<label>${k[0]}<sub>${k[1]}</sub><input type="range" min="-5" max="5" value="${V[k]}" data-k="${k}"><b id="v${k}">${V[k]}</b></label>`).join('');
+const gcd=(a,b)=>b?gcd(b,a%b):Math.abs(a);
+function upd(){const{x1,y1,x2,y2}=V,dx=x2-x1,dy=y2-y1;
+ $('gp').innerHTML=G([x1,y1],[x2,y2],{t:1,n:['A','B']});
+ let r;if(dx===0)r='tidak terdefinisi (garis tegak)';else{const g=gcd(dy,dx)||1,n=dy/g*(dx<0?-1:1),d=Math.abs(dx/g);r=d===1?n:`${n}/${d}`}
+ const k=dx===0?'':dy>0===dx>0&&dy!==0?'naik':dy===0?'mendatar':'turun';
+ $('out').innerHTML=`m = (${y2} − ${y1}) ÷ (${x2} − ${x1})<br>m = ${dy} ÷ ${dx}<br>m = <span class="r">${r}</span>${k?' · garis '+k:''}`}
+document.querySelectorAll('#sli input').forEach(i=>i.oninput=()=>{V[i.dataset.k]=+i.value;$('v'+i.dataset.k).textContent=i.value;upd()});upd();
+
+/* kuis */
+const Q=[
+{q:"Gradien garis yang melalui A(1, 2) dan B(3, 6) adalah...",o:["1","2","3","4"],c:1,e:"m = (6 − 2) ÷ (3 − 1) = 4 ÷ 2 = 2."},
+{q:"Gradien garis yang melalui P(−2, 5) dan Q(2, 1) adalah...",o:["−1","1","−2","2"],c:0,e:"m = (1 − 5) ÷ (2 − (−2)) = −4 ÷ 4 = −1."},
+{q:"Tabel: x = 0, 2, 4 dan y = 1, 4, 7. Gradien garisnya adalah...",o:["3/2","2/3","3","1/2"],c:0,e:"m = (4 − 1) ÷ (2 − 0) = 3/2. Cek: (7 − 4) ÷ (4 − 2) = 3/2."},
+{q:"Gradien garis yang melalui (3, 4) dan (7, 4) adalah...",o:["4","1","0","tidak terdefinisi"],c:2,e:"Δy = 4 − 4 = 0, sehingga m = 0 ÷ 4 = 0 (garis mendatar)."},
+{q:"Gradien garis yang melalui (2, −1) dan (2, 5) adalah...",o:["0","6","3","tidak terdefinisi"],c:3,e:"Δx = 2 − 2 = 0, pembagian dengan nol tidak terdefinisi (garis tegak)."},
+{q:"Garis melalui (0, 6) dan (3, 0). Gradiennya adalah...",o:["2","−2","1/2","−1/2"],c:1,e:"m = (0 − 6) ÷ (3 − 0) = −2. Garis turun, jadi gradien negatif."},
+{q:"Garis bergradien 2 melalui (1, −1) dan (3, k). Nilai k adalah...",o:["1","2","3","4"],c:2,e:"2 = (k + 1) ÷ 2, sehingga k + 1 = 4 dan k = 3."},
+{q:"Gradien garis yang melalui (−3, 2) dan (1, −2) adalah...",o:["−1","1","−4","4"],c:0,e:"m = (−2 − 2) ÷ (1 − (−3)) = −4 ÷ 4 = −1."},
+{q:"Ujung atas tangga menyentuh dinding setinggi 6 m dan kakinya berjarak 3 m dari dinding. Gradien tangga adalah...",o:["1/2","2","3","18"],c:1,e:"m = tinggi ÷ jarak mendatar = 6 ÷ 3 = 2."},
+{q:"HOTS: Titik A(−1, 3), B(2, p), dan C(5, −3) segaris. Nilai p adalah...",o:["0","−1","1","3"],c:0,e:"Gradien AC = (−3 − 3) ÷ (5 + 1) = −1. Gradien AB harus sama: (p − 3) ÷ 3 = −1, sehingga p = 0."}];
+let qi=0,sc=0,ans=false;
+function rq(){ans=false;const it=Q[qi];$('qn').textContent=`Soal ${qi+1}/${Q.length}`;$('qs').textContent='Skor: '+sc;$('qf').style.width=qi/Q.length*100+'%';$('qt').textContent=it.q;$('fb').classList.remove('show');$('qx').style.display='none';
+const w=$('qo');w.innerHTML='';it.o.forEach((t,i)=>{const b=document.createElement('button');b.className='opt';b.innerHTML=`<i>${'ABCD'[i]}</i><span>${t}</span>`;b.onclick=()=>pick(i);w.appendChild(b)})}
+function pick(i){if(ans)return;ans=true;const it=Q[qi],ok=i===it.c;if(ok)sc++;
+document.querySelectorAll('#qo .opt').forEach((el,k)=>{el.classList.add('off');if(k===it.c)el.classList.add('ok');else if(k===i)el.classList.add('no')});
+$('fb').textContent=(ok?'Benar! ':'Belum tepat. ')+it.e;$('fb').classList.add('show');$('qs').textContent='Skor: '+sc;$('qx').textContent=qi<Q.length-1?'Lanjut →':'Lihat Hasil →';$('qx').style.display='inline-block'}
+function nextQ(){if(qi<Q.length-1){qi++;rq()}else{$('qf').style.width='100%';$('play').style.display='none';$('res').classList.add('show');$('rsn').textContent=sc;
+$('rm').textContent=sc===Q.length?'Sempurna! Kamu menguasai gradien dua titik.':sc>=6?'Bagus! Sedikit lagi kamu menguasainya.':'Ayo coba lagi dan pelajari kembali contoh soalnya.'}}
+function restartQ(){qi=0;sc=0;$('res').classList.remove('show');$('play').style.display='block';rq()}
+rq();
+document.addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;if(e.key==='ArrowRight')goTo(cur+1);if(e.key==='ArrowLeft')goTo(cur-1)});
+goTo(0);
+</script>
+</body>
+</html>

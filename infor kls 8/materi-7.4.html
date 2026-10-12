@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Cara Melindungi Data Pribadi — Pembelajaran Interaktif</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-0:#090B14;
+    --bg-1:#0E1220;
+    --panel:#131829;
+    --panel-soft:#171D32;
+    --line:#262E48;
+    --ink:#EDEFFB;
+    --ink-dim:#A6ADC9;
+    --ink-faint:#6B7295;
+    --trust:#4C8DFF;
+    --trust-soft:#4C8DFF20;
+    --violet:#9A7CF2;
+    --violet-soft:#9A7CF220;
+    --amber:#F2B33D;
+    --amber-soft:#F2B33D20;
+    --danger:#F2495C;
+    --danger-soft:#F2495C20;
+    --grad-trust: linear-gradient(135deg,#4C8DFF,#8B7CF6);
+    --grad-lock: linear-gradient(135deg,#39D0A8,#4C8DFF);
+    --radius-lg:22px;
+    --radius-md:14px;
+    --radius-sm:9px;
+    --font-title:'Fredoka',sans-serif;
+    --font-body:'Plus Jakarta Sans',sans-serif;
+    --font-mono:'JetBrains Mono',monospace;
+    --shadow-soft: 0 20px 60px -20px rgba(0,0,0,.6);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1000px 560px at 90% -10%, #1B2140 0%, transparent 58%),
+      radial-gradient(900px 520px at -10% 108%, #1A1730 0%, transparent 55%),
+      var(--bg-0);
+    color:var(--ink);
+    font-family:var(--font-body);
+    overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  #app{height:100vh; display:flex; flex-direction:column;}
+
+  header.top{display:flex; align-items:center; gap:16px; padding:14px clamp(16px,4vw,40px); border-bottom:1px solid var(--line); background:linear-gradient(180deg, rgba(14,18,32,.92), rgba(14,18,32,.5)); backdrop-filter:blur(6px); z-index:20;}
+  .brand{display:flex;align-items:center;gap:10px; font-family:var(--font-title); font-weight:600; font-size:15px; color:var(--ink); white-space:nowrap;}
+  .brand .dot{width:10px;height:10px;border-radius:50%; background:var(--grad-trust); box-shadow:0 0 0 4px var(--trust-soft); flex:none;}
+  .brand small{display:block;font-family:var(--font-body);font-weight:500;color:var(--ink-faint);font-size:11px;margin-top:1px;}
+
+  .progress-wrap{flex:1; height:8px; background:var(--panel-soft); border-radius:99px; overflow:hidden; position:relative; border:1px solid var(--line);}
+  .progress-bar{height:100%; width:0%; background:var(--grad-trust); border-radius:99px; transition:width .45s cubic-bezier(.4,0,.2,1);}
+  .slide-counter{font-family:var(--font-mono); font-size:12px; color:var(--ink-dim); white-space:nowrap; min-width:56px; text-align:right;}
+
+  main.stage{flex:1; position:relative; overflow:hidden;}
+  .slide{position:absolute; inset:0; display:none; overflow-y:auto; padding:clamp(20px,5vw,56px) clamp(16px,7vw,120px) 40px;}
+  .slide.active{display:block; animation:rise .5s cubic-bezier(.22,1,.36,1);}
+  @keyframes rise{from{opacity:0; transform:translateY(18px);} to{opacity:1; transform:translateY(0);}}
+  .slide-inner{max-width:980px; margin:0 auto; min-height:100%; display:flex; flex-direction:column; justify-content:center;}
+
+  .eyebrow{font-family:var(--font-mono); font-size:12px; letter-spacing:.03em; color:var(--trust); margin:0 0 10px;}
+  h1.slide-title{font-family:var(--font-title); font-weight:600; font-size:clamp(26px,4.4vw,44px); line-height:1.12; margin:0 0 14px; color:var(--ink);}
+  h2.section-title{font-family:var(--font-title); font-weight:600; font-size:clamp(21px,3vw,30px); margin:0 0 12px; color:var(--ink);}
+  p.lead{font-size:clamp(15px,2vw,18px); line-height:1.65; color:var(--ink-dim); max-width:70ch; margin:0 0 20px;}
+  p.body-text{font-size:15.5px; line-height:1.7; color:var(--ink-dim); margin:0 0 14px; max-width:72ch;}
+  strong.hl{color:var(--trust); font-weight:700;}
+  strong.hl-violet{color:var(--violet); font-weight:700;}
+  strong.hl-amber{color:var(--amber); font-weight:700;}
+
+  .card{background:linear-gradient(180deg, var(--panel), var(--panel-soft)); border:1px solid var(--line); border-radius:var(--radius-lg); padding:clamp(18px,3vw,30px); box-shadow:var(--shadow-soft);}
+  .card + .card{margin-top:16px;}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  .grid4{display:grid; grid-template-columns:repeat(4,1fr); gap:12px;}
+  @media (max-width:760px){ .grid2{grid-template-columns:1fr;} .grid4{grid-template-columns:1fr 1fr;} }
+  @media (max-width:480px){ .grid4{grid-template-columns:1fr;} }
+
+  .tag{display:inline-flex; align-items:center; gap:6px; font-family:var(--font-mono); font-size:11.5px; padding:4px 10px; border-radius:99px; background:var(--trust-soft); color:var(--trust); border:1px solid #4C8DFF55;}
+  .tag-violet{background:var(--violet-soft); color:var(--violet); border-color:#9A7CF255;}
+  .tag-amber{background:var(--amber-soft); color:var(--amber); border-color:#F2B33D55;}
+
+  .btn{font-family:var(--font-body); font-weight:700; font-size:14px; border:none; cursor:pointer; padding:11px 20px; border-radius:99px; display:inline-flex; align-items:center; gap:8px; transition:transform .15s ease, box-shadow .15s ease, opacity .15s ease;}
+  .btn:active{transform:scale(.96);}
+  .btn-primary{background:var(--grad-trust); color:#0A0E1E;}
+  .btn-primary:hover{box-shadow:0 8px 22px -6px #4C8DFF77;}
+  .btn-outline{background:transparent;color:var(--ink);border:1px solid var(--line);}
+  .btn-outline:hover{border-color:var(--trust); color:var(--trust);}
+  .btn:disabled{opacity:.35; cursor:not-allowed; transform:none; box-shadow:none;}
+
+  footer.bottom-nav{display:flex; align-items:center; justify-content:space-between; gap:14px; padding:14px clamp(16px,4vw,40px); border-top:1px solid var(--line); background:linear-gradient(0deg, rgba(14,18,32,.94), rgba(14,18,32,.55)); backdrop-filter:blur(6px); z-index:20;}
+  .nav-group{display:flex; align-items:center; gap:10px;}
+  .dots{display:flex; gap:6px; align-items:center; flex-wrap:wrap; justify-content:center; max-width:46vw;}
+  .dots .d{width:7px;height:7px;border-radius:50%; background:var(--line); cursor:pointer; transition:all .2s ease; flex:none;}
+  .dots .d.active{width:20px; border-radius:5px; background:var(--grad-trust);}
+  .dots .d.done{background:var(--violet);}
+  .hint-key{display:none; font-family:var(--font-mono); font-size:11px; color:var(--ink-faint);}
+  @media (min-width:900px){ .hint-key{display:block;} }
+
+  .accordion{border:1px solid var(--line); border-radius:var(--radius-md); overflow:hidden; margin-bottom:10px; background:var(--bg-1);}
+  .accordion summary{list-style:none; cursor:pointer; padding:14px 16px; display:flex; align-items:center; justify-content:space-between; font-weight:700; font-size:14.5px; color:var(--ink);}
+  .accordion summary::-webkit-details-marker{display:none;}
+  .accordion summary:after{content:'+'; font-family:var(--font-mono); color:var(--trust); font-size:18px; transition:transform .25s ease;}
+  .accordion[open] summary:after{transform:rotate(45deg);}
+  .accordion .acc-body{padding:0 16px 16px; color:var(--ink-dim); font-size:14.5px; line-height:1.65;}
+
+  .reveal-box{border:1px dashed var(--line); border-radius:var(--radius-md); padding:14px 16px; cursor:pointer; background:var(--bg-1); transition:border-color .2s ease;}
+  .reveal-box:hover{border-color:var(--trust);}
+  .reveal-box .rq{font-weight:700; color:var(--ink); font-size:14.5px;}
+  .reveal-box .ra{display:none; margin-top:10px; padding-top:10px; border-top:1px solid var(--line); color:var(--trust); font-size:14px; line-height:1.6;}
+  .reveal-box.open .ra{display:block;}
+  .reveal-box .ra::before{content:'✓ '; font-weight:700;}
+  .reveal-hint{font-family:var(--font-mono); font-size:11px; color:var(--ink-faint); margin-top:6px;}
+
+  .mcq-opt{display:block; width:100%; text-align:left; padding:12px 14px; margin-bottom:8px; border-radius:var(--radius-sm); border:1px solid var(--line); background:var(--bg-1); color:var(--ink); font-family:var(--font-body); font-size:14.5px; cursor:pointer; transition:all .15s ease;}
+  .mcq-opt:hover{border-color:var(--violet);}
+  .mcq-opt.correct{border-color:#39D0A8; background:#39D0A820; color:#39D0A8;}
+  .mcq-opt.wrong{border-color:var(--danger); background:var(--danger-soft); color:var(--danger);}
+  .mcq-opt:disabled{cursor:default;}
+  .feedback{margin-top:10px; font-size:14px; line-height:1.6; padding:12px 14px; border-radius:var(--radius-sm); display:none;}
+  .feedback.show{display:block;}
+  .feedback.ok{background:#39D0A820; color:#39D0A8; border:1px solid #39D0A855;}
+  .feedback.bad{background:var(--danger-soft); color:var(--danger); border:1px solid #F2495C55;}
+
+  .input-row{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:8px;}
+  .input-row input[type=text]{flex:1; min-width:160px; background:var(--bg-1); border:1px solid var(--line); border-radius:var(--radius-sm); padding:10px 14px; color:var(--ink); font-family:var(--font-mono); font-size:14.5px;}
+  .input-row input:focus{outline:none; border-color:var(--trust);}
+
+  .stepper{display:flex; flex-direction:column; gap:10px;}
+  .step-item{display:flex; gap:12px; align-items:flex-start; border:1px solid var(--line); border-radius:var(--radius-md); padding:12px 14px; background:var(--bg-1);}
+  .step-num{flex:none; width:26px; height:26px; border-radius:50%; background:var(--grad-trust); color:#0A0E1E; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-weight:700; font-size:12.5px;}
+  .step-txt{font-size:14.5px; color:var(--ink-dim); line-height:1.6; padding-top:3px;}
+  .step-txt b{color:var(--ink);}
+
+  .quiz-progress{font-family:var(--font-mono); font-size:12.5px; color:var(--ink-faint); margin-bottom:10px;}
+  .quiz-score-ring{width:140px; height:140px; margin:0 auto 18px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-direction:column; background:conic-gradient(var(--trust) calc(var(--pct,0)*1%), var(--panel-soft) 0); position:relative;}
+  .quiz-score-ring::before{content:''; position:absolute; inset:9px; border-radius:50%; background:var(--bg-1);}
+  .quiz-score-ring .score-txt{position:relative; font-family:var(--font-title); font-size:26px; font-weight:600; color:var(--ink);}
+  .quiz-score-ring .score-sub{position:relative; font-size:11px; color:var(--ink-faint);}
+
+  .pill-toggle{display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;}
+  .pill-toggle button{font-family:var(--font-mono); font-size:12px; padding:7px 13px; border-radius:99px; border:1px solid var(--line); background:var(--bg-1); color:var(--ink-dim); cursor:pointer;}
+  .pill-toggle button.on{background:var(--grad-trust); color:#0A0E1E; border-color:transparent; font-weight:700;}
+
+  /* App mockup / phone screen */
+  .app-mock{border:1px solid var(--line); border-radius:var(--radius-md); overflow:hidden; background:var(--bg-1);}
+  .app-head{padding:12px 16px; border-bottom:1px solid var(--line); font-family:var(--font-body); font-weight:700; font-size:14px; color:var(--ink); display:flex; align-items:center; gap:8px;}
+  .app-body{padding:6px 0;}
+  .setting-row{display:flex; align-items:center; justify-content:space-between; padding:13px 16px; border-bottom:1px solid var(--line);}
+  .setting-row:last-child{border-bottom:none;}
+  .setting-txt{font-size:13.5px; color:var(--ink-dim); max-width:70%;}
+  .setting-txt b{color:var(--ink); display:block; font-size:14px; margin-bottom:2px;}
+
+  .switch{position:relative; width:44px; height:25px; flex:none;}
+  .switch input{opacity:0; width:0; height:0;}
+  .switch .slider-el{position:absolute; cursor:pointer; inset:0; background:var(--line); border-radius:99px; transition:.25s;}
+  .switch .slider-el:before{position:absolute; content:''; height:19px; width:19px; left:3px; bottom:3px; background:#fff; border-radius:50%; transition:.25s;}
+  .switch input:checked + .slider-el{background:var(--grad-trust);}
+  .switch input:checked + .slider-el:before{transform:translateX(19px);}
+
+  .privacy-verdict{margin-top:14px; padding:12px 16px; border-radius:var(--radius-sm); font-size:13.5px; line-height:1.6; transition:all .3s ease;}
+
+  .pw-meter{height:9px; border-radius:99px; background:var(--panel-soft); overflow:hidden; border:1px solid var(--line); margin-top:10px;}
+  .pw-meter-fill{height:100%; width:0%; border-radius:99px; transition:width .3s ease, background .3s ease;}
+  .pw-label{font-family:var(--font-mono); font-size:12.5px; margin-top:8px; color:var(--ink-dim);}
+  .pw-rules{margin-top:10px; display:flex; flex-direction:column; gap:5px;}
+  .pw-rule{font-size:12.5px; font-family:var(--font-mono); color:var(--ink-faint); display:flex; gap:7px; align-items:center;}
+  .pw-rule.met{color:#39D0A8;}
+  .pw-rule .ic{width:14px;}
+
+  .checklist{display:flex; flex-direction:column; gap:8px;}
+  .check-item{display:flex; gap:10px; align-items:flex-start; padding:10px 12px; border:1px solid var(--line); border-radius:var(--radius-sm); background:var(--bg-1); cursor:pointer;}
+  .check-item input{margin-top:3px; accent-color:var(--trust); width:16px; height:16px; flex:none;}
+  .check-item span{font-size:14px; color:var(--ink-dim); line-height:1.55;}
+  .check-item.checked span{color:#39D0A8; text-decoration:line-through; opacity:.75;}
+
+  .info-card{border:1px solid var(--line); border-radius:var(--radius-md); padding:16px; background:var(--bg-1);}
+  .info-card .ic-wrap{width:42px; height:42px; border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:10px;}
+  .info-card h4{font-family:var(--font-title); font-weight:600; font-size:16px; margin:0 0 6px; color:var(--ink);}
+  .info-card p{font-size:13.5px; color:var(--ink-dim); line-height:1.6; margin:0;}
+
+  /* 2FA phone simulation */
+  .phone-sim{max-width:280px; margin:0 auto; border:1px solid var(--line); border-radius:24px; overflow:hidden; background:var(--bg-1); box-shadow:var(--shadow-soft);}
+  .phone-notch{height:22px; background:var(--panel); display:flex; align-items:center; justify-content:center;}
+  .phone-notch .bump{width:50px; height:6px; border-radius:99px; background:var(--line);}
+  .phone-screen{padding:24px 20px; min-height:260px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:14px;}
+  .phone-icon{width:52px; height:52px; border-radius:16px; background:var(--grad-trust); display:flex; align-items:center; justify-content:center; font-size:24px;}
+  .otp-boxes{display:flex; gap:8px; justify-content:center; margin:8px 0;}
+  .otp-boxes input{width:34px; height:42px; text-align:center; font-family:var(--font-mono); font-size:18px; background:var(--panel-soft); border:1px solid var(--line); border-radius:8px; color:var(--ink);}
+  .otp-boxes input:focus{outline:none; border-color:var(--trust);}
+
+  ::-webkit-scrollbar{width:9px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+  ::-webkit-scrollbar-thumb{background:var(--line); border-radius:99px;}
+
+  .kbd{font-family:var(--font-mono); font-size:11px; border:1px solid var(--line); border-bottom-width:2px; border-radius:5px; padding:1px 6px; color:var(--ink-dim);}
+
+  .cover-hero{display:flex; flex-direction:column; align-items:flex-start; gap:18px;}
+  .cover-icon{width:64px; height:64px; border-radius:18px; background:var(--grad-trust); display:flex; align-items:center; justify-content:center; box-shadow:0 14px 34px -10px #4C8DFF66;}
+  .cover-meta{display:flex; gap:10px; flex-wrap:wrap; margin-top:6px;}
+
+  @media (max-width:600px){
+    .brand small{display:none;}
+    .quiz-score-ring{width:120px; height:120px;}
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <header class="top">
+    <div class="brand">
+      <span class="dot"></span>
+      <div>
+        Bab 7 — Melindungi Data Pribadi
+        <small>7.4 Privasi • Kata Sandi • Autentikasi • Keamanan Perangkat</small>
+      </div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+    <div class="slide-counter" id="slideCounter">1 / 1</div>
+  </header>
+
+  <main class="stage" id="stage"></main>
+
+  <footer class="bottom-nav">
+    <button class="btn btn-outline" id="btnPrev">← Sebelumnya</button>
+    <div class="nav-group"><div class="dots" id="dots"></div></div>
+    <div class="nav-group">
+      <span class="hint-key"><span class="kbd">←</span> / <span class="kbd">→</span> untuk navigasi</span>
+      <button class="btn btn-primary" id="btnNext">Berikutnya →</button>
+    </div>
+  </footer>
+</div>
+
+<script>
+/* =========================================================
+   DATA MATERI
+   ========================================================= */
+const slidesData = [];
+function addSlide(html){ slidesData.push(html); }
+
+/* ---------- Slide 1 : Cover ---------- */
+addSlide(`
+  <div class="slide-inner cover-hero">
+    <div class="cover-icon">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
+        <rect x="5" y="11" width="14" height="10" rx="2" stroke="#0A0E1E" stroke-width="2"/>
+        <path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="#0A0E1E" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="12" cy="16" r="1.6" fill="#0A0E1E"/>
+      </svg>
+    </div>
+    <p class="eyebrow">BAB 7 — MEMBAGIKAN INFORMASI DAN PERLINDUNGAN DATA PRIBADI · 7.4</p>
+    <h1 class="slide-title">Cara Melindungi Data Pribadi</h1>
+    <p class="lead">Pelajari empat kunci utama menjaga data pribadimu tetap aman: mengatur privasi dengan bijak, membuat kata sandi kuat, menggunakan autentikasi berlapis, dan menjaga keamanan perangkat.</p>
+    <div class="cover-meta">
+      <span class="tag">🔐 Pengaturan Privasi</span>
+      <span class="tag tag-violet">🔑 Kata Sandi</span>
+      <span class="tag">📲 Autentikasi</span>
+      <span class="tag tag-amber">🛡️ Keamanan Perangkat</span>
+    </div>
+  </div>
+`);
+
+/* ---------- Slide 2 : Apersepsi ---------- */
+addSlide(`
+  <div class="slide-inner">
+    <p class="eyebrow">APERSEPSI</p>
+    <h2 class="section-title">Coba pikirkan sejenak</h2>
+    <p class="body-text">Bayangkan buku harianmu — tentu kamu tidak akan meninggalkannya terbuka di meja umum, bukan? Data pribadi digital bekerja dengan cara yang sama.</p>
+    <div class="card">
+      <div class="reveal-box" onclick="this.classList.toggle('open')">
+        <div class="rq">🤔 Menurutmu, apa saja yang termasuk "data pribadi" yang perlu dilindungi di dunia digital?</div>
+        <div class="ra">Banyak sekali! Nama lengkap, alamat rumah, nomor telepon, foto/video pribadi, lokasi terkini, kata sandi akun, nomor identitas (NIK), data kesehatan, bahkan kebiasaan berbelanja — semuanya adalah data pribadi yang bisa disalahgunakan jika jatuh ke tangan yang salah.</div>
+        <div class="reveal-hint">👆 Klik kotak ini untuk melihat jawabannya</div>
+      </div>
+    </div>
+  </div>
+`);
+
+/* ---------- Slide 3 : Tujuan Pembelajaran ---------- */
+addSlide(`
+  <div class="slide-inner">
+    <p class="eyebrow">TUJUAN PEMBELAJARAN</p>
+    <h2 class="section-title">Setelah pembelajaran ini, kamu dapat:</h2>
+    <div class="stepper">
+      <div class="step-item"><div class="step-num">1</div><div class="step-txt">Mengatur <b>pengaturan privasi</b> pada akun dan aplikasi secara bijak.</div></div>
+      <div class="step-item"><div class="step-num">2</div><div class="step-txt">Membuat dan mengelola <b>kata sandi</b> yang kuat dan aman.</div></div>
+      <div class="step-item"><div class="step-num">3</div><div class="step-txt">Memahami dan menerapkan <b>autentikasi</b> berlapis (misalnya 2FA).</div></div>
+      <div class="step-item"><div class="step-num">4</div><div class="step-txt">Menjaga <b>keamanan perangkat</b> yang digunakan sehari-hari.</div></div>
+      <div class="step-item"><div class="step-num">5</div><div class="step-txt">Menerapkan langkah-langkah <b>perlindungan data pribadi</b> secara menyeluruh.</div></div>
+    </div>
+  </div>
+`);
+
+/* ---------- Slide 4 : Konsep dasar ---------- */
+addSlide(`
+  <div class="slide-inner">
+    <p class="eyebrow">KONSEP DASAR</p>
+    <h2 class="section-title">Mengapa data pribadi perlu dilindungi?</h2>
+    <p class="body-text">Jika data pribadi jatuh ke tangan yang tidak bertanggung jawab, risikonya nyata: <strong class="hl">penipuan</strong>, <strong class="hl-violet">pencurian identitas</strong>, akun dibobol, hingga <strong class="hl-amber">pelecehan/perundungan digital</strong>.</p>
+    <p class="body-text">Empat pilar utama perlindungan data pribadi yang akan kita pelajari:</p>
+    <div class="grid4">
+      <div class="info-card"><div class="ic-wrap" style="background:var(--trust-soft);">🔐</div><h4>Privasi</h4><p>Mengatur siapa yang bisa melihat informasimu.</p></div>
+      <div class="info-card"><div class="ic-wrap" style="background:var(--violet-soft);">🔑</div><h4>Kata Sandi</h4><p>Kunci utama menuju akun-akunmu.</p></div>
+      <div class="info-card"><div class="ic-wrap" style="background:var(--trust-soft);">📲</div><h4>Autentikasi</h4><p>Lapisan verifikasi tambahan saat login.</p></div>
+      <div class="info-card"><div class="ic-wrap" style="background:var(--amber-soft);">🛡️</div><h4>Perangkat</h4><p>Menjaga HP/laptop tetap aman dari serangan.</p></div>
+    </div>
+  </div>
+`);
+
+/* ---------- Slide 5 : Sub 1 - Pengaturan privasi konsep ---------- */
+addSlide(`
+  <div class="slide-inner">
+    <p class="eyebrow">SUBMATERI 1 — PENGATURAN PRIVASI</p>
+    <h2 class="section-title">Mengatur privasi di media sosial &amp; aplikasi</h2>
+    <p class="body-text"><strong class="hl">Pengaturan privasi</strong> menentukan siapa saja yang dapat melihat profil, unggahan, lokasi, atau informasi pribadimu di sebuah aplikasi. Prinsip pentingnya: <em>bagikan seperlunya, kepada yang tepat</em>.</p>
+    <div class="grid2">
+      <div class="info-card"><div class="ic-wrap" style="background:var(--trust-soft);">👤</div><h4>Visibilitas Profil</h4><p>Atur apakah profilmu bisa dilihat publik, hanya teman, atau tertutup total.</p></div>
+      <div class="info-card"><div class="ic-wrap" style="background:var(--trust-soft);">📍</div><h4>Berbagi Lokasi</h4><p>Matikan berbagi lokasi otomatis kecuali benar-benar diperlukan.</p></div>
+      <div class="info-card"><div class="ic-wrap" style="background:var(--trust-soft);">🏷️</div><h4>Tag &amp; Sebutan</h4><p>Atur siapa yang boleh menandai (tag) dirimu di unggahan mereka.</p></div>
+      <div class="info-card"><div class="ic-wrap" style="background:var(--trust-soft);">📇</div><h4>Info Kontak</h4><p>Batasi siapa yang bisa melihat nomor telepon/email di profilmu.</p></div>
+    </div>
+  </div>
+`);
+
+/* ---------- Slide 6 : Simulasi pengaturan privasi interaktif ---------- */
+addSlide(`
+  <div class="slide-inner">
+    <p class="eyebrow">AKTIVITAS INTERAKTIF — PENGATURAN PRIVASI</p>
+    <h2 class="section-title">Coba atur privasi akun media sosial ini</h2>
+    <p class="body-text">Geser tiap sakelar dan lihat bagaimana tingkat keamanan akun berubah secara langsung.</p>
+    <div class="card">
+      <div class="app-mock">
+        <div class="app-head">⚙️ Pengaturan Privasi Akun</div>
+        <div class="app-body" id="privacySettings">
+          <div class="setting-row"><div class="setting-txt"><b>Profil Publik</b>Siapa saja bisa melihat profilmu tanpa berteman</div><label class="switch"><input type="checkbox" data-w="2" checked><span class="slider-el"></span></label></div>
+          <div class="setting-row"><div class="setting-txt"><b>Bagikan Lokasi Otomatis</b>Lokasimu ditampilkan real-time di setiap unggahan</div><label class="switch"><input type="checkbox" data-w="3" checked><span class="slider-el"></span></label></div>
+          <div class="setting-row"><div class="setting-txt"><b>Nomor Telepon Terlihat</b>Nomor HP-mu ditampilkan di profil publik</div><label class="switch"><input type="checkbox" data-w="3" checked><span class="slider-el"></span></label></div>
+          <div class="setting-row"><div class="setting-txt"><b>Verifikasi 2 Langkah</b>Lapisan keamanan tambahan saat login</div><label class="switch"><input type="checkbox" data-w="-3"><span class="slider-el"></span></label></div>
+        </div>
+      </div>
+      <div class="privacy-verdict" id="privacyVerdict"></div>
+    </div>
+  </div>
+`);
+
+/* ---------- Slide 7 : Latihan pengaturan privasi ---------- */
+addSlide(`
+  <div class="slide-inner">
+    <p class="eyebrow">LATIHAN — PENGATURAN PRIVASI</p>
+    <h2 class="section-title">Manakah pengaturan yang paling aman?</h2>
+    <div class="card">
+      <p class="body-text" style="margin-bottom:6px;"><b>Seorang pelajar ingin tetap bisa berbagi momen dengan teman dekat tapi menjaga keamanannya. Pengaturan yang paling tepat adalah…</b></p>
+      <div id="mcq1"></div>
+      <div class="feedback" id="fb1"></div>
+    </div>
+  </div>
+`);
+
+/* ---------- Slide 8 : Sub 2 - Kata sandi konsep ---------- */
+addSlide(`
+  <div class="slide-inner">
+    <p class="eyebrow">SUBMATERI 2 — KATA SANDI</p>
+    <h2 class="section-title">Membuat kata sandi yang kuat</h2>
+    <p class="body-text">Kata sandi adalah <strong class="hl-violet">gerbang utama</strong> menuju akun digitalmu. Kata sandi yang lemah membuat akunmu mudah dibobol.</p>
+    <div class="stepper">
+      <div class="step-item"><div class="step-num">✓</div><div class="step-txt">Gunakan minimal <b>8–12 karakter</b>, semakin panjang semakin kuat.</div></div>
+      <div class="step-item"><div class="step-num">✓</div><div class="step-txt">Kombinasikan <b>huruf besar, huruf kecil, angka, dan simbol</b>.</div></div>
+      <div class="step-item"><div class="step-num">✓</div><div class="step-txt">Hindari data pribadi yang mudah ditebak (tanggal lahir, nama sendiri).</div></div>
+      <div class="step-item"><div class="step-num">✓</div><div class="step-txt">Gunakan <b>kata sandi berbeda</b> untuk setiap akun penting.</div></div>
+      <div class="step-item"><div class="step-num">✓</div><div class="step-txt">Pertimbangkan memakai <b>pengelola kata sandi (password manager)</b>.</div></div>
+    </div>
+  </div>
+`);
+
+/* ---------- Slide 9 : Password checker interaktif ---------- */
+addSlide(`
+  <div class="slide-inner">
+    <p class="eyebrow">AKTIVITAS INTERAKTIF — KATA SANDI</p>
+    <h2 class="section-title">Coba cek kekuatan kata sandimu</h2>
+    <p class="body-text">Ketik contoh kata sandi (jangan gunakan kata sandi asli akunmu!).</p>
+    <div class="card">
+      <div class="input-row"><input type="text" id="pwInput" placeholder="Ketik contoh kata sandi di sini..."></div>
+      <div class="pw-meter"><div class="pw-meter-fill" id="pwFill"></div></div>
+      <div class="pw-label" id="pwLabel">Belum ada kata sandi diketik</div>
+      <div class="pw-rules" id="pwRules">
+        <div class="pw-rule" data-r="len"><span class="ic">○</span> Minimal 8 karakter</div>
+        <div class="pw-rule" data-r="upper"><span class="ic">○</span> Mengandung huruf besar</div>
+        <div class="pw-rule" data-r="lower"><span class="ic">○</span> Mengandung huruf kecil</div>
+        <div class="pw-rule" data-r="num"><span class="ic">○</span> Mengandung angka</div>
+        <div class="pw-rule" data-r="sym"><span class="ic">○</span> Mengandung simbol (!@#$%, dst.)</div>
+      </div>
+    </div>
+  </div>
+`);
+
+/* ---------- Slide 10 : Latihan kata sandi ---------- */
+addSlide(`
+  <div class="slide-inner">
+    <p class="eyebrow">LATIHAN — KATA SANDI</p>
+    <h2 class="section-title">Pilih kata sandi terkuat</h2>
+    <div class="card">
+      <p class="body-text" style="margin-bottom:6px;"><b>Dari empat pilihan berikut, mana kata sandi yang paling aman digunakan?</b></p>
+      <div id="mcq2"></div>
+      <div class="feedback" id="fb2"></div>
+    </div>
+  </div>
+`);
+
+/* ---------- Slide 11 : Sub 3 - Autentikasi konsep ---------- */
+addSlide(`
+  <div class="slide-inner">
+    <p class="eyebrow">SUBMATERI 3 — AUTENTIKASI</p>
+    <h2 class="section-title">Apa itu autentikasi berlapis?</h2>
+    <p class="body-text"><strong class="hl">Autentikasi</strong> adalah proses membuktikan bahwa kamu benar-benar pemilik akun. <strong class="hl">Autentikasi dua langkah (2FA/Two-Factor Authentication)</strong> menambah lapisan keamanan ekstra selain kata sandi.</p>
+    <div class="grid2">
+      <div class="accordion" open><summary>1️⃣ Sesuatu yang kamu tahu</summary><div class="acc-body">Contoh: kata sandi atau PIN. Ini lapisan dasar yang paling umum digunakan.</div></div>
+      <div class="accordion"><summary>2️⃣ Sesuatu yang kamu punya</summary><div class="acc-body">Contoh: kode OTP dari SMS/aplikasi authenticator, atau HP yang menerima notifikasi login.</div></div>
+      <div class="accordion"><summary>3️⃣ Sesuatu yang ada pada dirimu</summary><div class="acc-body">Contoh: sidik jari (fingerprint) atau pengenalan wajah (face ID) — biometrik.</div></div>
+      <div class="accordion"><summary>💡 Mengapa 2FA penting?</summary><div class="acc-body">Meski kata sandimu bocor, pelaku tetap tidak bisa masuk tanpa faktor kedua (misalnya kode OTP di HP-mu).</div></div>
+    </div>
+  </div>
+`);
+
+/* ---------- Slide 12 : Simulasi 2FA interaktif ---------- */
+addSlide(`
+  <div class="slide-inner">
+    <p class="eyebrow">AKTIVITAS INTERAKTIF — AUTENTIKASI</p>
+    <h2 class="section-title">Coba simulasi login dengan 2FA</h2>
+    <p class="body-text">Ikuti langkah simulasi berikut untuk memahami cara kerja verifikasi dua langkah.</p>
+    <div class="card">
+      <div class="phone-sim">
+        <div class="phone-notch"><div class="bump"></div></div>
+        <div class="phone-screen" id="phoneScreen"></div>
+      </div>
+    </div>
+  </div>
+`);
+
+/* ---------- Slide 13 : Latihan autentikasi ---------- */
+addSlide(`
+  <div class="slide-inner">
+    <p class="eyebrow">LATIHAN — AUTENTIKASI</p>
+    <h2 class="section-title">Uji pemahamanmu</h2>
+    <div class="card">
+      <p class="body-text" style="margin-bottom:6px;"><b>Seseorang mengetahui kata sandi akun temanmu, tapi akun itu sudah mengaktifkan 2FA. Apa yang akan terjadi?</b></p>
+      <div id="mcq3"></div>
+      <div class="feedback" id="fb3"></div>
+    </div>
+  </div>
+`);
+
+/* ---------- Slide 14 : Sub 4 - Keamanan perangkat konsep ---------- */
+addSlide(`
+  <div class="slide-inner">
+    <p class="eyebrow">SUBMATERI 4 — KEAMANAN PERANGKAT</p>
+    <h2 class="section-title">Menjaga keamanan perangkat</h2>
+    <p class="body-text">Kata sandi kuat saja tidak cukup jika <strong class="hl-amber">perangkatmu sendiri</strong> tidak aman. Berikut langkah-langkah pentingnya:</p>
+    <div class="grid2">
+      <div class="info-card"><div class="ic-wrap" style="background:var(--amber-soft);">🔄</div><h4>Perbarui Perangkat Lunak</h4><p>Update sistem &amp; aplikasi secara rutin untuk menutup celah keamanan.</p></div>
+      <div class="info-card"><div class="ic-wrap" style="background:var(--amber-soft);">🔒</div><h4>Kunci Layar</h4><p>Aktifkan PIN, pola, sidik jari, atau face ID pada perangkatmu.</p></div>
+      <div class="info-card"><div class="ic-wrap" style="background:var(--amber-soft);">🧰</div><h4>Antivirus &amp; Keamanan</h4><p>Gunakan aplikasi keamanan resmi untuk mendeteksi ancaman.</p></div>
+      <div class="info-card"><div class="ic-wrap" style="background:var(--amber-soft);">📥</div><h4>Sumber Aplikasi Resmi</h4><p>Unduh aplikasi hanya dari Play Store/App Store, hindari file APK sembarangan.</p></div>
+    </div>
+  </div>
+`);
+
+/* ---------- Slide 15 : Checklist keamanan perangkat ---------- */
+addSlide(`
+  <div class="slide-inner">
+    <p class="eyebrow">AKTIVITAS INTERAKTIF — KEAMANAN PERANGKAT</p>
+    <h2 class="section-title">Checklist keamanan perangkatmu</h2>
+    <p class="body-text">Centang kebiasaan yang sudah kamu terapkan pada HP/laptopmu.</p>
+    <div class="card">
+      <div class="checklist" id="checklistBox">
+        <label class="check-item"><input type="checkbox"><span>Perangkat selalu diperbarui ke versi sistem terbaru.</span></label>
+        <label class="check-item"><input type="checkbox"><span>Layar terkunci otomatis dengan PIN/pola/biometrik.</span></label>
+        <label class="check-item"><input type="checkbox"><span>Hanya menginstal aplikasi dari toko aplikasi resmi.</span></label>
+        <label class="check-item"><input type="checkbox"><span>Tidak sembarangan menyambungkan perangkat ke USB/charger publik.</span></label>
+        <label class="check-item"><input type="checkbox"><span>Mengaktifkan fitur "temukan perangkat saya" jika hilang/dicuri.</span></label>
+        <label class="check-item"><input type="checkbox"><span>Rutin memeriksa izin aplikasi (kamera, lokasi, kontak) yang terpasang.</span></label>
+      </div>
+      <p class="pw-label" id="checklistScore" style="margin-top:14px;">0 dari 6 kebiasaan diterapkan</p>
+    </div>
+  </div>
+`);
+
+/* ---------- Slide 16 : Latihan keamanan perangkat ---------- */
+addSlide(`
+  <div class="slide-inner">
+    <p class="eyebrow">LATIHAN — KEAMANAN PERANGKAT</p>
+    <h2 class="section-title">Apa yang harus dilakukan?</h2>
+    <div class="card">
+      <p class="body-text" style="margin-bottom:6px;"><b>HP-mu hilang di tempat umum dan tidak dikunci layar. Apa risiko terbesar yang bisa terjadi?</b></p>
+      <div id="mcq4"></div>
+      <div class="feedback" id="fb4"></div>
+    </div>
+  </div>
+`);
+
+/* ---------- Slide 17 : Langkah perlindungan data pribadi menyeluruh ---------- */
+addSlide(`
+  <div class="slide-inner">
+    <p class="eyebrow">RINGKASAN PRAKTIS</p>
+    <h2 class="section-title">4 langkah perlindungan data pribadi</h2>
+    <div class="stepper">
+      <div class="step-item"><div class="step-num">1</div><div class="step-txt"><b>Atur privasi</b> — tinjau ulang siapa yang bisa melihat informasimu di tiap aplikasi.</div></div>
+      <div class="step-item"><div class="step-num">2</div><div class="step-txt"><b>Perkuat kata sandi</b> — gunakan kombinasi rumit &amp; berbeda tiap akun, pertimbangkan password manager.</div></div>
+      <div class="step-item"><div class="step-num">3</div><div class="step-txt"><b>Aktifkan autentikasi 2 langkah</b> — pada semua akun penting (email, media sosial, perbankan).</div></div>
+      <div class="step-item"><div class="step-num">4</div><div class="step-txt"><b>Amankan perangkat</b> — update rutin, kunci layar, dan hanya instal aplikasi resmi.</div></div>
+    </div>
+  </div>
+`);
+
+/* ---------- Slide 18 : Latihan gabungan studi kasus ---------- */
+addSlide(`
+  <div class="slide-inner">
+    <p class="eyebrow">LATIHAN GABUNGAN — STUDI KASUS</p>
+    <h2 class="section-title">Bagian mana yang perlu diperbaiki?</h2>
+    <p class="body-text">Cocokkan setiap masalah dengan pilar perlindungan data yang paling tepat untuk mengatasinya.</p>
+    <div class="card" id="matchCard"></div>
+  </div>
+`);
+
+/* ---------- Slide 19 : Kuis ---------- */
+addSlide(`
+  <div class="slide-inner">
+    <p class="eyebrow">KUIS AKHIR</p>
+    <h2 class="section-title">Uji Pemahaman Menyeluruh</h2>
+    <div class="card" id="quizCard"></div>
+  </div>
+`);
+
+/* ---------- Slide 20 : Refleksi ---------- */
+addSlide(`
+  <div class="slide-inner">
+    <p class="eyebrow">REFLEKSI</p>
+    <h2 class="section-title">Yuk, renungkan sejenak</h2>
+    <div class="card">
+      <div class="accordion"><summary>🔍 Pengaturan privasi mana di akunmu yang perlu ditinjau ulang?</summary><div class="acc-body">Coba buka aplikasi media sosialmu dan periksa siapa saja yang bisa melihat profil, lokasi, dan kontakmu.</div></div>
+      <div class="accordion"><summary>🔑 Apakah kata sandimu selama ini cukup kuat?</summary><div class="acc-body">Bandingkan kata sandimu dengan 5 kriteria yang sudah dipelajari — panjang, huruf besar/kecil, angka, dan simbol.</div></div>
+      <div class="accordion"><summary>📲 Akun penting mana yang belum kamu lindungi dengan 2FA?</summary><div class="acc-body">Pikirkan akun email, media sosial, atau perbankan — mana yang paling perlu diaktifkan verifikasi dua langkahnya segera?</div></div>
+    </div>
+  </div>
+`);
+
+/* ---------- Slide 21 : Rangkuman ---------- */
+addSlide(`
+  <div class="slide-inner">
+    <p class="eyebrow">RANGKUMAN</p>
+    <h2 class="section-title">Yang perlu kamu ingat</h2>
+    <div class="grid4">
+      <div class="info-card"><div class="ic-wrap" style="background:var(--trust-soft);">🔐</div><h4>Privasi</h4><p>Bagikan informasi seperlunya, kepada orang yang tepat saja.</p></div>
+      <div class="info-card"><div class="ic-wrap" style="background:var(--violet-soft);">🔑</div><h4>Kata Sandi</h4><p>Panjang, unik, dan kombinasi karakter yang beragam.</p></div>
+      <div class="info-card"><div class="ic-wrap" style="background:var(--trust-soft);">📲</div><h4>Autentikasi</h4><p>Aktifkan 2FA sebagai lapisan keamanan tambahan.</p></div>
+      <div class="info-card"><div class="ic-wrap" style="background:var(--amber-soft);">🛡️</div><h4>Perangkat</h4><p>Selalu perbarui &amp; kunci perangkat, unduh aplikasi resmi saja.</p></div>
+    </div>
+  </div>
+`);
+
+/* ---------- Slide 22 : Penutup ---------- */
+addSlide(`
+  <div class="slide-inner cover-hero">
+    <div class="cover-icon" style="background:var(--grad-lock);">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#08130F" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <p class="eyebrow">PENUTUP</p>
+    <h1 class="slide-title">Selamat! Data pribadimu kini lebih terlindungi 🔐</h1>
+    <p class="lead">Melindungi data pribadi bukan sekali jadi, tapi kebiasaan yang perlu terus dijaga. Mulai dari sekarang, tinjau pengaturan privasimu, perkuat kata sandi, aktifkan 2FA, dan jaga keamanan perangkatmu setiap hari.</p>
+    <button class="btn btn-primary" onclick="goTo(0)">⟲ Ulangi dari Awal</button>
+  </div>
+`);
+
+/* =========================================================
+   RENDER ENGINE
+   ========================================================= */
+const stage = document.getElementById('stage');
+let current = 0;
+
+function render(){
+  stage.innerHTML = slidesData.map((html,i)=>`<section class="slide" data-i="${i}">${html}</section>`).join('');
+  buildDots();
+  goTo(0, true);
+}
+
+function buildDots(){
+  const dots = document.getElementById('dots');
+  dots.innerHTML = slidesData.map((_,i)=>`<span class="d" data-i="${i}" onclick="goTo(${i})"></span>`).join('');
+}
+
+function goTo(i){
+  if(i<0 || i>=slidesData.length) return;
+  current = i;
+  document.querySelectorAll('.slide').forEach(s=>s.classList.remove('active'));
+  const el = document.querySelector(`.slide[data-i="${i}"]`);
+  el.classList.add('active');
+  el.scrollTop = 0;
+
+  document.getElementById('progressBar').style.width = ((i+1)/slidesData.length*100)+'%';
+  document.getElementById('slideCounter').textContent = (i+1)+' / '+slidesData.length;
+  document.querySelectorAll('.dots .d').forEach((d,idx)=>{
+    d.classList.toggle('active', idx===i);
+    d.classList.toggle('done', idx<i);
+  });
+  document.getElementById('btnPrev').disabled = (i===0);
+  document.getElementById('btnNext').disabled = (i===slidesData.length-1);
+
+  initSlideWidgets(i);
+}
+
+document.getElementById('btnPrev').addEventListener('click', ()=>goTo(current-1));
+document.getElementById('btnNext').addEventListener('click', ()=>goTo(current+1));
+document.addEventListener('keydown', (e)=>{
+  if(e.key==='ArrowRight') goTo(current+1);
+  if(e.key==='ArrowLeft') goTo(current-1);
+});
+
+/* =========================================================
+   WIDGET INITIALIZERS
+   ========================================================= */
+const initedSlides = new Set();
+
+function initSlideWidgets(i){
+  if(initedSlides.has(i)) return;
+  initedSlides.add(i);
+
+  if(i===5) buildPrivacySim();
+
+  if(i===6) buildMCQ('mcq1','fb1',
+    ['Profil publik penuh, lokasi selalu aktif, nomor HP terlihat semua orang','Profil hanya untuk teman, lokasi dimatikan, nomor HP disembunyikan, 2FA aktif','Menghapus akun sepenuhnya agar 100% aman','Membagikan kata sandi ke teman dekat agar bisa saling membantu'],
+    1,
+    'Tepat! Membatasi profil ke teman saja, mematikan lokasi otomatis, menyembunyikan nomor HP, dan mengaktifkan 2FA memberi keseimbangan antara tetap terhubung dan tetap aman.',
+    'Ingat prinsip "bagikan seperlunya, kepada yang tepat" — pengaturan paling terbuka bukan berarti paling nyaman digunakan.');
+
+  if(i===8) buildPasswordChecker();
+
+  if(i===9) buildMCQ('mcq2','fb2',
+    ['budi2010 (tanggal lahir)','password123','Bnt3ng&Awan99!','12345678'],
+    2,
+    'Benar! "Bnt3ng&Awan99!" menggabungkan huruf besar-kecil, angka, dan simbol, serta tidak mudah ditebak dari data pribadi.',
+    'Hindari kata sandi yang berisi tanggal lahir, kata umum, atau urutan angka sederhana — semua itu mudah ditebak.');
+
+  if(i===11) buildPhoneSim();
+
+  if(i===12) buildMCQ('mcq3','fb3',
+    ['Pelaku langsung bisa masuk tanpa hambatan','Pelaku tetap butuh kode verifikasi tambahan (OTP/biometrik) yang tidak dimilikinya, sehingga sulit masuk','2FA akan otomatis terhapus','Akun akan otomatis diblokir selamanya'],
+    1,
+    'Tepat! Inilah manfaat utama 2FA — meski kata sandi bocor, pelaku tetap terhambat oleh faktor kedua yang hanya dimiliki pemilik akun asli.',
+    'Ingat konsep 2FA: kata sandi saja ("sesuatu yang kamu tahu") tidak cukup tanpa faktor kedua seperti OTP di HP.');
+
+  if(i===14) buildChecklist();
+
+  if(i===15) buildMCQ('mcq4','fb4',
+    ['Tidak ada risiko karena HP mahal pasti aman','Orang lain bisa langsung mengakses foto, akun, dan data pribadi tanpa hambatan apa pun','HP akan otomatis terkunci sendiri','Risiko hanya kehilangan HP-nya saja, data tetap aman'],
+    1,
+    'Benar! Tanpa kunci layar, siapa pun yang menemukan HP bisa langsung mengakses semua aplikasi, foto, dan akun yang tersimpan di dalamnya.',
+    'Ingat: kunci layar adalah garis pertahanan pertama saat perangkat hilang atau dicuri.');
+
+  if(i===17) buildMatchGame();
+
+  if(i===18) buildQuiz();
+}
+
+/* ---------- Privacy toggle simulation (Slide 6) ---------- */
+function buildPrivacySim(){
+  const box = document.getElementById('privacySettings');
+  const verdict = document.getElementById('privacyVerdict');
+  function update(){
+    let score = 10;
+    box.querySelectorAll('input[type=checkbox]').forEach(cb=>{
+      const w = parseInt(cb.dataset.w);
+      if(cb.checked) score += w;
+    });
+    score = Math.max(0, Math.min(10, score));
+    let level, color, msg;
+    if(score>=8){ level='Sangat Aman'; color='#39D0A8'; msg='Pengaturanmu sudah cukup ketat — informasi pribadi hanya terlihat oleh pihak yang tepat.'; }
+    else if(score>=5){ level='Cukup Aman'; color='var(--amber)'; msg='Lumayan, tapi masih ada celah. Coba matikan berbagi lokasi otomatis dan sembunyikan nomor telepon.'; }
+    else { level='Berisiko'; color='var(--danger)'; msg='Pengaturan ini membuat data pribadimu sangat terbuka untuk umum — sebaiknya batasi visibilitas profil, lokasi, dan nomor telepon segera!'; }
+    verdict.style.background = color+'20';
+    verdict.style.border = '1px solid '+color+'55';
+    verdict.style.color = color;
+    verdict.innerHTML = `<b>Tingkat keamanan: ${level}</b><br>${msg}`;
+  }
+  box.querySelectorAll('input[type=checkbox]').forEach(cb=> cb.addEventListener('change', update));
+  update();
+}
+
+/* ---------- MCQ builder ---------- */
+function buildMCQ(mountId, fbId, options, correctIdx, correctMsg, wrongMsg){
+  const mount = document.getElementById(mountId);
+  const fb = document.getElementById(fbId);
+  mount.innerHTML = options.map((opt,idx)=>`<button class="mcq-opt" data-idx="${idx}">${opt}</button>`).join('');
+  mount.querySelectorAll('.mcq-opt').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const idx = parseInt(btn.dataset.idx);
+      mount.querySelectorAll('.mcq-opt').forEach(b=>b.disabled=true);
+      if(idx===correctIdx){
+        btn.classList.add('correct');
+        fb.textContent = '✓ '+correctMsg;
+        fb.className='feedback show ok';
+      } else {
+        btn.classList.add('wrong');
+        mount.querySelector(`[data-idx="${correctIdx}"]`).classList.add('correct');
+        fb.textContent = '✗ '+wrongMsg;
+        fb.className='feedback show bad';
+      }
+    });
+  });
+}
+
+/* ---------- Password strength checker (Slide 9) ---------- */
+function buildPasswordChecker(){
+  const input = document.getElementById('pwInput');
+  const fill = document.getElementById('pwFill');
+  const label = document.getElementById('pwLabel');
+  const rules = document.getElementById('pwRules');
+  input.addEventListener('input', ()=>{
+    const v = input.value;
+    const checks = {
+      len: v.length>=8,
+      upper: /[A-Z]/.test(v),
+      lower: /[a-z]/.test(v),
+      num: /[0-9]/.test(v),
+      sym: /[^A-Za-z0-9]/.test(v),
+    };
+    let score = Object.values(checks).filter(Boolean).length;
+    Object.entries(checks).forEach(([k,met])=>{
+      const el = rules.querySelector(`[data-r="${k}"]`);
+      el.classList.toggle('met', met);
+      el.querySelector('.ic').textContent = met ? '✓' : '○';
+    });
+    if(v.length===0){
+      fill.style.width='0%'; label.textContent='Belum ada kata sandi diketik'; fill.style.background='var(--line)';
+      return;
+    }
+    const pct = (score/5)*100;
+    fill.style.width = pct+'%';
+    let lvl='Sangat Lemah', color='var(--danger)';
+    if(score>=5){lvl='Sangat Kuat'; color='#39D0A8';}
+    else if(score===4){lvl='Kuat'; color='#39D0A8';}
+    else if(score===3){lvl='Cukup'; color='var(--amber)';}
+    else if(score===2){lvl='Lemah'; color='var(--amber)';}
+    fill.style.background = color;
+    label.innerHTML = `Kekuatan: <b style="color:${color}">${lvl}</b> (${score}/5 kriteria terpenuhi)`;
+  });
+}
+
+/* ---------- 2FA phone simulation (Slide 12) ---------- */
+function buildPhoneSim(){
+  const screen = document.getElementById('phoneScreen');
+  let step = 0;
+  const steps = [
+    ()=>`
+      <div class="phone-icon">🔑</div>
+      <div style="font-weight:700; font-size:14.5px;">Langkah 1: Masukkan kata sandi</div>
+      <div style="font-family:var(--font-mono); font-size:12px; color:var(--ink-faint);">Username: siswa_hebat</div>
+      <div style="width:100%; background:var(--panel-soft); border:1px solid var(--line); border-radius:8px; padding:10px; font-family:var(--font-mono); color:var(--ink-dim); font-size:13px;">••••••••••</div>
+      <button class="btn btn-primary" onclick="phoneNext()" style="width:100%; justify-content:center;">Masuk (Login)</button>
+    `,
+    ()=>`
+      <div class="phone-icon">📩</div>
+      <div style="font-weight:700; font-size:14.5px;">Langkah 2: Verifikasi 2 Langkah</div>
+      <div style="font-size:12.5px; color:var(--ink-faint);">Kode OTP telah dikirim ke HP terdaftar. Masukkan 4 digit kode:</div>
+      <div class="otp-boxes">
+        <input maxlength="1" type="text"><input maxlength="1" type="text"><input maxlength="1" type="text"><input maxlength="1" type="text">
+      </div>
+      <button class="btn btn-primary" onclick="phoneNext()" style="width:100%; justify-content:center;">Verifikasi</button>
+    `,
+    ()=>`
+      <div class="phone-icon" style="background:var(--grad-lock);">✅</div>
+      <div style="font-weight:700; font-size:14.5px; color:#39D0A8;">Berhasil masuk dengan aman!</div>
+      <div style="font-size:12.5px; color:var(--ink-faint); line-height:1.6;">Karena akun ini pakai 2FA, meski seseorang tahu kata sandimu, mereka tetap tidak bisa masuk tanpa kode OTP di HP-mu.</div>
+      <button class="btn btn-outline" onclick="phoneReset()" style="width:100%; justify-content:center;">⟲ Ulangi Simulasi</button>
+    `
+  ];
+  window.phoneNext = ()=>{ step = Math.min(step+1, steps.length-1); screen.innerHTML = steps[step](); };
+  window.phoneReset = ()=>{ step = 0; screen.innerHTML = steps[step](); };
+  screen.innerHTML = steps[step]();
+}
+
+/* ---------- Checklist (Slide 15) ---------- */
+function buildChecklist(){
+  const box = document.getElementById('checklistBox');
+  const score = document.getElementById('checklistScore');
+  const items = box.querySelectorAll('.check-item');
+  function update(){
+    const checked = box.querySelectorAll('input:checked').length;
+    score.textContent = `${checked} dari ${items.length} kebiasaan diterapkan`;
+  }
+  items.forEach(item=>{
+    const cb = item.querySelector('input');
+    cb.addEventListener('change', ()=>{
+      item.classList.toggle('checked', cb.checked);
+      update();
+    });
+  });
+}
+
+/* ---------- Matching scenario game (Slide 18) ---------- */
+const matchScenarios = [
+  {s:'Akun media sosial diatur "publik penuh" — lokasi, nomor HP, dan unggahan bisa dilihat siapa saja.', ans:'Pengaturan Privasi'},
+  {s:'Kata sandi yang dipakai adalah "namaayah123" dan sama untuk semua akun.', ans:'Kata Sandi'},
+  {s:'Akun email penting belum mengaktifkan verifikasi dua langkah sama sekali.', ans:'Autentikasi'},
+  {s:'HP tidak pernah diperbarui sistemnya dan tidak dikunci dengan PIN/pola.', ans:'Keamanan Perangkat'},
+];
+const matchOptions = ['Pengaturan Privasi','Kata Sandi','Autentikasi','Keamanan Perangkat'];
+let matchState = {};
+function buildMatchGame(){
+  const card = document.getElementById('matchCard');
+  matchState = {};
+  card.innerHTML = matchScenarios.map((m,idx)=>`
+    <div style="margin-bottom:18px; padding-bottom:16px; ${idx<matchScenarios.length-1?'border-bottom:1px solid var(--line);':''}">
+      <p class="body-text" style="margin-bottom:10px;">${idx+1}. ${m.s}</p>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;" id="matchOpts${idx}">
+        ${matchOptions.map(o=>`<button class="mcq-opt" style="width:auto; display:inline-block; padding:8px 14px; margin-bottom:0;" data-opt="${o}" data-idx="${idx}">${o}</button>`).join('')}
+      </div>
+    </div>
+  `).join('');
+  matchScenarios.forEach((m,idx)=>{
+    document.querySelectorAll(`#matchOpts${idx} button`).forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        if(matchState[idx]) return;
+        matchState[idx]=true;
+        const opt = btn.dataset.opt;
+        document.querySelectorAll(`#matchOpts${idx} button`).forEach(b=>b.disabled=true);
+        if(opt===m.ans){ btn.classList.add('correct'); }
+        else{
+          btn.classList.add('wrong');
+          document.querySelector(`#matchOpts${idx} [data-opt="${m.ans}"]`).classList.add('correct');
+        }
+      });
+    });
+  });
+}
+
+/* =========================================================
+   QUIZ (Slide 19)
+   ========================================================= */
+const quizQuestions = [
+  {
+    q:'Prinsip utama dalam mengatur privasi di media sosial adalah…',
+    opts:['Membagikan semua informasi agar terlihat aktif','Membagikan informasi seperlunya, kepada orang yang tepat','Menonaktifkan seluruh akun media sosial','Selalu mengaktifkan berbagi lokasi otomatis'],
+    correct:1,
+    exp:'Prinsip privasi yang baik adalah membagikan informasi secukupnya dan hanya kepada pihak yang memang perlu mengetahuinya.'
+  },
+  {
+    q:'Kata sandi yang paling aman adalah yang…',
+    opts:['Mudah diingat meski sama untuk semua akun','Menggunakan tanggal lahir agar mudah diingat','Panjang, unik, dan mengombinasikan huruf besar-kecil, angka, dan simbol','Terdiri dari angka berurutan seperti 123456'],
+    correct:2,
+    exp:'Kombinasi karakter yang beragam dan panjang membuat kata sandi jauh lebih sulit ditebak atau dibobol.'
+  },
+  {
+    q:'Manfaat utama autentikasi dua langkah (2FA) adalah…',
+    opts:['Membuat login jadi lebih lambat tanpa manfaat lain','Menambah lapisan keamanan sehingga akun tetap terlindungi walau kata sandi bocor','Mengganti kata sandi secara otomatis','Menghapus kebutuhan akan kata sandi sama sekali'],
+    correct:1,
+    exp:'2FA menambahkan faktor verifikasi kedua, sehingga akun tetap aman meski kata sandi diketahui orang lain.'
+  },
+  {
+    q:'Langkah paling penting untuk keamanan perangkat adalah…',
+    opts:['Menginstal semua aplikasi tanpa memeriksa sumbernya','Membiarkan sistem operasi tidak pernah diperbarui','Mengunci layar dan memperbarui sistem secara rutin','Menyambungkan perangkat ke charger publik sesering mungkin'],
+    correct:2,
+    exp:'Mengunci layar dan rutin memperbarui sistem menutup celah keamanan yang sering dimanfaatkan pelaku kejahatan siber.'
+  },
+  {
+    q:'Contoh "sesuatu yang kamu punya" dalam autentikasi berlapis adalah…',
+    opts:['Kata sandi','Kode OTP yang dikirim ke HP','Nama pengguna (username)','Alamat email'],
+    correct:1,
+    exp:'Kode OTP di HP adalah contoh faktor "sesuatu yang kamu punya", berbeda dari kata sandi yang termasuk "sesuatu yang kamu tahu".'
+  },
+  {
+    q:'Jika HP hilang tanpa kunci layar, risiko terbesarnya adalah…',
+    opts:['Baterai HP akan cepat habis','Orang lain bisa langsung mengakses akun, foto, dan data pribadi di dalamnya','HP akan otomatis reset ke pengaturan pabrik','Tidak ada risiko selama HP mahal'],
+    correct:1,
+    exp:'Tanpa kunci layar, siapa pun yang menemukan HP dapat mengakses seluruh data dan akun yang tersimpan di dalamnya.'
+  }
+];
+let quizState = { idx:0, score:0, answered:false };
+
+function buildQuiz(){
+  quizState = { idx:0, score:0, answered:false };
+  renderQuizQuestion();
+}
+
+function renderQuizQuestion(){
+  const card = document.getElementById('quizCard');
+  if(quizState.idx >= quizQuestions.length){
+    renderQuizResult();
+    return;
+  }
+  const q = quizQuestions[quizState.idx];
+  card.innerHTML = `
+    <div class="quiz-progress">Soal ${quizState.idx+1} dari ${quizQuestions.length}</div>
+    <p class="body-text" style="margin-bottom:14px; color:var(--ink); font-weight:700; font-size:16px;">${q.q}</p>
+    <div id="quizOpts"></div>
+    <div class="feedback" id="quizFb"></div>
+    <div style="margin-top:16px; text-align:right;">
+      <button class="btn btn-primary" id="quizNextBtn" style="display:none;">Lanjut →</button>
+    </div>
+  `;
+  const opts = document.getElementById('quizOpts');
+  opts.innerHTML = q.opts.map((o,idx)=>`<button class="mcq-opt" data-idx="${idx}">${o}</button>`).join('');
+  quizState.answered = false;
+  opts.querySelectorAll('.mcq-opt').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      if(quizState.answered) return;
+      quizState.answered = true;
+      const idx = parseInt(btn.dataset.idx);
+      const fb = document.getElementById('quizFb');
+      opts.querySelectorAll('.mcq-opt').forEach(b=>b.disabled=true);
+      if(idx===q.correct){
+        btn.classList.add('correct');
+        quizState.score++;
+        fb.textContent = '✓ Benar! '+q.exp;
+        fb.className='feedback show ok';
+      } else {
+        btn.classList.add('wrong');
+        opts.querySelector(`[data-idx="${q.correct}"]`).classList.add('correct');
+        fb.textContent = '✗ Kurang tepat. '+q.exp;
+        fb.className='feedback show bad';
+      }
+      document.getElementById('quizNextBtn').style.display='inline-flex';
+    });
+  });
+  document.getElementById('quizNextBtn').addEventListener('click', ()=>{
+    quizState.idx++;
+    renderQuizQuestion();
+  });
+}
+
+function renderQuizResult(){
+  const card = document.getElementById('quizCard');
+  const pct = Math.round(quizState.score/quizQuestions.length*100);
+  let msg = 'Terus berlatih ya — lindungi data pribadimu mulai dari kebiasaan kecil setiap hari!';
+  if(pct>=80) msg = 'Luar biasa! Kamu sudah sangat memahami cara melindungi data pribadi. 🔐';
+  else if(pct>=60) msg = 'Bagus! Pemahamanmu cukup baik, coba tinjau lagi bagian yang masih salah.';
+  card.innerHTML = `
+    <div class="quiz-score-ring" style="--pct:${pct}"><span class="score-txt">${pct}%</span><span class="score-sub">${quizState.score}/${quizQuestions.length} benar</span></div>
+    <p class="body-text" style="text-align:center;">${msg}</p>
+    <div style="text-align:center; margin-top:12px;">
+      <button class="btn btn-outline" onclick="buildQuiz()">⟲ Ulangi Kuis</button>
+    </div>
+  `;
+}
+
+/* =========================================================
+   INIT
+   ========================================================= */
+render();
+</script>
+</body>
+</html>

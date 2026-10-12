@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Peluang Empirik — Bab 6 Teori Peluang</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0A0E16;
+    --bg-soft: #0E1420;
+    --card: #141B27;
+    --card-2: #1A2332;
+    --card-border: #263142;
+    --card-border-hi: #354258;
+    --text: #EEF2F8;
+    --text-dim: #9BA8BC;
+    --text-faint: #6C7A90;
+    --coral: #FF7A50;
+    --coral-dim: #7A3F2E;
+    --teal: #35D6C4;
+    --teal-dim: #205950;
+    --gold: #FFC857;
+    --gold-dim: #6B551F;
+    --success: #4ADE80;
+    --danger: #F87171;
+    --radius-lg: 22px;
+    --radius-md: 14px;
+    --radius-sm: 9px;
+    --font-head: 'Fredoka', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --shadow-card: 0 10px 30px -12px rgba(0,0,0,0.55);
+  }
+
+  *{ box-sizing: border-box; }
+  html,body{ height:100%; }
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 12% 8%, rgba(255,122,80,0.10), transparent 40%),
+      radial-gradient(circle at 88% 92%, rgba(53,214,196,0.10), transparent 45%),
+      var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    overflow:hidden;
+  }
+  h1,h2,h3,h4{ font-family:var(--font-head); font-weight:600; margin:0; letter-spacing:0.2px; }
+  p{ margin:0; }
+  ::selection{ background:var(--coral); color:#1a0d08; }
+
+  button{ font-family:var(--font-body); cursor:pointer; }
+  :focus-visible{ outline:2px solid var(--teal); outline-offset:3px; border-radius:6px; }
+
+  .app{ position:relative; height:100vh; width:100vw; display:flex; flex-direction:column; }
+
+  /* ---------- TOP BAR ---------- */
+  .topbar{
+    display:flex; align-items:center; gap:16px;
+    padding:14px clamp(16px,4vw,40px) 10px;
+    flex-shrink:0;
+  }
+  .topbar .brand{ display:flex; align-items:center; gap:10px; flex-shrink:0; }
+  .topbar .brand .dot{
+    width:11px; height:11px; border-radius:50%;
+    background: conic-gradient(from 180deg, var(--coral), var(--gold), var(--teal), var(--coral));
+  }
+  .topbar .brand span{ font-family:var(--font-head); font-size:14px; color:var(--text-dim); }
+  .progress-track{
+    flex:1; height:6px; background:var(--card-2); border-radius:99px; overflow:hidden;
+    border:1px solid var(--card-border);
+  }
+  .progress-fill{
+    height:100%; width:5%; border-radius:99px;
+    background:linear-gradient(90deg, var(--coral), var(--gold), var(--teal));
+    transition:width .4s cubic-bezier(.4,0,.2,1);
+  }
+  .slide-counter{
+    font-family:var(--font-mono); font-size:12.5px; color:var(--text-faint);
+    flex-shrink:0; min-width:56px; text-align:right;
+  }
+  .btn-home{
+    flex-shrink:0; background:var(--card); border:1px solid var(--card-border); color:var(--text-dim);
+    width:32px; height:32px; border-radius:9px; display:flex; align-items:center; justify-content:center;
+    transition:border-color .2s, color .2s;
+  }
+  .btn-home:hover{ border-color:var(--card-border-hi); color:var(--text); }
+
+  /* ---------- SLIDE STAGE ---------- */
+  .stage{ position:relative; flex:1; overflow:hidden; }
+  .slide{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:flex-start;
+    padding: clamp(14px,3vh,36px) clamp(16px,6vw,64px) clamp(70px,10vh,96px);
+    overflow-y:auto;
+    opacity:0; visibility:hidden; transform:translateY(14px);
+    transition:opacity .38s ease, transform .38s ease;
+    pointer-events:none;
+  }
+  .slide.active{
+    opacity:1; visibility:visible; transform:translateY(0);
+    pointer-events:auto;
+  }
+  .slide-inner{ width:100%; max-width:920px; margin:auto; display:flex; flex-direction:column; gap:18px; }
+
+  .eyebrow{
+    font-family:var(--font-mono); font-size:12px; color:var(--teal);
+    display:flex; align-items:center; gap:8px;
+  }
+  .eyebrow .line{ width:22px; height:1px; background:var(--teal); opacity:.6; }
+
+  .slide h2.title{ font-size:clamp(24px,4vw,38px); line-height:1.15; color:var(--text); }
+  .slide .lede{ font-size:16px; color:var(--text-dim); line-height:1.6; max-width:70ch; }
+
+  .card{
+    background:var(--card); border:1px solid var(--card-border); border-radius:var(--radius-lg);
+    padding:clamp(16px,2.6vw,26px); box-shadow:var(--shadow-card);
+  }
+  .card-soft{ background:var(--card-2); border:1px solid var(--card-border); border-radius:var(--radius-md); padding:16px 18px; }
+
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .grid3{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  @media(max-width:760px){ .grid2,.grid3{ grid-template-columns:1fr; } }
+
+  .tag{
+    display:inline-flex; align-items:center; gap:6px; font-family:var(--font-mono); font-size:11.5px;
+    padding:4px 10px; border-radius:99px; border:1px solid var(--card-border-hi); color:var(--text-dim);
+    background:var(--card-2); width:fit-content;
+  }
+
+  code, .mono{ font-family:var(--font-mono); }
+  .formula{
+    font-family:var(--font-mono); font-size:clamp(15px,2.4vw,19px); color:var(--gold);
+    background:var(--bg-soft); border:1px solid var(--gold-dim); border-radius:var(--radius-sm);
+    padding:14px 18px; display:inline-block; line-height:1.5;
+  }
+
+  /* ---------- NAV BAR ---------- */
+  .navbar{
+    position:absolute; left:0; right:0; bottom:0;
+    display:flex; align-items:center; justify-content:center; gap:14px;
+    padding:14px clamp(16px,4vw,40px) 18px;
+    background:linear-gradient(to top, rgba(10,14,22,0.92), rgba(10,14,22,0));
+    flex-shrink:0;
+  }
+  .nav-btn{
+    display:flex; align-items:center; gap:8px;
+    background:var(--card); color:var(--text); border:1px solid var(--card-border);
+    padding:10px 18px; border-radius:99px; font-size:14px; font-weight:600;
+    transition:transform .15s, border-color .2s, background .2s;
+  }
+  .nav-btn:hover:not(:disabled){ border-color:var(--card-border-hi); transform:translateY(-1px); }
+  .nav-btn:active:not(:disabled){ transform:translateY(0); }
+  .nav-btn:disabled{ opacity:.35; cursor:not-allowed; }
+  .nav-btn.primary{ background:linear-gradient(135deg, var(--coral), #E85D3A); border-color:transparent; color:#1a0d08; }
+  .dots{ display:flex; gap:6px; max-width:220px; overflow-x:auto; padding:2px; scrollbar-width:none; }
+  .dots::-webkit-scrollbar{ display:none; }
+  .seg{ width:7px; height:7px; border-radius:50%; background:var(--card-border-hi); flex-shrink:0; transition:background .2s,transform .2s; }
+  .seg.on{ background:var(--coral); transform:scale(1.3); }
+
+  @media(max-width:640px){
+    .dots{ display:none; }
+    .nav-btn span.label{ display:none; }
+    .nav-btn{ padding:12px 16px; }
+  }
+
+  /* ---------- BUTTONS / INTERACTIVE ---------- */
+  .btn{
+    background:var(--card-2); border:1px solid var(--card-border-hi); color:var(--text);
+    padding:11px 20px; border-radius:12px; font-size:14.5px; font-weight:600;
+    transition:transform .15s, border-color .2s, background .2s;
+  }
+  .btn:hover{ border-color:var(--teal); transform:translateY(-1px); }
+  .btn.solid{ background:linear-gradient(135deg, var(--teal), #1FA695); border-color:transparent; color:#062420; }
+  .btn.solid:hover{ filter:brightness(1.08); }
+  .btn.ghost{ background:transparent; }
+  .btn.small{ padding:7px 14px; font-size:13px; border-radius:9px; }
+
+  .accordion-item{ border:1px solid var(--card-border); border-radius:var(--radius-md); overflow:hidden; background:var(--card-2); }
+  .accordion-head{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:14px 18px; cursor:pointer; user-select:none;
+  }
+  .accordion-head h4{ font-size:16px; color:var(--text); }
+  .accordion-head .plus{ font-family:var(--font-mono); color:var(--coral); font-size:18px; transition:transform .25s; flex-shrink:0; }
+  .accordion-item.open .plus{ transform:rotate(45deg); }
+  .accordion-body{ max-height:0; overflow:hidden; transition:max-height .3s ease; }
+  .accordion-item.open .accordion-body{ max-height:400px; }
+  .accordion-body-inner{ padding:0 18px 16px; color:var(--text-dim); font-size:14.5px; line-height:1.65; }
+
+  .reveal-card{
+    border:1px dashed var(--card-border-hi); border-radius:var(--radius-md); padding:16px 18px;
+    background:var(--card-2); cursor:pointer; transition:border-color .2s;
+  }
+  .reveal-card:hover{ border-color:var(--gold); }
+  .reveal-card .rc-head{ display:flex; justify-content:space-between; align-items:center; gap:10px; }
+  .reveal-card .rc-answer{ display:none; margin-top:10px; padding-top:10px; border-top:1px solid var(--card-border); color:var(--teal); font-size:14px; font-family:var(--font-mono); }
+  .reveal-card.shown .rc-answer{ display:block; }
+  .reveal-card.shown{ cursor:default; border-style:solid; border-color:var(--teal-dim); }
+  .rc-hint{ font-size:12px; color:var(--text-faint); font-family:var(--font-mono); }
+
+  /* coin */
+  .coin-wrap{ display:flex; flex-direction:column; align-items:center; gap:18px; }
+  .coin{
+    width:120px; height:120px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background:radial-gradient(circle at 35% 30%, #FFE08A, var(--gold) 60%, #A8781E 100%);
+    border:4px solid #FFDE9C; box-shadow:0 10px 26px -8px rgba(255,200,87,0.45);
+    font-family:var(--font-head); font-size:15px; font-weight:600; color:#3d2a06;
+    transition:transform .5s cubic-bezier(.4,0,.2,1);
+  }
+  .coin.flipping{ animation:coinflip .6s ease; }
+  @keyframes coinflip{
+    0%{ transform:rotateY(0) scale(1); }
+    50%{ transform:rotateY(720deg) scale(1.12); }
+    100%{ transform:rotateY(1080deg) scale(1); }
+  }
+  .coin-stats{ display:flex; gap:14px; flex-wrap:wrap; justify-content:center; }
+  .stat-pill{
+    background:var(--card-2); border:1px solid var(--card-border); border-radius:14px; padding:10px 18px; min-width:120px; text-align:center;
+  }
+  .stat-pill .n{ font-family:var(--font-mono); font-size:22px; color:var(--text); }
+  .stat-pill .l{ font-size:12px; color:var(--text-faint); margin-top:2px; }
+  .bar-row{ display:flex; align-items:center; gap:10px; margin-top:6px; }
+  .bar-row .label{ width:70px; flex-shrink:0; font-size:13px; color:var(--text-dim); }
+  .bar-track{ flex:1; height:14px; background:var(--bg-soft); border-radius:99px; overflow:hidden; border:1px solid var(--card-border); }
+  .bar-fill{ height:100%; border-radius:99px; width:0%; transition:width .5s ease; }
+  .bar-fill.a{ background:linear-gradient(90deg, var(--coral), var(--gold)); }
+  .bar-fill.b{ background:linear-gradient(90deg, var(--teal), #1FA695); }
+  .bar-val{ width:64px; flex-shrink:0; font-family:var(--font-mono); font-size:12.5px; color:var(--text-dim); text-align:right; }
+
+  /* dice chart */
+  .dice-controls{ display:flex; gap:10px; flex-wrap:wrap; }
+  .dice-chart{ display:flex; align-items:flex-end; gap:clamp(6px,2vw,18px); height:190px; padding:0 6px; margin-top:10px; border-bottom:1px solid var(--card-border); position:relative; }
+  .dice-chart .theo-line{ position:absolute; left:0; right:0; height:1px; background:repeating-linear-gradient(90deg, var(--text-faint) 0 6px, transparent 6px 12px); }
+  .dice-chart .theo-label{ position:absolute; right:0; font-family:var(--font-mono); font-size:10.5px; color:var(--text-faint); transform:translateY(-16px); }
+  .dice-col{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:8px; height:100%; }
+  .dice-bar{ width:100%; max-width:44px; border-radius:8px 8px 3px 3px; background:linear-gradient(180deg, var(--coral), #A8462A); height:2px; transition:height .5s ease; }
+  .dice-face{ width:30px; height:30px; border:1.5px solid var(--card-border-hi); border-radius:7px; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:13px; color:var(--text-dim); }
+  .dice-freq{ font-family:var(--font-mono); font-size:11.5px; color:var(--text-faint); }
+
+  /* matching */
+  .match-wrap{ display:grid; grid-template-columns:1fr 1fr; gap:10px 24px; }
+  @media(max-width:700px){ .match-wrap{ grid-template-columns:1fr; } }
+  .match-chip{
+    padding:13px 16px; border-radius:12px; border:1px solid var(--card-border-hi); background:var(--card-2);
+    font-size:14px; color:var(--text); cursor:pointer; transition:all .18s; line-height:1.4;
+  }
+  .match-chip:hover{ border-color:var(--gold); }
+  .match-chip.selected{ border-color:var(--gold); background:rgba(255,200,87,0.08); }
+  .match-chip.matched{ border-color:var(--success); background:rgba(74,222,128,0.08); color:var(--success); cursor:default; }
+  .match-chip.wrong{ animation:shake .32s; border-color:var(--danger); }
+  @keyframes shake{ 0%,100%{transform:translateX(0);} 25%{transform:translateX(-6px);} 75%{transform:translateX(6px);} }
+
+  /* latihan */
+  .exercise{ display:flex; flex-direction:column; gap:12px; }
+  .exercise input[type=text], .exercise input[type=number]{
+    background:var(--bg-soft); border:1px solid var(--card-border-hi); color:var(--text);
+    padding:11px 14px; border-radius:10px; font-family:var(--font-mono); font-size:14.5px; width:160px;
+  }
+  .exercise-row{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  .feedback{ padding:12px 16px; border-radius:10px; font-size:14px; display:none; line-height:1.55; }
+  .feedback.show{ display:block; }
+  .feedback.ok{ background:rgba(74,222,128,0.1); border:1px solid var(--teal-dim); color:var(--success); }
+  .feedback.bad{ background:rgba(248,113,113,0.1); border:1px solid #6b2b2b; color:var(--danger); }
+  .diff-badge{ font-family:var(--font-mono); font-size:11px; padding:3px 10px; border-radius:99px; }
+  .diff-badge.easy{ background:rgba(74,222,128,0.12); color:var(--success); }
+  .diff-badge.med{ background:rgba(255,200,87,0.14); color:var(--gold); }
+  .diff-badge.hard{ background:rgba(255,122,80,0.14); color:var(--coral); }
+
+  /* quiz */
+  .quiz-q{ border-top:1px solid var(--card-border); padding-top:16px; margin-top:16px; }
+  .quiz-q:first-child{ border-top:none; padding-top:0; margin-top:0; }
+  .quiz-q .qn{ font-size:15px; color:var(--text); margin-bottom:10px; line-height:1.55; }
+  .quiz-opts{ display:flex; flex-direction:column; gap:8px; }
+  .quiz-opt{
+    display:flex; align-items:center; gap:10px; padding:11px 14px; border-radius:11px;
+    border:1px solid var(--card-border-hi); background:var(--card-2); font-size:14px; cursor:pointer; transition:all .15s;
+  }
+  .quiz-opt:hover{ border-color:var(--teal); }
+  .quiz-opt .rb{ width:16px; height:16px; border-radius:50%; border:1.5px solid var(--text-faint); flex-shrink:0; position:relative; }
+  .quiz-opt.picked .rb{ border-color:var(--teal); }
+  .quiz-opt.picked .rb::after{ content:''; position:absolute; inset:3px; border-radius:50%; background:var(--teal); }
+  .quiz-opt.correct{ border-color:var(--success); background:rgba(74,222,128,0.08); }
+  .quiz-opt.incorrect{ border-color:var(--danger); background:rgba(248,113,113,0.08); }
+  .quiz-explain{ display:none; margin-top:10px; font-size:13px; color:var(--text-dim); background:var(--bg-soft); padding:10px 14px; border-radius:9px; border:1px solid var(--card-border); }
+  .quiz-explain.show{ display:block; }
+  .quiz-score{ display:none; text-align:center; padding:26px; }
+  .quiz-score.show{ display:block; }
+  .quiz-score .big{ font-family:var(--font-head); font-size:48px; color:var(--gold); }
+
+  ul.plain{ margin:0; padding-left:20px; color:var(--text-dim); font-size:14.5px; line-height:1.75; }
+  ul.plain li::marker{ color:var(--coral); }
+
+  .check-item{ display:flex; align-items:flex-start; gap:10px; padding:10px 0; }
+  .check-item .cb{ width:20px; height:20px; border-radius:6px; border:1.5px solid var(--card-border-hi); flex-shrink:0; margin-top:1px; display:flex; align-items:center; justify-content:center; transition:all .2s; }
+  .check-item.on .cb{ background:var(--teal); border-color:var(--teal); }
+  .check-item .cb svg{ opacity:0; transition:opacity .15s; }
+  .check-item.on .cb svg{ opacity:1; }
+  .check-item p{ font-size:14.5px; color:var(--text-dim); line-height:1.55; }
+
+  .num-line{ position:relative; height:70px; margin-top:10px; }
+  .cover-hero{ display:flex; flex-direction:column; align-items:center; text-align:center; gap:22px; padding-top:2vh; }
+  .cover-hero .icon-row{ display:flex; gap:18px; }
+  .icon-chip{ width:56px; height:56px; border-radius:16px; display:flex; align-items:center; justify-content:center; background:var(--card-2); border:1px solid var(--card-border); }
+  .cover-hero h1{ font-size:clamp(30px,6vw,54px); line-height:1.1; background:linear-gradient(120deg, var(--coral), var(--gold) 55%, var(--teal)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .cover-hero .sub{ font-size:clamp(15px,2vw,18px); color:var(--text-dim); max-width:56ch; }
+  .cover-meta{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+
+  textarea.reflect{
+    width:100%; min-height:90px; background:var(--bg-soft); border:1px solid var(--card-border-hi);
+    border-radius:12px; color:var(--text); padding:12px 14px; font-family:var(--font-body); font-size:14px; resize:vertical;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="topbar">
+    <div class="brand"><span class="dot"></span><span>BAB 6 · TEORI PELUANG</span></div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="slide-counter" id="slideCounter">01 / 20</div>
+    <button class="btn-home" id="btnHome" title="Kembali ke awal" aria-label="Kembali ke slide awal">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M3 11.5L12 4l9 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 10v9.5a1 1 0 0 0 1 1H9a1 1 0 0 0 1-1V15a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4.5a1 1 0 0 0 1 1h2.5a1 1 0 0 0 1-1V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+
+  <div class="stage" id="stage">
+
+    <!-- 1. COVER -->
+    <section class="slide" data-slide>
+      <div class="slide-inner cover-hero">
+        <div class="icon-row">
+          <div class="icon-chip"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#FFC857" stroke-width="2"/><circle cx="12" cy="12" r="2.4" fill="#FFC857"/></svg></div>
+          <div class="icon-chip"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" stroke="#FF7A50" stroke-width="2"/><circle cx="8.5" cy="8.5" r="1.3" fill="#FF7A50"/><circle cx="15.5" cy="8.5" r="1.3" fill="#FF7A50"/><circle cx="8.5" cy="15.5" r="1.3" fill="#FF7A50"/><circle cx="15.5" cy="15.5" r="1.3" fill="#FF7A50"/><circle cx="12" cy="12" r="1.3" fill="#FF7A50"/></svg></div>
+          <div class="icon-chip"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 19V9M11 19V4M18 19v13" stroke="#35D6C4" stroke-width="2" stroke-linecap="round"/></svg></div>
+        </div>
+        <div class="eyebrow"><span class="line"></span>PEMBELAJARAN INTERAKTIF · MATEMATIKA<span class="line"></span></div>
+        <h1>Peluang Empirik</h1>
+        <p class="sub">Menjelajahi peluang melalui percobaan nyata — memahami frekuensi relatif dan bagaimana hasil pengamatan membentuk perkiraan peluang suatu kejadian.</p>
+        <div class="cover-meta">
+          <span class="tag">Bab 6 · Teori Peluang</span>
+          <span class="tag">Percobaan &amp; Frekuensi Relatif</span>
+          <span class="tag">± 20 langkah belajar</span>
+        </div>
+        <button class="btn solid" id="btnStart" style="margin-top:8px;">Mulai Belajar →</button>
+      </div>
+    </section>
+
+    <!-- 2. APERSEPSI -->
+    <section class="slide" data-slide>
+      <div class="slide-inner">
+        <div class="eyebrow"><span class="line"></span>APERSEPSI</div>
+        <h2 class="title">Pernahkah kamu menebak sesuatu sebelum mencobanya?</h2>
+        <p class="lede">Sebelum melempar koin, kamu mungkin menebak akan muncul <em>angka</em> atau <em>gambar</em>. Sebelum melempar dadu, kamu menebak mata dadu berapa yang akan muncul. Tebakan itu berkaitan dengan <strong>peluang</strong> — dan cara paling nyata untuk mengetahuinya adalah dengan benar-benar <strong>mencobanya</strong>.</p>
+        <div class="grid3">
+          <div class="card-soft">
+            <p style="font-size:14px;color:var(--text-dim);">🪙 Saat koin dilempar 10 kali, apakah pasti muncul 5 kali angka dan 5 kali gambar?</p>
+          </div>
+          <div class="card-soft">
+            <p style="font-size:14px;color:var(--text-dim);">🎲 Kalau dadu dilempar berkali-kali, bagaimana kita tahu peluang munculnya angka 6?</p>
+          </div>
+          <div class="card-soft">
+            <p style="font-size:14px;color:var(--text-dim);">🌦️ Ramalan cuaca berkata "70% kemungkinan hujan" — dari mana angka itu berasal?</p>
+          </div>
+        </div>
+        <div class="card">
+          <p class="lede">Jawaban dari semua pertanyaan itu ada pada <strong style="color:var(--gold)">Peluang Empirik</strong>: peluang yang dihitung bukan dari dugaan, tetapi dari <strong>hasil percobaan dan pengamatan yang sungguh-sungguh dilakukan</strong>. Yuk, kita pelajari bersama!</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. TUJUAN -->
+    <section class="slide" data-slide>
+      <div class="slide-inner">
+        <div class="eyebrow"><span class="line"></span>TUJUAN PEMBELAJARAN</div>
+        <h2 class="title">Setelah pembelajaran ini, kamu akan mampu:</h2>
+        <div class="card" id="objectivesCard">
+          <div class="check-item" data-check>
+            <div class="cb"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="#062420" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <p>Menjelaskan pengertian percobaan, hasil percobaan, dan ruang sampel.</p>
+          </div>
+          <div class="check-item" data-check>
+            <div class="cb"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="#062420" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <p>Menghitung frekuensi relatif suatu kejadian dari data hasil percobaan.</p>
+          </div>
+          <div class="check-item" data-check>
+            <div class="cb"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="#062420" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <p>Menentukan peluang empirik suatu kejadian berdasarkan hasil pengamatan.</p>
+          </div>
+          <div class="check-item" data-check>
+            <div class="cb"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="#062420" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <p>Menerapkan konsep peluang empirik untuk memperkirakan kejadian dalam kehidupan sehari-hari.</p>
+          </div>
+        </div>
+        <p class="lede" style="font-size:13px;color:var(--text-faint);">Ketuk setiap poin untuk menandainya sebagai target belajarmu hari ini.</p>
+      </div>
+    </section>
+
+    <!-- 4. KONSEP PERCOBAAN -->
+    <section class="slide" data-slide>
+      <div class="slide-inner">
+        <div class="eyebrow"><span class="line"></span>KONSEP DASAR</div>
+        <h2 class="title">Percobaan, Hasil, dan Ruang Sampel</h2>
+        <p class="lede">Sebelum bicara peluang, kita perlu memahami tiga istilah dasar berikut. Ketuk tiap kartu untuk membuka penjelasannya.</p>
+        <div class="card" style="padding:8px;">
+          <div style="display:flex;flex-direction:column;gap:8px;padding:8px;" id="accordionWrap">
+            <div class="accordion-item" data-acc>
+              <div class="accordion-head" data-acc-head>
+                <h4>1. Percobaan (Eksperimen)</h4><span class="plus">+</span>
+              </div>
+              <div class="accordion-body"><div class="accordion-body-inner">
+                Kegiatan yang dilakukan untuk memperoleh suatu hasil pengamatan, dan dapat diulang dalam kondisi yang relatif sama. Contoh: melempar koin, melempar dadu, mengambil bola dari kotak, mengamati cuaca.
+              </div></div>
+            </div>
+            <div class="accordion-item" data-acc>
+              <div class="accordion-head" data-acc-head>
+                <h4>2. Hasil Percobaan (Outcome)</h4><span class="plus">+</span>
+              </div>
+              <div class="accordion-body"><div class="accordion-body-inner">
+                Sesuatu yang benar-benar muncul atau teramati setiap kali percobaan dilakukan. Misalnya, saat koin dilempar sekali, hasil percobaan yang mungkin muncul adalah <strong>angka</strong> atau <strong>gambar</strong>.
+              </div></div>
+            </div>
+            <div class="accordion-item" data-acc>
+              <div class="accordion-head" data-acc-head>
+                <h4>3. Ruang Sampel</h4><span class="plus">+</span>
+              </div>
+              <div class="accordion-body"><div class="accordion-body-inner">
+                Himpunan semua kemungkinan hasil dari suatu percobaan. Untuk pelemparan dadu, ruang sampelnya adalah <span class="mono">{1, 2, 3, 4, 5, 6}</span>. Untuk pelemparan koin, ruang sampelnya adalah <span class="mono">{Angka, Gambar}</span>.
+              </div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. CONTOH PERCOBAAN GALLERY -->
+    <section class="slide" data-slide>
+      <div class="slide-inner">
+        <div class="eyebrow"><span class="line"></span>CONTOH DI SEKITAR KITA</div>
+        <h2 class="title">Berbagai Percobaan dalam Kehidupan Sehari-hari</h2>
+        <p class="lede">Ketuk setiap kartu untuk melihat ruang sampel (kemungkinan hasil) dari percobaan tersebut.</p>
+        <div class="grid3" id="galleryWrap">
+          <div class="reveal-card" data-reveal>
+            <div class="rc-head"><p style="font-weight:600;">🪙 Melempar sekeping koin</p></div>
+            <p class="rc-hint">ketuk untuk lihat ruang sampel</p>
+            <div class="rc-answer">S = {Angka, Gambar}</div>
+          </div>
+          <div class="reveal-card" data-reveal>
+            <div class="rc-head"><p style="font-weight:600;">🎲 Melempar sebuah dadu</p></div>
+            <p class="rc-hint">ketuk untuk lihat ruang sampel</p>
+            <div class="rc-answer">S = {1, 2, 3, 4, 5, 6}</div>
+          </div>
+          <div class="reveal-card" data-reveal>
+            <div class="rc-head"><p style="font-weight:600;">🟠 Mengambil bola dari kotak (3 warna)</p></div>
+            <p class="rc-hint">ketuk untuk lihat ruang sampel</p>
+            <div class="rc-answer">S = {Merah, Biru, Kuning}</div>
+          </div>
+          <div class="reveal-card" data-reveal>
+            <div class="rc-head"><p style="font-weight:600;">☁️ Mengamati cuaca besok</p></div>
+            <p class="rc-hint">ketuk untuk lihat ruang sampel</p>
+            <div class="rc-answer">S = {Cerah, Berawan, Hujan}</div>
+          </div>
+          <div class="reveal-card" data-reveal>
+            <div class="rc-head"><p style="font-weight:600;">🏭 Memeriksa satu produk pabrik</p></div>
+            <p class="rc-hint">ketuk untuk lihat ruang sampel</p>
+            <div class="rc-answer">S = {Baik, Cacat}</div>
+          </div>
+          <div class="reveal-card" data-reveal>
+            <div class="rc-head"><p style="font-weight:600;">📅 Menanyakan hari lahir seorang teman</p></div>
+            <p class="rc-hint">ketuk untuk lihat ruang sampel</p>
+            <div class="rc-answer">S = {Senin, Selasa, Rabu, Kamis, Jumat, Sabtu, Minggu}</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. KONSEP FREKUENSI RELATIF -->
+    <section class="slide" data-slide>
+      <div class="slide-inner">
+        <div class="eyebrow"><span class="line"></span>KONSEP INTI</div>
+        <h2 class="title">Frekuensi dan Frekuensi Relatif</h2>
+        <p class="lede"><strong>Frekuensi</strong> adalah banyak kemunculan suatu hasil dalam sejumlah percobaan yang dilakukan. Jika kita ingin membandingkan seberapa "sering" suatu hasil muncul terhadap keseluruhan percobaan, kita gunakan <strong>frekuensi relatif</strong>.</p>
+        <div class="card">
+          <p style="font-size:13px;color:var(--text-faint);margin-bottom:10px;">RUMUS FREKUENSI RELATIF KEJADIAN A</p>
+          <div class="formula">fr(A) &nbsp;=&nbsp; n(A) / n</div>
+          <ul class="plain" style="margin-top:16px;">
+            <li><span class="mono">n(A)</span> = banyak kemunculan kejadian A dalam percobaan</li>
+            <li><span class="mono">n</span> = banyak percobaan yang dilakukan (seluruhnya)</li>
+            <li>Nilai frekuensi relatif berada di antara 0 dan 1 (atau dinyatakan dalam persen)</li>
+          </ul>
+        </div>
+        <div class="card-soft">
+          <p style="font-size:14px;color:var(--text-dim);"><strong style="color:var(--gold)">Contoh singkat:</strong> Sebuah koin dilempar 20 kali. Hasil "Angka" muncul 8 kali. Maka frekuensi relatif munculnya "Angka" adalah <span class="mono" style="color:var(--teal)">fr(Angka) = 8/20 = 0,4</span> atau 40%.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. SIMULASI KOIN -->
+    <section class="slide" data-slide>
+      <div class="slide-inner">
+        <div class="eyebrow"><span class="line"></span>COBA SENDIRI</div>
+        <h2 class="title">Simulasi: Lempar Koin</h2>
+        <p class="lede">Ketuk tombol untuk "melempar" koin. Perhatikan bagaimana frekuensi relatif Angka dan Gambar berubah setiap kali percobaan bertambah.</p>
+        <div class="card coin-wrap">
+          <div class="coin" id="coinEl">?</div>
+          <div class="dice-controls">
+            <button class="btn solid" id="btnFlip1">Lempar 1×</button>
+            <button class="btn" id="btnFlip10">Lempar 10×</button>
+            <button class="btn ghost" id="btnFlipReset">Reset</button>
+          </div>
+          <div class="coin-stats">
+            <div class="stat-pill"><div class="n" id="coinTotal">0</div><div class="l">Total Percobaan</div></div>
+            <div class="stat-pill"><div class="n" id="coinAngka">0</div><div class="l">Muncul Angka</div></div>
+            <div class="stat-pill"><div class="n" id="coinGambar">0</div><div class="l">Muncul Gambar</div></div>
+          </div>
+          <div style="width:100%;max-width:420px;">
+            <div class="bar-row">
+              <div class="label">Angka</div>
+              <div class="bar-track"><div class="bar-fill a" id="barAngka"></div></div>
+              <div class="bar-val" id="valAngka">fr = 0</div>
+            </div>
+            <div class="bar-row">
+              <div class="label">Gambar</div>
+              <div class="bar-track"><div class="bar-fill b" id="barGambar"></div></div>
+              <div class="bar-val" id="valGambar">fr = 0</div>
+            </div>
+          </div>
+          <p style="font-size:12.5px;color:var(--text-faint);text-align:center;">Semakin banyak koin dilempar, perhatikan apakah frekuensi relatif mendekati 0,5 untuk kedua sisi.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. KONSEP PELUANG EMPIRIK -->
+    <section class="slide" data-slide>
+      <div class="slide-inner">
+        <div class="eyebrow"><span class="line"></span>KONSEP INTI</div>
+        <h2 class="title">Apa itu Peluang Empirik?</h2>
+        <p class="lede"><strong>Peluang empirik</strong> (disebut juga peluang berdasarkan percobaan) adalah peluang suatu kejadian yang dihitung berdasarkan <strong>hasil percobaan atau pengamatan nyata</strong> — bukan berdasarkan perhitungan teoretis semata. Nilai peluang empirik suatu kejadian A sama dengan frekuensi relatif kejadian tersebut.</p>
+        <div class="card">
+          <p style="font-size:13px;color:var(--text-faint);margin-bottom:10px;">RUMUS PELUANG EMPIRIK KEJADIAN A</p>
+          <div class="formula">P<sub>empirik</sub>(A) &nbsp;=&nbsp; fr(A) &nbsp;=&nbsp; n(A) / n</div>
+        </div>
+        <div class="grid2">
+          <div class="card-soft">
+            <p style="font-weight:600;color:var(--coral);margin-bottom:6px;">🔬 Ciri Peluang Empirik</p>
+            <ul class="plain">
+              <li>Dihitung dari data hasil percobaan/pengamatan nyata</li>
+              <li>Bisa berbeda setiap kali percobaan diulang</li>
+              <li>Cocok dipakai saat semua kemungkinan hasil tidak sama besar peluangnya, atau belum diketahui</li>
+            </ul>
+          </div>
+          <div class="card-soft">
+            <p style="font-weight:600;color:var(--teal);margin-bottom:6px;">📌 Semakin banyak percobaan…</p>
+            <p style="font-size:14px;color:var(--text-dim);line-height:1.6;">Nilai peluang empirik cenderung semakin <strong>stabil</strong> dan mendekati nilai peluang sebenarnya. Inilah sebabnya percobaan berulang penting dalam sains dan statistik.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. CONTOH SOAL 1 -->
+    <section class="slide" data-slide>
+      <div class="slide-inner">
+        <div class="eyebrow"><span class="line"></span>CONTOH SOAL 1</div>
+        <h2 class="title">Menghitung Frekuensi Relatif dari Data</h2>
+        <div class="card">
+          <p class="lede"><strong>Soal:</strong> Sebuah kotak berisi kartu berwarna. Dalam 50 kali pengambilan (dengan pengembalian), diperoleh data: kartu Merah terambil 22 kali, Biru 18 kali, dan Kuning 10 kali. Tentukan frekuensi relatif tiap warna!</p>
+          <div class="grid3" style="margin-top:14px;">
+            <div class="card-soft" style="text-align:center;"><p style="font-size:13px;color:var(--text-faint);">MERAH</p><p style="font-family:var(--font-mono);font-size:20px;color:var(--text);">22 / 50</p></div>
+            <div class="card-soft" style="text-align:center;"><p style="font-size:13px;color:var(--text-faint);">BIRU</p><p style="font-family:var(--font-mono);font-size:20px;color:var(--text);">18 / 50</p></div>
+            <div class="card-soft" style="text-align:center;"><p style="font-size:13px;color:var(--text-faint);">KUNING</p><p style="font-family:var(--font-mono);font-size:20px;color:var(--text);">10 / 50</p></div>
+          </div>
+          <div class="reveal-card" data-reveal style="margin-top:16px;">
+            <div class="rc-head"><p style="font-weight:600;">Lihat Langkah Penyelesaian &amp; Jawaban</p></div>
+            <p class="rc-hint">ketuk untuk membuka pembahasan</p>
+            <div class="rc-answer">
+              fr(Merah) = 22/50 = 0,44 (44%)<br>
+              fr(Biru) = 18/50 = 0,36 (36%)<br>
+              fr(Kuning) = 10/50 = 0,20 (20%)<br><br>
+              Periksa: 0,44 + 0,36 + 0,20 = 1,00 ✓ (jumlah seluruh frekuensi relatif selalu 1)
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. CONTOH SOAL 2 -->
+    <section class="slide" data-slide>
+      <div class="slide-inner">
+        <div class="eyebrow"><span class="line"></span>CONTOH SOAL 2</div>
+        <h2 class="title">Menerapkan Peluang Empirik</h2>
+        <div class="card">
+          <p class="lede"><strong>Soal:</strong> Sebuah pabrik lampu memeriksa 200 lampu secara acak sebagai sampel. Hasilnya, 6 lampu ditemukan cacat. Berapa peluang empirik sebuah lampu yang diperiksa berikutnya akan cacat? Jika pabrik memproduksi 5.000 lampu, perkirakan berapa banyak yang cacat!</p>
+          <div class="reveal-card" data-reveal style="margin-top:14px;">
+            <div class="rc-head"><p style="font-weight:600;">Lihat Langkah Penyelesaian &amp; Jawaban</p></div>
+            <p class="rc-hint">ketuk untuk membuka pembahasan</p>
+            <div class="rc-answer">
+              Langkah 1 — Hitung peluang empirik:<br>
+              P<sub>empirik</sub>(cacat) = n(cacat)/n = 6/200 = 0,03 (3%)<br><br>
+              Langkah 2 — Perkirakan untuk 5.000 lampu:<br>
+              Perkiraan jumlah cacat = 0,03 × 5.000 = <strong>150 lampu</strong><br><br>
+              Catatan: ini hanya perkiraan berdasarkan sampel, bukan kepastian mutlak.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11. SIMULASI DADU -->
+    <section class="slide" data-slide>
+      <div class="slide-inner">
+        <div class="eyebrow"><span class="line"></span>COBA SENDIRI</div>
+        <h2 class="title">Simulasi: Lempar Dadu &amp; Grafik Frekuensi Relatif</h2>
+        <p class="lede">Lempar dadu berkali-kali dan amati grafik batang di bawah. Garis putus-putus menunjukkan peluang teoretik tiap sisi (1/6 ≈ 16,7%).</p>
+        <div class="card">
+          <div class="dice-controls">
+            <button class="btn solid" id="btnRoll1">Lempar 1×</button>
+            <button class="btn" id="btnRoll10">Lempar 10×</button>
+            <button class="btn" id="btnRoll100">Lempar 100×</button>
+            <button class="btn ghost" id="btnRollReset">Reset</button>
+          </div>
+          <p style="font-size:12.5px;color:var(--text-faint);margin-top:10px;">Total percobaan: <span class="mono" id="diceTotal" style="color:var(--text);">0</span></p>
+          <div class="dice-chart" id="diceChart">
+            <div class="theo-line" style="bottom:33.4%;"><span class="theo-label" style="top:-2px;">≈16,7% teoretik</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12. MATCHING -->
+    <section class="slide" data-slide>
+      <div class="slide-inner">
+        <div class="eyebrow"><span class="line"></span>AKTIVITAS</div>
+        <h2 class="title">Cocokkan Istilah dengan Penjelasannya</h2>
+        <p class="lede">Ketuk satu istilah di kiri, lalu ketuk penjelasan yang sesuai di kanan.</p>
+        <div class="card">
+          <div class="match-wrap">
+            <div style="display:flex;flex-direction:column;gap:10px;" id="matchTerms"></div>
+            <div style="display:flex;flex-direction:column;gap:10px;" id="matchDefs"></div>
+          </div>
+          <p id="matchStatus" style="margin-top:14px;font-size:13px;color:var(--text-faint);">0 dari 5 pasangan benar.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 13. HUKUM BILANGAN BESAR / EMPIRIK VS TEORETIK -->
+    <section class="slide" data-slide>
+      <div class="slide-inner">
+        <div class="eyebrow"><span class="line"></span>MEMPERLUAS PEMAHAMAN</div>
+        <h2 class="title">Peluang Empirik vs. Peluang Teoretik</h2>
+        <p class="lede">Selain dihitung dari percobaan (empirik), peluang juga dapat dihitung secara teoretis bila semua hasil dianggap sama mungkin muncul. Membandingkan keduanya membantu kita memahami makna hasil percobaan.</p>
+        <div class="grid2">
+          <div class="card-soft">
+            <p class="tag" style="margin-bottom:10px;">PELUANG EMPIRIK</p>
+            <p style="font-size:14px;color:var(--text-dim);line-height:1.65;">Dihitung dari data hasil percobaan yang benar-benar dilakukan: <span class="mono" style="color:var(--gold)">n(A)/n</span>. Nilainya bisa berubah-ubah tiap kali percobaan diulang, terutama jika jumlah percobaan masih sedikit.</p>
+          </div>
+          <div class="card-soft">
+            <p class="tag" style="margin-bottom:10px;">PELUANG TEORETIK</p>
+            <p style="font-size:14px;color:var(--text-dim);line-height:1.65;">Dihitung dari perbandingan banyak hasil yang diharapkan dengan banyak seluruh anggota ruang sampel, tanpa perlu melakukan percobaan. Contoh: peluang teoretik munculnya angka 6 pada dadu adalah 1/6.</p>
+          </div>
+        </div>
+        <div class="card">
+          <p class="lede">Cobalah lihat kembali simulasi dadu sebelumnya — <strong>semakin banyak percobaan dilakukan, nilai frekuensi relatif (peluang empirik) cenderung semakin mendekati peluang teoretiknya.</strong> Inilah gagasan penting di balik percobaan berulang dalam statistik.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 14. LATIHAN MUDAH -->
+    <section class="slide" data-slide>
+      <div class="slide-inner">
+        <div class="eyebrow"><span class="line"></span>LATIHAN</div>
+        <h2 class="title">Latihan — Tingkat Mudah</h2>
+        <div class="card exercise">
+          <span class="diff-badge easy" style="width:fit-content;">MUDAH</span>
+          <p class="lede">Sebuah dadu dilempar 20 kali. Mata dadu bernilai 6 muncul sebanyak 4 kali. Berapakah frekuensi relatif munculnya mata dadu 6? (tulis dalam bentuk desimal, misal 0,4)</p>
+          <div class="exercise-row">
+            <input type="text" id="ex1Input" placeholder="cth: 0,2">
+            <button class="btn solid small" id="ex1Btn">Periksa Jawaban</button>
+          </div>
+          <div class="feedback" id="ex1Feedback"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 15. LATIHAN SEDANG -->
+    <section class="slide" data-slide>
+      <div class="slide-inner">
+        <div class="eyebrow"><span class="line"></span>LATIHAN</div>
+        <h2 class="title">Latihan — Tingkat Sedang</h2>
+        <div class="card exercise">
+          <span class="diff-badge med" style="width:fit-content;">SEDANG</span>
+          <p class="lede">Dalam 80 kali percobaan melempar koin, hasil "Gambar" muncul sebanyak 34 kali. Berapa peluang empirik munculnya "Angka"? (tulis dalam bentuk desimal)</p>
+          <div class="exercise-row">
+            <input type="text" id="ex2Input" placeholder="cth: 0,5">
+            <button class="btn solid small" id="ex2Btn">Periksa Jawaban</button>
+          </div>
+          <div class="feedback" id="ex2Feedback"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 16. LATIHAN MENANTANG -->
+    <section class="slide" data-slide>
+      <div class="slide-inner">
+        <div class="eyebrow"><span class="line"></span>LATIHAN</div>
+        <h2 class="title">Latihan — Tingkat Menantang</h2>
+        <div class="card exercise">
+          <span class="diff-badge hard" style="width:fit-content;">MENANTANG</span>
+          <p class="lede">Sebuah survei terhadap 250 siswa tentang olahraga favorit menghasilkan data: Sepak Bola 100 siswa, Bulu Tangkis 50 siswa, Basket 75 siswa, dan lainnya 25 siswa.</p>
+          <p class="lede"><strong>Langkah 1:</strong> Berapa peluang empirik seorang siswa menyukai Bulu Tangkis? (desimal)</p>
+          <div class="exercise-row">
+            <input type="text" id="ex3aInput" placeholder="cth: 0,2">
+            <button class="btn small" id="ex3aBtn">Periksa</button>
+          </div>
+          <div class="feedback" id="ex3aFeedback"></div>
+          <p class="lede" style="margin-top:6px;"><strong>Langkah 2:</strong> Jika di sekolah lain yang memiliki 4.000 siswa memiliki kecenderungan serupa, perkirakan jumlah siswa yang menyukai Bulu Tangkis!</p>
+          <div class="exercise-row">
+            <input type="text" id="ex3bInput" placeholder="cth: 800">
+            <button class="btn solid small" id="ex3bBtn">Periksa</button>
+          </div>
+          <div class="feedback" id="ex3bFeedback"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 17. KUIS -->
+    <section class="slide" data-slide>
+      <div class="slide-inner">
+        <div class="eyebrow"><span class="line"></span>KUIS AKHIR</div>
+        <h2 class="title">Uji Pemahamanmu</h2>
+        <p class="lede">Jawab seluruh soal berikut, lalu ketuk "Selesai &amp; Lihat Skor" di bagian bawah.</p>
+        <div class="card" id="quizCard"></div>
+        <div class="card quiz-score" id="quizScoreCard">
+          <p class="big" id="quizScoreBig">0/8</p>
+          <p style="color:var(--text-dim);margin-top:6px;" id="quizScoreMsg"></p>
+          <button class="btn solid" style="margin-top:16px;" id="btnQuizRetry">Ulangi Kuis</button>
+        </div>
+        <button class="btn solid" id="btnQuizSubmit" style="width:fit-content;align-self:center;">Selesai &amp; Lihat Skor</button>
+      </div>
+    </section>
+
+    <!-- 18. REFLEKSI -->
+    <section class="slide" data-slide>
+      <div class="slide-inner">
+        <div class="eyebrow"><span class="line"></span>REFLEKSI</div>
+        <h2 class="title">Sebelum lanjut, coba renungkan sejenak</h2>
+        <div class="card" style="display:flex;flex-direction:column;gap:16px;">
+          <div>
+            <p class="lede" style="margin-bottom:8px;">1. Bagian mana dari materi Peluang Empirik yang menurutmu paling mudah dipahami?</p>
+            <textarea class="reflect" placeholder="Tulis jawabanmu di sini..."></textarea>
+          </div>
+          <div>
+            <p class="lede" style="margin-bottom:8px;">2. Bagian mana yang masih terasa membingungkan dan ingin kamu pelajari lagi?</p>
+            <textarea class="reflect" placeholder="Tulis jawabanmu di sini..."></textarea>
+          </div>
+          <div>
+            <p class="lede" style="margin-bottom:8px;">3. Sebutkan satu contoh peluang empirik yang bisa kamu temukan dalam kehidupan sehari-harimu!</p>
+            <textarea class="reflect" placeholder="Tulis jawabanmu di sini..."></textarea>
+          </div>
+          <p style="font-size:12.5px;color:var(--text-faint);">Refleksi ini untuk dirimu sendiri — tidak dinilai, dan tidak disimpan setelah halaman ditutup.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 19. RANGKUMAN -->
+    <section class="slide" data-slide>
+      <div class="slide-inner">
+        <div class="eyebrow"><span class="line"></span>RANGKUMAN</div>
+        <h2 class="title">Yang Perlu Kamu Ingat</h2>
+        <div class="grid2">
+          <div class="card-soft">
+            <p style="font-weight:600;color:var(--coral);margin-bottom:6px;">Percobaan &amp; Ruang Sampel</p>
+            <p style="font-size:14px;color:var(--text-dim);line-height:1.6;">Percobaan adalah kegiatan yang dapat diulang untuk memperoleh hasil. Ruang sampel adalah himpunan semua kemungkinan hasilnya.</p>
+          </div>
+          <div class="card-soft">
+            <p style="font-weight:600;color:var(--gold);margin-bottom:6px;">Frekuensi Relatif</p>
+            <p style="font-size:14px;color:var(--text-dim);line-height:1.6;">fr(A) = n(A)/n — perbandingan banyak kemunculan kejadian A terhadap banyak seluruh percobaan.</p>
+          </div>
+          <div class="card-soft">
+            <p style="font-weight:600;color:var(--teal);margin-bottom:6px;">Peluang Empirik</p>
+            <p style="font-size:14px;color:var(--text-dim);line-height:1.6;">P<sub>empirik</sub>(A) = fr(A) = n(A)/n — dihitung dari data percobaan nyata, bukan dugaan teoretis.</p>
+          </div>
+          <div class="card-soft">
+            <p style="font-weight:600;color:#C9A6FF;margin-bottom:6px;">Semakin Banyak Percobaan</p>
+            <p style="font-size:14px;color:var(--text-dim);line-height:1.6;">Nilai peluang empirik cenderung semakin stabil dan mendekati peluang teoretiknya.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 20. PENUTUP -->
+    <section class="slide" data-slide>
+      <div class="slide-inner cover-hero">
+        <div class="icon-chip" style="width:64px;height:64px;"><svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="#35D6C4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h1 style="font-size:clamp(26px,5vw,42px);">Kerja Bagus!</h1>
+        <p class="sub">Kamu telah menyelesaikan pembelajaran Peluang Empirik — mulai dari percobaan, frekuensi relatif, simulasi, latihan, hingga kuis. Teruslah berlatih menemukan peluang empirik di sekitarmu!</p>
+        <button class="btn solid" id="btnRestart">Pelajari Ulang dari Awal ↺</button>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="navbar">
+    <button class="nav-btn" id="btnPrev"><span>←</span><span class="label">Sebelumnya</span></button>
+    <div class="dots" id="dotsWrap"></div>
+    <button class="nav-btn primary" id="btnNext"><span class="label">Berikutnya</span><span>→</span></button>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ================= NAVIGATION ================= */
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  let current = 0;
+
+  const progressFill = document.getElementById('progressFill');
+  const slideCounter = document.getElementById('slideCounter');
+  const dotsWrap = document.getElementById('dotsWrap');
+  const btnPrev = document.getElementById('btnPrev');
+  const btnNext = document.getElementById('btnNext');
+
+  slides.forEach((s,i)=>{
+    const d = document.createElement('div');
+    d.className = 'seg';
+    d.addEventListener('click', ()=> goTo(i));
+    dotsWrap.appendChild(d);
+  });
+  const segs = Array.from(dotsWrap.children);
+
+  function pad(n){ return String(n).padStart(2,'0'); }
+
+  function render(){
+    slides.forEach((s,i)=> s.classList.toggle('active', i===current));
+    progressFill.style.width = ((current+1)/total*100)+'%';
+    slideCounter.textContent = pad(current+1)+' / '+pad(total);
+    segs.forEach((seg,i)=> seg.classList.toggle('on', i===current));
+    btnPrev.disabled = current===0;
+    btnNext.disabled = current===total-1;
+    btnNext.classList.toggle('primary', current!==total-1);
+    if(current===total-1){ btnNext.classList.remove('primary'); }
+    slides[current].scrollTop = 0;
+  }
+
+  function goTo(i){
+    current = Math.max(0, Math.min(total-1, i));
+    render();
+  }
+
+  btnPrev.addEventListener('click', ()=> goTo(current-1));
+  btnNext.addEventListener('click', ()=> goTo(current+1));
+  document.getElementById('btnHome').addEventListener('click', ()=> goTo(0));
+  document.getElementById('btnStart').addEventListener('click', ()=> goTo(1));
+  document.getElementById('btnRestart').addEventListener('click', ()=> goTo(0));
+
+  document.addEventListener('keydown', (e)=>{
+    const tag = (document.activeElement && document.activeElement.tagName) || '';
+    if(tag === 'INPUT' || tag === 'TEXTAREA') return;
+    if(e.key === 'ArrowRight'){ goTo(current+1); }
+    if(e.key === 'ArrowLeft'){ goTo(current-1); }
+  });
+
+  render();
+
+  /* ================= SLIDE 3: OBJECTIVES CHECKLIST ================= */
+  document.querySelectorAll('#objectivesCard [data-check]').forEach(item=>{
+    item.addEventListener('click', ()=> item.classList.toggle('on'));
+  });
+
+  /* ================= SLIDE 4: ACCORDION ================= */
+  document.querySelectorAll('#accordionWrap [data-acc-head]').forEach(head=>{
+    head.addEventListener('click', ()=>{
+      head.parentElement.classList.toggle('open');
+    });
+  });
+
+  /* ================= GENERIC REVEAL CARDS (slides 5, 9, 10) ================= */
+  document.querySelectorAll('[data-reveal]').forEach(card=>{
+    card.addEventListener('click', ()=>{
+      card.classList.add('shown');
+      const hint = card.querySelector('.rc-hint');
+      if(hint) hint.textContent = 'jawaban ditampilkan';
+    });
+  });
+
+  /* ================= SLIDE 7: COIN SIMULATION ================= */
+  const coinEl = document.getElementById('coinEl');
+  const coinTotalEl = document.getElementById('coinTotal');
+  const coinAngkaEl = document.getElementById('coinAngka');
+  const coinGambarEl = document.getElementById('coinGambar');
+  const barAngka = document.getElementById('barAngka');
+  const barGambar = document.getElementById('barGambar');
+  const valAngka = document.getElementById('valAngka');
+  const valGambar = document.getElementById('valGambar');
+
+  let coin = { angka:0, gambar:0 };
+
+  function coinRender(){
+    const t = coin.angka + coin.gambar;
+    coinTotalEl.textContent = t;
+    coinAngkaEl.textContent = coin.angka;
+    coinGambarEl.textContent = coin.gambar;
+    const frA = t? coin.angka/t : 0;
+    const frG = t? coin.gambar/t : 0;
+    barAngka.style.width = (frA*100)+'%';
+    barGambar.style.width = (frG*100)+'%';
+    valAngka.textContent = 'fr = '+frA.toFixed(2);
+    valGambar.textContent = 'fr = '+frG.toFixed(2);
+  }
+
+  function flipOnce(){
+    const result = Math.random() < 0.5 ? 'angka' : 'gambar';
+    coin[result]++;
+    return result;
+  }
+
+  function playCoinAnim(label){
+    coinEl.classList.remove('flipping');
+    void coinEl.offsetWidth;
+    coinEl.classList.add('flipping');
+    coinEl.textContent = label === 'angka' ? 'ANGKA' : 'GAMBAR';
+  }
+
+  document.getElementById('btnFlip1').addEventListener('click', ()=>{
+    const r = flipOnce();
+    playCoinAnim(r);
+    coinRender();
+  });
+  document.getElementById('btnFlip10').addEventListener('click', ()=>{
+    let last = 'angka';
+    for(let i=0;i<10;i++){ last = flipOnce(); }
+    playCoinAnim(last);
+    coinRender();
+  });
+  document.getElementById('btnFlipReset').addEventListener('click', ()=>{
+    coin = { angka:0, gambar:0 };
+    coinEl.textContent = '?';
+    coinEl.classList.remove('flipping');
+    coinRender();
+  });
+  coinRender();
+
+  /* ================= SLIDE 11: DICE SIMULATION ================= */
+  const diceChart = document.getElementById('diceChart');
+  const diceTotalEl = document.getElementById('diceTotal');
+  let diceCounts = [0,0,0,0,0,0];
+
+  const diceCols = [];
+  for(let f=1; f<=6; f++){
+    const col = document.createElement('div');
+    col.className = 'dice-col';
+    col.innerHTML =
+      '<span class="dice-freq" data-freq>0%</span>'+
+      '<div class="dice-bar" data-bar></div>'+
+      '<div class="dice-face">'+f+'</div>';
+    diceChart.appendChild(col);
+    diceCols.push({ bar: col.querySelector('[data-bar]'), freq: col.querySelector('[data-freq]') });
+  }
+
+  function diceRender(){
+    const total = diceCounts.reduce((a,b)=>a+b,0);
+    diceTotalEl.textContent = total;
+    diceCounts.forEach((c,i)=>{
+      const fr = total ? c/total : 0;
+      const heightPct = Math.min(100, fr*100 / 0.5 * 100 ? Math.min(100, (fr/0.5)*100) : 0);
+      diceCols[i].bar.style.height = (total ? Math.min(100, (fr/0.5)*100) : 0) + '%';
+      diceCols[i].freq.textContent = total ? Math.round(fr*100)+'%' : '0%';
+    });
+  }
+
+  function rollOnce(){
+    const face = Math.floor(Math.random()*6);
+    diceCounts[face]++;
+  }
+
+  document.getElementById('btnRoll1').addEventListener('click', ()=>{ rollOnce(); diceRender(); });
+  document.getElementById('btnRoll10').addEventListener('click', ()=>{ for(let i=0;i<10;i++) rollOnce(); diceRender(); });
+  document.getElementById('btnRoll100').addEventListener('click', ()=>{ for(let i=0;i<100;i++) rollOnce(); diceRender(); });
+  document.getElementById('btnRollReset').addEventListener('click', ()=>{ diceCounts=[0,0,0,0,0,0]; diceRender(); });
+  diceRender();
+
+  /* ================= SLIDE 12: MATCHING ================= */
+  const pairs = [
+    { term:'Percobaan', def:'Kegiatan yang dilakukan untuk memperoleh data/hasil dan dapat diulang' },
+    { term:'Hasil Percobaan', def:'Sesuatu yang benar-benar muncul setiap kali percobaan dilakukan' },
+    { term:'Frekuensi', def:'Banyak kemunculan suatu hasil dalam sejumlah percobaan' },
+    { term:'Frekuensi Relatif', def:'Perbandingan banyak kemunculan suatu kejadian dengan banyak percobaan' },
+    { term:'Peluang Empirik', def:'Peluang yang dihitung berdasarkan hasil percobaan atau pengamatan nyata' }
+  ];
+  const termsWrap = document.getElementById('matchTerms');
+  const defsWrap = document.getElementById('matchDefs');
+  const matchStatus = document.getElementById('matchStatus');
+
+  const shuffledDefs = [...pairs].sort(()=> Math.random()-0.5);
+
+  pairs.forEach((p,i)=>{
+    const chip = document.createElement('div');
+    chip.className = 'match-chip';
+    chip.textContent = p.term;
+    chip.dataset.term = p.term;
+    termsWrap.appendChild(chip);
+  });
+  shuffledDefs.forEach((p)=>{
+    const chip = document.createElement('div');
+    chip.className = 'match-chip';
+    chip.textContent = p.def;
+    chip.dataset.term = p.term;
+    defsWrap.appendChild(chip);
+  });
+
+  let selectedTerm = null;
+  let matchedCount = 0;
+
+  function checkMatchDone(){
+    matchStatus.textContent = matchedCount+' dari '+pairs.length+' pasangan benar.';
+    if(matchedCount === pairs.length){
+      matchStatus.textContent = 'Mantap! Semua istilah berhasil dicocokkan. 🎉';
+    }
+  }
+
+  termsWrap.querySelectorAll('.match-chip').forEach(chip=>{
+    chip.addEventListener('click', ()=>{
+      if(chip.classList.contains('matched')) return;
+      termsWrap.querySelectorAll('.match-chip').forEach(c=>c.classList.remove('selected'));
+      chip.classList.add('selected');
+      selectedTerm = chip;
+    });
+  });
+
+  defsWrap.querySelectorAll('.match-chip').forEach(chip=>{
+    chip.addEventListener('click', ()=>{
+      if(chip.classList.contains('matched') || !selectedTerm) return;
+      if(chip.dataset.term === selectedTerm.dataset.term){
+        chip.classList.add('matched');
+        selectedTerm.classList.add('matched');
+        selectedTerm.classList.remove('selected');
+        selectedTerm = null;
+        matchedCount++;
+        checkMatchDone();
+      } else {
+        chip.classList.add('wrong');
+        selectedTerm.classList.add('wrong');
+        setTimeout(()=>{
+          chip.classList.remove('wrong');
+          selectedTerm && selectedTerm.classList.remove('wrong','selected');
+          selectedTerm = null;
+        }, 350);
+      }
+    });
+  });
+  checkMatchDone();
+
+  /* ================= SLIDES 14-16: LATIHAN ================= */
+  function parseNum(str){
+    if(!str) return NaN;
+    const cleaned = str.trim().replace(/\./g,'').replace(',', '.');
+    return parseFloat(cleaned);
+  }
+  function withinTolerance(val, target, tol){
+    return Math.abs(val-target) <= tol;
+  }
+  function setupExercise(inputId, btnId, feedbackId, correctVal, tol, correctMsg, wrongMsg){
+    const input = document.getElementById(inputId);
+    const btn = document.getElementById(btnId);
+    const fb = document.getElementById(feedbackId);
+    btn.addEventListener('click', ()=>{
+      const val = parseNum(input.value);
+      fb.classList.add('show');
+      if(!isNaN(val) && withinTolerance(val, correctVal, tol)){
+        fb.classList.remove('bad'); fb.classList.add('ok');
+        fb.innerHTML = '<strong>Benar! ✓</strong> '+correctMsg;
+      } else {
+        fb.classList.remove('ok'); fb.classList.add('bad');
+        fb.innerHTML = '<strong>Belum tepat.</strong> '+wrongMsg;
+      }
+    });
+  }
+
+  setupExercise('ex1Input','ex1Btn','ex1Feedback', 0.2, 0.01,
+    'fr(mata dadu 6) = 4/20 = 0,2.',
+    'Ingat rumus fr(A) = n(A)/n = 4/20. Coba hitung lagi.');
+
+  setupExercise('ex2Input','ex2Btn','ex2Feedback', 0.575, 0.01,
+    'Angka muncul 80 − 34 = 46 kali, sehingga fr(Angka) = 46/80 = 0,575.',
+    'Hitung dulu berapa kali Angka muncul (80 − 34), baru bagi dengan total percobaan (80).');
+
+  setupExercise('ex3aInput','ex3aBtn','ex3aFeedback', 0.2, 0.01,
+    'P(Bulu Tangkis) = 50/250 = 0,2.',
+    'Bagi banyak siswa penyuka Bulu Tangkis (50) dengan total responden (250).');
+
+  setupExercise('ex3bInput','ex3bBtn','ex3bFeedback', 800, 15,
+    'Perkiraan = 0,2 × 4.000 = 800 siswa.',
+    'Kalikan peluang empirik dari Langkah 1 dengan 4.000 siswa.');
+
+  /* ================= SLIDE 17: QUIZ ================= */
+  const quizData = [
+    {
+      q: 'Manakah pernyataan yang paling tepat menggambarkan pengertian "percobaan" dalam peluang?',
+      opts: [
+        'Kegiatan yang hanya bisa dilakukan satu kali dan tidak dapat diulang',
+        'Kegiatan yang dilakukan untuk memperoleh hasil pengamatan dan dapat diulang dalam kondisi serupa',
+        'Perkiraan yang dibuat tanpa melakukan pengamatan apa pun',
+        'Kumpulan seluruh kemungkinan hasil dari suatu kejadian'
+      ], correct:1,
+      exp:'Percobaan adalah kegiatan yang dilakukan untuk memperoleh hasil, dan dapat diulang dalam kondisi yang relatif sama.'
+    },
+    {
+      q: 'Rumus frekuensi relatif kejadian A adalah…',
+      opts:['fr(A) = n × n(A)', 'fr(A) = n(A) / n', 'fr(A) = n / n(A)', 'fr(A) = n(A) + n'],
+      correct:1,
+      exp:'Frekuensi relatif dihitung sebagai perbandingan banyak kemunculan kejadian A, n(A), terhadap banyak seluruh percobaan, n.'
+    },
+    {
+      q: 'Sebuah koin dilempar 40 kali dan hasil "Gambar" muncul 18 kali. Frekuensi relatif munculnya "Angka" adalah…',
+      opts:['0,18', '0,45', '0,55', '0,82'],
+      correct:2,
+      exp:'Angka muncul 40 − 18 = 22 kali, sehingga fr(Angka) = 22/40 = 0,55.'
+    },
+    {
+      q: 'Peluang empirik juga sering disebut sebagai…',
+      opts:['Peluang teoretik', 'Peluang berdasarkan percobaan/pengamatan', 'Peluang pasti', 'Peluang mustahil'],
+      correct:1,
+      exp:'Karena dihitung dari data hasil percobaan atau pengamatan nyata, peluang empirik disebut juga peluang berdasarkan percobaan.'
+    },
+    {
+      q: 'Semakin banyak percobaan dilakukan, nilai frekuensi relatif suatu kejadian cenderung…',
+      opts:['Semakin jauh dari peluang teoretik', 'Semakin acak dan tidak menentu', 'Semakin stabil dan mendekati peluang teoretik', 'Selalu tetap sama sejak awal'],
+      correct:2,
+      exp:'Ini merupakan gagasan penting di balik percobaan berulang: nilai frekuensi relatif cenderung semakin stabil mendekati peluang sebenarnya.'
+    },
+    {
+      q: 'Dari 150 produk yang diperiksa, ditemukan 9 produk cacat. Peluang empirik sebuah produk cacat adalah…',
+      opts:['0,06', '0,6', '0,09', '0,9'],
+      correct:0,
+      exp:'P(cacat) = 9/150 = 0,06.'
+    },
+    {
+      q: 'Manakah pernyataan berikut yang BENAR tentang peluang empirik?',
+      opts:[
+        'Nilainya selalu sama persis dengan peluang teoretik',
+        'Dihitung tanpa memerlukan data hasil percobaan',
+        'Dihitung berdasarkan hasil pengamatan/percobaan nyata, bukan hanya dugaan',
+        'Hanya berlaku untuk percobaan melempar koin'
+      ], correct:2,
+      exp:'Ciri utama peluang empirik adalah dihitung dari data hasil pengamatan atau percobaan yang benar-benar dilakukan.'
+    },
+    {
+      q: 'Dalam percobaan lempar dadu sebanyak 60 kali, mata dadu bernilai 3 muncul 8 kali. Frekuensi relatifnya adalah…',
+      opts:['8/60 ≈ 0,133', '60/8 = 7,5', '8/6 ≈ 1,33', '3/60 = 0,05'],
+      correct:0,
+      exp:'fr(3) = n(3)/n = 8/60 ≈ 0,133.'
+    }
+  ];
+
+  const quizCard = document.getElementById('quizCard');
+  quizData.forEach((item, qi)=>{
+    const qDiv = document.createElement('div');
+    qDiv.className = 'quiz-q';
+    qDiv.dataset.qi = qi;
+    let optsHtml = '<div class="quiz-opts">';
+    item.opts.forEach((opt, oi)=>{
+      optsHtml += '<div class="quiz-opt" data-oi="'+oi+'"><span class="rb"></span><span>'+opt+'</span></div>';
+    });
+    optsHtml += '</div><div class="quiz-explain">'+item.exp+'</div>';
+    qDiv.innerHTML = '<p class="qn">'+(qi+1)+'. '+item.q+'</p>'+optsHtml;
+    quizCard.appendChild(qDiv);
+  });
+
+  const quizAnswers = new Array(quizData.length).fill(null);
+
+  quizCard.querySelectorAll('.quiz-q').forEach(qDiv=>{
+    const qi = parseInt(qDiv.dataset.qi,10);
+    qDiv.querySelectorAll('.quiz-opt').forEach(opt=>{
+      opt.addEventListener('click', ()=>{
+        if(qDiv.classList.contains('locked')) return;
+        qDiv.querySelectorAll('.quiz-opt').forEach(o=>o.classList.remove('picked'));
+        opt.classList.add('picked');
+        quizAnswers[qi] = parseInt(opt.dataset.oi,10);
+      });
+    });
+  });
+
+  const quizScoreCard = document.getElementById('quizScoreCard');
+  const quizScoreBig = document.getElementById('quizScoreBig');
+  const quizScoreMsg = document.getElementById('quizScoreMsg');
+  const btnQuizSubmit = document.getElementById('btnQuizSubmit');
+  const btnQuizRetry = document.getElementById('btnQuizRetry');
+
+  btnQuizSubmit.addEventListener('click', ()=>{
+    let score = 0;
+    quizCard.querySelectorAll('.quiz-q').forEach(qDiv=>{
+      const qi = parseInt(qDiv.dataset.qi,10);
+      const correctIdx = quizData[qi].correct;
+      const chosen = quizAnswers[qi];
+      qDiv.classList.add('locked');
+      qDiv.querySelectorAll('.quiz-opt').forEach(o=>{
+        const oi = parseInt(o.dataset.oi,10);
+        if(oi === correctIdx) o.classList.add('correct');
+        else if(oi === chosen) o.classList.add('incorrect');
+      });
+      qDiv.querySelector('.quiz-explain').classList.add('show');
+      if(chosen === correctIdx) score++;
+    });
+    quizScoreBig.textContent = score+'/'+quizData.length;
+    let msg;
+    if(score === quizData.length) msg = 'Sempurna! Kamu memahami konsep peluang empirik dengan sangat baik. 🎉';
+    else if(score >= quizData.length*0.6) msg = 'Bagus! Sebagian besar sudah kamu pahami — cek lagi bagian yang salah, ya.';
+    else msg = 'Terus berlatih, ya! Coba baca kembali materi frekuensi relatif dan peluang empirik.';
+    quizScoreMsg.textContent = msg;
+    quizScoreCard.classList.add('show');
+    btnQuizSubmit.style.display = 'none';
+  });
+
+  btnQuizRetry.addEventListener('click', ()=>{
+    quizAnswers.fill(null);
+    quizCard.querySelectorAll('.quiz-q').forEach(qDiv=>{
+      qDiv.classList.remove('locked');
+      qDiv.querySelectorAll('.quiz-opt').forEach(o=> o.classList.remove('picked','correct','incorrect'));
+      qDiv.querySelector('.quiz-explain').classList.remove('show');
+    });
+    quizScoreCard.classList.remove('show');
+    btnQuizSubmit.style.display = '';
+  });
+
+})();
+</script>
+</body>
+</html>

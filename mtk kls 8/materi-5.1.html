@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>5.1 Konsep Persamaan Garis Lurus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark;--bg:#0a0f26;--card:#0f1633;--ink:#f2f5ff;--mut:#8d9bd0;--line:#171f45;--bd:#2b3566;--acc:#ff9a3c;--accs:rgba(255,154,60,.14);--pop:#7dd3fc;--ok:#4ade80;--bad:#f87171}
+*,*:before,*:after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font:17px/1.6 "Inter",system-ui,sans-serif;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:28px 28px;background-attachment:fixed}
+h1,h2,h3{font-family:"Space Grotesk",system-ui,sans-serif;line-height:1.15;margin:0 0 .5em}
+h1{font-size:clamp(2rem,6vw,3.4rem);font-weight:800}h2{font-size:clamp(1.5rem,4vw,2.1rem);font-weight:800}h3{font-size:1.1rem}
+#bar{position:sticky;top:env(safe-area-inset-top,0px);height:6px;background:var(--line);z-index:5}
+#bar i{display:block;height:100%;width:0;background:var(--acc);transition:width .3s}
+main{max-width:860px;margin:0 auto;padding:20px 16px 110px}
+.slide{display:none}.slide.on{display:block}
+.card{background:var(--card);border:2px solid var(--bd);border-radius:14px;padding:18px;margin:14px 0}
+.eq{font:800 clamp(1.6rem,6vw,2.6rem)/1.2 "Space Grotesk",sans-serif;text-align:center;margin:8px 0}
+.row{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}.row>*{flex:1 1 280px;min-width:0}
+button,.btn{font:700 1rem "Inter",sans-serif;color:var(--ink);background:var(--card);border:2px solid var(--bd);border-radius:10px;padding:9px 16px;cursor:pointer;min-height:44px}
+button:hover{background:var(--accs)}button:focus-visible,input:focus-visible{outline:3px solid var(--pop);outline-offset:2px}
+button.pri{background:var(--acc);color:#0a0f26;border-color:var(--acc)}
+.chip{font:800 2rem "Space Grotesk",sans-serif;padding:2px 12px;border-radius:10px;border:2px dashed var(--mut);background:transparent;min-height:0}
+.chip.s{background:var(--accs);border-style:solid;border-color:var(--acc)}
+input[type=range]{width:100%;accent-color:var(--acc)}
+input[type=number]{width:70px;font:700 1rem inherit;padding:6px;border:2px solid var(--bd);border-radius:8px;background:var(--card);color:var(--ink)}
+textarea{width:100%;min-height:80px;font:inherit;padding:10px;border:2px solid var(--bd);border-radius:10px;background:var(--card);color:var(--ink)}
+.note{background:var(--accs);border-left:6px solid var(--acc);padding:10px 14px;border-radius:8px;margin:10px 0}
+.ok{color:var(--ok);font-weight:700}.no{color:var(--bad);font-weight:700}
+svg.pl{width:100%;max-width:340px;height:auto;display:block;margin:auto;background:var(--card);border:2px solid var(--bd);border-radius:8px;touch-action:manipulation}
+.g{stroke:var(--line);stroke-width:1}.ax{stroke:var(--ink);stroke-width:2}.t{fill:var(--mut);font-size:10px}
+.ln{stroke:var(--acc);stroke-width:3}.pt{fill:var(--pop);stroke:var(--ink);stroke-width:2}
+table{border-collapse:collapse;margin:8px auto}td,th{border:2px solid var(--bd);padding:6px 12px;text-align:center}th{background:var(--accs)}
+.opt{display:block;width:100%;text-align:left;margin:6px 0}.opt.r{background:var(--ok);color:#0a0f26;border-color:var(--ok)}.opt.w{background:var(--bad);color:#0a0f26;border-color:var(--bad)}
+.cl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}.cl b{flex:1 1 150px;font-size:1.2rem}
+nav{position:fixed;left:0;right:0;bottom:0;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:var(--card);border-top:2px solid var(--bd);display:flex;justify-content:space-between;align-items:center;gap:10px;z-index:6}
+#ct{font:500 .95rem "JetBrains Mono",monospace;color:var(--mut)}
+.wrap{overflow-x:auto}nav button:disabled{opacity:.35;cursor:default}
+</style>
+</head>
+<body>
+<div id="bar"><i></i></div>
+<main>
+
+<section class="slide on">
+<h1>Persamaan Garis Lurus</h1>
+<p>Bab 5.1 · Konsep dasar, dari bidang koordinat sampai tabel nilai.</p>
+<div class="card"><h3>Tujuan belajar</h3>
+<ul><li>Menjelaskan arti persamaan garis lurus.</li><li>Membedakan variabel, koefisien, dan konstanta.</li><li>Menentukan dan menempatkan titik (x, y) pada bidang Kartesius.</li><li>Mengenali bentuk y = mx + c.</li><li>Menghubungkan persamaan dengan tabel nilai.</li></ul></div>
+<div class="note"><b>Pertanyaan pemantik:</b> Mengapa tarif ojek online yang naik tiap kilometer selalu membentuk garis lurus jika digambar?</div>
+</section>
+
+<section class="slide">
+<h2>Apa itu persamaan garis lurus?</h2>
+<p>Persamaan garis lurus menyatakan hubungan antara dua besaran (x dan y) yang jika digambar pada bidang koordinat membentuk <b>garis lurus</b>.</p>
+<div class="card"><h3>Contoh: tarif ojek</h3>
+<p>Biaya awal Rp5.000, tambahan Rp3.000 per km. Geser jarak tempuhnya.</p>
+<div class="eq">y = 3.000x + 5.000</div>
+<label>Jarak (x): <b id="km">4</b> km<input type="range" id="kmr" min="0" max="10" value="4" aria-label="Jarak tempuh dalam kilometer"></label>
+<p>Biaya (y) = <b id="cost"></b></p>
+<p>Setiap tambah 1 km, biaya selalu naik Rp3.000. Kenaikan yang tetap inilah ciri garis lurus.</p></div>
+</section>
+
+<section class="slide">
+<h2>Variabel, koefisien, konstanta</h2>
+<p>Ketuk bagian persamaan untuk melihat namanya.</p>
+<div class="card"><div class="eq" id="eq3">
+<button class="chip" data-k="y">y</button> = <button class="chip" data-k="c">3</button><button class="chip" data-k="x">x</button> + <button class="chip" data-k="k">2</button></div>
+<div class="note" id="exp3">Ketuk salah satu bagian di atas.</div></div>
+<p>Variabel adalah lambang yang nilainya dapat berubah (x dan y). Koefisien adalah angka di depan variabel. Konstanta adalah angka tetap tanpa variabel.</p>
+</section>
+
+<section class="slide">
+<h2>Bidang koordinat Kartesius</h2>
+<p>Dibentuk oleh sumbu-x (mendatar) dan sumbu-y (tegak) yang berpotongan di titik asal (0, 0). Posisi titik ditulis sebagai pasangan (x, y): x disebut absis, y disebut ordinat.</p>
+<div class="row"><svg class="pl" id="p4" viewBox="0 0 308 308" role="img" aria-label="Bidang koordinat, ketuk untuk menempatkan titik"></svg>
+<div class="card"><h3>Tantangan</h3><p>Ketuk titik <b id="tg" style="font-size:1.4rem"></b> pada bidang.</p><p id="fb4">Ketuk bidang untuk mulai.</p><button id="nx4">Titik baru</button></div></div>
+</section>
+
+<section class="slide">
+<h2>Bentuk umum: y = mx + c</h2>
+<div class="eq">y = mx + c</div>
+<p>m = koefisien x (menentukan kemiringan), c = konstanta (titik potong sumbu-y). Geser m dan c lalu amati garisnya.</p>
+<div class="row"><svg class="pl" id="p5" viewBox="0 0 308 308" role="img" aria-label="Grafik garis y = mx + c"></svg>
+<div class="card"><div class="eq" id="e5"></div>
+<label>m = <b id="mv"></b><input type="range" id="mr" min="-3" max="3" step="0.5" value="1" aria-label="Nilai m"></label>
+<label>c = <b id="cv"></b><input type="range" id="cr" min="-5" max="5" step="1" value="2" aria-label="Nilai c"></label>
+<div class="note" id="n5"></div></div></div>
+</section>
+
+<section class="slide">
+<h2>Garis lurus atau bukan?</h2>
+<p>Persamaan garis lurus memuat x dan y berpangkat 1 saja, tanpa x di penyebut atau di bawah akar.</p>
+<div class="card" id="cls"></div>
+</section>
+
+<section class="slide">
+<h2>Persamaan dan tabel nilai</h2>
+<p>Substitusikan nilai x ke persamaan untuk mendapat y. Isi tabelnya lalu periksa.</p>
+<div class="card"><div class="eq" id="e7"></div>
+<div class="wrap"><table><tr><th>x</th><td>−2</td><td>−1</td><td>0</td><td>1</td><td>2</td></tr>
+<tr><th>y</th><td><input type="number" aria-label="y untuk x=-2"></td><td><input type="number" aria-label="y untuk x=-1"></td><td><input type="number" aria-label="y untuk x=0"></td><td><input type="number" aria-label="y untuk x=1"></td><td><input type="number" aria-label="y untuk x=2"></td></tr></table></div>
+<p><button class="pri" id="ck7">Periksa</button> <button id="nw7">Persamaan baru</button></p><p id="fb7"></p></div>
+<svg class="pl" id="p7" viewBox="0 0 308 308" role="img" aria-label="Titik dari tabel pada grafik"></svg>
+</section>
+
+<section class="slide">
+<h2>Kuis</h2>
+<div class="card" id="qz"></div>
+</section>
+
+<section class="slide">
+<h2>Refleksi dan rangkuman</h2>
+<div class="card"><h3>Rangkuman</h3>
+<ul><li>Persamaan garis lurus: hubungan x dan y yang grafiknya garis lurus.</li><li>Bentuk umum y = mx + c, dengan m koefisien x dan c konstanta.</li><li>Titik ditulis (x, y), dengan absis x dan ordinat y.</li><li>Tabel nilai diperoleh dengan mengganti x lalu menghitung y.</li></ul></div>
+<div class="card"><h3>Centang yang sudah kamu pahami</h3>
+<label><input type="checkbox" class="rf"> Saya bisa menjelaskan arti persamaan garis lurus.</label><br>
+<label><input type="checkbox" class="rf"> Saya bisa membedakan variabel, koefisien, dan konstanta.</label><br>
+<label><input type="checkbox" class="rf"> Saya bisa menempatkan titik (x, y).</label><br>
+<label><input type="checkbox" class="rf"> Saya bisa mengenali bentuk y = mx + c.</label><br>
+<label><input type="checkbox" class="rf"> Saya bisa membuat tabel nilai dari persamaan.</label>
+<p id="rfo" class="ok"></p>
+<h3>Tuliskan satu hal yang masih membingungkan</h3><textarea aria-label="Refleksi"></textarea></div>
+</section>
+</main>
+
+<nav><button id="pv">Sebelumnya</button><span id="ct"></span><button id="nxt" class="pri">Lanjut</button></nav>
+
+<script>
+var $=function(s){return document.querySelector(s)},S=document.querySelectorAll('.slide'),cur=0;
+function fm(n){return String(n).replace('-','−')}
+function eqs(m,c){if(m==0)return 'y = '+fm(c);var s='y = '+(m==1?'':m==-1?'−':fm(m))+'x';return s+(c>0?' + '+c:c<0?' − '+(-c):'')}
+function show(i){cur=Math.max(0,Math.min(S.length-1,i));S.forEach(function(s,j){s.classList.toggle('on',j==cur)});$('#bar i').style.width=((cur+1)/S.length*100)+'%';$('#ct').textContent=(cur+1)+' / '+S.length;$('#pv').disabled=cur==0;$('#nxt').disabled=cur==S.length-1;window.scrollTo(0,0)}
+$('#pv').onclick=function(){show(cur-1)};$('#nxt').onclick=function(){show(cur+1)};
+document.onkeydown=function(e){if(e.target.tagName=='INPUT'||e.target.tagName=='TEXTAREA')return;if(e.key=='ArrowRight')show(cur+1);if(e.key=='ArrowLeft')show(cur-1)};
+var U=22,O=154,R=7;
+function plane(el,m,c,pts){var s='',i,p;for(i=-R;i<=R;i++){p=O+i*U;s+='<line x1="'+p+'" y1="0" x2="'+p+'" y2="308" class="g"/><line x1="0" y1="'+p+'" x2="308" y2="'+p+'" class="g"/>';if(i&&i%2==0)s+='<text x="'+p+'" y="'+(O+13)+'" class="t" text-anchor="middle">'+fm(i)+'</text><text x="'+(O-5)+'" y="'+(p+4)+'" class="t" text-anchor="end">'+fm(-i)+'</text>'}
+s+='<line x1="0" y1="'+O+'" x2="308" y2="'+O+'" class="ax"/><line x1="'+O+'" y1="0" x2="'+O+'" y2="308" class="ax"/>';
+if(m!=null)s+='<line x1="0" y1="'+(O-(m*-R+c)*U)+'" x2="308" y2="'+(O-(m*R+c)*U)+'" class="ln"/>';
+(pts||[]).forEach(function(q){s+='<circle cx="'+(O+q[0]*U)+'" cy="'+(O-q[1]*U)+'" r="6" class="pt"/>'});el.innerHTML=s}
+function pick(el,e){var r=el.getBoundingClientRect(),k=308/r.width;return[Math.round(((e.clientX-r.left)*k-O)/U),-Math.round(((e.clientY-r.top)*k-O)/U)]}
+function ri(a,b){return a+Math.floor(Math.random()*(b-a+1))}
+/* slide 2 */
+$('#kmr').oninput=function(){var x=+this.value;$('#km').textContent=x;$('#cost').textContent='Rp'+(3000*x+5000).toLocaleString('id-ID')};$('#kmr').oninput();
+/* slide 3 */
+var D={y:'y = variabel (nilainya bergantung pada x).',x:'x = variabel (nilainya bebas dipilih).',c:'3 = koefisien, angka di depan variabel x.',k:'2 = konstanta, angka tetap tanpa variabel.'};
+document.querySelectorAll('#eq3 .chip').forEach(function(b){b.onclick=function(){document.querySelectorAll('#eq3 .chip').forEach(function(o){o.classList.remove('s')});b.classList.add('s');$('#exp3').textContent=D[b.dataset.k]}});
+/* slide 4 */
+var T=[0,0],P=[];
+function nt(){T=[ri(-6,6),ri(-6,6)];$('#tg').textContent='('+fm(T[0])+', '+fm(T[1])+')';P=[];plane($('#p4'),null,0,P)}
+$('#p4').onclick=function(e){var q=pick(this,e);P=[q];plane(this,null,0,P);$('#fb4').innerHTML=(q[0]==T[0]&&q[1]==T[1])?'<span class="ok">Tepat! Absis '+fm(q[0])+', ordinat '+fm(q[1])+'.</span>':'<span class="no">Itu titik ('+fm(q[0])+', '+fm(q[1])+'). Absis dibaca dulu (mendatar), lalu ordinat (tegak).</span>'};
+$('#nx4').onclick=function(){nt();$('#fb4').textContent='Ketuk bidang untuk menjawab.'};nt();
+/* slide 5 */
+function u5(){var m=+$('#mr').value,c=+$('#cr').value;$('#mv').textContent=fm(m);$('#cv').textContent=fm(c);$('#e5').textContent=eqs(m,c);plane($('#p5'),m,c,[[0,c]]);$('#n5').textContent=(m>0?'m positif: garis naik ke kanan. ':m<0?'m negatif: garis turun ke kanan. ':'m = 0: garis mendatar. ')+'Garis memotong sumbu-y di (0, '+fm(c)+').'}
+$('#mr').oninput=u5;$('#cr').oninput=u5;u5();
+/* slide 6 */
+var C=[['y = 2x + 1',1,'Variabel berpangkat 1.'],['y = x<sup>2</sup> + 1',0,'x berpangkat 2, grafiknya lengkung.'],['y = −3x',1,'Garis lurus dengan c = 0, melalui titik asal.'],['y = 5',1,'Garis lurus mendatar (m = 0).'],['y = 1/x',0,'x ada di penyebut, grafiknya lengkung.'],['2y − 4x = 6',1,'Ubah ke y = 2x + 3, bentuk garis lurus.']];
+$('#cls').innerHTML=C.map(function(r,i){return '<div class="cl"><b>'+r[0]+'</b><button data-i="'+i+'" data-a="1">Lurus</button><button data-i="'+i+'" data-a="0">Bukan</button><span id="cx'+i+'" style="flex-basis:100%"></span></div>'}).join('');
+document.querySelectorAll('#cls button').forEach(function(b){b.onclick=function(){var r=C[b.dataset.i],g=+b.dataset.a==r[1];$('#cx'+b.dataset.i).innerHTML='<span class="'+(g?'ok':'no')+'">'+(g?'Benar. ':'Belum tepat. ')+'</span>'+r[2]}});
+/* slide 7 */
+var M,K,xs=[-2,-1,0,1,2];
+function n7(){do{M=ri(-3,3)}while(!M);K=ri(-4,4);$('#e7').textContent=eqs(M,K);document.querySelectorAll('#s7 input,.slide:nth-of-type(7) input').forEach(function(i){i.value=''});$('#fb7').textContent='';plane($('#p7'),null,0,[])}
+$('#ck7').onclick=function(){var ins=document.querySelectorAll('.slide:nth-of-type(7) input'),n=0,pts=[];ins.forEach(function(i,j){var y=M*xs[j]+K;if(i.value!==''&&+i.value==y){n++;pts.push([xs[j],y])}});$('#fb7').innerHTML=n==5?'<span class="ok">Semua benar. Titiknya segaris, sesuai persamaan.</span>':'<span class="no">'+n+' dari 5 benar.</span> Hitung y = '+fm(M)+' × x + ('+fm(K)+') untuk tiap x.';plane($('#p7'),n==5?M:null,K,pts)};
+$('#nw7').onclick=n7;n7();
+/* slide 8 */
+var Q=[['Manakah persamaan garis lurus?',['y = x² − 3','y = 4x + 1','y = 2/x','y = √x'],1],['Pada y = −3x + 7, koefisien x dan konstantanya adalah …',['7 dan −3','−3 dan 7','3 dan 7','−3 dan −7'],1],['Pada titik (4, −2), ordinatnya adalah …',['4','−2','2','−4'],1],['Tabel: x = 1, 2, 3 menghasilkan y = 5, 7, 9. Persamaannya …',['y = 2x + 3','y = 3x + 2','y = x + 4','y = 2x + 5'],0],['Titik yang terletak pada garis y = 3x + 1 adalah …',['(1, 3)','(2, 7)','(3, 9)','(0, 3)'],1]],qi=0,sc=0;
+function rq(){var q=Q[qi];if(!q){$('#qz').innerHTML='<h3>Skor kamu: '+sc+' dari '+Q.length+'</h3><p>'+(sc>=4?'Hebat, konsepnya sudah kuat.':'Ulangi slide yang masih membingungkan, lalu coba lagi.')+'</p><button class="pri" id="rs">Ulangi kuis</button>';$('#rs').onclick=function(){qi=0;sc=0;rq()};return}
+$('#qz').innerHTML='<p><b>Soal '+(qi+1)+' / '+Q.length+'</b></p><p>'+q[0]+'</p>'+q[1].map(function(o,i){return '<button class="opt" data-i="'+i+'">'+o+'</button>'}).join('')+'<p id="qf"></p>';
+document.querySelectorAll('.opt').forEach(function(b){b.onclick=function(){var g=+b.dataset.i==q[2];if(g)sc++;document.querySelectorAll('.opt').forEach(function(o,i){o.disabled=true;if(i==q[2])o.classList.add('r')});if(!g)b.classList.add('w');$('#qf').innerHTML='<button class="pri" id="qn">'+(qi==Q.length-1?'Lihat skor':'Soal berikutnya')+'</button>';$('#qn').onclick=function(){qi++;rq()}}})}
+rq();
+/* slide 9 */
+document.querySelectorAll('.rf').forEach(function(c){c.onchange=function(){var n=document.querySelectorAll('.rf:checked').length;$('#rfo').textContent=n+' dari 5 tujuan sudah kamu kuasai.'+(n==5?' Mantap!':'')}});
+show(0);
+</script>
+</body>
+</html>
