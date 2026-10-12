@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ujian Kesebangunan dan Kekongruenan — KW Learning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F0F2F5;--panel:#fff;--ink:#1B2430;--soft:#5B6473;--navy:#0F3D63;--deep:#0A2B48;--gold:#D79A2C;--line:#DDE2E8;
+--sedang:#2E86AB;--sedang-bg:#EAF3F8;--sulit:#C9642A;--sulit-bg:#FBEEE4;--hots:#7B4FA6;--hots-bg:#F1EAF8;--olimpiade:#B23A48;--olimpiade-bg:#FAEBEC;
+--ok:#2F9E5B;--ok-bg:#E7F5EC;--no:#C0392B;--no-bg:#FBEBE9;color-scheme:light}
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--paper)}
+body{color:var(--ink);font-family:'Public Sans',system-ui,sans-serif;line-height:1.5;overflow:hidden}
+h2,h3{font-family:'Fraunces',Georgia,serif;margin:0}button{font-family:inherit}
+.app{height:100dvh;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+header{flex:none;background:linear-gradient(120deg,var(--navy),var(--deep) 65%,#0C3452);color:#F4F1E8;padding:10px 26px 0}
+.row{display:flex;align-items:baseline;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.brand{font-size:13.5px;color:#B9C6D6;font-weight:600}.title{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(16px,2vw,19px);color:#fff}
+.sub{margin:4px 0 8px;color:#C7D2DE;font-size:12.5px;max-width:820px}
+.strip{display:flex;height:4px}.strip span{flex:1}
+.body{flex:1;display:flex;min-height:0}
+aside{width:280px;flex:none;background:var(--panel);border-right:1px solid var(--line);border-top:3px solid var(--gold);display:flex;flex-direction:column;min-height:0}
+.sc{flex:1;overflow-y:auto;padding:18px 18px 12px}aside h3{font-family:'Public Sans';font-size:13px;color:var(--soft);margin-bottom:10px}
+.pt{height:7px;background:#E7EAEF;border-radius:99px;overflow:hidden;margin-bottom:6px}.pf{height:100%;background:var(--gold);width:0;transition:width .25s}
+.pl{font-size:12.5px;color:var(--soft);margin-bottom:16px}
+.ng{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:18px}
+.nc{aspect-ratio:1;border-radius:6px;border:1.5px solid var(--line);background:#fff;font-size:12.5px;font-weight:700;color:var(--soft);cursor:pointer;padding:0}
+.nc.sedang{border-color:var(--sedang);color:var(--sedang);background:var(--sedang-bg)}.nc.sulit{border-color:var(--sulit);color:var(--sulit);background:var(--sulit-bg)}
+.nc.hots{border-color:var(--hots);color:var(--hots);background:var(--hots-bg)}.nc.olimpiade{border-color:var(--olimpiade);color:var(--olimpiade);background:var(--olimpiade-bg)}
+.nc.sedang.a{background:var(--sedang);color:#fff}.nc.sulit.a{background:var(--sulit);color:#fff}.nc.hots.a{background:var(--hots);color:#fff}.nc.olimpiade.a{background:var(--olimpiade);color:#fff}
+.nc.cur{outline:2.5px solid var(--gold);outline-offset:1px}
+.lg{display:flex;flex-direction:column;gap:7px;font-size:12px;color:var(--soft)}.li{display:flex;align-items:center;gap:8px}
+.dot{width:9px;height:9px;border-radius:50%;flex:none}
+.sf{flex:none;padding:14px 18px;border-top:1px solid var(--line)}
+.bs{width:100%;background:var(--gold);color:#2A1D06;border:none;border-radius:8px;padding:12px;font-size:14.5px;font-weight:700;cursor:pointer}
+main{flex:1;min-width:0;overflow-y:auto;display:flex;justify-content:center;padding:30px 26px 40px}
+.card{width:100%;max-width:760px;background:var(--panel);border:1px solid var(--line);border-top:5px solid var(--navy);border-radius:10px;padding:26px 30px 30px;align-self:flex-start}
+.card.sedang{border-top-color:var(--sedang)}.card.sulit{border-top-color:var(--sulit)}.card.hots{border-top-color:var(--hots)}.card.olimpiade{border-top-color:var(--olimpiade)}
+.br{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.chip{font-size:12.5px;font-weight:700;padding:5px 12px;border-radius:99px}
+.chip.sedang{background:var(--sedang-bg);color:var(--sedang)}.chip.sulit{background:var(--sulit-bg);color:var(--sulit)}.chip.hots{background:var(--hots-bg);color:var(--hots)}.chip.olimpiade{background:var(--olimpiade-bg);color:var(--olimpiade)}
+.tc{font-size:12.5px;color:var(--soft);border:1px solid var(--line);padding:5px 12px;border-radius:99px}
+.qn{font-family:'Fraunces',serif;font-size:14.5px;color:var(--soft);margin-bottom:6px}
+.vz{background:#F7FAFD;border:1px solid var(--line);border-radius:10px;padding:12px;margin:0 0 18px}
+.vz svg{display:block;width:100%;height:auto;max-height:280px}
+.nt{font-size:12px;color:var(--soft);text-align:right;margin-top:4px}
+.tb{width:100%;border-collapse:collapse;font-size:15px}.tb th,.tb td{border:1px solid var(--line);padding:8px 12px;text-align:center}
+.tb th{background:var(--sedang-bg);color:var(--navy)}.tb .q{background:#FFF5DC;font-weight:700;color:#8a5a00}
+.qt{font-size:19px;line-height:1.55;margin:0 0 22px}
+fieldset{border:none;margin:0 0 26px;padding:0;display:flex;flex-direction:column;gap:10px}
+.opt{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:8px;padding:13px 16px;cursor:pointer;background:#fff}
+.opt:hover{border-color:var(--navy)}.opt input{margin-top:3px;accent-color:var(--navy)}.opt.sel{border-color:var(--navy);background:#F2F6FA}
+.ol{font-weight:700;color:var(--navy);width:18px;flex:none}
+.nb{display:flex;justify-content:space-between;gap:12px}
+.bg,.bp{font-size:15px;font-weight:700;border-radius:8px;padding:11px 22px;cursor:pointer;border:1px solid transparent}
+.bg{background:#fff;border-color:var(--line);color:var(--ink)}.bg:disabled{opacity:.4;cursor:not-allowed}.bp{background:var(--navy);color:#fff}
+.bp.sedang{background:var(--sedang)}.bp.sulit{background:var(--sulit)}.bp.hots{background:var(--hots)}.bp.olimpiade{background:var(--olimpiade)}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.rw{max-width:820px;margin:0 auto;width:100%}.rw h2{font-size:24px}
+.hero{display:flex;align-items:baseline;gap:10px;margin:10px 0 22px}.hero .n{font-family:'Fraunces',serif;font-size:52px;font-weight:600}.hero .o{color:var(--soft);font-size:15px}
+.bd{display:grid;gap:12px;margin-bottom:24px}.bdr{display:grid;grid-template-columns:100px 1fr 56px;align-items:center;gap:12px;font-size:14px}
+.bt{height:9px;background:#EEEAE0;border-radius:99px;overflow:hidden}.bf{height:100%;border-radius:99px}
+.bf.sedang{background:var(--sedang)}.bf.sulit{background:var(--sulit)}.bf.hots{background:var(--hots)}.bf.olimpiade{background:var(--olimpiade)}
+.ri{border-top:1px solid var(--line);padding:20px 0}.rq{font-size:16px;margin:10px 0 8px}
+.ro{padding:8px 12px;border-radius:6px;font-size:14px;margin-bottom:6px;border:1px solid var(--line)}
+.ro.c{border-color:var(--ok);background:var(--ok-bg);color:#1E6B3E}.ro.w{border-color:var(--no);background:var(--no-bg);color:#8E2A20}
+.ex{font-size:14px;color:var(--soft);background:#F6F4EC;border-radius:8px;padding:12px 14px;margin-top:10px}.ex b{color:var(--ink)}
+.hidden{display:none!important}
+.mo{position:fixed;inset:0;background:rgba(10,20,32,.55);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}
+.mb{background:#fff;border-radius:12px;padding:26px 28px;max-width:380px;width:100%;border-top:4px solid var(--gold)}
+.mb h3{font-size:18px;margin-bottom:10px}.mb p{font-size:14.5px;color:var(--soft);margin:0 0 22px}.ma{display:flex;justify-content:flex-end;gap:10px}
+@media(max-width:820px){.body{flex-direction:column}aside{width:100%;max-height:34vh;border-right:none;border-bottom:1px solid var(--line)}main{padding:20px 16px 30px}.card{padding:20px 18px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="row"><span class="brand">KW Learning · Ruang Belajar Matematika</span><span class="title">Ujian Kesebangunan dan Kekongruenan</span></div>
+  <p class="sub">45 soal pilihan ganda dengan gambar bangun datar sebangun, garis sejajar, dan bayangan — sedang, sulit, HOTS, dan olimpiade. Jawaban bisa diubah sebelum dikumpulkan.</p>
+  <div class="strip"><span style="background:var(--sedang)"></span><span style="background:var(--sulit)"></span><span style="background:var(--hots)"></span><span style="background:var(--olimpiade)"></span></div>
+</header>
+<div class="body">
+  <aside id="side">
+    <div class="sc">
+      <h3>Progres</h3><div class="pt"><div class="pf" id="pf"></div></div><div class="pl" id="pl"></div>
+      <h3>Navigasi soal</h3><div class="ng" id="ng"></div>
+      <div class="lg">
+        <div class="li"><span class="dot" style="background:var(--navy)"></span> Sudah dijawab (warna penuh)</div>
+        <div class="li"><span class="dot" style="background:var(--sedang)"></span> Sedang (1–15)</div>
+        <div class="li"><span class="dot" style="background:var(--sulit)"></span> Sulit (16–30)</div>
+        <div class="li"><span class="dot" style="background:var(--hots)"></span> HOTS (31–40)</div>
+        <div class="li"><span class="dot" style="background:var(--olimpiade)"></span> Olimpiade (41–45)</div>
+      </div>
+    </div>
+    <div class="sf"><button class="bs" id="bs">Kumpulkan jawaban</button></div>
+  </aside>
+  <main id="panel" aria-live="polite"></main>
+</div>
+</div>
+<div class="mo hidden" id="mo"><div class="mb"><h3>Kumpulkan jawaban?</h3><p id="mm"></p><div class="ma"><button class="bg" id="no">Kembali</button><button class="bp" id="yes">Ya, kumpulkan</button></div></div></div>
+
+<script>
+/* Pembuat visual */
+const Sm=(a,b,k)=>({t:'sim',a,b,k}),Pr=(tt,l)=>({t:'par',tt,l}),Xx=l=>({t:'x',l}),Rt=(r,l)=>({t:'rt',r,l}),
+      Rc=(a,b,k)=>({t:'rc',a,b,k}),Sh=(a,b,k)=>({t:'sh',a,b,k}),Tb=(h,r)=>({t:'tbl',h,r});
+/* Data soal: [level, topik, visual, soal, jawaban, 3 pengecoh, satuan, pembahasan] */
+const RAW=[
+// ===== SEDANG =====
+['sedang','Syarat Kesebangunan',null,'Dua bangun datar dikatakan sebangun apabila ...','Sudut-sudut yang bersesuaian sama besar dan sisi-sisi yang bersesuaian sebanding',['Semua sisi yang bersesuaian sama panjang','Luas kedua bangun sama besar','Keliling kedua bangun sama besar'],'','Dua bangun sebangun jika sudut-sudut bersesuaian sama besar dan perbandingan sisi-sisi bersesuaian sama (sebanding). Ukurannya boleh berbeda.'],
+['sedang','Persegi Panjang Sebangun',Rc([6,4],[12,'?'],2),'Kedua persegi panjang pada gambar sebangun. Nilai ? adalah ...',8,[6,10,16],'cm','Panjang 6 → 12 berarti diperbesar 2 kali. Lebar = 4 × 2 = 8 cm.'],
+['sedang','Segitiga Sebangun',Sm([3,4,5],[6,8,'?']),'Kedua segitiga pada gambar sebangun. Panjang sisi ? adalah ...',10,[7,9,12],'cm','Segitiga kedua 2 kali segitiga pertama (3 → 6). Sisi ? = 5 × 2 = 10 cm.'],
+['sedang','Tiang dan Bayangan',Sh(['1,5 m','2 m'],['? m','40 m'],2.2),'Tiang setinggi 1,5 m berbayangan 2 m. Pada saat yang sama sebuah gedung berbayangan 40 m. Tinggi gedung adalah ...',30,[20,25,35],'m','Tinggi dan bayangan sebanding. 1,5/2 = t/40 → t = 1,5 × 40 ÷ 2 = 30 m.'],
+['sedang','Foto Diperbesar',Rc([15,10],['?',20],1.5),'Foto berukuran 15 cm × 10 cm diperbesar secara sebangun. Jika lebar hasil cetak 20 cm, panjangnya adalah ...',30,[25,35,40],'cm','Lebar 10 → 20 (2 kali). Panjang = 15 × 2 = 30 cm.'],
+['sedang','Syarat Kekongruenan',null,'Dua bangun datar dikatakan kongruen apabila ...','Bentuk dan ukurannya sama persis',['Bentuknya sama, ukurannya boleh berbeda','Luasnya sama, bentuknya boleh berbeda','Kelilingnya sama saja'],'','Bangun kongruen memiliki bentuk dan ukuran yang sama: sisi-sisi bersesuaian sama panjang dan sudut-sudut bersesuaian sama besar.'],
+['sedang','Garis Sejajar pada Segitiga',Pr(.5,{AD:'4 cm',DB:'4 cm',DE:'5 cm',BC:'? cm'}),'Pada segitiga ABC, DE sejajar BC. Panjang BC adalah ...',10,[5,9,12],'cm','AB = AD + DB = 8 cm. AD/AB = DE/BC → 4/8 = 5/BC → BC = 10 cm.'],
+['sedang','Garis Sejajar pada Segitiga',Pr(1/3,{AD:'3 cm',DB:'6 cm',AE:'2 cm',EC:'? cm'}),'Pada segitiga ABC, DE sejajar BC. Panjang EC adalah ...',4,[2,3,6],'cm','AD/DB = AE/EC → 3/6 = 2/EC → EC = 4 cm.'],
+['sedang','Segitiga Sebangun',Sm([5,12,13],[10,'?',26]),'Kedua segitiga pada gambar sebangun. Panjang sisi ? adalah ...',24,[20,22,25],'cm','Faktor pembesaran = 10 ÷ 5 = 2. Sisi ? = 12 × 2 = 24 cm.'],
+['sedang','Persegi Panjang Sebangun',Rc([8,6],['?',9],1.5),'Kedua persegi panjang pada gambar sebangun. Nilai ? adalah ...',12,[10,13,14],'cm','Lebar 6 → 9 (1,5 kali). Panjang = 8 × 1,5 = 12 cm.'],
+['sedang','Segitiga Sebangun',Sm([4,6,5],[10,'?','12,5 cm']),'Kedua segitiga pada gambar sebangun. Panjang sisi ? adalah ...',15,[12,14,16],'cm','Faktor = 10 ÷ 4 = 2,5. Sisi ? = 6 × 2,5 = 15 cm (cek: 5 × 2,5 = 12,5 cm).'],
+['sedang','Sudut Bersesuaian',null,'Dua segitiga sebangun. Segitiga pertama memiliki sudut 50° dan 60°. Sudut pada segitiga kedua yang bersesuaian dengan sudut ketiga segitiga pertama besarnya ...','70°',['60°','80°','50°'],'','Sudut ketiga = 180° − 50° − 60° = 70°. Pada bangun sebangun, sudut-sudut bersesuaian sama besar, jadi 70°.'],
+['sedang','Skala Model',Tb(['Model pesawat','Pesawat sebenarnya'],[['20 cm','? m']]),'Model pesawat berskala 1 : 50 memiliki panjang 20 cm. Panjang pesawat sebenarnya adalah ...',10,[1,100,2.5],'m','20 × 50 = 1.000 cm = 10 m.'],
+['sedang','Tiang dan Bayangan',Sh(['3 m','4 m'],['? m','8 m'],2),'Tiang 3 m berbayangan 4 m. Pada waktu yang sama pohon berbayangan 8 m. Tinggi pohon adalah ...',6,[5,7,9],'m','3/4 = t/8 → t = 6 m.'],
+['sedang','Kekongruenan',Sm([8,7,9],[8,7,9],1),'Segitiga ABC kongruen dengan segitiga PQR. Panjang AB = 7 cm, BC = 8 cm, dan AC = 9 cm. Keliling segitiga PQR adalah ...',24,[21,25,27],'cm','Segitiga kongruen memiliki sisi-sisi bersesuaian sama panjang, jadi keliling PQR = 7 + 8 + 9 = 24 cm.'],
+// ===== SULIT =====
+['sulit','Garis Sejajar pada Segitiga',Pr(2/3,{AD:'6 cm',DB:'3 cm',DE:'8 cm',BC:'? cm'}),'Pada segitiga ABC, DE sejajar BC. Panjang BC adalah ...',12,[10,16,18],'cm','AB = 6 + 3 = 9 cm. AD/AB = DE/BC → 6/9 = 8/BC → BC = 8 × 9 ÷ 6 = 12 cm.'],
+['sulit','Garis Sejajar pada Segitiga',Pr(2/3,{AD:'4 cm',DB:'2 cm',AE:'6 cm',EC:'? cm'}),'Pada segitiga ABC, DE sejajar BC. Panjang EC adalah ...',3,[2,4,12],'cm','AD/DB = AE/EC → 4/2 = 6/EC → EC = 3 cm.'],
+['sulit','Segitiga Bersilang',Xx({AO:'6 cm',OC:'9 cm',BO:'4 cm',OD:'? cm'}),'AB sejajar DC. Garis AC dan BD berpotongan di O. Panjang OD adalah ...',6,[4,8,13.5],'cm','Segitiga AOB sebangun dengan COD, sehingga AO/OC = BO/OD → 6/9 = 4/OD → OD = 6 cm.'],
+['sulit','Segitiga Bersilang',Xx({AB:'6 cm',DC:'15 cm',AO:'4 cm',OC:'? cm'}),'AB sejajar DC. Garis AC dan BD berpotongan di O. Panjang OC adalah ...',10,[8,9,12],'cm','AB/DC = AO/OC → 6/15 = 4/OC → OC = 4 × 15 ÷ 6 = 10 cm.'],
+['sulit','Segitiga Siku-siku',Rt(4/13,{AD:'4 cm',DB:'9 cm',CD:'? cm'}),'Segitiga ABC siku-siku di C dan CD tegak lurus AB. Panjang CD adalah ...',6,[5,8,13],'cm','CD² = AD × DB = 4 × 9 = 36 → CD = 6 cm.'],
+['sulit','Segitiga Siku-siku',Rt(.2,{AD:'2 cm',DB:'8 cm',AC:'? cm'}),'Segitiga ABC siku-siku di C dan CD tegak lurus AB. Panjang AC adalah ...','2√5 cm',['4 cm','√10 cm','8 cm'],'','AB = 2 + 8 = 10 cm. AC² = AD × AB = 2 × 10 = 20 → AC = √20 = 2√5 cm.'],
+['sulit','Tinggi dengan Bayangan',Sh(['1,6 m','2 m'],['? m','25 m'],2.4),'Seorang anak setinggi 1,6 m berbayangan 2 m. Pada saat yang sama sebuah gedung berbayangan 25 m. Tinggi gedung adalah ...',20,[16,25,32],'m','1,6/2 = t/25 → t = 1,6 × 25 ÷ 2 = 20 m.'],
+['sulit','Keliling Sebangun',Sm([9,12,15],[15,'?','?'],1.6),'Segitiga kecil bersisi 9 cm, 12 cm, 15 cm sebangun dengan segitiga besar yang sisi terpendeknya 15 cm. Keliling segitiga besar adalah ...',60,[36,45,50],'cm','Faktor = 15 ÷ 9 = 5/3. Keliling kecil = 36 cm, jadi keliling besar = 36 × 5/3 = 60 cm.'],
+['sulit','Luas Bangun Sebangun',null,'Dua segitiga sebangun memiliki perbandingan sisi bersesuaian 2 : 3. Jika luas segitiga yang kecil 20 cm², luas segitiga yang besar adalah ...',45,[30,40,60],'cm²','Perbandingan luas = kuadrat perbandingan sisi = 4 : 9. Luas besar = 20 × 9/4 = 45 cm².'],
+['sulit','Persegi Panjang Sebangun',Rc([20,12],[15,'?'],.75),'Kedua persegi panjang pada gambar sebangun. Nilai ? adalah ...',9,[10,8,7.5],'cm','Panjang 20 → 15 (0,75 kali). Lebar = 12 × 0,75 = 9 cm.'],
+['sulit','Garis Sejajar pada Segitiga',Pr(1/3,{AD:'5 cm',DB:'10 cm',DE:'? cm',BC:'24 cm'}),'Pada segitiga ABC, DE sejajar BC. Panjang DE adalah ...',8,[5,9,12],'cm','AB = 15 cm. AD/AB = DE/BC → 5/15 = DE/24 → DE = 8 cm.'],
+['sulit','Segitiga Bersilang',Xx({AB:'10 cm',DC:'16 cm',AO:'5 cm',OC:'? cm'}),'AB sejajar DC. Garis AC dan BD berpotongan di O. Panjang OC adalah ...',8,[6,10,12],'cm','AB/DC = AO/OC → 10/16 = 5/OC → OC = 5 × 16 ÷ 10 = 8 cm.'],
+['sulit','Segitiga Siku-siku',Rt(9/25,{AD:'9 cm',DB:'16 cm',BC:'? cm'}),'Segitiga ABC siku-siku di C dan CD tegak lurus AB. Panjang BC adalah ...',20,[12,15,25],'cm','AB = 9 + 16 = 25 cm. BC² = DB × AB = 16 × 25 = 400 → BC = 20 cm.'],
+['sulit','Skala Model',Tb(['','Tinggi','Lebar'],[['Gedung','30 m','45 m'],['Model','20 cm','? cm']]),'Sebuah model gedung dibuat sebangun dengan gedung aslinya. Lebar model adalah ...',30,[25,35,40],'cm','Tinggi 30 m menjadi 20 cm, jadi perbandingan model : asli = 2 : 3 (satuan sama). Lebar model = 2/3 × 45 = 30 cm.'],
+['sulit','Luas Persegi Panjang Sebangun',Rc([8,6],[12,'?'],1.5),'Kedua persegi panjang pada gambar sebangun. Luas persegi panjang yang besar adalah ...',108,[72,96,81],'cm²','Panjang 8 → 12 (1,5 kali), lebar = 6 × 1,5 = 9 cm. Luas = 12 × 9 = 108 cm².'],
+// ===== HOTS =====
+['hots','Lampu dan Bayangan',Tb(['Tinggi anak','Jarak anak ke tiang','Panjang bayangan anak'],[['1,5 m','3 m','2 m']]),'Seorang anak setinggi 1,5 m berdiri 3 m dari tiang lampu. Panjang bayangan anak 2 m (ujung bayangan di sisi yang menjauhi tiang). Tinggi tiang lampu adalah ...',3.75,[3,4.5,2.25],'m','Segitiga kecil (anak + bayangan) sebangun dengan segitiga besar (tiang + jarak ke ujung bayangan = 3 + 2 = 5 m). 1,5/2 = t/5 → t = 3,75 m.'],
+['hots','Lebar Sungai',Xx({AB:'? m',DC:'15 m',AO:'24 m',OC:'12 m'}),'Lebar sungai AB diukur dengan segitiga sebangun (AB sejajar DC, AC dan BD berpotongan di O). Lebar sungai adalah ...',30,[7.5,18,45],'m','AB/DC = AO/OC → AB/15 = 24/12 = 2 → AB = 30 m.'],
+['hots','Garis Sejajar pada Segitiga',Pr(.4,{AD:'2k',DB:'3k',DE:'6 cm',BC:'? cm'}),'Pada segitiga ABC, DE sejajar BC dengan AD : DB = 2 : 3. Jika DE = 6 cm, panjang BC adalah ...',15,[9,10,12],'cm','AB = 5k. AD/AB = DE/BC → 2/5 = 6/BC → BC = 15 cm.'],
+['hots','Luas Segitiga Sebangun',Pr(.4,{AD:'2k',DB:'3k'}),'Luas segitiga ABC adalah 100 cm², DE sejajar BC, dan AD : DB = 2 : 3. Luas segitiga ADE adalah ...',16,[40,20,36],'cm²','AD : AB = 2 : 5. Perbandingan luas ADE : ABC = 2² : 5² = 4 : 25. Luas ADE = 4/25 × 100 = 16 cm².'],
+['hots','Luas Trapesium',Pr(.4,{AD:'2k',DB:'3k'}),'Luas segitiga ABC adalah 100 cm², DE sejajar BC, dan AD : DB = 2 : 3. Luas trapesium DBCE adalah ...',84,[60,40,16],'cm²','Luas ADE = 4/25 × 100 = 16 cm². Luas trapesium DBCE = 100 − 16 = 84 cm².'],
+['hots','Segitiga Siku-siku',Rt(.25,{AD:'3 cm',AC:'6 cm',DB:'? cm'}),'Segitiga ABC siku-siku di C dan CD tegak lurus AB. Panjang DB adalah ...',9,[3,12,36],'cm','AC² = AD × AB → 36 = 3 × AB → AB = 12 cm. DB = AB − AD = 12 − 3 = 9 cm.'],
+['hots','Luas Segitiga Siku-siku',Rt(9/25,{AD:'9 cm',CD:'12 cm',DB:'? cm'}),'Segitiga ABC siku-siku di C dan CD tegak lurus AB. Luas segitiga ABC adalah ...',150,[108,300,96],'cm²','CD² = AD × DB → 144 = 9 × DB → DB = 16 cm. AB = 25 cm. Luas = ½ × 25 × 12 = 150 cm².'],
+['hots','Luas dan Sisi',Tb(['','Persegi panjang kecil','Persegi panjang besar'],[['Luas','36 cm²','100 cm²'],['Panjang','9 cm','? cm']]),'Dua persegi panjang sebangun. Panjang persegi panjang besar adalah ...',15,[12,16,25],'cm','Perbandingan luas 36 : 100 = 6² : 10², jadi perbandingan sisi = 6 : 10. Panjang besar = 9 × 10/6 = 15 cm.'],
+['hots','Keliling Sebangun',Tb(['Segitiga pertama (sisi)','Segitiga kedua (keliling)'],[['9 cm, 12 cm, 15 cm','72 cm']]),'Segitiga dengan sisi 9 cm, 12 cm, dan 15 cm sebangun dengan segitiga lain yang kelilingnya 72 cm. Sisi terpanjang segitiga kedua adalah ...',30,[24,27,45],'cm','Keliling pertama = 36 cm. Faktor = 72/36 = 2. Sisi terpanjang = 15 × 2 = 30 cm.'],
+['hots','Trapesium',Xx({AB:'8 cm',DC:'12 cm',AO:'? cm'}),'ABCD trapesium dengan AB sejajar DC. Diagonal AC dan BD berpotongan di O. Jika AC = 20 cm, panjang AO adalah ...',8,[12,10,6],'cm','AO : OC = AB : DC = 8 : 12 = 2 : 3. AO = 2/5 × AC = 2/5 × 20 = 8 cm.'],
+// ===== OLIMPIADE =====
+['olimpiade','Luas dan Garis Sejajar',Pr(.707,{DE:'? cm',BC:'12√2 cm'}),'Garis DE sejajar BC membagi segitiga ABC menjadi dua bagian yang luasnya sama (luas ADE = luas trapesium DBCE). Jika BC = 12√2 cm, panjang DE adalah ...','12 cm',['6 cm','6√2 cm','12√2 cm'],'','Luas ADE = ½ luas ABC. Perbandingan luas = kuadrat perbandingan sisi, jadi (DE/BC)² = ½ → DE = BC/√2 = 12√2/√2 = 12 cm.'],
+['olimpiade','Persegi dalam Segitiga',null,'Dalam sebuah segitiga dengan alas 12 cm dan tinggi 6 cm terdapat persegi yang satu sisinya terletak pada alas, sedangkan dua titik sudut lainnya berada pada sisi-sisi segitiga. Panjang sisi persegi adalah ...',4,[3,5,6],'cm','Misal sisi persegi s. Segitiga kecil di atas persegi sebangun dengan segitiga besar: s/12 = (6 − s)/6 → 6s = 72 − 12s → 18s = 72 → s = 4 cm.'],
+['olimpiade','Segitiga Siku-siku',Rt(.2,{AD:'1k',DB:'4k',CD:'6 cm'}),'Segitiga ABC siku-siku di C, CD tegak lurus AB, dan AD : DB = 1 : 4. Jika CD = 6 cm, keliling segitiga ABC adalah ...','(15 + 9√5) cm',['27 cm','(15 + 3√5) cm','45 cm'],'','CD² = AD × DB → 36 = k × 4k → k = 3. AD = 3, DB = 12, AB = 15. AC = √(AD × AB) = √45 = 3√5 dan BC = √(DB × AB) = √180 = 6√5. Keliling = 15 + 3√5 + 6√5 = 15 + 9√5 cm.'],
+['olimpiade','Luas Sebangun',Tb(['Persegi panjang A','Persegi panjang B'],[['8 cm × 6 cm','keliling 70 cm']]),'Persegi panjang A dan B sebangun. Luas persegi panjang B adalah ...',300,[210,240,420],'cm²','Perbandingan sisi A = 8 : 6 = 4 : 3. Untuk B: p + l = 35 = 7 bagian, jadi 1 bagian = 5, p = 20 dan l = 15. Luas B = 20 × 15 = 300 cm².'],
+['olimpiade','Luas dan Keliling Sebangun',null,'Dua segitiga sebangun memiliki perbandingan keliling 3 : 5. Jika luas segitiga yang kecil 27 cm², luas segitiga yang besar adalah ...',75,[45,125,135],'cm²','Perbandingan sisi = perbandingan keliling = 3 : 5. Perbandingan luas = 9 : 25. Luas besar = 27 × 25/9 = 75 cm².']
+];
+const fmt=n=>n.toLocaleString('id-ID',{maximumFractionDigits:2});
+const QUESTIONS=RAW.map((r,i)=>{const [level,topic,vis,q,a,w,u,exp]=r;
+ const f=x=>typeof x==='number'?fmt(x)+(u?' '+u:''):x;
+ const opts=w.map(f);const ci=(i*3+1)%4;opts.splice(ci,0,f(a));return{level,topic,vis,q,opts,correct:ci,exp}});
+const LBL={sedang:'Sedang',sulit:'Sulit',hots:'HOTS',olimpiade:'Olimpiade'};
+
+/* ===== Gambar SVG ===== */
+const U=x=>typeof x==='number'?x+' cm':x==='?'?'? cm':x;
+const lab=(x,y,t,a='middle')=>`<text x="${x}" y="${y}" text-anchor="${a}" font-size="15" ${String(t).includes('?')?'fill="#C9642A" font-weight="700"':'fill="#1B2430"'}>${t}</text>`;
+const poly=p=>`<polygon points="${p.map(q=>q.join(',')).join(' ')}" fill="#EAF3F8" stroke="#0F3D63" stroke-width="2.5" stroke-linejoin="round"/>`;
+const pt=(a,b,t)=>[a[0]+t*(b[0]-a[0]),a[1]+t*(b[1]-a[1])],mid=(a,b)=>pt(a,b,.5);
+const wrap=(s,h,t)=>`<div class="vz"><svg viewBox="0 0 600 ${h}" role="img" aria-label="Gambar soal">${s}</svg><div class="nt">Gambar tidak digambar sesuai skala</div></div>`;
+function vis(v){
+ if(!v)return'';
+ if(v.t==='tbl')return`<div class="vz"><table class="tb"><tr>${v.h.map(h=>`<th>${h}</th>`).join('')}</tr>${v.r.map(r=>`<tr>${r.map(c=>`<td class="${String(c).includes('?')?'q':''}">${c}</td>`).join('')}</tr>`).join('')}</table></div>`;
+ if(v.t==='sim'){const k=v.k||1.6;
+  const tri=(ox,s,l)=>{const y=170;return poly([[ox,y],[ox+100*s,y],[ox+30*s,y-90*s]])+lab(ox+50*s,y+20,U(l[0]))+lab(ox+15*s-8,y-45*s+5,U(l[1]),'end')+lab(ox+65*s+8,y-45*s+5,U(l[2]),'start')};
+  return wrap(tri(50,1,v.a)+tri(270,k,v.b),200)}
+ if(v.t==='par'){const A=[300,20],B=[90,190],C=[510,190],D=pt(A,B,v.tt),E=pt(A,C,v.tt),L=v.l||{};let s=poly([A,B,C])+`<line x1="${D[0]}" y1="${D[1]}" x2="${E[0]}" y2="${E[1]}" stroke="#B23A48" stroke-width="2.5"/>`;
+  s+=lab(300,14,'A')+lab(80,208,'B','end')+lab(520,208,'C','start')+lab(D[0]-8,D[1]-4,'D','end')+lab(E[0]+8,E[1]-4,'E','start');
+  const m1=mid(A,D),m2=mid(D,B),m3=mid(A,E),m4=mid(E,C),m5=mid(D,E),m6=mid(B,C);
+  if(L.AD)s+=lab(m1[0]-12,m1[1]+4,L.AD,'end');if(L.DB)s+=lab(m2[0]-12,m2[1]+4,L.DB,'end');
+  if(L.AE)s+=lab(m3[0]+12,m3[1]+4,L.AE,'start');if(L.EC)s+=lab(m4[0]+12,m4[1]+4,L.EC,'start');
+  if(L.DE)s+=lab(m5[0],m5[1]-8,L.DE);if(L.BC)s+=lab(m6[0],m6[1]+22,L.BC);
+  return wrap(s,230)}
+ if(v.t==='x'){const A=[230,30],B=[370,30],D=[195,230],C=[405,230],O=[300,110],L=v.l||{};
+  let s=poly([A,B,C,D])+`<line x1="${A[0]}" y1="${A[1]}" x2="${C[0]}" y2="${C[1]}" stroke="#B23A48" stroke-width="2.5"/><line x1="${B[0]}" y1="${B[1]}" x2="${D[0]}" y2="${D[1]}" stroke="#B23A48" stroke-width="2.5"/>`;
+  s+=lab(222,26,'A','end')+lab(378,26,'B','start')+lab(187,248,'D','end')+lab(413,248,'C','start')+lab(300,100,'O');
+  if(L.AB)s+=lab(300,18,L.AB);if(L.DC)s+=lab(300,252,L.DC);
+  if(L.AO)s+=lab(255,70,L.AO,'end');if(L.OC)s+=lab(358,176,L.OC,'start');if(L.BO)s+=lab(345,70,L.BO,'start');if(L.OD)s+=lab(242,176,L.OD,'end');
+  return wrap(s,265)}
+ if(v.t==='rt'){const Ln=420,A=[90,215],B=[510,215],r=v.r,D=[90+r*Ln,215],h=Ln*Math.sqrt(r*(1-r)),C=[D[0],215-h],L=v.l||{};
+  let s=poly([A,B,C])+`<line x1="${C[0]}" y1="${C[1]}" x2="${D[0]}" y2="${D[1]}" stroke="#B23A48" stroke-width="2.5" stroke-dasharray="6 4"/><path d="M${D[0]-10},215 v-10 h10" fill="none" stroke="#0F3D63" stroke-width="1.5"/>`;
+  s+=lab(80,214,'A','end')+lab(520,214,'B','start')+lab(C[0],C[1]-8,'C')+lab(D[0],232,'D');
+  const mAC=mid(A,C),mBC=mid(B,C);
+  if(L.AD)s+=lab((A[0]+D[0])/2,252,L.AD);if(L.DB)s+=lab((D[0]+B[0])/2,252,L.DB);
+  if(L.CD)s+=lab(D[0]+10,(C[1]+215)/2,L.CD,'start');if(L.AC)s+=lab(mAC[0]-10,mAC[1],L.AC,'end');if(L.BC)s+=lab(mBC[0]+10,mBC[1],L.BC,'start');
+  return wrap(s,265)}
+ if(v.t==='rc'){const k=v.k||1.5;
+  const rect=(ox,s,l)=>{const w=120*s,h=80*s,y=190-h;return`<rect x="${ox}" y="${y}" width="${w}" height="${h}" fill="#EAF3F8" stroke="#0F3D63" stroke-width="2.5"/>`+lab(ox+w/2,208,U(l[0]))+lab(ox-8,y+h/2+5,U(l[1]),'end')};
+  return wrap(rect(90,1,v.a)+rect(320,k,v.b),220)}
+ if(v.t==='sh'){const k=v.k||2;
+  const tr=(ox,s,l)=>poly([[ox,180],[ox,180-70*s],[ox+90*s,180]])+lab(ox-8,180-35*s+5,l[0],'end')+lab(ox+45*s,200,l[1]);
+  return wrap(`<line x1="10" y1="180" x2="590" y2="180" stroke="#5B6473" stroke-width="2"/>`+tr(70,1,v.a)+tr(300,k,v.b),212)}
+ return''}
+
+/* ===== UI ===== */
+const state={cur:0,ans:new Array(QUESTIONS.length).fill(null),done:false};
+const $=id=>document.getElementById(id),panel=$('panel'),ng=$('ng');
+QUESTIONS.forEach((q,i)=>{const b=document.createElement('button');b.className='nc '+q.level;b.textContent=i+1;b.setAttribute('aria-label','Soal '+(i+1)+', '+LBL[q.level]);b.onclick=()=>{state.cur=i;render()};ng.appendChild(b)});
+function upd(){const n=state.ans.filter(a=>a!==null).length;$('pf').style.width=Math.round(n/QUESTIONS.length*100)+'%';$('pl').textContent=n+' dari '+QUESTIONS.length+' soal terjawab';
+ ng.querySelectorAll('.nc').forEach((c,i)=>{c.classList.toggle('a',state.ans[i]!==null);c.classList.toggle('cur',i===state.cur&&!state.done)})}
+function confirmBox(msg,ok){const m=$('mo');$('mm').textContent=msg;m.classList.remove('hidden');
+ const y=$('yes'),n=$('no');const off=()=>{m.classList.add('hidden');y.onclick=n.onclick=null};y.onclick=()=>{off();ok()};n.onclick=off}
+function submit(){const un=state.ans.filter(a=>a===null).length;const go=()=>{state.done=true;results()};
+ un?confirmBox('Masih ada '+un+' soal belum dijawab. Tetap kumpulkan?',go):go()}
+$('bs').onclick=submit;
+function question(){
+ const i=state.cur,q=QUESTIONS[i];
+ panel.innerHTML=`<div class="card ${q.level}"><div class="br"><span class="chip ${q.level}">${LBL[q.level]}</span><span class="tc">${q.topic}</span></div>
+ <div class="qn">Soal ${i+1} dari ${QUESTIONS.length}</div>
+ ${vis(q.vis)}
+ <p class="qt">${q.q}</p>
+ <fieldset>${q.opts.map((o,k)=>`<label class="opt${state.ans[i]===k?' sel':''}"><input type="radio" name="o" value="${k}" ${state.ans[i]===k?'checked':''}><span class="ol">${'ABCD'[k]}.</span><span>${o}</span></label>`).join('')}</fieldset>
+ <div class="nb"><button class="bg" id="pv" ${i?'':'disabled'}>Sebelumnya</button>
+ <button class="bp ${q.level}" id="nx">${i===QUESTIONS.length-1?'Ke ringkasan':'Berikutnya'}</button></div></div>`;
+ panel.querySelectorAll('input').forEach(x=>x.onchange=e=>{state.ans[i]=+e.target.value;upd();panel.querySelectorAll('.opt').forEach((l,k)=>l.classList.toggle('sel',k===state.ans[i]))});
+ $('pv').onclick=()=>{state.cur--;render()};
+ $('nx').onclick=()=>i===QUESTIONS.length-1?submit():(state.cur++,render());
+}
+function results(){
+ const lv=['sedang','sulit','hots','olimpiade'],c={};lv.forEach(l=>c[l]={c:0,t:0});let tot=0;
+ QUESTIONS.forEach((q,i)=>{c[q.level].t++;if(state.ans[i]===q.correct){c[q.level].c++;tot++}});
+ const sc=Math.round(tot/QUESTIONS.length*100),col=sc>=75?'var(--ok)':sc>=50?'var(--gold)':'var(--no)';
+ $('side').classList.add('hidden');
+ panel.innerHTML=`<div class="rw"><h2>Hasil ujian</h2>
+ <div class="hero"><span class="n" style="color:${col}">${tot}</span><span class="o">dari ${QUESTIONS.length} soal benar · nilai akhir <b style="color:${col}">${sc}</b></span></div>
+ <div class="bd">${lv.map(l=>`<div class="bdr"><span>${LBL[l]}</span><div class="bt"><div class="bf ${l}" style="width:${c[l].c/c[l].t*100}%"></div></div><span>${c[l].c}/${c[l].t}</span></div>`).join('')}</div>
+ <button class="bg" id="rt">Ulangi ujian</button>
+ <div style="margin-top:30px">${QUESTIONS.map((q,i)=>{const a=state.ans[i],ok=a===q.correct;
+ return `<div class="ri"><div class="br"><span class="chip ${q.level}">${LBL[q.level]}</span><span class="tc">${q.topic}</span>
+ <span class="tc" style="border-color:${ok?'var(--ok)':'var(--no)'};color:${ok?'var(--ok)':'var(--no)'}">${ok?'Benar':a===null?'Tidak dijawab':'Salah'}</span></div>
+ <p class="rq">${i+1}. ${q.q}</p>${vis(q.vis)}
+ ${q.opts.map((o,k)=>`<div class="ro ${k===q.correct?'c':k===a?'w':''}">${'ABCD'[k]}. ${o}</div>`).join('')}
+ <div class="ex"><b>Pembahasan:</b> ${q.exp}</div></div>`}).join('')}</div></div>`;
+ $('rt').onclick=()=>{state.cur=0;state.ans.fill(null);state.done=false;$('side').classList.remove('hidden');render()};
+ panel.scrollTo({top:0});
+}
+function render(){if(state.done){results();return}question();upd();panel.scrollTo({top:0})}
+render();
+</script>
+</body>
+</html>

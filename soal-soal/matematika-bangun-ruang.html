@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ujian Bangun Ruang — KW Learning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F0F2F5;--panel:#fff;--ink:#1B2430;--soft:#5B6473;--navy:#0F3D63;--deep:#0A2B48;--gold:#D79A2C;--line:#DDE2E8;
+--sedang:#2E86AB;--sedang-bg:#EAF3F8;--sulit:#C9642A;--sulit-bg:#FBEEE4;--hots:#7B4FA6;--hots-bg:#F1EAF8;--olimpiade:#B23A48;--olimpiade-bg:#FAEBEC;
+--ok:#2F9E5B;--ok-bg:#E7F5EC;--no:#C0392B;--no-bg:#FBEBE9;color-scheme:light}
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--paper)}
+body{color:var(--ink);font-family:'Public Sans',system-ui,sans-serif;line-height:1.5;overflow:hidden}
+h2,h3{font-family:'Fraunces',Georgia,serif;margin:0}button{font-family:inherit}
+.app{height:100dvh;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+header{flex:none;background:linear-gradient(120deg,var(--navy),var(--deep) 65%,#0C3452);color:#F4F1E8;padding:10px 26px 0}
+.row{display:flex;align-items:baseline;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.brand{font-size:13.5px;color:#B9C6D6;font-weight:600}.title{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(16px,2vw,19px);color:#fff}
+.sub{margin:4px 0 8px;color:#C7D2DE;font-size:12.5px;max-width:820px}
+.strip{display:flex;height:4px}.strip span{flex:1}
+.body{flex:1;display:flex;min-height:0}
+aside{width:280px;flex:none;background:var(--panel);border-right:1px solid var(--line);border-top:3px solid var(--gold);display:flex;flex-direction:column;min-height:0}
+.sc{flex:1;overflow-y:auto;padding:18px 18px 12px}aside h3{font-family:'Public Sans';font-size:13px;color:var(--soft);margin-bottom:10px}
+.pt{height:7px;background:#E7EAEF;border-radius:99px;overflow:hidden;margin-bottom:6px}.pf{height:100%;background:var(--gold);width:0;transition:width .25s}
+.pl{font-size:12.5px;color:var(--soft);margin-bottom:16px}
+.ng{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:18px}
+.nc{aspect-ratio:1;border-radius:6px;border:1.5px solid var(--line);background:#fff;font-size:12.5px;font-weight:700;color:var(--soft);cursor:pointer;padding:0}
+.nc.sedang{border-color:var(--sedang);color:var(--sedang);background:var(--sedang-bg)}.nc.sulit{border-color:var(--sulit);color:var(--sulit);background:var(--sulit-bg)}
+.nc.hots{border-color:var(--hots);color:var(--hots);background:var(--hots-bg)}.nc.olimpiade{border-color:var(--olimpiade);color:var(--olimpiade);background:var(--olimpiade-bg)}
+.nc.sedang.a{background:var(--sedang);color:#fff}.nc.sulit.a{background:var(--sulit);color:#fff}.nc.hots.a{background:var(--hots);color:#fff}.nc.olimpiade.a{background:var(--olimpiade);color:#fff}
+.nc.cur{outline:2.5px solid var(--gold);outline-offset:1px}
+.lg{display:flex;flex-direction:column;gap:7px;font-size:12px;color:var(--soft)}.li{display:flex;align-items:center;gap:8px}
+.dot{width:9px;height:9px;border-radius:50%;flex:none}
+.sf{flex:none;padding:14px 18px;border-top:1px solid var(--line)}
+.bs{width:100%;background:var(--gold);color:#2A1D06;border:none;border-radius:8px;padding:12px;font-size:14.5px;font-weight:700;cursor:pointer}
+main{flex:1;min-width:0;overflow-y:auto;display:flex;justify-content:center;padding:30px 26px 40px}
+.card{width:100%;max-width:760px;background:var(--panel);border:1px solid var(--line);border-top:5px solid var(--navy);border-radius:10px;padding:26px 30px 30px;align-self:flex-start}
+.card.sedang{border-top-color:var(--sedang)}.card.sulit{border-top-color:var(--sulit)}.card.hots{border-top-color:var(--hots)}.card.olimpiade{border-top-color:var(--olimpiade)}
+.br{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.chip{font-size:12.5px;font-weight:700;padding:5px 12px;border-radius:99px}
+.chip.sedang{background:var(--sedang-bg);color:var(--sedang)}.chip.sulit{background:var(--sulit-bg);color:var(--sulit)}.chip.hots{background:var(--hots-bg);color:var(--hots)}.chip.olimpiade{background:var(--olimpiade-bg);color:var(--olimpiade)}
+.tc{font-size:12.5px;color:var(--soft);border:1px solid var(--line);padding:5px 12px;border-radius:99px}
+.qn{font-family:'Fraunces',serif;font-size:14.5px;color:var(--soft);margin-bottom:6px}
+.v3{width:100%;height:230px;border-radius:10px;background:linear-gradient(160deg,#DCE8F5,#F4F8FC);border:1px solid var(--line);touch-action:none;cursor:grab;overflow:hidden}
+.v3 canvas{display:block}.cap{font-size:13px;color:var(--soft);margin:8px 0 16px}.cap b{color:var(--navy)}
+.qt{font-size:19px;line-height:1.55;margin:0 0 22px}
+fieldset{border:none;margin:0 0 26px;padding:0;display:flex;flex-direction:column;gap:10px}
+.opt{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:8px;padding:13px 16px;cursor:pointer;background:#fff}
+.opt:hover{border-color:var(--navy)}.opt input{margin-top:3px;accent-color:var(--navy)}.opt.sel{border-color:var(--navy);background:#F2F6FA}
+.ol{font-weight:700;color:var(--navy);width:18px;flex:none}
+.nb{display:flex;justify-content:space-between;gap:12px}
+.bg,.bp{font-size:15px;font-weight:700;border-radius:8px;padding:11px 22px;cursor:pointer;border:1px solid transparent}
+.bg{background:#fff;border-color:var(--line);color:var(--ink)}.bg:disabled{opacity:.4;cursor:not-allowed}.bp{background:var(--navy);color:#fff}
+.bp.sedang{background:var(--sedang)}.bp.sulit{background:var(--sulit)}.bp.hots{background:var(--hots)}.bp.olimpiade{background:var(--olimpiade)}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.rw{max-width:820px;margin:0 auto;width:100%}.rw h2{font-size:24px}
+.hero{display:flex;align-items:baseline;gap:10px;margin:10px 0 22px}.hero .n{font-family:'Fraunces',serif;font-size:52px;font-weight:600}.hero .o{color:var(--soft);font-size:15px}
+.bd{display:grid;gap:12px;margin-bottom:24px}.bdr{display:grid;grid-template-columns:100px 1fr 56px;align-items:center;gap:12px;font-size:14px}
+.bt{height:9px;background:#EEEAE0;border-radius:99px;overflow:hidden}.bf{height:100%;border-radius:99px}
+.bf.sedang{background:var(--sedang)}.bf.sulit{background:var(--sulit)}.bf.hots{background:var(--hots)}.bf.olimpiade{background:var(--olimpiade)}
+.ri{border-top:1px solid var(--line);padding:20px 0}.rq{font-size:16px;margin:10px 0 8px}
+.ro{padding:8px 12px;border-radius:6px;font-size:14px;margin-bottom:6px;border:1px solid var(--line)}
+.ro.c{border-color:var(--ok);background:var(--ok-bg);color:#1E6B3E}.ro.w{border-color:var(--no);background:var(--no-bg);color:#8E2A20}
+.ex{font-size:14px;color:var(--soft);background:#F6F4EC;border-radius:8px;padding:12px 14px;margin-top:10px}.ex b{color:var(--ink)}
+.hidden{display:none!important}
+.mo{position:fixed;inset:0;background:rgba(10,20,32,.55);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}
+.mb{background:#fff;border-radius:12px;padding:26px 28px;max-width:380px;width:100%;border-top:4px solid var(--gold)}
+.mb h3{font-size:18px;margin-bottom:10px}.mb p{font-size:14.5px;color:var(--soft);margin:0 0 22px}.ma{display:flex;justify-content:flex-end;gap:10px}
+@media(max-width:820px){.body{flex-direction:column}aside{width:100%;max-height:34vh;border-right:none;border-bottom:1px solid var(--line)}main{padding:20px 16px 30px}.card{padding:20px 18px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="row"><span class="brand">KW Learning · Ruang Belajar Matematika</span><span class="title">Ujian Bangun Ruang</span></div>
+  <p class="sub">45 soal pilihan ganda dengan gambar 3D yang bisa diputar — sedang, sulit, HOTS, dan olimpiade. Jawaban bisa diubah sebelum dikumpulkan.</p>
+  <div class="strip"><span style="background:var(--sedang)"></span><span style="background:var(--sulit)"></span><span style="background:var(--hots)"></span><span style="background:var(--olimpiade)"></span></div>
+</header>
+<div class="body">
+  <aside id="side">
+    <div class="sc">
+      <h3>Progres</h3><div class="pt"><div class="pf" id="pf"></div></div><div class="pl" id="pl"></div>
+      <h3>Navigasi soal</h3><div class="ng" id="ng"></div>
+      <div class="lg">
+        <div class="li"><span class="dot" style="background:var(--navy)"></span> Sudah dijawab (warna penuh)</div>
+        <div class="li"><span class="dot" style="background:var(--sedang)"></span> Sedang (1–15)</div>
+        <div class="li"><span class="dot" style="background:var(--sulit)"></span> Sulit (16–30)</div>
+        <div class="li"><span class="dot" style="background:var(--hots)"></span> HOTS (31–40)</div>
+        <div class="li"><span class="dot" style="background:var(--olimpiade)"></span> Olimpiade (41–45)</div>
+      </div>
+    </div>
+    <div class="sf"><button class="bs" id="bs">Kumpulkan jawaban</button></div>
+  </aside>
+  <main id="panel" aria-live="polite"></main>
+</div>
+</div>
+<div class="mo hidden" id="mo"><div class="mb"><h3>Kumpulkan jawaban?</h3><p id="mm"></p><div class="ma"><button class="bg" id="no">Kembali</button><button class="bp" id="yes">Ya, kumpulkan</button></div></div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* Data soal: [level, topik, bentuk 3D, soal, jawaban, 3 pengecoh, satuan, pembahasan] */
+const u3='cm³',u2='cm²',L='(π = 22/7)',D='(π = 3,14)';
+const RAW=[
+// SEDANG
+['sedang','Kubus',{k:'kubus',s:4},'Volume kubus pada gambar adalah ...',64,[16,96,48],u3,'V = s³ = 4 × 4 × 4 = 64 cm³.'],
+['sedang','Kubus',{k:'kubus',s:10},'Volume kubus pada gambar adalah ...',1000,[100,600,30],u3,'V = 10³ = 1.000 cm³.'],
+['sedang','Kubus',{k:'kubus',s:5},'Luas permukaan kubus pada gambar adalah ...',150,[25,125,100],u2,'L = 6s² = 6 × 25 = 150 cm².'],
+['sedang','Kubus',{k:'kubus',s:7},'Jumlah panjang seluruh rusuk kubus pada gambar adalah ...',84,[28,42,49],'cm','Kubus memiliki 12 rusuk sama panjang: 12 × 7 = 84 cm.'],
+['sedang','Balok',{k:'balok',p:6,l:4,t:3},'Volume balok pada gambar adalah ...',72,[13,36,48],u3,'V = p × l × t = 6 × 4 × 3 = 72 cm³.'],
+['sedang','Balok',{k:'balok',p:5,l:3,t:2},'Luas permukaan balok pada gambar adalah ...',62,[30,31,124],u2,'L = 2(pl + pt + lt) = 2(15 + 10 + 6) = 62 cm².'],
+['sedang','Balok',{k:'balok',p:8,l:5,t:3},'Jumlah panjang seluruh rusuk balok pada gambar adalah ...',64,[16,120,32],'cm','Balok punya 4 rusuk untuk tiap ukuran: 4(8 + 5 + 3) = 64 cm.'],
+['sedang','Prisma',{k:'prisma',a:3,b:4,t:8},'Volume prisma segitiga pada gambar adalah ...',48,[96,24,120],u3,'Luas alas = ½ × 3 × 4 = 6 cm². V = luas alas × tinggi = 6 × 8 = 48 cm³.'],
+['sedang','Limas',{k:'limas',s:6,t:5},'Volume limas pada gambar adalah ...',60,[180,30,90],u3,'V = ⅓ × luas alas × tinggi = ⅓ × 36 × 5 = 60 cm³.'],
+['sedang','Tabung',{k:'tabung',r:7,t:6},'Volume tabung pada gambar adalah ... '+L,924,[132,462,3696],u3,'V = πr²t = 22/7 × 7 × 7 × 6 = 924 cm³.'],
+['sedang','Kerucut',{k:'kerucut',r:3,t:4},'Volume kerucut pada gambar adalah ... '+D,37.68,[113.04,18.84,75.36],u3,'V = ⅓πr²t = ⅓ × 3,14 × 9 × 4 = 37,68 cm³.'],
+['sedang','Bola',{k:'bola',r:3},'Volume bola pada gambar adalah ... '+D,113.04,[37.68,84.78,339.12],u3,'V = 4/3 πr³ = 4/3 × 3,14 × 27 = 113,04 cm³.'],
+['sedang','Tabung',{k:'tabung',r:7,t:10},'Luas selimut tabung pada gambar adalah ... '+L,440,[220,1540,880],u2,'Luas selimut = 2πrt = 2 × 22/7 × 7 × 10 = 440 cm².'],
+['sedang','Kerucut',{k:'kerucut',r:3,t:4,sl:5},'Luas selimut kerucut pada gambar adalah ... '+D,47.1,[94.2,28.26,37.68],u2,'Luas selimut = πrs = 3,14 × 3 × 5 = 47,1 cm².'],
+['sedang','Kubus',{k:'kubus',s:7,c:'V = 343 cm³'},'Volume kubus pada gambar 343 cm³. Panjang rusuknya adalah ...',7,[49,8,114],'cm','Rusuk = ∛343 = 7 cm, karena 7 × 7 × 7 = 343.'],
+// SULIT
+['sulit','Balok',{k:'balok',p:10,l:6,t:4},'Luas permukaan balok pada gambar adalah ...',248,[124,240,480],u2,'L = 2(10×6 + 10×4 + 6×4) = 2(60 + 40 + 24) = 248 cm².'],
+['sulit','Kubus',{k:'kubus',s:12},'Luas permukaan kubus pada gambar adalah ...',864,[144,1728,432],u2,'L = 6 × 12² = 6 × 144 = 864 cm².'],
+['sulit','Balok',{k:'balok',p:12,l:9,t:5},'Volume balok pada gambar adalah ...',540,[26,270,216],u3,'V = 12 × 9 × 5 = 540 cm³.'],
+['sulit','Prisma',{k:'prisma',a:6,b:8,t:12},'Luas permukaan prisma segitiga siku-siku pada gambar adalah ...',336,[288,384,624],u2,'Luas alas = ½×6×8 = 24; keliling alas = 6+8+10 = 24. L = 2×24 + 24×12 = 48 + 288 = 336 cm².'],
+['sulit','Prisma',{k:'prisma',a:5,b:12,t:9},'Volume prisma segitiga siku-siku pada gambar adalah ...',270,[540,135,60],u3,'Luas alas = ½×5×12 = 30 cm². V = 30 × 9 = 270 cm³.'],
+['sulit','Limas',{k:'limas',s:10,t:12,ts:13},'Luas permukaan limas pada gambar adalah ...',360,[260,400,500],u2,'Luas alas = 10² = 100. Satu sisi tegak = ½×10×13 = 65, ada 4 sisi = 260. L = 100 + 260 = 360 cm².'],
+['sulit','Limas',{k:'limas',s:9,t:12},'Volume limas pada gambar adalah ...',324,[972,108,486],u3,'V = ⅓ × 81 × 12 = 324 cm³.'],
+['sulit','Tabung',{k:'tabung',r:14,t:5},'Luas permukaan tabung pada gambar adalah ... '+L,1672,[440,1232,3344],u2,'L = 2πr(r + t) = 2 × 22/7 × 14 × 19 = 88 × 19 = 1.672 cm².'],
+['sulit','Tabung',{k:'tabung',r:7,t:15},'Volume tabung pada gambar adalah ... '+L,2310,[770,4620,1540],u3,'V = 22/7 × 7 × 7 × 15 = 22 × 7 × 15 = 2.310 cm³.'],
+['sulit','Kerucut',{k:'kerucut',r:7,t:24,sl:25},'Luas permukaan kerucut pada gambar adalah ... '+L,704,[550,154,1100],u2,'L = πr(r + s) = 22/7 × 7 × (7 + 25) = 22 × 32 = 704 cm².'],
+['sulit','Kerucut',{k:'kerucut',r:7,t:12},'Volume kerucut pada gambar adalah ... '+L,616,[1848,308,1232],u3,'V = ⅓ × 22/7 × 49 × 12 = ⅓ × 154 × 12 = 616 cm³.'],
+['sulit','Bola',{k:'bola',r:7},'Luas permukaan bola pada gambar adalah ... '+L,616,[154,308,462],u2,'L = 4πr² = 4 × 22/7 × 49 = 4 × 154 = 616 cm².'],
+['sulit','Bola',{k:'bola',r:21},'Volume bola pada gambar adalah ... '+L,38808,[12936,116424,5544],u3,'V = 4/3 × 22/7 × 21³ = 4/3 × 22/7 × 9.261 = 38.808 cm³.'],
+['sulit','Balok',{k:'balok',p:3,l:4,t:12},'Panjang diagonal ruang balok pada gambar adalah ...',13,[19,15,25],'cm','d = √(p² + l² + t²) = √(9 + 16 + 144) = √169 = 13 cm.'],
+['sulit','Balok',{k:'balok',p:10,l:6,t:6,c:'p = 10 cm, l = 6 cm, V = 360 cm³'},'Tinggi balok pada gambar adalah ...',6,[36,60,4],'cm','V = p × l × t → 360 = 10 × 6 × t = 60t → t = 6 cm.'],
+// HOTS
+['hots','Kubus',{k:'kubus',s:5,c:'rusuk semula s = 5 cm'},'Rusuk kubus pada gambar diperbesar 2 kali lipat. Volume kubus yang baru adalah ...',1000,[250,500,125],u3,'Rusuk baru = 10 cm, maka V = 10³ = 1.000 cm³. Volume menjadi 8 kali lipat (2³), bukan 2 kali.'],
+['hots','Gabungan',{k:'kapsul',r:3,t:10},'Sebuah kapsul terdiri atas tabung dan dua belahan bola di kedua ujungnya. Volume kapsul pada gambar adalah ... '+D,395.64,[282.6,508.68,423.9],u3,'V tabung = 3,14 × 9 × 10 = 282,6. Dua belahan bola = satu bola = 4/3 × 3,14 × 27 = 113,04. Total = 282,6 + 113,04 = 395,64 cm³.'],
+['hots','Gabungan',{k:'bolakubus',s:12},'Sebuah bola (kuning) berada di dalam kubus dan menyinggung semua sisinya. Volume bola tersebut adalah ... '+D,904.32,[1728,452.16,7234.56],u3,'Bola menyinggung semua sisi, sehingga diameter = rusuk = 12 cm dan r = 6 cm. V = 4/3 × 3,14 × 216 = 904,32 cm³.'],
+['hots','Tabung',{k:'tabung',r:7,t:28,c:'r = 7 cm, t = 28 cm, terisi air ¾ bagian'},'Tabung pada gambar terisi air ¾ bagian. Volume air dalam tabung adalah ... '+L,3234,[4312,1078,6468],u3,'Tinggi air = ¾ × 28 = 21 cm. V air = 22/7 × 7² × 21 = 3.234 cm³.'],
+['hots','Kerucut',{k:'kerucut',r:7,t:3,c:'t = 3 cm, V = 154 cm³'},'Volume kerucut pada gambar 154 cm³ dan tingginya 3 cm. Jari-jari alasnya adalah ... '+L,7,[49,14,3.5],'cm','V = ⅓πr²t → 154 = ⅓ × 22/7 × r² × 3 = 22/7 × r² → r² = 49 → r = 7 cm.'],
+['hots','Balok',{k:'balok',p:10,l:8,t:6,c:'p = 10 cm, l = 8 cm, t = 6 cm'},'Balok pada gambar akan diisi penuh kubus kecil dengan rusuk 2 cm. Banyak kubus kecil yang muat adalah ...',60,[480,120,30],'buah','Kubus muat sebanyak (10÷2) × (8÷2) × (6÷2) = 5 × 4 × 3 = 60 buah.'],
+['hots','Tabung',{k:'tabung',r:7,t:10},'Sebuah kaleng tanpa tutup berbentuk tabung seperti pada gambar. Luas bahan yang diperlukan adalah ... '+L,594,[748,440,1540],u2,'Tanpa tutup: L = πr² + 2πrt = 154 + 440 = 594 cm².'],
+['hots','Tabung',{k:'tabung',r:7,t:10,c:'r semula = 7 cm, t = 10 cm'},'Jari-jari tabung pada gambar diperbesar 2 kali lipat, tinggi tetap. Volume tabung yang baru adalah ... '+L,6160,[3080,12320,1540],u3,'V awal = 22/7 × 49 × 10 = 1.540. Jari-jari 2 kali → r² menjadi 4 kali, sehingga V baru = 4 × 1.540 = 6.160 cm³.'],
+['hots','Limas',{k:'limas',s:9,t:9,c:'alas persegi 9 cm, tinggi 9 cm (sama dengan rusuk kubus)'},'Limas pada gambar beralas persegi 9 cm dengan tinggi 9 cm. Volume limas tersebut adalah ...',243,[729,81,486],u3,'V = ⅓ × 9² × 9 = ⅓ × 729 = 243 cm³ (sepertiga volume kubus berrusuk 9 cm).'],
+['hots','Kubus',{k:'kubus',s:40,c:'rusuk 40 cm, terisi air ¾ bagian'},'Bak mandi berbentuk kubus seperti pada gambar terisi air ¾ bagian. Volume air dalam bak adalah ...',48,[64,16,36],'liter','V bak = 40³ = 64.000 cm³. Air = ¾ × 64.000 = 48.000 cm³ = 48 liter (1 liter = 1.000 cm³).'],
+// OLIMPIADE
+['olimpiade','Kubus',{k:'kubus',s:9,c:'diagonal ruang = 9√3 cm'},'Diagonal ruang kubus pada gambar adalah 9√3 cm. Volume kubus tersebut adalah ...',729,[81,243,2187],u3,'Diagonal ruang = s√3 = 9√3 → s = 9. V = 9³ = 729 cm³.'],
+['olimpiade','Gabungan',{k:'bolatab',r:3,c:'bola (kuning) menyinggung alas, tutup, dan selimut tabung'},'Perbandingan volume bola terhadap volume tabung pada gambar adalah ...','2 : 3',['1 : 2','3 : 4','1 : 3'],'','Tinggi tabung = 2r. V bola = 4/3 πr³, V tabung = πr² × 2r = 2πr³. Perbandingan = 4/3 : 2 = 2 : 3.'],
+['olimpiade','Kubus',{k:'kubus',s:6,c:'rusuk 6 cm, dipotong menjadi kubus kecil rusuk 2 cm'},'Kubus pada gambar dipotong menjadi kubus-kubus kecil berusuk 2 cm. Banyak kubus kecil yang diperoleh adalah ...',27,[9,18,36],'buah','Tiap rusuk terbagi 6 ÷ 2 = 3 bagian, sehingga banyak kubus = 3 × 3 × 3 = 27 buah.'],
+['olimpiade','Gabungan',{k:'kertab',r:3,t:10,c:'V tabung = 270 cm³; kerucut (kuning) beralas dan setinggi tabung'},'Pada gambar, kerucut berada di dalam tabung dengan alas dan tinggi yang sama. Selisih volume tabung dan kerucut adalah ...',180,[90,135,270],u3,'V kerucut = ⅓ × V tabung = ⅓ × 270 = 90 cm³. Selisih = 270 − 90 = 180 cm³.'],
+['olimpiade','Balok',{k:'balok',p:3,l:4,t:5,c:'p = 3 cm, l = 4 cm, luas permukaan = 94 cm²'},'Luas permukaan balok pada gambar 94 cm². Tinggi balok tersebut adalah ...',5,[4,6,7],'cm','L = 2(pl + pt + lt) → 94 = 2(12 + 3t + 4t) → 47 = 12 + 7t → 7t = 35 → t = 5 cm.']
+];
+const fmt=n=>n.toLocaleString('id-ID',{maximumFractionDigits:2});
+const QUESTIONS=RAW.map((r,i)=>{const [level,topic,sh,q,a,w,u,exp]=r;const f=x=>typeof x==='number'?fmt(x)+(u?' '+u:''):x;
+ const opts=w.map(f);const ci=(i*3+1)%4;opts.splice(ci,0,f(a));return{level,topic,sh,q,opts,correct:ci,exp}});
+const LBL={sedang:'Sedang',sulit:'Sulit',hots:'HOTS',olimpiade:'Olimpiade'};
+const NAME={kubus:'Kubus',balok:'Balok',prisma:'Prisma segitiga siku-siku',limas:'Limas segi empat',tabung:'Tabung',kerucut:'Kerucut',bola:'Bola',kapsul:'Kapsul (tabung + 2 belahan bola)',bolakubus:'Bola dalam kubus',bolatab:'Bola dalam tabung',kertab:'Kerucut dalam tabung'};
+function cap(s){let d=s.c;if(!d){const k=s.k;d=k==='kubus'?`s = ${s.s} cm`:k==='balok'?`p = ${s.p}, l = ${s.l}, t = ${s.t} cm`:k==='prisma'?`a = ${s.a}, b = ${s.b}, c = ${Math.hypot(s.a,s.b)}, tinggi prisma = ${s.t} cm`:
+ k==='limas'?`sisi alas = ${s.s}, tinggi = ${s.t}`+(s.ts?`, tinggi sisi tegak = ${s.ts}`:'')+' cm':
+ k==='kapsul'?`r = ${s.r}, panjang bagian tabung = ${s.t} cm`:k==='bola'?`r = ${s.r} cm`:`r = ${s.r}, t = ${s.t}`+(s.sl?`, s = ${s.sl}`:'')+' cm'}
+ return `<b>${NAME[s.k]}</b> · ${d}`}
+
+/* ===== 3D ===== */
+let cur=null;
+function build(sh){
+ const g=new THREE.Group(),B=0x2e86ab,O=0xd79a2c;
+ const M=(geo,col,op,edge)=>{const m=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({color:col,transparent:true,opacity:op,roughness:.45,side:THREE.DoubleSide}));g.add(m);
+  if(edge)g.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo),new THREE.LineBasicMaterial({color:0x0b2a66})));return m};
+ const Cy=(r,t)=>new THREE.CylinderGeometry(r,r,t,48),Sp=r=>new THREE.SphereGeometry(r,40,28);let mx;
+ switch(sh.k){
+ case'kubus':M(new THREE.BoxGeometry(sh.s,sh.s,sh.s),B,.8,1);mx=sh.s;break;
+ case'balok':M(new THREE.BoxGeometry(sh.p,sh.t,sh.l),B,.8,1);mx=Math.max(sh.p,sh.l,sh.t);break;
+ case'prisma':{const s=new THREE.Shape();s.moveTo(0,0);s.lineTo(sh.a,0);s.lineTo(0,sh.b);s.closePath();
+  const geo=new THREE.ExtrudeGeometry(s,{depth:sh.t,bevelEnabled:false});geo.translate(-sh.a/3,-sh.b/3,-sh.t/2);M(geo,B,.8,1);mx=Math.max(sh.a,sh.b,sh.t);break}
+ case'limas':{const geo=new THREE.ConeGeometry(sh.s/Math.SQRT2,sh.t,4);geo.rotateY(Math.PI/4);M(geo,B,.8,1);mx=Math.max(sh.s,sh.t);break}
+ case'tabung':M(Cy(sh.r,sh.t),B,.8);mx=Math.max(2*sh.r,sh.t);break;
+ case'kerucut':M(new THREE.ConeGeometry(sh.r,sh.t,48),B,.8);mx=Math.max(2*sh.r,sh.t);break;
+ case'bola':M(Sp(sh.r),B,.85);mx=2*sh.r;break;
+ case'kapsul':{M(Cy(sh.r,sh.t),B,.8);const h=new THREE.SphereGeometry(sh.r,32,16,0,Math.PI*2,0,Math.PI/2);
+  const a=M(h,B,.8);a.position.y=sh.t/2;const b=M(h,B,.8);b.position.y=-sh.t/2;b.rotation.x=Math.PI;mx=sh.t+2*sh.r;break}
+ case'bolakubus':M(new THREE.BoxGeometry(sh.s,sh.s,sh.s),B,.25,1);M(Sp(sh.s/2),O,.95);mx=sh.s;break;
+ case'bolatab':M(Cy(sh.r,2*sh.r),B,.25);M(Sp(sh.r),O,.95);mx=2*sh.r;break;
+ case'kertab':M(Cy(sh.r,sh.t),B,.25);M(new THREE.ConeGeometry(sh.r,sh.t,48),O,.95);mx=Math.max(2*sh.r,sh.t);break}
+ g.scale.setScalar(3/mx);return g}
+function show3D(el,sh){
+ if(cur){cur.dead=true;cur.r.dispose();if(cur.el!==el)cur.el.innerHTML=''}
+ el.innerHTML='';const w=el.clientWidth||320,h=el.clientHeight||230;
+ const sc=new THREE.Scene(),cam=new THREE.PerspectiveCamera(40,w/h,.1,50),r=new THREE.WebGLRenderer({antialias:true,alpha:true});
+ cam.position.set(0,0,8.5);r.setSize(w,h);r.setPixelRatio(Math.min(devicePixelRatio,2));el.appendChild(r.domElement);
+ sc.add(new THREE.AmbientLight(0xffffff,.75));const dl=new THREE.DirectionalLight(0xffffff,.8);dl.position.set(3,5,4);sc.add(dl);
+ const g=build(sh);g.rotation.set(.5,.7,0);sc.add(g);
+ const o={r,el,dead:false};cur=o;let d=false,lx=0,ly=0;
+ el.onpointerdown=e=>{d=true;lx=e.clientX;ly=e.clientY;try{el.setPointerCapture(e.pointerId)}catch(_){}};
+ el.onpointerup=()=>d=false;
+ el.onpointermove=e=>{if(!d)return;g.rotation.y+=(e.clientX-lx)*.01;g.rotation.x+=(e.clientY-ly)*.01;lx=e.clientX;ly=e.clientY};
+ (function f(){if(o.dead||!el.isConnected)return;if(!d)g.rotation.y+=.006;r.render(sc,cam);requestAnimationFrame(f)})();
+}
+
+/* ===== UI ===== */
+const state={cur:0,ans:new Array(QUESTIONS.length).fill(null),done:false};
+const $=id=>document.getElementById(id),panel=$('panel'),ng=$('ng');
+QUESTIONS.forEach((q,i)=>{const b=document.createElement('button');b.className='nc '+q.level;b.textContent=i+1;b.setAttribute('aria-label','Soal '+(i+1)+', '+LBL[q.level]);b.onclick=()=>{state.cur=i;render()};ng.appendChild(b)});
+function upd(){const n=state.ans.filter(a=>a!==null).length;$('pf').style.width=Math.round(n/QUESTIONS.length*100)+'%';$('pl').textContent=n+' dari '+QUESTIONS.length+' soal terjawab';
+ ng.querySelectorAll('.nc').forEach((c,i)=>{c.classList.toggle('a',state.ans[i]!==null);c.classList.toggle('cur',i===state.cur&&!state.done)})}
+function confirmBox(msg,ok){const m=$('mo');$('mm').textContent=msg;m.classList.remove('hidden');
+ const y=$('yes'),n=$('no');const off=()=>{m.classList.add('hidden');y.onclick=n.onclick=null};y.onclick=()=>{off();ok()};n.onclick=off}
+function submit(){const un=state.ans.filter(a=>a===null).length;const go=()=>{state.done=true;results()};
+ un?confirmBox('Masih ada '+un+' soal belum dijawab. Tetap kumpulkan?',go):go()}
+$('bs').onclick=submit;
+function question(){
+ const i=state.cur,q=QUESTIONS[i];
+ panel.innerHTML=`<div class="card ${q.level}"><div class="br"><span class="chip ${q.level}">${LBL[q.level]}</span><span class="tc">${q.topic}</span></div>
+ <div class="qn">Soal ${i+1} dari ${QUESTIONS.length}</div>
+ <div class="v3" id="v3" role="img" aria-label="Gambar 3D ${NAME[q.sh.k]}"></div>
+ <div class="cap">${cap(q.sh)} · seret untuk memutar</div>
+ <p class="qt">${q.q}</p>
+ <fieldset>${q.opts.map((o,k)=>`<label class="opt${state.ans[i]===k?' sel':''}"><input type="radio" name="o" value="${k}" ${state.ans[i]===k?'checked':''}><span class="ol">${'ABCD'[k]}.</span><span>${o}</span></label>`).join('')}</fieldset>
+ <div class="nb"><button class="bg" id="pv" ${i?'':'disabled'}>Sebelumnya</button>
+ <button class="bp ${q.level}" id="nx">${i===QUESTIONS.length-1?'Ke ringkasan':'Berikutnya'}</button></div></div>`;
+ show3D($('v3'),q.sh);
+ panel.querySelectorAll('input').forEach(x=>x.onchange=e=>{state.ans[i]=+e.target.value;upd();panel.querySelectorAll('.opt').forEach((l,k)=>l.classList.toggle('sel',k===state.ans[i]))});
+ $('pv').onclick=()=>{state.cur--;render()};
+ $('nx').onclick=()=>i===QUESTIONS.length-1?submit():(state.cur++,render());
+}
+function results(){
+ const lv=['sedang','sulit','hots','olimpiade'],c={};lv.forEach(l=>c[l]={c:0,t:0});let tot=0;
+ QUESTIONS.forEach((q,i)=>{c[q.level].t++;if(state.ans[i]===q.correct){c[q.level].c++;tot++}});
+ const sc=Math.round(tot/QUESTIONS.length*100),col=sc>=75?'var(--ok)':sc>=50?'var(--gold)':'var(--no)';
+ $('side').classList.add('hidden');
+ panel.innerHTML=`<div class="rw"><h2>Hasil ujian</h2>
+ <div class="hero"><span class="n" style="color:${col}">${tot}</span><span class="o">dari ${QUESTIONS.length} soal benar · nilai akhir <b style="color:${col}">${sc}</b></span></div>
+ <div class="bd">${lv.map(l=>`<div class="bdr"><span>${LBL[l]}</span><div class="bt"><div class="bf ${l}" style="width:${c[l].c/c[l].t*100}%"></div></div><span>${c[l].c}/${c[l].t}</span></div>`).join('')}</div>
+ <button class="bg" id="rt">Ulangi ujian</button>
+ <div style="margin-top:30px">${QUESTIONS.map((q,i)=>{const a=state.ans[i],ok=a===q.correct;
+ return `<div class="ri"><div class="br"><span class="chip ${q.level}">${LBL[q.level]}</span><span class="tc">${q.topic}</span>
+ <span class="tc" style="border-color:${ok?'var(--ok)':'var(--no)'};color:${ok?'var(--ok)':'var(--no)'}">${ok?'Benar':a===null?'Tidak dijawab':'Salah'}</span></div>
+ <p class="rq">${i+1}. ${q.q}</p><div class="cap" style="margin:0 0 10px">${cap(q.sh)} · <a href="#" data-v="${i}">tampilkan gambar 3D</a></div><div class="v3 hidden" id="rv${i}"></div>
+ ${q.opts.map((o,k)=>`<div class="ro ${k===q.correct?'c':k===a?'w':''}">${'ABCD'[k]}. ${o}</div>`).join('')}
+ <div class="ex"><b>Pembahasan:</b> ${q.exp}</div></div>`}).join('')}</div></div>`;
+ panel.querySelectorAll('[data-v]').forEach(a=>a.onclick=e=>{e.preventDefault();const i=+a.dataset.v;
+  panel.querySelectorAll('.v3').forEach(v=>v.classList.add('hidden'));const el=$('rv'+i);el.classList.remove('hidden');show3D(el,QUESTIONS[i].sh)});
+ $('rt').onclick=()=>{if(cur){cur.dead=true;cur.r.dispose();cur=null}state.cur=0;state.ans.fill(null);state.done=false;$('side').classList.remove('hidden');render()};
+ panel.scrollTo({top:0});
+}
+function render(){if(state.done){results();return}question();upd();panel.scrollTo({top:0})}
+render();
+</script>
+</body>
+</html>

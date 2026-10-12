@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ujian Lingkaran — KW Learning</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F0F2F5;--panel:#fff;--ink:#1B2430;--soft:#5B6473;--navy:#0F3D63;--deep:#0A2B48;--gold:#D79A2C;--line:#DDE2E8;
+--sedang:#2E86AB;--sedang-bg:#EAF3F8;--sulit:#C9642A;--sulit-bg:#FBEEE4;--hots:#7B4FA6;--hots-bg:#F1EAF8;--olimpiade:#B23A48;--olimpiade-bg:#FAEBEC;--ok:#2F9E5B;--ok-bg:#E7F5EC;--bad:#C0392B;--bad-bg:#FBEBE9;color-scheme:light}
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--paper)}
+body{color:var(--ink);font-family:'Public Sans',system-ui,sans-serif;line-height:1.5;overflow:hidden}
+h2,h3{font-family:'Fraunces',Georgia,serif;margin:0}button{font-family:inherit}
+.app{height:100dvh;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+header{flex:none;background:linear-gradient(120deg,var(--navy),var(--deep));color:#fff;padding:10px 26px 0}
+.row{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:baseline}
+.brand{font-size:13px;color:#B9C6D6;font-weight:600}.et{font-family:'Fraunces',serif;font-weight:600;font-size:18px}
+.sub{margin:4px 0 8px;color:#C7D2DE;font-size:12.5px}
+.strip{display:flex;height:4px}.strip span{flex:1}
+.body{flex:1;display:flex;min-height:0}
+aside{width:270px;flex:none;background:var(--panel);border-right:1px solid var(--line);border-top:3px solid var(--gold);display:flex;flex-direction:column;min-height:0}
+.sc{flex:1;overflow-y:auto;padding:18px}
+aside h2{font-size:13px;color:var(--soft);margin-bottom:10px;font-family:'Public Sans',sans-serif;font-weight:700}
+.pt{height:7px;background:#E7EAEF;border-radius:99px;overflow:hidden;margin-bottom:6px}.pf{height:100%;background:var(--gold);width:0;transition:width .25s}
+.pl{font-size:12.5px;color:var(--soft);margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:16px}
+.cell{aspect-ratio:1;border-radius:6px;border:1.5px solid;font-size:12.5px;font-weight:700;cursor:pointer;padding:0;background:#fff}
+.sedang{--c:var(--sedang);--b:var(--sedang-bg)}.sulit{--c:var(--sulit);--b:var(--sulit-bg)}.hots{--c:var(--hots);--b:var(--hots-bg)}.olimpiade{--c:var(--olimpiade);--b:var(--olimpiade-bg)}
+.cell{border-color:var(--c);color:var(--c);background:var(--b)}.cell.answered{background:var(--c);color:#fff}.cell.current{outline:2.5px solid var(--gold);outline-offset:1px}
+.legend{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--soft)}.legend i{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--c);margin-right:8px}
+.sf{padding:14px 18px;border-top:1px solid var(--line)}
+.bs{width:100%;background:var(--gold);color:#2A1D06;border:0;border-radius:8px;padding:12px;font-size:14.5px;font-weight:700;cursor:pointer}
+main{flex:1;min-width:0;overflow-y:auto;display:flex;justify-content:center;padding:28px 24px 40px}
+.card{width:100%;max-width:760px;background:#fff;border:1px solid var(--line);border-top:5px solid var(--c,var(--navy));border-radius:10px;padding:24px 28px 28px;align-self:flex-start}
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.chip{font-size:12.5px;font-weight:700;padding:5px 12px;border-radius:99px;background:var(--b);color:var(--c)}
+.tc{font-size:12.5px;color:var(--soft);border:1px solid var(--line);padding:5px 12px;border-radius:99px}
+.qn{font-family:'Fraunces',serif;font-size:14.5px;color:var(--soft);margin-bottom:6px}
+.qt{font-size:18.5px;line-height:1.55;margin:0 0 16px}
+.figbox{display:flex;justify-content:center;background:#F7F9FB;border:1px solid var(--line);border-radius:8px;padding:10px;margin-bottom:18px}
+.fig{width:100%;max-width:340px;height:auto}
+fieldset{border:0;margin:0 0 24px;padding:0;display:flex;flex-direction:column;gap:10px}
+.opt{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:8px;padding:12px 16px;cursor:pointer}
+.opt:hover{border-color:var(--navy)}.opt.sel{border-color:var(--navy);background:#F2F6FA}.opt input{margin-top:4px;accent-color:var(--navy)}.ol{font-weight:700;color:var(--navy);width:18px;flex:none}
+.nb{display:flex;justify-content:space-between;gap:12px}
+.g,.p{font-size:15px;font-weight:700;border-radius:8px;padding:11px 22px;cursor:pointer;border:1px solid transparent}
+.g{background:#fff;border-color:var(--line);color:var(--ink)}.g:disabled{opacity:.4;cursor:not-allowed}.p{background:var(--c,var(--navy));color:#fff}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.rw{max-width:820px;margin:0 auto;width:100%}.rw h2{font-size:24px}
+.hero{display:flex;align-items:baseline;gap:10px;margin:10px 0 20px}.hero .n{font-family:'Fraunces',serif;font-size:52px;font-weight:600}.hero .o{color:var(--soft)}
+.bd{display:grid;grid-template-columns:90px 1fr 50px;gap:12px;align-items:center;font-size:14px;margin-bottom:10px}
+.bt{height:9px;background:#E7EAEF;border-radius:99px;overflow:hidden}.bt div{height:100%;background:var(--c)}
+.ri{border-top:1px solid var(--line);padding:18px 0}.rq{font-size:16px;margin:10px 0}
+.ro{padding:7px 12px;border-radius:6px;font-size:14px;margin-bottom:6px;border:1px solid var(--line)}
+.ro.c{border-color:var(--ok);background:var(--ok-bg);color:#1E6B3E}.ro.w{border-color:var(--bad);background:var(--bad-bg);color:#8E2A20}
+.ex{font-size:14px;color:var(--soft);background:#F6F4EC;border-radius:8px;padding:12px 14px;margin-top:10px}.ex b{color:var(--ink)}
+.hidden{display:none!important}
+.ov{position:fixed;inset:0;background:rgba(10,20,32,.55);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}
+.mb{background:#fff;border-radius:12px;padding:24px 26px;max-width:380px;border-top:4px solid var(--gold)}
+.mb p{font-size:14.5px;color:var(--soft);margin:8px 0 18px}.ma{display:flex;justify-content:flex-end;gap:10px}
+@media(max-width:820px){.body{flex-direction:column}aside{width:100%;max-height:36vh;border-right:0}main{padding:18px 14px 30px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+<div class="row"><span class="brand">KW Learning · Ruang Belajar Matematika</span><span class="et">Ujian Lingkaran</span></div>
+<p class="sub">45 soal pilihan ganda dengan gambar lingkaran, juring, sudut pusat, dan garis singgung — sedang, sulit, HOTS, dan olimpiade.</p>
+<div class="strip"><span style="background:var(--sedang)"></span><span style="background:var(--sulit)"></span><span style="background:var(--hots)"></span><span style="background:var(--olimpiade)"></span></div>
+</header>
+<div class="body">
+<aside id="side"><div class="sc">
+<h2>Progres</h2><div class="pt"><div class="pf" id="pf"></div></div><div class="pl" id="pl"></div>
+<h2>Navigasi soal</h2><div class="grid" id="grid"></div>
+<div class="legend"><span class="sedang"><i></i>Sedang (1–15)</span><span class="sulit"><i></i>Sulit (16–30)</span><span class="hots"><i></i>HOTS (31–40)</span><span class="olimpiade"><i></i>Olimpiade (41–45)</span></div>
+</div><div class="sf"><button class="bs" id="bsub">Kumpulkan jawaban</button></div></aside>
+<main id="panel" aria-live="polite"></main>
+</div></div>
+<div class="ov hidden" id="ov"><div class="mb"><h3>Kumpulkan jawaban?</h3><p id="cm"></p><div class="ma"><button class="g" id="no">Kembali</button><button class="p" id="yes">Ya, kumpulkan</button></div></div></div>
+
+<script>
+const NS='http://www.w3.org/2000/svg';
+// Gambar: lingkaran
+const T=(x,y,t,c,sz)=>`<text x="${x}" y="${y}" font-size="${sz||14}" font-weight="700" text-anchor="middle" fill="${c||'#0F3D63'}">${t}</text>`;
+const CIR=`<circle cx="160" cy="95" r="75" fill="#EAF3F8" stroke="#0F3D63" stroke-width="2.5"/>`;
+function cr(kind,label){
+  const x0=kind==='d'?85:160;
+  return `<svg class="fig" viewBox="0 0 320 190" role="img" aria-label="Lingkaran">${CIR}<line x1="${x0}" y1="95" x2="235" y2="95" stroke="#C9642A" stroke-width="3"/><circle cx="160" cy="95" r="4" fill="#1B2430"/>${T(160,113,'O','#1B2430')}${T(kind==='d'?198:198,82,label,'#C9642A')}</svg>`;
+}
+function sector(deg,label){
+  const r=deg*Math.PI/180,x=160+75*Math.cos(r),y=95-75*Math.sin(r),m=r/2;
+  return `<svg class="fig" viewBox="0 0 320 190" role="img" aria-label="Juring lingkaran bersudut ${deg} derajat"><circle cx="160" cy="95" r="75" fill="#fff" stroke="#0F3D63" stroke-width="2"/><path d="M160 95L235 95A75 75 0 ${deg>180?1:0} 0 ${x} ${y}z" fill="#D79A2C" fill-opacity=".55" stroke="#0F3D63" stroke-width="2.5"/><circle cx="160" cy="95" r="4" fill="#1B2430"/>${T(150,112,'O','#1B2430')}${T(160+36*Math.cos(m),95-36*Math.sin(m)+5,deg+'°','#7B4FA6',13)}${label?T(205,110,label,'#C9642A',13):''}</svg>`;
+}
+function cent(po,ke){
+  const P=d=>[160+75*Math.cos(d*Math.PI/180),95-75*Math.sin(d*Math.PI/180)],A=P(235),B=P(305),C=P(90),L=(p,q,c)=>`<line x1="${p[0]}" y1="${p[1]}" x2="${q[0]}" y2="${q[1]}" stroke="${c}" stroke-width="2.5"/>`;
+  return `<svg class="fig" viewBox="0 0 320 200" role="img" aria-label="Sudut pusat dan sudut keliling">${CIR}${L([160,95],A,'#C9642A')}${L([160,95],B,'#C9642A')}${L(C,A,'#2E86AB')}${L(C,B,'#2E86AB')}<circle cx="160" cy="95" r="3.5" fill="#1B2430"/>${T(160,89,'O','#1B2430',13)}${T(A[0]-12,A[1]+14,'A')}${T(B[0]+12,B[1]+14,'B')}${T(C[0],C[1]-6,'C')}${T(160,128,po,'#C9642A',13)}${T(160,50,ke,'#2E86AB',13)}</svg>`;
+}
+function tang(lr,lpa,lop){
+  return `<svg class="fig" viewBox="0 0 320 200" role="img" aria-label="Garis singgung lingkaran"><circle cx="110" cy="110" r="60" fill="#EAF3F8" stroke="#0F3D63" stroke-width="2.5"/><line x1="170" y1="10" x2="170" y2="190" stroke="#2E86AB" stroke-width="2"/><line x1="110" y1="110" x2="170" y2="110" stroke="#C9642A" stroke-width="3"/><line x1="110" y1="110" x2="170" y2="30" stroke="#5B6473" stroke-width="2" stroke-dasharray="5 3"/><path d="M160 110v-10h10" fill="none" stroke="#1B2430"/><circle cx="110" cy="110" r="3.5" fill="#1B2430"/>${T(100,128,'O','#1B2430',13)}${T(182,126,'A')}${T(182,26,'P')}${T(140,128,lr,'#C9642A',13)}${T(212,74,lpa,'#2E86AB',13)}${T(116,62,lop,'#5B6473',13)}</svg>`;
+}
+const F=(h)=>`<div class="figbox">${h}</div>`;
+const Q=[
+// SEDANG
+{l:"sedang",t:"Unsur Lingkaran",f:F(cr('d','14 cm')),q:"Garis berwarna pada gambar di atas adalah diameter 14 cm. Jari-jari lingkaran tersebut adalah ...",o:["14 cm","7 cm","28 cm","21 cm"],c:1,e:"Jari-jari = diameter : 2 = 14 : 2 = 7 cm."},
+{l:"sedang",t:"Keliling Lingkaran",f:F(cr('r','7 cm')),q:"Keliling lingkaran pada gambar di atas (π = 22/7) adalah ...",o:["22 cm","154 cm","44 cm","49 cm"],c:2,e:"K = 2πr = 2 × 22/7 × 7 = 44 cm."},
+{l:"sedang",t:"Luas Lingkaran",f:F(cr('r','7 cm')),q:"Luas lingkaran pada gambar di atas (π = 22/7) adalah ...",o:["154 cm²","44 cm²","49 cm²","308 cm²"],c:0,e:"L = πr² = 22/7 × 7 × 7 = 154 cm²."},
+{l:"sedang",t:"Unsur Lingkaran",q:"Garis lurus dari titik pusat ke titik pada lingkaran disebut ...",o:["diameter","jari-jari","tali busur","apotema"],c:1,e:"Jarak pusat ke lingkaran disebut jari-jari."},
+{l:"sedang",t:"Unsur Lingkaran",q:"Tali busur terpanjang pada suatu lingkaran adalah ...",o:["jari-jari","busur","diameter","juring"],c:2,e:"Tali busur yang melalui titik pusat disebut diameter dan merupakan yang terpanjang."},
+{l:"sedang",t:"Keliling Lingkaran",f:F(cr('d','20 cm')),q:"Keliling lingkaran dengan diameter 20 cm (π = 3,14) adalah ...",o:["31,4 cm","62,8 cm","314 cm","125,6 cm"],c:1,e:"K = πd = 3,14 × 20 = 62,8 cm."},
+{l:"sedang",t:"Luas Lingkaran",f:F(cr('r','10 cm')),q:"Luas lingkaran pada gambar di atas (π = 3,14) adalah ...",o:["31,4 cm²","62,8 cm²","314 cm²","628 cm²"],c:2,e:"L = 3,14 × 10 × 10 = 314 cm²."},
+{l:"sedang",t:"Juring",f:F(sector(90,'')),q:"Juring pada gambar di atas bersudut pusat 90°. Juring tersebut adalah ... bagian lingkaran.",o:["1/2","1/3","1/4","1/8"],c:2,e:"90°/360° = 1/4."},
+{l:"sedang",t:"Juring",f:F(sector(60,'')),q:"Juring dengan sudut pusat 60° merupakan ... bagian lingkaran.",o:["1/6","1/4","1/3","1/2"],c:0,e:"60°/360° = 1/6."},
+{l:"sedang",t:"Sudut Pusat dan Keliling",f:F(cent('80°','?')),q:"Pada gambar di atas, sudut pusat AOB = 80°. Besar sudut keliling ACB adalah ...",o:["20°","40°","80°","160°"],c:1,e:"Sudut keliling = 1/2 × sudut pusat = 40°."},
+{l:"sedang",t:"Sudut Pusat dan Keliling",f:F(cent('100°','?')),q:"Pada gambar di atas, sudut pusat AOB = 100°. Besar sudut keliling ACB adalah ...",o:["25°","100°","50°","200°"],c:2,e:"Sudut keliling = 1/2 × 100° = 50°."},
+{l:"sedang",t:"Sudut Keliling",q:"Sudut keliling yang menghadap diameter lingkaran besarnya ...",o:["45°","90°","60°","180°"],c:1,e:"Diameter menghadap sudut pusat 180°, sehingga sudut kelilingnya 90°."},
+{l:"sedang",t:"Keliling dan Jari-jari",q:"Keliling suatu lingkaran 88 cm (π = 22/7). Jari-jari lingkaran tersebut adalah ...",o:["7 cm","21 cm","14 cm","28 cm"],c:2,e:"r = K : 2π = 88 : (2 × 22/7) = 14 cm."},
+{l:"sedang",t:"Luas dan Jari-jari",q:"Luas suatu lingkaran 154 cm² (π = 22/7). Diameter lingkaran tersebut adalah ...",o:["14 cm","21 cm","22 cm","7 cm"],c:0,e:"r² = 154 : 22/7 = 49, sehingga r = 7 cm dan d = 14 cm."},
+{l:"sedang",t:"Panjang Busur",f:F(sector(90,'14 cm')),q:"Panjang busur juring pada gambar di atas (π = 22/7) adalah ...",o:["11 cm","22 cm","44 cm","88 cm"],c:1,e:"Panjang busur = 90/360 × 2πr = 1/4 × 88 = 22 cm."},
+// SULIT
+{l:"sulit",t:"Panjang Busur",f:F(sector(60,'21 cm')),q:"Panjang busur juring pada gambar di atas (π = 22/7) adalah ...",o:["11 cm","44 cm","22 cm","66 cm"],c:2,e:"60/360 × 2 × 22/7 × 21 = 1/6 × 132 = 22 cm."},
+{l:"sulit",t:"Luas Juring",f:F(sector(72,'10 cm')),q:"Luas juring pada gambar di atas (π = 3,14) adalah ...",o:["31,4 cm²","78,5 cm²","62,8 cm²","125,6 cm²"],c:2,e:"72/360 × 3,14 × 10 × 10 = 1/5 × 314 = 62,8 cm²."},
+{l:"sulit",t:"Luas Juring",f:F(sector(120,'21 cm')),q:"Luas juring pada gambar di atas (π = 22/7) adalah ...",o:["231 cm²","462 cm²","693 cm²","924 cm²"],c:1,e:"120/360 × 22/7 × 21 × 21 = 1/3 × 1.386 = 462 cm²."},
+{l:"sulit",t:"Sudut Pusat dari Busur",q:"Panjang busur 22 cm pada lingkaran berjari-jari 14 cm (π = 22/7). Sudut pusat juring tersebut adalah ...",o:["45°","60°","90°","120°"],c:2,e:"Keliling = 88 cm. Sudut = 22/88 × 360° = 90°."},
+{l:"sulit",t:"Sudut Pusat dan Keliling",f:F(cent('?','35°')),q:"Pada gambar di atas, sudut keliling ACB = 35°. Besar sudut pusat AOB adalah ...",o:["35°","105°","70°","140°"],c:2,e:"Sudut pusat = 2 × sudut keliling = 70°."},
+{l:"sulit",t:"Soal Cerita",q:"Roda sebuah sepeda berdiameter 70 cm. Jika roda berputar 100 kali (π = 22/7), jarak yang ditempuh adalah ...",o:["22 m","70 m","220 m","2.200 m"],c:2,e:"Keliling roda = 22/7 × 70 = 220 cm. Jarak = 100 × 220 cm = 22.000 cm = 220 m."},
+{l:"sulit",t:"Luas Cincin",q:"Dua lingkaran sepusat berjari-jari 14 cm dan 7 cm. Luas daerah di antara kedua lingkaran (π = 22/7) adalah ...",o:["154 cm²","462 cm²","308 cm²","616 cm²"],c:1,e:"L = π(14² − 7²) = 22/7 × 147 = 462 cm²."},
+{l:"sulit",t:"Keliling Gabungan",q:"Keliling setengah lingkaran dengan diameter 14 cm (π = 22/7) adalah ...",o:["22 cm","44 cm","36 cm","58 cm"],c:2,e:"Busur = 1/2 × 22/7 × 14 = 22 cm. Ditambah diameter 14 cm = 36 cm."},
+{l:"sulit",t:"Garis Singgung",f:F(tang('5 cm','?','13 cm')),q:"Garis singgung PA dan jari-jari OA = 5 cm, OP = 13 cm. Panjang PA adalah ...",o:["8 cm","10 cm","12 cm","18 cm"],c:2,e:"OA ⊥ PA, maka PA² = 13² − 5² = 144 → PA = 12 cm."},
+{l:"sulit",t:"Garis Singgung",f:F(tang('6 cm','8 cm','?')),q:"Garis singgung PA = 8 cm dan jari-jari OA = 6 cm. Jarak OP adalah ...",o:["9 cm","10 cm","12 cm","14 cm"],c:1,e:"OP² = 6² + 8² = 100 → OP = 10 cm."},
+{l:"sulit",t:"Sudut Keliling",q:"Sudut-sudut keliling yang menghadap busur yang sama besarnya ...",o:["sama besar","dua kali","setengah","berjumlah 180°"],c:0,e:"Sudut keliling yang menghadap busur sama adalah sama besar."},
+{l:"sulit",t:"Segiempat Tali Busur",q:"Pada segiempat tali busur ABCD, besar ∠A = 70°. Besar ∠C adalah ...",o:["70°","90°","110°","120°"],c:2,e:"Sudut-sudut yang berhadapan berjumlah 180°: ∠C = 180° − 70° = 110°."},
+{l:"sulit",t:"Keliling dan Luas",q:"Lingkaran yang nilai kelilingnya sama dengan nilai luasnya memiliki jari-jari ...",o:["1","π","2","4"],c:2,e:"2πr = πr² → r = 2."},
+{l:"sulit",t:"Luas Juring",f:F(sector(45,'8 cm')),q:"Luas juring pada gambar di atas (π = 3,14) adalah ...",o:["12,56 cm²","25,12 cm²","50,24 cm²","100,48 cm²"],c:1,e:"45/360 × 3,14 × 64 = 1/8 × 200,96 = 25,12 cm²."},
+{l:"sulit",t:"Soal Cerita",q:"Roda berjari-jari 35 cm berputar 50 kali (π = 22/7). Jarak yang ditempuh adalah ...",o:["55 m","220 m","110 m","1.100 m"],c:2,e:"Keliling = 2 × 22/7 × 35 = 220 cm. Jarak = 50 × 220 = 11.000 cm = 110 m."},
+// HOTS
+{l:"hots",t:"Soal Cerita",q:"Kebun berbentuk lingkaran berdiameter 28 m dipagari kawat sebanyak 3 putaran (π = 22/7). Panjang kawat yang dibutuhkan adalah ...",o:["88 m","176 m","264 m","352 m"],c:2,e:"Keliling = 22/7 × 28 = 88 m. Tiga putaran = 264 m."},
+{l:"hots",t:"Soal Cerita",q:"Taman berbentuk lingkaran berdiameter 14 m ditanami rumput dengan biaya Rp10.000 per m². Total biayanya (π = 22/7) adalah ...",o:["Rp1.100.000","Rp1.540.000","Rp2.200.000","Rp6.160.000"],c:1,e:"Luas = 22/7 × 7 × 7 = 154 m². Biaya = 154 × 10.000 = Rp1.540.000."},
+{l:"hots",t:"Luas Gabungan",q:"Sebuah lingkaran berada tepat di dalam persegi bersisi 14 cm. Luas daerah di dalam persegi tetapi di luar lingkaran (π = 22/7) adalah ...",o:["42 cm²","52 cm²","154 cm²","196 cm²"],c:0,e:"Luas persegi = 196 cm², luas lingkaran (r = 7) = 154 cm². Selisih = 42 cm²."},
+{l:"hots",t:"Perbandingan",q:"Jika jari-jari suatu lingkaran diperbesar 2 kali semula, luas lingkaran menjadi ... kali semula.",o:["2","3","4","8"],c:2,e:"L = πr². Dengan r → 2r, luas menjadi π(2r)² = 4πr²."},
+{l:"hots",t:"Mencari Sudut Juring",q:"Luas juring suatu lingkaran adalah 38,5 cm² dan jari-jarinya 7 cm (π = 22/7). Sudut pusat juring tersebut adalah ...",o:["60°","90°","120°","150°"],c:1,e:"Luas lingkaran = 154 cm². Sudut = 38,5/154 × 360° = 90°."},
+{l:"hots",t:"Keliling Juring",f:F(sector(90,'14 cm')),q:"Keliling juring pada gambar di atas (π = 22/7) adalah ...",o:["36 cm","64 cm","50 cm","72 cm"],c:2,e:"Keliling juring = busur + 2 jari-jari = 22 + 28 = 50 cm."},
+{l:"hots",t:"Perbandingan Putaran",q:"Roda A berjari-jari 21 cm berputar 20 kali. Roda B berjari-jari 14 cm menempuh jarak yang sama. Roda B berputar sebanyak ... kali.",o:["25","30","35","40"],c:1,e:"Jarak sama → 21 × 20 = 14 × n → n = 30."},
+{l:"hots",t:"Sudut dalam Lingkaran",q:"Segitiga ABC dengan AB diameter lingkaran. Jika ∠A = 35°, besar ∠B adalah ...",o:["35°","45°","55°","65°"],c:2,e:"∠C = 90° (menghadap diameter). ∠B = 180° − 90° − 35° = 55°."},
+{l:"hots",t:"Garis Singgung Persekutuan Luar",q:"Dua lingkaran berjari-jari 8 cm dan 3 cm dengan jarak kedua pusat 13 cm. Panjang garis singgung persekutuan luarnya adalah ...",o:["10 cm","11 cm","12 cm","13 cm"],c:2,e:"Panjang = √(13² − (8 − 3)²) = √(169 − 25) = 12 cm."},
+{l:"hots",t:"Garis Singgung Persekutuan Dalam",q:"Dua lingkaran berjari-jari 7 cm dan 3 cm dengan jarak kedua pusat 26 cm. Panjang garis singgung persekutuan dalamnya adalah ...",o:["20 cm","24 cm","22 cm","26 cm"],c:1,e:"Panjang = √(26² − (7 + 3)²) = √(676 − 100) = 24 cm."},
+// OLIMPIADE
+{l:"olimpiade",t:"Lingkaran Luar",q:"Persegi bersisi 10 cm memiliki lingkaran luar yang melalui keempat titik sudutnya. Luas lingkaran tersebut (π = 3,14) adalah ...",o:["78,5 cm²","157 cm²","314 cm²","200 cm²"],c:1,e:"Diagonal = 10√2 = diameter, sehingga r² = 50. Luas = 3,14 × 50 = 157 cm²."},
+{l:"olimpiade",t:"Lingkaran Dalam",q:"Jari-jari lingkaran dalam segitiga siku-siku dengan sisi 6 cm, 8 cm, dan 10 cm adalah ...",o:["1 cm","3 cm","2 cm","4 cm"],c:2,e:"r = (a + b − c)/2 = (6 + 8 − 10)/2 = 2 cm."},
+{l:"olimpiade",t:"Dua Lingkaran Bersinggungan",q:"Dua lingkaran berjari-jari 16 cm dan 4 cm bersinggungan di luar (jarak pusat 20 cm). Panjang garis singgung persekutuan luarnya adalah ...",o:["12 cm","14 cm","16 cm","20 cm"],c:2,e:"Panjang = √(20² − (16 − 4)²) = √(400 − 144) = 16 cm."},
+{l:"olimpiade",t:"Sudut Jam",q:"Besar sudut terkecil yang dibentuk jarum jam dan jarum menit pada pukul 4.00 adalah ...",o:["90°","100°","120°","150°"],c:2,e:"Tiap jam = 30°, sehingga 4 jam = 120°."},
+{l:"olimpiade",t:"Tali Busur",q:"Terdapat 6 titik berbeda pada sebuah lingkaran. Banyak tali busur yang dapat dibuat dengan menghubungkan dua titik adalah ...",o:["12","15","18","30"],c:1,e:"Banyak pasangan titik = C(6,2) = 6 × 5 : 2 = 15."}
+];
+const LB={sedang:"Sedang",sulit:"Sulit",hots:"HOTS",olimpiade:"Olimpiade"},LT=['A','B','C','D'];
+const S={cur:0,ans:Q.map(()=>null),done:false};
+const $=id=>document.getElementById(id),panel=$('panel'),grid=$('grid');
+Q.forEach((q,i)=>{const b=document.createElement('button');b.type='button';b.className='cell '+q.l;b.textContent=i+1;b.setAttribute('aria-label','Soal '+(i+1)+', '+LB[q.l]);b.onclick=()=>{S.cur=i;render()};grid.appendChild(b)});
+function upd(){grid.childNodes.forEach((c,i)=>{c.classList.toggle('answered',S.ans[i]!==null);c.classList.toggle('current',i===S.cur&&!S.done)});
+ const n=S.ans.filter(a=>a!==null).length;$('pf').style.width=Math.round(n/Q.length*100)+'%';$('pl').textContent=n+' dari '+Q.length+' soal terjawab'}
+function confirmBox(msg,ok){$('cm').textContent=msg;$('ov').classList.remove('hidden');$('no').onclick=()=>$('ov').classList.add('hidden');$('yes').onclick=()=>{$('ov').classList.add('hidden');ok()}}
+function submit(){const u=S.ans.filter(a=>a===null).length;const go=()=>{S.done=true;results()};u?confirmBox('Masih ada '+u+' soal belum dijawab. Tetap kumpulkan?',go):go()}
+$('bsub').onclick=submit;
+function question(){
+  const i=S.cur,q=Q[i];
+  panel.innerHTML=`<div class="card ${q.l}"><div class="chips"><span class="chip">${LB[q.l]}</span><span class="tc">${q.t}</span></div>
+  <div class="qn">Soal ${i+1} dari ${Q.length}</div>${q.f||''}<p class="qt">${q.q}</p>
+  <fieldset>${q.o.map((o,k)=>`<label class="opt${S.ans[i]===k?' sel':''}"><input type="radio" name="o" value="${k}"${S.ans[i]===k?' checked':''}><span class="ol">${LT[k]}.</span><span>${o}</span></label>`).join('')}</fieldset>
+  <div class="nb"><button type="button" class="g" id="pv"${i?'':' disabled'}>Sebelumnya</button><button type="button" class="p" id="nx">${i===Q.length-1?'Ke ringkasan':'Berikutnya'}</button></div></div>`;
+  panel.querySelectorAll('input').forEach(inp=>inp.onchange=e=>{S.ans[i]=+e.target.value;panel.querySelectorAll('.opt').forEach((el,k)=>el.classList.toggle('sel',k===S.ans[i]));upd()});
+  $('pv').onclick=()=>{S.cur--;render()};
+  $('nx').onclick=()=>i===Q.length-1?submit():(S.cur++,render());
+}
+function results(){
+  const cnt={};Object.keys(LB).forEach(k=>cnt[k]=[0,0]);let tot=0;
+  Q.forEach((q,i)=>{cnt[q.l][1]++;if(S.ans[i]===q.c){cnt[q.l][0]++;tot++}});
+  const sc=Math.round(tot/Q.length*100),col=sc>=75?'var(--ok)':sc>=50?'var(--gold)':'var(--bad)';
+  $('side').classList.add('hidden');
+  panel.innerHTML=`<div class="rw"><h2>Hasil ujian</h2><div class="hero"><span class="n" style="color:${col}">${tot}</span><span class="o">dari ${Q.length} soal benar · nilai akhir <b style="color:${col}">${sc}</b></span></div>
+  ${Object.keys(LB).map(k=>`<div class="bd ${k}"><span>${LB[k]}</span><div class="bt"><div style="width:${cnt[k][1]?cnt[k][0]/cnt[k][1]*100:0}%"></div></div><span>${cnt[k][0]}/${cnt[k][1]}</span></div>`).join('')}
+  <button class="g" id="rt">Ulangi ujian</button>
+  <div style="margin-top:24px">${Q.map((q,i)=>{const a=S.ans[i],ok=a===q.c;return `<div class="ri ${q.l}"><div class="chips"><span class="chip">${LB[q.l]}</span><span class="tc">${q.t}</span><span class="tc" style="color:${ok?'var(--ok)':'var(--bad)'};border-color:currentColor">${ok?'Benar':a===null?'Tidak dijawab':'Salah'}</span></div>${q.f||''}<p class="rq">${i+1}. ${q.q}</p>${q.o.map((o,k)=>`<div class="ro ${k===q.c?'c':k===a?'w':''}">${LT[k]}. ${o}</div>`).join('')}<div class="ex"><b>Pembahasan:</b> ${q.e}</div></div>`}).join('')}</div></div>`;
+  $('rt').onclick=()=>{S.cur=0;S.ans=Q.map(()=>null);S.done=false;$('side').classList.remove('hidden');render()};
+  panel.scrollTo(0,0);
+}
+function render(){if(S.done)return results();question();upd();panel.scrollTo(0,0)}
+render();
+</script>
+</body>
+</html>
