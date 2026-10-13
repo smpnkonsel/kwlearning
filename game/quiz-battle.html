@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#071126">
+<title>Quiz Battle Informatika</title>
+<style>
+:root{--bg:#071126;--panel:#101F43;--panel2:#16295a;--blue:#35C7FF;--cyan:#5EF1FF;--violet:#9B68FF;--gold:#FFCA38;--green:#38EDAB;--red:#FF547E;--txt:#EAF2FF;--mut:#A9BBE0;--font:'Trebuchet MS','Segoe UI',system-ui,-apple-system,Roboto,Arial,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+html,body{min-height:100%}
+body{background:radial-gradient(120% 90% at 50% 0%,#14296a 0%,var(--bg) 62%) fixed;color:var(--txt);font-family:var(--font);overflow-x:hidden;line-height:1.45}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+#bg,#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+#bg{z-index:0}#fx{z-index:60}
+.grid{position:fixed;left:-50%;right:-50%;bottom:0;height:52vh;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(53,199,255,.32) 1px,transparent 1px),linear-gradient(90deg,rgba(53,199,255,.32) 1px,transparent 1px);background-size:56px 56px;transform:perspective(520px) rotateX(64deg);transform-origin:50% 100%;-webkit-mask-image:linear-gradient(to top,#000 5%,transparent 80%);mask-image:linear-gradient(to top,#000 5%,transparent 80%);animation:gridmove 5s linear infinite}
+@keyframes gridmove{to{background-position:0 56px}}
+.shapes{position:fixed;inset:0;z-index:0;pointer-events:none;transition:transform .2s ease-out}
+.shp{position:absolute;display:block;border:2px solid rgba(94,241,255,.35);background:rgba(53,199,255,.06);animation:tumble 14s linear infinite}
+.s1{width:70px;height:70px;left:6%;top:18%}
+.s2{width:46px;height:46px;right:9%;top:26%;border-color:rgba(155,104,255,.45);border-radius:50%;animation-duration:18s}
+.s3{width:90px;height:90px;right:18%;bottom:30%;border-color:rgba(255,202,56,.3);animation-duration:22s}
+.s4{width:38px;height:38px;left:14%;bottom:24%;border-color:rgba(56,237,171,.35);animation-duration:16s}
+@keyframes tumble{to{transform:rotate3d(1,1,.4,360deg)}}
+
+/* top bar */
+.top{position:fixed;z-index:30;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:calc(.5rem + env(safe-area-inset-top)) 1rem .5rem;background:linear-gradient(#071126 40%,rgba(7,17,38,0))}
+.brandmini{background:none;border:0;cursor:pointer;font-weight:900;font-size:1.05rem;letter-spacing:.04em;padding:.4rem .6rem;border-radius:.7rem}
+.ctl{display:flex;gap:.45rem}
+.ic{position:relative;width:46px;height:46px;border-radius:.9rem;border:2px solid rgba(94,241,255,.35);background:linear-gradient(#22408a,#162a5e);font-size:1.25rem;cursor:pointer;box-shadow:0 .25em 0 #0b1636;transition:transform .08s}
+.ic:active{transform:translateY(.2em);box-shadow:0 .05em 0 #0b1636}
+.ic[aria-pressed=false]{opacity:.6}
+.ic[aria-pressed=false]::after{content:"";position:absolute;left:20%;right:20%;top:50%;height:3px;background:var(--red);transform:rotate(-40deg);border-radius:2px}
+
+#app{position:relative;z-index:2;max-width:1180px;margin:0 auto;padding:calc(4.2rem + env(safe-area-inset-top)) 1rem 2.5rem}
+.screen{display:none}
+.screen.active{display:block;animation:enter .5s cubic-bezier(.2,.9,.3,1.1)}
+@keyframes enter{from{opacity:0;transform:perspective(900px) translateY(24px) rotateX(8deg)}to{opacity:1;transform:none}}
+h1,h2,h3{line-height:1.15}
+h2.ttl{font-size:clamp(1.5rem,4vw,2.2rem);font-weight:900;text-shadow:0 3px 0 #0a1a45,0 0 24px rgba(53,199,255,.45)}
+.lead{color:var(--mut);font-size:1.05rem}
+.head-row{display:flex;align-items:center;gap:1rem;margin-bottom:1.1rem;flex-wrap:wrap}
+.foot{display:flex;justify-content:center;gap:1rem;margin-top:1.4rem;flex-wrap:wrap}
+
+/* buttons */
+.btn{font-weight:800;color:#06142e;border:0;border-radius:1rem;padding:.85rem 1.4rem;min-height:48px;font-size:1.02rem;cursor:pointer;background:linear-gradient(#8fe6ff,var(--blue));box-shadow:0 .38em 0 #1b86b3,0 .9em 1.3em rgba(53,199,255,.3);transition:transform .08s,box-shadow .08s,filter .15s}
+.btn:hover{filter:brightness(1.08);transform:translateY(-2px)}
+.btn:active{transform:translateY(.3em);box-shadow:0 .08em 0 #1b86b3,0 .2em .5em rgba(53,199,255,.3)}
+.btn:disabled{filter:grayscale(.85) brightness(.65);cursor:not-allowed;transform:none;box-shadow:0 .2em 0 #222}
+.btn.gold{background:linear-gradient(#ffe48a,var(--gold));box-shadow:0 .38em 0 #b5851b,0 .9em 1.3em rgba(255,202,56,.28)}
+.btn.gold:active{box-shadow:0 .08em 0 #b5851b}
+.btn.violet{background:linear-gradient(#c3a2ff,var(--violet));box-shadow:0 .38em 0 #5d3aa8,0 .9em 1.3em rgba(155,104,255,.3)}
+.btn.violet:active{box-shadow:0 .08em 0 #5d3aa8}
+.btn.ghost{background:linear-gradient(#2d4a96,#1c3170);color:var(--txt);box-shadow:0 .38em 0 #0d1a40,0 .9em 1.3em rgba(0,0,0,.3)}
+.btn.ghost:active{box-shadow:0 .08em 0 #0d1a40}
+.btn.danger{background:linear-gradient(#ff9bb2,var(--red));box-shadow:0 .38em 0 #a82b4b}
+.btn.danger:active{box-shadow:0 .08em 0 #a82b4b}
+.btn.sm{padding:.55rem 1rem;min-height:44px;font-size:.95rem}
+.btn.big{font-size:1.25rem;padding:1.05rem 1.6rem}
+
+.panel{background:linear-gradient(160deg,rgba(28,50,106,.93),rgba(16,31,67,.96));border:1px solid rgba(94,241,255,.25);border-radius:1.2rem;padding:1.2rem;box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 18px 40px rgba(0,0,0,.45),0 0 0 1px rgba(0,0,0,.35)}
+
+/* splash & menu */
+.splash{display:grid;justify-items:center;text-align:center;gap:1rem;padding-top:1rem}
+.logo{font-weight:900;line-height:.95}
+.logo .l1{display:block;font-size:clamp(2.4rem,8vw,4.6rem);color:#fff;text-shadow:0 1px 0 #9fe6ff,0 2px 0 #6fd0f5,0 3px 0 #3aa6d6,0 4px 0 #1d6fa0,0 5px 0 #124a72,0 12px 22px rgba(0,0,0,.6),0 0 38px rgba(53,199,255,.55)}
+.logo .l2{display:block;font-size:clamp(1.3rem,4.6vw,2.4rem);letter-spacing:.14em;background:linear-gradient(90deg,var(--gold),#ff9f4a,var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 3px 0 #0a1a45)}
+.two{display:grid;grid-template-columns:1.1fr .9fr;gap:1.5rem;align-items:center}
+.menubtns{display:grid;gap:.9rem;margin:1.2rem 0;max-width:430px}
+.stats3{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;max-width:520px}
+.stat{padding:.8rem .6rem;text-align:center}
+.stat b{display:block;font-size:1.35rem;color:var(--cyan)}
+.stat span{font-size:.82rem;color:var(--mut)}
+
+/* slots + mascot */
+.slot{display:flex;justify-content:center;align-items:flex-end;min-height:120px;--ms:13px}
+.slot.big{--ms:17px}
+#slot-splash{--ms:15px}
+#mbox{display:flex;flex-direction:column;align-items:center;gap:.6rem}
+.bubble{position:relative;max-width:min(320px,86vw);min-height:2.6rem;background:#fff;color:#0b1a3d;font-weight:700;padding:.65rem .95rem;border-radius:1.1rem;font-size:.98rem;box-shadow:0 8px 20px rgba(0,0,0,.4);opacity:0;transform:translateY(8px) scale(.96);transition:opacity .25s,transform .25s}
+.bubble.show{opacity:1;transform:none}
+.bubble::after{content:"";position:absolute;bottom:-9px;left:50%;margin-left:-9px;border:9px solid transparent;border-bottom:0;border-top-color:#fff}
+.mascot{--sk:#ffd3ae;--hd:#1b2150;font-size:var(--ms,13px);width:14em;height:23em;position:relative;perspective:70em;flex:none}
+.m3d{position:absolute;inset:0;transform-style:preserve-3d;animation:floaty 3.4s ease-in-out infinite}
+@keyframes floaty{0%,100%{transform:translateY(0) rotateY(-12deg)}50%{transform:translateY(-.8em) rotateY(12deg)}}
+.m3d>*{position:absolute}
+.m3d .shadow{bottom:-.6em;left:2.4em;width:9.2em;height:1.6em;border-radius:50%;background:radial-gradient(rgba(0,0,0,.5),transparent 70%);transform:translateZ(-2em)}
+.hoodb{top:5.4em;left:2.2em;width:9.6em;height:8.4em;border-radius:50%;background:#1a52bd;transform:translateZ(-1.6em)}
+.leg{top:17.2em;width:3em;height:4.8em;background:linear-gradient(#233a78,#16244f);border-radius:.8em}
+.leg.l{left:4.2em}.leg.r{left:6.9em}
+.leg b{position:absolute;bottom:-.7em;left:-.6em;width:4.1em;height:1.9em;border-radius:1.3em 1.6em .7em .7em;background:linear-gradient(#fff,#dfe8ff);border-bottom:.45em solid var(--blue)}
+.leg.r b{left:-.5em}
+.body{top:10.2em;left:3em;width:8em;height:7.8em;border-radius:3.2em 3.2em 1.5em 1.5em;background:linear-gradient(160deg,#4a97ff,#1f50d6 70%);box-shadow:inset -.7em -.7em 1.2em rgba(0,0,50,.4),inset .5em .5em 1em rgba(255,255,255,.25)}
+.zip{position:absolute;left:50%;top:0;bottom:0;width:.22em;background:rgba(255,255,255,.55);margin-left:-.11em}
+.pocket{position:absolute;left:1.6em;bottom:1em;width:4.8em;height:2.1em;border:.2em solid rgba(255,255,255,.35);border-top:0;border-radius:0 0 1em 1em}
+.chip{position:absolute;top:1.3em;right:1.2em;font-size:1.7em;line-height:1;filter:drop-shadow(0 0 .3em #5ef1ff)}
+.arm{top:10.8em;width:2.2em;height:6em;background:linear-gradient(90deg,#2f74f0,#1c46c4);border-radius:1.1em;transform-origin:50% .9em;transition:transform .4s cubic-bezier(.3,1.4,.5,1);z-index:2}
+.arm.l{left:1em;transform:rotate(7deg)}
+.arm.r{right:1em;transform:rotate(-7deg)}
+.arm .hand{position:absolute;bottom:-1em;left:50%;margin-left:-1em;width:2em;height:2em;border-radius:50%;background:var(--sk);box-shadow:inset -.2em -.2em .4em rgba(150,80,40,.3)}
+.head{top:1em;left:3em;width:8em;height:8.2em;border-radius:48% 48% 46% 46%;background:radial-gradient(circle at 35% 30%,#ffe2c6,var(--sk) 55%,#f0b98c);box-shadow:inset -.6em -.6em 1em rgba(170,90,40,.3);transform:translateZ(1.2em);transition:transform .4s;z-index:3}
+.head>*{position:absolute}
+.hair{top:-.6em;left:-.3em;width:8.6em;height:4.6em;border-radius:4.3em 4.3em 1.8em 1.8em;background:linear-gradient(#2c3472,var(--hd));clip-path:polygon(0 100%,0 40%,12% 0,32% 25%,52% 0,72% 25%,92% 0,100% 40%,100% 100%,86% 62%,60% 78%,32% 66%,14% 100%)}
+.eye{top:4.1em;width:1.1em;height:1.55em;border-radius:50%;background:var(--hd);animation:blink 5s infinite;transition:transform .3s}
+.eye::after{content:"";position:absolute;top:.2em;left:.2em;width:.4em;height:.4em;border-radius:50%;background:#fff}
+.eye.l{left:2.2em}.eye.r{right:2.2em}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
+.brow{top:3.1em;width:1.7em;height:.34em;border-radius:.3em;background:var(--hd);transition:transform .3s,top .3s}
+.brow.l{left:1.8em}.brow.r{right:1.8em}
+.cheek{top:5.6em;width:1.3em;height:.8em;border-radius:50%;background:rgba(255,100,110,.38)}
+.cheek.l{left:1em}.cheek.r{right:1em}
+.mouth{top:6.15em;left:50%;margin-left:-1.1em;width:2.2em;height:1.1em;border-bottom:.34em solid #8a2b3a;border-radius:0 0 2em 2em;transition:all .25s}
+.band{top:-1.1em;left:.1em;width:7.8em;height:5.4em;border:.6em solid var(--blue);border-bottom:0;border-radius:4.4em 4.4em 0 0;box-shadow:0 0 1em rgba(53,199,255,.65)}
+.cup{top:3.3em;width:1.7em;height:3em;border-radius:.9em;background:linear-gradient(#25479a,#142a62);border:.25em solid var(--cyan);box-shadow:0 0 .8em rgba(94,241,255,.6)}
+.cup.l{left:-1em}.cup.r{right:-1em}
+.mic{left:-.5em;top:6em;width:3.2em;height:1.2em;border-left:.28em solid #142a62;border-bottom:.28em solid #142a62;border-radius:0 0 0 1.2em}
+.mic::after{content:"";position:absolute;right:-.3em;bottom:-.45em;width:.7em;height:.7em;border-radius:50%;background:var(--cyan)}
+.orb{top:3.4em;right:-1.2em;width:2.6em;height:2.6em;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,var(--cyan) 40%,#1a7fd0);box-shadow:0 0 1.2em var(--cyan);animation:orb 2.6s ease-in-out infinite;transform:translateZ(2.5em)}
+.orb i{position:absolute;inset:-.45em;border:.18em dashed rgba(94,241,255,.8);border-radius:50%;animation:spin 5s linear infinite}
+@keyframes orb{0%,100%{margin-top:0}50%{margin-top:-1em}}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* poses */
+.s-greet .arm.r{animation:wave .7s ease-in-out infinite}
+@keyframes wave{0%,100%{transform:rotate(-142deg)}50%{transform:rotate(-172deg)}}
+.s-greet .mouth,.s-cheer .mouth{height:1.5em;background:#8a2b3a;border:0;border-radius:0 0 2em 2em}
+.s-think .head{transform:translateZ(1.2em) rotate(-8deg)}
+.s-think .eye{transform:translateY(-.35em)}
+.s-think .brow.l{transform:rotate(10deg);top:2.8em}
+.s-think .brow.r{transform:rotate(-4deg);top:3.3em}
+.s-think .mouth{width:1em;height:1em;margin-left:-.5em;border:.3em solid #8a2b3a;border-radius:50%}
+.s-think .head::after{content:"?";position:absolute;top:-2.4em;right:-1.5em;font-size:2.4em;font-weight:900;color:var(--gold);text-shadow:0 0 .4em var(--gold);animation:orb 1.6s ease-in-out infinite}
+.s-happy .arm.l,.s-win .arm.l{transform:rotate(152deg)}
+.s-happy .arm.r,.s-win .arm.r{transform:rotate(-152deg)}
+.s-happy .m3d{animation:jump .55s ease-in-out infinite}
+.s-win .m3d{animation:winspin 1.3s ease-in-out infinite}
+@keyframes jump{0%,100%{transform:translateY(0)}45%{transform:translateY(-2.2em)}}
+@keyframes winspin{0%{transform:translateY(0) rotateY(0)}40%{transform:translateY(-2.6em) rotateY(180deg)}80%,100%{transform:translateY(0) rotateY(360deg)}}
+.s-happy .mouth,.s-win .mouth{height:1.7em;background:#8a2b3a;border:0;border-radius:0 0 2.2em 2.2em}
+.s-happy .eye,.s-win .eye{transform:scaleY(.65)}
+.s-happy .brow,.s-win .brow{top:2.7em}
+.s-sad .head{transform:translateZ(1.2em) translateY(.7em) rotate(6deg)}
+.s-sad .m3d{animation:none}
+.s-sad .arm.l{transform:rotate(2deg)}.s-sad .arm.r{transform:rotate(-2deg)}
+.s-sad .brow.l{transform:rotate(-16deg)}.s-sad .brow.r{transform:rotate(16deg)}
+.s-sad .mouth{border-bottom:0;border-top:.3em solid #8a2b3a;border-radius:2em 2em 0 0;top:6.7em;height:.9em}
+.s-sad .eye{transform:translateY(.2em) scaleY(.85)}
+.s-cheer .arm.r{transform:rotate(-80deg);animation:thumb .8s ease-in-out infinite}
+@keyframes thumb{0%,100%{transform:rotate(-80deg)}50%{transform:rotate(-95deg)}}
+.s-cheer .head{animation:nod 1s ease-in-out 3}
+@keyframes nod{0%,100%{transform:translateZ(1.2em)}50%{transform:translateZ(1.2em) translateY(.5em)}}
+
+/* levels/cats */
+.two2{display:grid;grid-template-columns:240px 1fr;gap:1.4rem;align-items:start}
+.lvgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
+.catgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem}
+.lv,.cat{position:relative;text-align:left;cursor:pointer;background:linear-gradient(160deg,#1d3677,#101f45);border:2px solid rgba(255,255,255,.14);border-radius:1.2rem;padding:1rem;--c:var(--blue);transition:transform .25s,box-shadow .25s,border-color .25s;box-shadow:0 .4em 0 #0a1432,0 16px 30px rgba(0,0,0,.4)}
+.lv:hover,.cat:hover,.lv:focus-visible,.cat:focus-visible{transform:perspective(800px) translateY(-8px) rotateX(5deg);border-color:var(--c);box-shadow:0 .4em 0 #0a1432,0 24px 40px rgba(0,0,0,.5),0 0 26px -6px var(--c)}
+.lv[aria-pressed=true],.cat[aria-pressed=true]{border-color:var(--c);box-shadow:0 0 0 3px var(--c),0 .4em 0 #0a1432,0 0 34px -4px var(--c);background:linear-gradient(160deg,#274a9a,#14285c)}
+.sel{display:none;position:absolute;top:.7rem;right:.7rem;background:var(--c);color:#06142e;font-weight:900;font-size:.78rem;padding:.2rem .55rem;border-radius:2rem}
+[aria-pressed=true]>.sel{display:block}
+.lv .row{display:flex;gap:.9rem;align-items:center}
+.emb{position:relative;flex:none;width:4.2rem;height:4.2rem;animation:sway 4s ease-in-out infinite;filter:drop-shadow(0 6px 8px rgba(0,0,0,.5))}
+.emb::before{content:"";position:absolute;inset:0;background:linear-gradient(145deg,var(--c),#0b1a3d 130%);clip-path:polygon(50% 0,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%)}
+.emb span{position:absolute;inset:0;display:grid;place-items:center;font-size:1.8rem}
+@keyframes sway{0%,100%{transform:perspective(300px) rotateY(-24deg)}50%{transform:perspective(300px) rotateY(24deg)}}
+.lv h3{font-size:1.3rem;color:var(--c)}
+.lv p{color:var(--mut);font-size:.92rem;margin:.55rem 0}
+.meta{display:flex;flex-wrap:wrap;gap:.4rem .9rem;font-size:.86rem;font-weight:700}
+.meta span{background:rgba(0,0,0,.28);padding:.18rem .55rem;border-radius:.6rem}
+.cat{padding:.9rem;--c:var(--cyan)}
+.cat .ci{font-size:2rem;display:block;margin-bottom:.3rem}
+.cat h3{font-size:1.02rem}
+.cat p{font-size:.84rem;color:var(--mut);margin-top:.2rem}
+.cat small{display:block;margin-top:.4rem;color:var(--gold);font-weight:700}
+
+/* game */
+.gamewrap{display:grid;grid-template-columns:260px 1fr;gap:1.2rem;align-items:start}
+.gmain{display:grid;gap:1rem;min-width:0}
+.hrow{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
+.hrow .btn{margin-left:auto}
+.hrow .btn+.btn{margin-left:0}
+.chip2{background:rgba(0,0,0,.3);border:1px solid rgba(94,241,255,.3);border-radius:2rem;padding:.2rem .75rem;font-size:.88rem;font-weight:800}
+.prog{height:.75rem;border-radius:1rem;background:#0a1632;margin:.8rem 0;overflow:hidden;box-shadow:inset 0 2px 4px #000}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--violet),var(--cyan));box-shadow:0 0 14px var(--cyan);transition:width .5s}
+.nums{display:grid;grid-template-columns:auto auto 1fr;gap:1rem;align-items:center}
+.num small{display:block;color:var(--mut);font-size:.78rem}
+.num b{font-size:1.5rem;color:var(--gold);font-variant-numeric:tabular-nums}
+.tm{display:flex;align-items:center;gap:.7rem}
+.tbar{flex:1;height:.95rem;border-radius:1rem;background:#0a1632;overflow:hidden;box-shadow:inset 0 2px 4px #000}
+.tbar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--cyan),var(--blue));box-shadow:0 0 12px var(--cyan);transition:width .2s linear}
+.tnum{font-size:1.8rem;font-weight:900;min-width:3.4rem;text-align:center;border-radius:.9rem;background:#0a1632;padding:.1rem .5rem;border:2px solid var(--cyan);font-variant-numeric:tabular-nums}
+.tm.warn .tbar i{background:linear-gradient(90deg,#ffe48a,var(--gold));box-shadow:0 0 12px var(--gold)}
+.tm.warn .tnum{border-color:var(--gold);color:var(--gold)}
+.tm.danger .tbar i{background:linear-gradient(90deg,#ff9bb2,var(--red));box-shadow:0 0 12px var(--red)}
+.tm.danger .tnum{border-color:var(--red);color:var(--red);animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.08)}}
+.qtext{font-size:clamp(1.15rem,2.6vw,1.5rem);font-weight:800;margin-bottom:1rem;outline:none}
+.answers{display:grid;gap:.75rem}
+.ans{display:flex;align-items:center;gap:.8rem;width:100%;text-align:left;padding:.85rem 1rem;min-height:56px;border-radius:1rem;background:linear-gradient(#22408a,#172a5e);border:2px solid rgba(94,241,255,.28);font-weight:700;font-size:1.02rem;cursor:pointer;box-shadow:0 .3em 0 #0b1636;transition:transform .08s,box-shadow .08s,border-color .15s}
+.ans:hover{border-color:var(--cyan);transform:translateY(-2px)}
+.ans:active{transform:translateY(.25em);box-shadow:0 .05em 0 #0b1636}
+.ans .let{flex:none;width:2.2rem;height:2.2rem;border-radius:.65rem;display:grid;place-items:center;background:var(--blue);color:#06142e;font-weight:900}
+.ans .mk{margin-left:auto;font-size:1.35rem;font-weight:900}
+.ans.locked{pointer-events:none;cursor:default}
+.ans.correct{border-color:var(--green);background:linear-gradient(#17865f,#0f5c43);box-shadow:0 0 24px rgba(56,237,171,.45),0 .3em 0 #07372a}
+.ans.wrong{border-color:var(--red);background:linear-gradient(#92274a,#5c1629);animation:shake .4s}
+.ans.gone{opacity:.3;text-decoration:line-through;pointer-events:none}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.fb{margin-top:1rem;padding:1rem;border-radius:1rem;background:rgba(0,0,0,.28);border-left:6px solid var(--green);animation:enter .35s}
+.fb.bad{border-left-color:var(--red)}
+.fbh{display:flex;gap:.6rem;align-items:center;font-size:1.2rem;margin-bottom:.4rem}
+#fbPts{color:var(--gold);font-weight:800;margin-bottom:.4rem}
+#fbExp{color:var(--txt);margin-bottom:.9rem}
+.flash-ok{animation:glowok .7s}
+.flash-no{animation:glowno .6s}
+@keyframes glowok{0%{box-shadow:0 0 0 0 rgba(56,237,171,.7)}100%{box-shadow:0 0 0 24px rgba(56,237,171,0)}}
+@keyframes glowno{0%{box-shadow:0 0 0 0 rgba(255,84,126,.5)}100%{box-shadow:0 0 0 20px rgba(255,84,126,0)}}
+
+/* result */
+.rgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;margin:1rem 0}
+.rgrid .stat b{font-size:1.25rem}
+.bigscore{font-size:clamp(2.6rem,9vw,4.4rem);font-weight:900;color:var(--gold);text-shadow:0 4px 0 #8a5d0a,0 0 30px rgba(255,202,56,.45);line-height:1}
+.rankup{margin:.8rem 0;padding:.8rem 1rem;border-radius:1rem;font-weight:900;text-align:center;background:linear-gradient(90deg,var(--violet),var(--blue));color:#fff;animation:rank 1s ease-out}
+@keyframes rank{0%{transform:scale(.6) rotateX(60deg);opacity:0}60%{transform:scale(1.08)}100%{transform:none;opacity:1}}
+.review{display:grid;gap:.6rem;margin-top:.6rem}
+.rv{padding:.7rem .9rem;border-radius:.9rem;background:rgba(0,0,0,.25);border-left:5px solid var(--red);font-size:.94rem}
+.rv small{display:block;color:var(--mut)}
+.rv b{color:var(--green)}
+
+/* tables, forms */
+.tblwrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th,td{padding:.7rem .6rem;text-align:left;border-bottom:1px solid rgba(255,255,255,.1)}
+th{color:var(--mut);font-size:.85rem}
+tr.me td{background:rgba(255,202,56,.12)}
+td.sc{font-weight:900;color:var(--gold)}
+.sub{display:none;font-size:.78rem;color:var(--mut)}
+.note{color:var(--mut);font-size:.88rem;margin-top:.9rem}
+.setgrid{display:grid;gap:1rem;grid-template-columns:repeat(2,1fr)}
+.srow{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:.55rem 0;border-bottom:1px solid rgba(255,255,255,.08);flex-wrap:wrap}
+.srow label{font-weight:700}
+.sw{position:relative;width:62px;height:34px;border-radius:2rem;border:2px solid rgba(255,255,255,.25);background:#0a1632;cursor:pointer;flex:none}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#7b8cb5;transition:transform .2s,background .2s}
+.sw[aria-checked=true]{background:#0f6b52;border-color:var(--green)}
+.sw[aria-checked=true]::after{transform:translateX(28px);background:var(--green)}
+.sw i{position:absolute;top:50%;transform:translateY(-50%);font-style:normal;font-size:.62rem;font-weight:900}
+.sw .on{left:8px;color:#d6fff0;display:none}.sw .off{right:7px;color:#9db0da}
+.sw[aria-checked=true] .on{display:block}.sw[aria-checked=true] .off{display:none}
+input[type=range]{width:min(210px,45vw);accent-color:var(--cyan);height:32px}
+select,input[type=text]{font:inherit;background:#0a1632;color:var(--txt);border:2px solid rgba(94,241,255,.35);border-radius:.8rem;padding:.55rem .7rem;min-height:44px;max-width:100%}
+.pbar{height:.8rem;border-radius:1rem;background:#0a1632;overflow:hidden;margin:.4rem 0}
+.pbar i{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--cyan))}
+
+/* modal / toast */
+.modal{position:fixed;inset:0;z-index:80;display:grid;place-items:center;background:rgba(3,8,22,.78);padding:1rem}
+.mbox{max-width:420px;width:100%;text-align:center;animation:enter .3s}
+.mbox h3{font-size:1.4rem;margin-bottom:.5rem}
+.mbox p{color:var(--mut);margin-bottom:1.2rem}
+.mbtns{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap}
+#toast{position:fixed;left:50%;bottom:calc(1.2rem + env(safe-area-inset-bottom));transform:translate(-50%,30px);z-index:90;background:#fff;color:#0b1a3d;font-weight:800;padding:.7rem 1.2rem;border-radius:2rem;opacity:0;transition:.3s;pointer-events:none;max-width:90vw;text-align:center}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* responsive */
+@media (max-width:900px){
+ .two{grid-template-columns:1fr}
+ .two .slot{order:-1}
+ .two2{grid-template-columns:1fr}
+ .two2 .slot{--ms:7px;justify-self:center}
+ .catgrid{grid-template-columns:repeat(2,1fr)}
+ .setgrid{grid-template-columns:1fr}
+ .gamewrap{grid-template-columns:1fr}
+ .gside .slot{--ms:4.4px;min-height:0}
+ .gside #mbox{flex-direction:row-reverse;align-items:center;justify-content:center;gap:.8rem}
+ .gside .bubble::after{display:none}
+ .gside .bubble{opacity:1;transform:none;font-size:.9rem;min-height:0}
+ .menubtns{max-width:none}
+}
+@media (max-width:600px){
+ #app{padding-left:.75rem;padding-right:.75rem}
+ .lvgrid{grid-template-columns:1fr}
+ .catgrid{grid-template-columns:1fr 1fr;gap:.6rem}
+ .cat p{display:none}
+ .rgrid,.stats3{grid-template-columns:repeat(3,1fr);gap:.45rem}
+ .stat span{font-size:.72rem}
+ .nums{grid-template-columns:auto auto;}
+ .nums .tm{grid-column:1/-1}
+ .panel{padding:.9rem}
+ th:nth-child(6),td:nth-child(6){display:none}
+ .sub{display:block}
+ th,td{padding:.55rem .35rem;font-size:.9rem}
+ .slot.big{--ms:10px}
+ .top{padding-left:.6rem;padding-right:.6rem}
+}
+.rm *,.rm *::before,.rm *::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+.rm .grid{animation:none}
+@media (prefers-reduced-motion:reduce){.grid{animation:none}}
+</style>
+</head>
+<body>
+<noscript><p style="padding:2rem;color:#fff">Game ini membutuhkan JavaScript. Aktifkan JavaScript di browser lalu muat ulang halaman.</p></noscript>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="grid" aria-hidden="true"></div>
+<div class="shapes" id="shapes" aria-hidden="true"><i class="shp s1"></i><i class="shp s2"></i><i class="shp s3"></i><i class="shp s4"></i></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<header class="top" id="top" hidden>
+  <button class="brandmini" data-go="menu" aria-label="Kembali ke menu utama">🏆 QBI</button>
+  <div class="ctl">
+    <button class="ic" id="tMusic" aria-pressed="true" aria-label="Musik latar" title="Musik latar">🎵</button>
+    <button class="ic" id="tSfx" aria-pressed="true" aria-label="Efek suara" title="Efek suara">🔔</button>
+    <button class="ic" id="tVoice" aria-pressed="true" aria-label="Suara karakter" title="Suara karakter">🗣️</button>
+  </div>
+</header>
+
+<main id="app">
+  <!-- SPLASH -->
+  <section class="screen" id="s-splash" aria-labelledby="h-splash">
+    <div class="splash">
+      <h1 class="logo" id="h-splash"><span class="l1">QUIZ BATTLE</span><span class="l2">INFORMATIKA</span></h1>
+      <div class="slot" id="slot-splash"></div>
+      <button class="btn gold big" id="btnEnter">▶ Masuk Arena</button>
+      <button class="btn ghost sm" id="btnEnterSilent">🔇 Masuk tanpa suara</button>
+      <p class="note" style="max-width:460px">Ketuk “Masuk Arena” untuk mengaktifkan musik dan suara karakter. Ketersediaan suara bergantung pada perangkat dan browser.</p>
+    </div>
+  </section>
+
+  <!-- MENU -->
+  <section class="screen" id="s-menu" aria-labelledby="h-menu">
+    <div class="two">
+      <div>
+        <h1 class="logo" id="h-menu"><span class="l1">QUIZ BATTLE</span><span class="l2">INFORMATIKA</span></h1>
+        <p class="lead" id="hello" style="margin-top:.8rem"></p>
+        <div class="menubtns">
+          <button class="btn gold big" data-go="levels">⚔️ Mulai Battle</button>
+          <button class="btn ghost" data-go="board">🏅 Papan Peringkat</button>
+          <button class="btn ghost" data-go="profile">👤 Profil</button>
+          <button class="btn ghost" data-go="settings">⚙️ Pengaturan</button>
+        </div>
+        <div class="stats3">
+          <div class="panel stat"><b id="stB">0</b><span>Battle dimainkan</span></div>
+          <div class="panel stat"><b id="stS">0</b><span>Skor terbaik</span></div>
+          <div class="panel stat"><b id="stL">-</b><span>Level tertinggi</span></div>
+        </div>
+      </div>
+      <div class="slot big" id="slot-menu"></div>
+    </div>
+  </section>
+
+  <!-- LEVEL -->
+  <section class="screen" id="s-levels" aria-labelledby="h-levels">
+    <div class="head-row"><button class="btn ghost sm" data-go="menu">← Menu</button><h2 class="ttl" id="h-levels">Pilih Level</h2></div>
+    <div class="two2">
+      <div class="slot" id="slot-levels"></div>
+      <div class="lvgrid" id="lvGrid" role="group" aria-label="Pilihan level"></div>
+    </div>
+    <div class="foot"><button class="btn gold" id="toCats">Pilih Materi ➜</button></div>
+  </section>
+
+  <!-- MATERI -->
+  <section class="screen" id="s-cats" aria-labelledby="h-cats">
+    <div class="head-row"><button class="btn ghost sm" data-go="levels">← Level</button><h2 class="ttl" id="h-cats">Pilih Materi</h2><span class="chip2" id="catLv"></span></div>
+    <div class="two2">
+      <div class="slot" id="slot-cats"></div>
+      <div class="catgrid" id="catGrid" role="group" aria-label="Pilihan materi"></div>
+    </div>
+    <div class="foot"><button class="btn gold big" id="btnStart" disabled>⚔️ Mulai Battle!</button></div>
+  </section>
+
+  <!-- GAME -->
+  <section class="screen" id="s-game" aria-label="Permainan">
+    <div class="gamewrap">
+      <aside class="gside"><div class="slot" id="slot-game"></div></aside>
+      <div class="gmain">
+        <div class="panel">
+          <div class="hrow">
+            <span class="chip2" id="hLv"></span><span class="chip2" id="hCat"></span><span class="chip2" id="hNo"></span>
+            <button class="btn violet sm" id="btnHelp">💡 50:50 (1×)</button>
+            <button class="btn ghost sm" id="btnPause" aria-label="Jeda permainan">⏸ Jeda</button>
+          </div>
+          <div class="prog" id="prog" role="progressbar" aria-label="Progres soal" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="progI"></i></div>
+          <div class="nums">
+            <div class="num"><small>Skor</small><b id="hScore">0</b></div>
+            <div class="num"><small>Combo</small><b id="hCombo">0</b></div>
+            <div class="tm" id="tm"><div class="tbar"><i id="tI"></i></div><div class="tnum" id="tN" role="timer" aria-label="Sisa waktu">0</div></div>
+          </div>
+        </div>
+        <div class="panel">
+          <h2 class="qtext" id="qText" tabindex="-1"></h2>
+          <div class="answers" id="answers" role="group" aria-label="Pilihan jawaban"></div>
+          <div class="fb" id="fb" hidden role="status">
+            <div class="fbh"><span id="fbIco" aria-hidden="true"></span><b id="fbT"></b></div>
+            <p id="fbPts"></p><p id="fbExp"></p>
+            <button class="btn gold" id="btnNext">Soal berikutnya ➜</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HASIL -->
+  <section class="screen" id="s-result" aria-labelledby="h-result">
+    <div class="two2">
+      <div class="slot" id="slot-result"></div>
+      <div>
+        <div class="panel" style="text-align:center">
+          <h2 class="ttl" id="h-result" tabindex="-1">Hasil Battle</h2>
+          <p class="lead" id="rSub"></p>
+          <div class="bigscore" id="rScore">0</div>
+          <p class="lead">poin</p>
+          <div class="rankup" id="rRank" hidden></div>
+          <div class="rgrid">
+            <div class="panel stat"><b id="rOk">0</b><span>✔ Benar</span></div>
+            <div class="panel stat"><b id="rNo">0</b><span>✘ Salah / habis waktu</span></div>
+            <div class="panel stat"><b id="rAcc">0%</b><span>Akurasi</span></div>
+            <div class="panel stat"><b id="rDur">0:00</b><span>Durasi</span></div>
+            <div class="panel stat"><b id="rXp">0</b><span>XP diperoleh</span></div>
+            <div class="panel stat"><b id="rPos">-</b><span>Peringkat lokal</span></div>
+          </div>
+          <p class="lead" id="rLv"></p>
+          <p id="rEval" style="margin-top:.6rem;font-weight:700"></p>
+        </div>
+        <div class="panel" style="margin-top:1rem" id="rvBox" hidden>
+          <h3>Tinjau jawaban yang belum tepat</h3>
+          <div class="review" id="rvList"></div>
+        </div>
+        <div class="foot">
+          <button class="btn gold" id="rAgain">🔁 Main Lagi</button>
+          <button class="btn" id="rOther">📚 Pilih Materi Lain</button>
+          <button class="btn ghost" data-go="board">🏅 Papan Peringkat</button>
+          <button class="btn ghost" data-go="menu">🏠 Menu Utama</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAPAN PERINGKAT -->
+  <section class="screen" id="s-board" aria-labelledby="h-board">
+    <div class="head-row"><button class="btn ghost sm" data-go="menu">← Menu</button><h2 class="ttl" id="h-board">Papan Peringkat</h2>
+      <label style="margin-left:auto">Level: <select id="bFilter" aria-label="Filter level"></select></label></div>
+    <div class="panel">
+      <div class="tblwrap">
+        <table>
+          <thead><tr><th>#</th><th>Pemain</th><th>Skor</th><th>Level</th><th>Akurasi</th><th>Materi</th></tr></thead>
+          <tbody id="bBody"></tbody>
+        </table>
+      </div>
+      <p class="note">Papan peringkat ini bersifat lokal: hanya menampilkan skor yang dimainkan di perangkat dan browser ini, bukan peringkat daring antarpengguna.</p>
+    </div>
+  </section>
+
+  <!-- PROFIL -->
+  <section class="screen" id="s-profile" aria-labelledby="h-profile">
+    <div class="head-row"><button class="btn ghost sm" data-go="menu">← Menu</button><h2 class="ttl" id="h-profile">Profil Pemain</h2></div>
+    <div class="two2">
+      <div class="slot" id="slot-profile"></div>
+      <div>
+        <div class="panel">
+          <div class="srow"><label for="inName">Nama pemain</label>
+            <span style="display:flex;gap:.5rem;flex-wrap:wrap"><input type="text" id="inName" maxlength="16" autocomplete="off"><button class="btn sm" id="btnName">Simpan nama</button></span></div>
+          <h3 id="pRank" style="margin-top:1rem"></h3>
+          <div class="pbar" role="progressbar" aria-label="Progres XP ke rank berikutnya" id="pBar" aria-valuemin="0" aria-valuemax="100"><i id="pBarI"></i></div>
+          <p class="note" id="pXp" style="margin-top:.2rem"></p>
+          <div class="rgrid">
+            <div class="panel stat"><b id="pB">0</b><span>Battle</span></div>
+            <div class="panel stat"><b id="pS">0</b><span>Skor terbaik</span></div>
+            <div class="panel stat"><b id="pA">0%</b><span>Akurasi total</span></div>
+            <div class="panel stat"><b id="pC">0</b><span>Jawaban benar</span></div>
+            <div class="panel stat"><b id="pX">0</b><span>Total XP</span></div>
+            <div class="panel stat"><b id="pL">-</b><span>Level tertinggi</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PENGATURAN -->
+  <section class="screen" id="s-settings" aria-labelledby="h-settings">
+    <div class="head-row"><button class="btn ghost sm" data-go="menu">← Menu</button><h2 class="ttl" id="h-settings">Pengaturan</h2></div>
+    <div class="setgrid">
+      <div class="panel">
+        <h3>Audio</h3>
+        <div class="srow"><label id="lbM">Musik latar</label><button class="sw" id="swMusic" role="switch" aria-labelledby="lbM" aria-checked="true"><i class="on">ON</i><i class="off">OFF</i></button></div>
+        <div class="srow"><label for="rngM">Volume musik <b id="vM"></b></label><input type="range" id="rngM" min="0" max="100"></div>
+        <div class="srow"><label id="lbS">Efek suara</label><button class="sw" id="swSfx" role="switch" aria-labelledby="lbS" aria-checked="true"><i class="on">ON</i><i class="off">OFF</i></button></div>
+        <div class="srow"><label for="rngS">Volume efek <b id="vS"></b></label><input type="range" id="rngS" min="0" max="100"></div>
+        <div class="srow"><label id="lbV">Suara karakter</label><button class="sw" id="swVoice" role="switch" aria-labelledby="lbV" aria-checked="true"><i class="on">ON</i><i class="off">OFF</i></button></div>
+        <div class="srow"><label for="rngV">Volume suara karakter <b id="vV"></b></label><input type="range" id="rngV" min="0" max="100"></div>
+        <div class="srow"><label for="rngR">Kecepatan bicara <b id="vR"></b></label><input type="range" id="rngR" min="7" max="13" step="1"></div>
+        <div class="srow"><label for="selVoice">Pilihan suara</label><select id="selVoice"></select></div>
+        <div class="srow"><button class="btn sm violet" id="btnTest">🗣️ Coba suara karakter</button><button class="btn sm ghost" id="btnSilent">🔇 Mode senyap</button></div>
+        <p class="note" id="voiceStatus"></p>
+      </div>
+      <div class="panel">
+        <h3>Permainan &amp; tampilan</h3>
+        <div class="srow"><label for="selTime">Durasi per soal</label>
+          <select id="selTime"><option value="10">Santai (+10 detik)</option><option value="5">Longgar (+5 detik)</option><option value="0">Normal</option><option value="-5">Cepat (−5 detik)</option></select></div>
+        <div class="srow"><label id="lbRm">Kurangi animasi</label><button class="sw" id="swRm" role="switch" aria-labelledby="lbRm" aria-checked="false"><i class="on">ON</i><i class="off">OFF</i></button></div>
+        <p class="note">Durasi dasar tiap level: Pemula 25 detik, Penjelajah 22, Pro Player 20, Legenda 16. Pengaturan ini menambah atau mengurangi waktu (minimal 10 detik).</p>
+        <h3 style="margin-top:1.4rem">Data permainan</h3>
+        <p class="note" style="margin-bottom:.8rem">Profil, skor, dan pengaturan disimpan di browser ini (localStorage).</p>
+        <button class="btn danger sm" id="btnReset">🗑 Reset semua data</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- MASKOT (dipindahkan ke slot halaman aktif) -->
+<div id="mbox" hidden>
+  <div class="bubble" id="bubble" role="status" aria-live="polite"><span id="btxt"></span></div>
+  <div class="mascot s-idle" id="mascot" aria-hidden="true">
+    <div class="m3d">
+      <div class="shadow"></div>
+      <div class="orb"><i></i></div>
+      <div class="hoodb"></div>
+      <div class="leg l"><b></b></div><div class="leg r"><b></b></div>
+      <div class="body"><span class="zip"></span><span class="pocket"></span><span class="chip">⚡</span></div>
+      <div class="arm l"><b class="hand"></b></div>
+      <div class="arm r"><b class="hand"></b></div>
+      <div class="head">
+        <span class="hair"></span>
+        <span class="brow l"></span><span class="brow r"></span>
+        <span class="eye l"></span><span class="eye r"></span>
+        <span class="cheek l"></span><span class="cheek r"></span>
+        <span class="mouth"></span>
+        <span class="band"></span><span class="cup l"></span><span class="cup r"></span><span class="mic"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="panel mbox"><h3 id="mTitle"></h3><p id="mText"></p><div class="mbtns" id="mBtns"></div></div>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+'use strict';
+/* ====================== UTIL ====================== */
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+const fmtT=s=>{s=Math.round(s);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');};
+const fmtN=n=>Number(n).toLocaleString('id-ID');
+
+/* ====================== DATA STATIS ====================== */
+const LV=[
+ {id:1,name:'Pemula',icon:'🌱',color:'#38EDAB',desc:'Konsep dasar Informatika: istilah, fungsi, dan contoh sederhana.',diff:1,label:'Mudah',time:25,base:100,n:6},
+ {id:2,name:'Penjelajah',icon:'🧭',color:'#35C7FF',desc:'Pemahaman dan penerapan konsep dalam situasi sehari-hari.',diff:2,label:'Sedang',time:22,base:150,n:7},
+ {id:3,name:'Pro Player',icon:'🎮',color:'#9B68FF',desc:'Analisis, hitungan, dan pemecahan masalah digital.',diff:3,label:'Sulit',time:20,base:200,n:7},
+ {id:4,name:'Legenda',icon:'👑',color:'#FFCA38',desc:'Tantangan tingkat tinggi: logika berlapis dan penalaran.',diff:4,label:'Sangat sulit',time:16,base:300,n:8}
+];
+const CATS=[
+ {id:'kom',n:'Dasar Komputer',i:'💻',d:'Perangkat keras, perangkat lunak, dan sistem biner.'},
+ {id:'net',n:'Jaringan Komputer',i:'📡',d:'LAN, IP address, DNS, dan topologi.'},
+ {id:'prog',n:'Pemrograman & Algoritma',i:'🧩',d:'Logika, variabel, percabangan, dan perulangan.'},
+ {id:'os',n:'Sistem Operasi',i:'🖥️',d:'Windows, Linux, file, folder, dan driver.'},
+ {id:'data',n:'Data & Basis Data',i:'🗄️',d:'Tabel, spreadsheet, dan analisis data.'},
+ {id:'sec',n:'Keamanan Siber',i:'🛡️',d:'Kata sandi, phishing, dan perlindungan data.'},
+ {id:'ai',n:'Teknologi Digital & AI',i:'🤖',d:'AI, IoT, etika, dan hoaks digital.'},
+ {id:'web',n:'Internet & Web',i:'🌍',d:'Browser, URL, HTML, dan literasi web.'},
+ {id:'prod',n:'Produktivitas Digital',i:'📝',d:'Dokumen, presentasi, cloud, dan kolaborasi.'},
+ {id:'mix',n:'Campuran Semua Materi',i:'🎲',d:'Soal acak dari seluruh kategori.'}
+];
+const RANKS=['Rookie','Hacker Muda','Coder','Netizen Pro','Master Digital','Legenda Informatika'];
+const D={
+ open:'Halo, Sobat Digital! Selamat datang di Quiz Battle Informatika!',
+ start:'Siap bertarung? Ayo, buktikan kemampuan Informatikamu!',
+ level:'Pilih level yang sesuai dengan kemampuanmu. Berani mencoba tantangan tertinggi?',
+ question:'Fokus, ya! Baca pertanyaannya dengan teliti!',
+ correct:'Wih, benar! Kamu keren banget! Poin bertambah!',
+ wrong:'Ups, belum tepat. Tidak apa-apa, yuk pelajari pembahasannya!',
+ hurry:'Cepat, waktu hampir habis!',
+ combo:'Combo luar biasa! Terus pertahankan!',
+ final:'Battle selesai! Terima kasih sudah bermain. Terus belajar dan jadilah juara!',
+ high:'Wow! Kamu luar biasa! Gelar juara Informatika pantas untukmu!',
+ fail:'Jangan menyerah! Setiap kesalahan adalah kesempatan untuk belajar!'
+};
+
+/* Bank soal: [tingkat 1-4, pertanyaan, jawaban benar, salah1, salah2, salah3, pembahasan] */
+const RAW={
+kom:[
+[1,"Komponen yang berfungsi sebagai “otak” komputer untuk memproses instruksi adalah…","CPU (prosesor)","Monitor","Speaker","Keyboard","CPU memproses instruksi dan melakukan perhitungan. Monitor, speaker, dan keyboard hanya perangkat input/output."],
+[1,"Manakah yang termasuk perangkat input?","Mouse","Monitor","Printer","Speaker","Perangkat input memasukkan data ke komputer. Mouse mengirim gerakan dan klik, sedangkan monitor, printer, dan speaker adalah perangkat output."],
+[1,"Satuan terkecil data pada komputer adalah…","Bit","Byte","Kilobyte","Megabyte","Bit (binary digit) hanya bernilai 0 atau 1. Satuan lain tersusun dari kumpulan bit."],
+[2,"Satu byte terdiri dari berapa bit?","8 bit","4 bit","10 bit","16 bit","Satu byte = 8 bit. Karena itu satu karakter huruf biasanya memakai 1 byte."],
+[2,"Apa ciri utama RAM dibanding penyimpanan seperti SSD?","Menyimpan data sementara dan isinya hilang saat komputer dimatikan","Menyimpan data permanen tanpa listrik","Hanya dipakai untuk menampilkan gambar","Hanya dipakai untuk mencetak dokumen","RAM adalah memori kerja yang cepat tetapi bersifat sementara. SSD atau harddisk menyimpan data jangka panjang."],
+[2,"Aplikasi pengolah kata (untuk mengetik laporan) termasuk jenis…","Perangkat lunak aplikasi","Sistem operasi","Perangkat keras","Kabel data","Aplikasi pengolah kata dipakai pengguna untuk tugas tertentu, sehingga termasuk perangkat lunak aplikasi."],
+[3,"Komputer terasa lambat saat membuka banyak program sekaligus, padahal ruang SSD masih banyak. Komponen yang paling mungkin kurang adalah…","RAM","Webcam","Speaker","Kabel monitor","Banyak program aktif memakai memori kerja (RAM). Jika RAM kecil, komputer melambat walaupun SSD masih lega."],
+[3,"Dalam hitungan komputer, 1 KB umumnya dianggap sama dengan berapa byte?","1.024 byte","100 byte","1.000.000 byte","10 byte","Komputer memakai sistem biner sehingga 1 KB = 2¹⁰ = 1.024 byte."],
+[3,"Urutan siklus kerja dasar komputer yang benar adalah…","Input → Proses → Output","Output → Input → Proses","Proses → Output → Input","Input → Output → Proses","Data dimasukkan (input), diolah (proses), lalu hasilnya ditampilkan (output)."],
+[4,"Bilangan biner 1010 sama dengan bilangan desimal…","10","12","8","5","1010 biner = 1×8 + 0×4 + 1×2 + 0×1 = 10."],
+[4,"Flashdisk berkapasitas 1 GB (anggap 1 GB = 1.000 MB) akan diisi foto berukuran 3 MB. Paling banyak berapa foto yang muat?","333 foto","3.000 foto","30 foto","100 foto","1.000 ÷ 3 ≈ 333,3 sehingga hanya 333 foto utuh yang muat."],
+[4,"Mengapa komputer menggunakan sistem biner (0 dan 1)?","Rangkaian elektronik mudah membedakan dua keadaan, misalnya arus ada atau tidak ada","Karena angka 2 sampai 9 dilarang oleh pabrik","Karena biner paling mudah dibaca manusia","Karena komputer tidak bisa menyimpan angka","Dua keadaan listrik (hidup/mati) sangat andal untuk diwakili oleh 1 dan 0."]
+],
+net:[
+[1,"Jaringan komputer yang mencakup area terbatas seperti satu laboratorium atau gedung sekolah disebut…","LAN","WAN","Satelit global","Bluetooth dunia","LAN (Local Area Network) menghubungkan perangkat dalam area yang kecil."],
+[1,"Perangkat yang umum dipakai untuk membagikan sinyal Wi-Fi di rumah adalah…","Router","Scanner","Joystick","Printer","Router menghubungkan jaringan rumah ke internet dan umumnya memancarkan Wi-Fi."],
+[1,"Alamat unik yang dipakai untuk mengenali perangkat dalam jaringan disebut…","IP Address","Wallpaper","Username game","Nama folder","Setiap perangkat di jaringan memiliki alamat IP agar data dapat dikirim ke tujuan yang tepat."],
+[2,"Protokol yang menjaga komunikasi antara browser dan situs web dengan enkripsi adalah…","HTTPS","HTTP","FTP","SMTP","HTTPS adalah HTTP yang dienkripsi, sehingga data lebih sulit disadap."],
+[2,"Topologi jaringan yang semua komputernya terhubung ke satu perangkat pusat seperti switch disebut…","Topologi bintang","Topologi bus","Topologi cincin","Topologi acak","Pada topologi bintang, setiap komputer memiliki jalur sendiri ke perangkat pusat."],
+[2,"Fungsi DNS adalah…","Menerjemahkan nama domain menjadi alamat IP","Mengirim email","Menguatkan sinyal Wi-Fi","Menghapus virus","Manusia mengingat nama (contoh.com), komputer memakai angka IP. DNS menjembatani keduanya."],
+[3,"Laptop terhubung Wi-Fi tetapi tidak dapat membuka situs web, sedangkan ponsel pada Wi-Fi yang sama bisa. Langkah diagnosis paling logis adalah…","Memeriksa pengaturan jaringan/DNS laptop dan menyambungkan ulang Wi-Fi","Membeli ponsel baru","Mengganti keyboard laptop","Menghapus semua foto di laptop","Karena ponsel normal, masalah kemungkinan ada di laptop (pengaturan jaringan atau DNS), bukan di router atau internetnya."],
+[3,"Alamat IPv4 yang formatnya valid adalah…","192.168.1.10","192.168.1.300","192.168.1","192.168.1.10.5","IPv4 terdiri dari empat bagian angka 0–255. Angka 300 serta format yang kurang atau lebih dari empat bagian tidak valid."],
+[3,"Perbedaan download dan upload yang benar adalah…","Download mengambil data dari internet ke perangkat kita, upload mengirim data dari perangkat kita ke internet","Download mengirim data dari perangkat kita, upload mengambil data ke perangkat kita","Keduanya sama persis","Download hanya untuk video dan upload hanya untuk foto","Download = unduh (data masuk ke perangkat), upload = unggah (data keluar dari perangkat)."],
+[4,"Sekolah memiliki internet 100 Mbps yang dibagi rata untuk 50 komputer yang mengunduh bersamaan. Kecepatan rata-rata tiap komputer kira-kira…","2 Mbps","50 Mbps","100 Mbps","20 Mbps","100 ÷ 50 = 2 Mbps. Karena itu internet terasa lambat ketika banyak perangkat memakainya bersamaan."],
+[4,"File 100 MB diunduh dengan kecepatan stabil 8 MB per detik. Waktu yang dibutuhkan kira-kira…","12,5 detik","8 detik","100 detik","800 detik","Waktu = ukuran ÷ kecepatan = 100 ÷ 8 = 12,5 detik."],
+[4,"Mengapa topologi bintang lebih mudah dirawat daripada topologi bus?","Jika satu kabel perangkat bermasalah, perangkat lain tetap bekerja dan sumber masalah mudah dilacak","Karena tidak memerlukan kabel sama sekali","Karena hanya bisa menghubungkan satu komputer","Karena tidak memerlukan perangkat pusat","Pada topologi bus, gangguan di kabel utama dapat mematikan seluruh jaringan. Pada topologi bintang, gangguan terisolasi pada satu jalur."]
+],
+prog:[
+[1,"Urutan langkah yang logis dan terbatas untuk menyelesaikan suatu masalah disebut…","Algoritma","Virus","Hardware","Monitor","Algoritma adalah langkah-langkah sistematis untuk menyelesaikan masalah."],
+[1,"Pada diagram alir (flowchart), bentuk belah ketupat dipakai untuk…","Pengambilan keputusan (ya/tidak)","Awal dan akhir program","Menampilkan output saja","Mengetik komentar","Belah ketupat menandakan percabangan: jika kondisi benar mengikuti satu jalur, jika salah mengikuti jalur lain."],
+[1,"Tempat menyimpan data yang nilainya dapat berubah selama program berjalan disebut…","Variabel","Printer","Kabel","Wallpaper","Variabel seperti kotak bernama yang isinya dapat diganti."],
+[2,"Struktur pengulangan digunakan untuk…","Menjalankan perintah yang sama berkali-kali tanpa menulis ulang","Menghapus program","Mengganti sistem operasi","Mematikan komputer","Contohnya: menampilkan angka 1 sampai 100 cukup dengan satu perulangan."],
+[2,"Jika x = 5 lalu dijalankan perintah x = x + 3, nilai x sekarang adalah…","8","5","3","53","Nilai lama x (5) ditambah 3 menghasilkan 8, lalu disimpan kembali ke x."],
+[2,"Struktur “jika … maka … jika tidak …” termasuk struktur…","Percabangan (seleksi)","Pengulangan","Urutan","Input","Percabangan memilih langkah berdasarkan kondisi."],
+[3,"Perhatikan: total = 0; untuk i dari 1 sampai 4, lakukan total = total + i. Berapa nilai total di akhir?","10","4","6","24","1 + 2 + 3 + 4 = 10."],
+[3,"Algoritma mencari angka terbesar dalam sebuah daftar. Langkah awal yang paling tepat adalah…","Anggap angka pertama sebagai terbesar, lalu bandingkan satu per satu dengan angka lainnya","Jumlahkan semua angka","Pilih satu angka secara acak lalu berhenti","Ambil angka paling akhir tanpa membandingkan","Dengan membandingkan setiap angka dengan “terbesar sementara”, kita pasti menemukan nilai maksimum."],
+[3,"Bug dalam pemrograman adalah…","Kesalahan pada program yang membuat hasilnya tidak sesuai harapan","Nama bahasa pemrograman","Perangkat tambahan komputer","Aplikasi pengedit foto","Mencari dan memperbaiki bug disebut debugging."],
+[4,"Perhatikan: n = 1; selama n < 20, lakukan n = n × 2. Setelah perulangan berhenti, nilai n adalah…","32","20","16","64","n: 1 → 2 → 4 → 8 → 16 → 32. Saat n = 32 syarat n < 20 tidak terpenuhi, sehingga berhenti dengan n = 32."],
+[4,"Jika x = 7: “jika x genap tampilkan A, jika tidak tampilkan B”, lalu tampilkan x + 1. Output programnya adalah…","B lalu 8","A lalu 8","B lalu 7","A lalu 7","7 ganjil sehingga tampil B. Setelah itu x + 1 = 8 ditampilkan."],
+[4,"Mengapa perulangan harus memiliki kondisi berhenti yang jelas?","Agar program tidak berjalan tanpa akhir (infinite loop)","Agar layar lebih berwarna","Agar internet lebih cepat","Agar ukuran file mengecil","Tanpa kondisi berhenti yang akhirnya tercapai, perulangan terus berjalan dan program dapat macet."]
+],
+os:[
+[1,"Manakah yang termasuk sistem operasi?","Windows","Microsoft Word","Google Chrome","WhatsApp","Windows mengelola komputer. Pilihan lain adalah aplikasi yang berjalan di atas sistem operasi."],
+[1,"Fungsi utama sistem operasi adalah…","Mengelola perangkat keras dan menjadi penghubung antara pengguna dan aplikasi","Hanya menyimpan foto","Hanya menyalakan layar","Hanya mencetak dokumen","Sistem operasi mengatur CPU, memori, penyimpanan, dan perangkat lain agar aplikasi dapat berjalan."],
+[1,"Android terutama digunakan sebagai sistem operasi untuk…","Ponsel dan tablet","Kalkulator sederhana","Printer lama","Kabel LAN","Android adalah sistem operasi untuk perangkat bergerak seperti ponsel dan tablet."],
+[2,"Folder pada sistem operasi berfungsi untuk…","Mengelompokkan dan merapikan file","Mempercepat internet","Mengisi daya baterai","Menghapus virus otomatis","Folder membantu menata file agar mudah dicari."],
+[2,"File dengan ekstensi .jpg biasanya berisi…","Gambar","Dokumen teks","Lagu","Program yang dapat dijalankan","Ekstensi menunjukkan jenis file. .jpg adalah format gambar."],
+[2,"Sistem operasi yang bersifat open source dan gratis adalah…","Linux","Windows","macOS","iOS","Linux dikembangkan secara terbuka sehingga kodenya dapat dipelajari dan dimodifikasi."],
+[3,"Fitur Task Manager (Pengelola Tugas) di Windows berguna untuk…","Melihat program yang berjalan dan menutup aplikasi yang macet","Mengedit foto","Membuat presentasi","Mengganti wallpaper saja","Task Manager menampilkan pemakaian CPU dan RAM serta memungkinkan menutup aplikasi yang tidak merespons."],
+[3,"Sebuah aplikasi tiba-tiba tidak merespons (hang). Langkah yang paling tepat adalah…","Menunggu sebentar, lalu menutup paksa lewat Task Manager bila tetap macet","Menginstal ulang sistem operasi seketika","Menghapus semua file tugas","Membongkar komputer","Menunggu memberi kesempatan aplikasi pulih. Jika tidak, tutup paksa adalah langkah ringan sebelum solusi yang lebih berat."],
+[3,"Driver pada komputer berfungsi untuk…","Memungkinkan sistem operasi berkomunikasi dengan perangkat keras tertentu, seperti printer","Menyimpan foto liburan","Menghubungkan komputer ke listrik","Membersihkan layar","Tanpa driver yang sesuai, perangkat keras mungkin tidak dikenali atau tidak bekerja maksimal."],
+[4,"Multitasking pada sistem operasi berarti…","Menjalankan beberapa program secara bergantian dengan sangat cepat sehingga tampak bersamaan","Hanya mengizinkan satu program berjalan","Mematikan program lain saat satu program dibuka","Memperbesar layar otomatis","OS membagi waktu CPU ke banyak proses sehingga pengguna merasa semuanya berjalan bersama."],
+[4,"Mengapa pembaruan (update) sistem operasi penting?","Memperbaiki bug dan menambal celah keamanan","Menghapus semua aplikasi","Membuat internet gratis","Mengganti perangkat keras","Pembaruan sering menutup celah yang dapat dimanfaatkan peretas."],
+[4,"Kamu menyalin file bernama tugas.docx dua kali ke folder yang sama. Mengapa OS biasanya menanyakan apakah file lama akan diganti?","Dalam satu folder tidak boleh ada dua file dengan nama dan ekstensi yang sama","Karena flashdisk selalu penuh","Karena file .docx selalu rusak","Karena internet sedang mati","Nama file lengkap dengan ekstensi bersifat unik dalam satu folder. OS menghindari menimpa file tanpa konfirmasi."]
+],
+data:[
+[1,"Kumpulan data yang tersusun rapi agar mudah dikelola dan dicari disebut…","Basis data (database)","Printer","Kabel LAN","Layar sentuh","Basis data menyimpan data terstruktur, misalnya data siswa sekolah."],
+[1,"Aplikasi pengolah angka yang berbentuk tabel baris dan kolom adalah…","Spreadsheet","Pemutar musik","Browser","Antivirus","Spreadsheet seperti Excel atau Google Sheets cocok untuk menghitung dan menata data."],
+[1,"Dalam tabel data siswa, satu baris yang berisi data lengkap seorang siswa disebut…","Record","Judul tabel","Gembok","Shortcut","Baris data disebut record, sedangkan kolom disebut field."],
+[2,"Kolom pada tabel basis data (misalnya kolom “Nama”) disebut…","Field","Record","Folder","Shortcut","Field menyimpan satu jenis informasi untuk semua record."],
+[2,"Rumus spreadsheet untuk menjumlahkan sel A1 sampai A5 adalah…","=SUM(A1:A5)","=ADD(A1-A5)","=PLUS(A1:A5)","=TOTAL(A1;A5)","SUM adalah fungsi penjumlahan, dan A1:A5 menunjukkan rentang sel."],
+[2,"Grafik batang paling cocok digunakan untuk…","Membandingkan jumlah antarkategori","Menulis surat","Mengirim email","Menghapus data","Tinggi batang memudahkan kita melihat perbedaan nilai antarkategori."],
+[3,"Nilai lima siswa: 80, 90, 70, 100, 60. Berapa rata-rata nilainya?","80","70","90","400","Jumlah nilai = 400, dibagi 5 siswa = 80."],
+[3,"Kolom NIS sebaiknya dijadikan primary key karena…","Nilainya unik sehingga tiap siswa dapat dibedakan","Nilainya sama untuk semua siswa","Nilainya sering berubah","Berisi gambar","Primary key harus unik dan tidak kosong agar setiap record dapat dikenali."],
+[3,"Sebuah rumus memeriksa: jika nilai ≥ 75 maka “Lulus”, jika tidak maka “Remedi”. Hasil untuk nilai 70 adalah…","Remedi","Lulus","75","Error","70 lebih kecil dari 75 sehingga kondisinya salah dan hasilnya “Remedi”."],
+[4,"Dari 40 siswa, 25 siswa mendapat nilai ≥ 75. Berapa persentase siswa yang tuntas?","62,5%","25%","40%","75%","25 ÷ 40 × 100% = 62,5%."],
+[4,"Mengapa menulis alamat lengkap yang sama berulang-ulang di tabel besar kurang baik?","Boros tempat dan rawan tidak konsisten ketika data harus diubah","Karena komputer menolak huruf","Karena tabel bisa menjadi bundar","Karena angka akan hilang","Data berulang membuat perubahan harus dilakukan di banyak tempat. Jika ada yang terlewat, data menjadi tidak konsisten."],
+[4,"Data: 12, 15, 12, 18, 12, 20. Berapa modus (nilai yang paling sering muncul)?","12","15","18","20","Angka 12 muncul tiga kali, lebih banyak daripada angka lain."]
+],
+sec:[
+[1,"Manakah kata sandi yang paling kuat?","Kc#7mRt!92xP","12345678","namaku","password","Kata sandi kuat itu panjang, mengombinasikan huruf besar, huruf kecil, angka, dan simbol, serta tidak mudah ditebak."],
+[1,"Phishing adalah…","Upaya menipu agar korban memberikan data pribadi atau mengeklik tautan berbahaya","Cara membersihkan layar","Jenis kabel jaringan","Aplikasi edit video","Penipu menyamar sebagai pihak tepercaya untuk mencuri data."],
+[1,"Antivirus berfungsi untuk…","Mendeteksi dan membersihkan program berbahaya","Mempercepat sinyal Wi-Fi","Mengganti baterai","Menambah RAM secara fisik","Antivirus memindai file dan aplikasi untuk menemukan malware."],
+[2,"Informasi manakah yang tidak boleh dibagikan kepada siapa pun, termasuk yang mengaku petugas?","Kode OTP","Warna favorit","Judul lagu favorit","Nama aplikasi yang dipakai","OTP adalah kunci sementara untuk membuktikan bahwa itu benar-benar kamu. Jika bocor, akunmu bisa diambil alih."],
+[2,"Manakah tindakan paling aman ketika menerima tautan hadiah dari nomor tidak dikenal?","Memeriksa sumbernya dan tidak memasukkan data pribadi sembarangan","Langsung membuka tautan","Memasukkan kata sandi untuk memeriksa hadiah","Meneruskan tautan ke semua teman","Tautan hadiah dari nomor asing sering menjadi jebakan phishing. Memeriksa sumber dan tidak memberi data pribadi adalah langkah paling aman."],
+[2,"Verifikasi dua langkah (2FA) membuat akun lebih aman karena…","Selain kata sandi, dibutuhkan bukti kedua untuk masuk","Kata sandi tidak diperlukan lagi","Akun tidak bisa dihapus","Internet menjadi lebih cepat","Walaupun kata sandi bocor, pelaku tetap membutuhkan faktor kedua seperti kode OTP atau aplikasi autentikator."],
+[3,"Temanmu mengirim chat meminta pulsa karena “darurat”, tetapi gaya bahasanya terasa aneh. Tindakan terbaik adalah…","Menghubungi temanmu lewat telepon atau jalur lain untuk memastikan","Langsung mengirim pulsa","Memberikan kode OTP","Membalas dengan data pribadi","Akun teman bisa saja diretas. Konfirmasi lewat jalur lain mencegah penipuan."],
+[3,"Wi-Fi publik tanpa kata sandi sebaiknya tidak dipakai untuk…","Memasukkan data sensitif seperti kata sandi atau informasi perbankan","Membaca berita umum","Melihat jadwal kereta","Membuka peta","Jaringan terbuka lebih mudah disadap sehingga tidak cocok untuk data sensitif."],
+[3,"Mana alamat yang paling mencurigakan sebagai situs belanja resmi “contohtoko.com”?","https://contohtoko.com.hadiah-gratis.xyz","https://www.contohtoko.com/promo","https://contohtoko.com","https://m.contohtoko.com","Domain sebenarnya ada di bagian paling kanan sebelum garis miring. Pada pilihan itu domainnya hadiah-gratis.xyz, bukan contohtoko.com."],
+[4,"Ransomware adalah…","Malware yang mengunci atau mengenkripsi data lalu meminta tebusan","Program pembersih sampah","Jenis antivirus","Aplikasi kompresi file","Korban tidak dapat membuka datanya sampai membayar, itulah mengapa serangan ini berbahaya."],
+[4,"Cara terbaik agar data tetap aman jika perangkat terkena ransomware adalah…","Memiliki cadangan (backup) yang disimpan terpisah dari perangkat","Membayar tebusan secepatnya","Mematikan antivirus","Menyimpan semua file hanya di satu perangkat","Backup terpisah memungkinkan data dipulihkan tanpa harus menuruti penjahat."],
+[4,"Mengapa memakai kata sandi yang sama untuk banyak akun berbahaya?","Jika satu akun bocor, akun lain ikut mudah dibobol","Akun menjadi lambat","Kata sandi menjadi kedaluwarsa","Hal itu melanggar hukum fisika","Penyerang mencoba kata sandi yang bocor di banyak layanan. Gunakan sandi berbeda untuk tiap akun."]
+],
+ai:[
+[1,"AI adalah singkatan dari…","Artificial Intelligence (kecerdasan buatan)","Automatic Internet","Advanced Install","Auto Input","AI adalah teknologi yang membuat komputer dapat melakukan tugas yang biasanya memerlukan kecerdasan manusia."],
+[1,"Manakah contoh pemanfaatan AI dalam kehidupan sehari-hari?","Asisten suara yang menjawab pertanyaan","Kabel charger","Casing ponsel","Layar yang mati","Asisten suara memahami ucapan dan memberi jawaban."],
+[1,"Manakah contoh pemanfaatan teknologi digital untuk belajar?","Mengikuti kelas daring dan menonton video pembelajaran","Menulis di dinding","Menghafal tanpa buku","Menunggu pengumuman lewat pengeras suara saja","Kelas daring dan video pembelajaran adalah contoh teknologi digital di bidang pendidikan."],
+[2,"Sistem AI belajar mengenali pola terutama dari…","Data","Sinar matahari","Kabel listrik","Casing komputer","Semakin banyak dan baik data latih, semakin baik AI mengenali pola."],
+[2,"Chatbot AI kadang memberi jawaban yang keliru. Sikap yang tepat adalah…","Memeriksa kembali informasi penting dari sumber tepercaya","Selalu menganggap jawabannya benar","Menyalin semuanya ke tugas tanpa membaca","Menyebarkan jawabannya ke semua orang","AI dapat salah atau mengarang jawaban. Verifikasi diperlukan, terutama untuk informasi penting."],
+[2,"Internet of Things (IoT) adalah…","Perangkat sehari-hari yang terhubung ke internet","Sebuah game online","Jenis virus","Kabel optik baru","Contohnya lampu pintar, jam tangan pintar, atau kamera CCTV yang dapat dipantau lewat internet."],
+[3,"Rekomendasi video di aplikasi berubah mengikuti tontonanmu. Hal ini terjadi karena…","Algoritma rekomendasi mempelajari kebiasaan menontonmu","Aplikasi membaca pikiran","Video dipilih tanpa dasar","Ponsel berubah menjadi komputer lain","Algoritma menganalisis riwayat tontonan, durasi, dan interaksi untuk memprediksi video yang kamu sukai."],
+[3,"Sebuah gambar “pejabat” mengatakan hal mengejutkan menyebar tanpa sumber jelas. Sebaiknya kamu…","Memeriksa sumber dan fakta sebelum percaya atau membagikan","Langsung membagikan agar teman tahu","Mengomentari dengan marah","Mengabaikan semua berita selamanya","Gambar dan video bisa dimanipulasi dengan AI. Verifikasi dulu mencegah penyebaran hoaks."],
+[3,"Bias pada AI dapat muncul karena…","Data latihnya tidak seimbang atau mencerminkan prasangka","AI sedang marah","Listrik terlalu besar","Layar terlalu terang","Jika data latih berat sebelah, hasil AI cenderung berat sebelah juga."],
+[4,"Mengapa tidak sebaiknya memasukkan data pribadi (alamat, nomor identitas) ke alat AI sembarangan?","Data dapat tersimpan atau disalahgunakan di luar kendali kita","Karena AI hanya mengerti angka","Karena AI akan menjadi lelah","Karena data otomatis menjadi lebih aman","Data yang dikirim ke layanan daring dapat disimpan atau bocor. Bagikan seperlunya saja."],
+[4,"Deepfake adalah…","Video atau audio palsu yang tampak nyata, dibuat memakai AI","Jenis kabel jaringan","Aplikasi pengolah kata","Kata sandi yang sangat panjang","Deepfake dapat meniru wajah atau suara seseorang, sehingga bukti visual saja tidak selalu cukup untuk dipercaya."],
+[4,"Jika memakai AI untuk membantu tugas sekolah, sikap yang paling jujur dan bertanggung jawab adalah…","Memahami hasilnya, memeriksa kebenarannya, dan mengikuti aturan guru tentang penggunaan AI","Menyalin seluruh jawaban tanpa membaca","Mengaku semuanya buatan sendiri padahal tidak","Menyuruh teman menyalin dan menyembunyikan sumbernya","AI sebaiknya menjadi alat bantu belajar, bukan pengganti berpikir. Kejujuran dan pemeriksaan fakta tetap tanggung jawab kita."]
+],
+web:[
+[1,"Aplikasi yang dipakai untuk menjelajahi situs web disebut…","Browser","Spreadsheet","Compiler","Antivirus","Chrome, Firefox, dan Edge adalah contoh browser."],
+[1,"Manakah yang merupakan contoh mesin pencari?","Google","Microsoft Paint","Notepad","Calculator","Mesin pencari membantu menemukan halaman web berdasarkan kata kunci."],
+[1,"Alamat sebuah halaman web, misalnya https://contoh.id/belajar, disebut…","URL","RAM","BIOS","CPU","URL (Uniform Resource Locator) adalah alamat lengkap sumber daya di web."],
+[2,"Bagian “.com” atau “.id” pada alamat situs disebut…","Ekstensi (domain tingkat atas)","Nama file","Kata sandi","Nomor IP","Domain tingkat atas menunjukkan kategori atau negara, misalnya .id untuk Indonesia."],
+[2,"Ikon gembok pada kolom alamat browser menandakan…","Koneksi ke situs terenkripsi, tetapi isi situs tetap perlu diwaspadai","Situs pasti 100% aman dan tepercaya","Situs pasti milik pemerintah","Situs bebas iklan","Gembok berarti koneksi memakai HTTPS. Situs penipuan pun bisa memakainya, jadi tetap periksa alamat dan isinya."],
+[2,"Bahasa yang dipakai untuk menyusun struktur halaman web adalah…","HTML","SQL","BASIC","Assembly","HTML (HyperText Markup Language) membentuk struktur judul, paragraf, gambar, dan tautan."],
+[3,"Agar hasil pencarian lebih tepat, sebaiknya…","Memakai kata kunci yang spesifik","Mengetik satu kata umum saja","Mengetik kalimat acak","Menekan tombol enter berulang kali","Kata kunci spesifik mempersempit hasil sehingga lebih relevan."],
+[3,"Cookie pada browser berfungsi untuk…","Menyimpan data kecil tentang kunjunganmu, seperti preferensi atau status login","Menjalankan virus","Menambah RAM komputer","Mencetak halaman web","Cookie membuat situs “mengingat” pilihanmu, tetapi juga dapat dipakai melacak kebiasaan sehingga perlu dikelola."],
+[3,"Dalam HTML, tag <h1> dipakai untuk…","Judul utama halaman","Membuat tabel","Menyisipkan gambar","Membuat tautan","<h1> adalah heading level pertama yang menunjukkan judul terpenting."],
+[4,"Dua situs menggunakan HTML yang sama, tetapi tampilannya berbeda. Teknologi yang paling berperan mengatur tampilan (warna, tata letak) adalah…","CSS","SQL","DNS","HTTP","CSS memisahkan gaya tampilan dari struktur HTML."],
+[4,"Kamu menemukan berita mengejutkan tanpa penulis, tanggal, dan sumber. Langkah verifikasi terbaik adalah…","Mencari berita yang sama di media tepercaya atau situs pemeriksa fakta","Langsung membagikan ke grup","Percaya jika judulnya heboh","Percaya jika banyak yang menyukai","Ciri hoaks: sumber tidak jelas dan memancing emosi. Bandingkan dengan sumber yang kredibel."],
+[4,"Kode <a href='https://contoh.id'>Klik</a> akan menghasilkan…","Teks “Klik” yang jika ditekan membuka https://contoh.id","Gambar bertuliskan Klik","Tabel dengan dua kolom","Kotak isian kata sandi","Tag <a> dengan atribut href membuat tautan ke alamat tujuan."]
+],
+prod:[
+[1,"Aplikasi pengolah kata yang umum dipakai untuk menulis laporan adalah…","Microsoft Word","Microsoft PowerPoint","Microsoft Excel","Paint","Word dirancang untuk menulis dan memformat dokumen."],
+[1,"Aplikasi untuk membuat presentasi berupa slide adalah…","PowerPoint","Word","Notepad","Excel","PowerPoint atau Google Slides digunakan untuk membuat slide presentasi."],
+[1,"Pintasan keyboard Ctrl + C berfungsi untuk…","Menyalin","Menempel","Memotong","Menyimpan","Ctrl+C = copy (salin), sedangkan Ctrl+V = paste (tempel)."],
+[2,"Pintasan keyboard Ctrl + Z berfungsi untuk…","Membatalkan tindakan terakhir (undo)","Menutup program","Mencetak dokumen","Membuka file baru","Ctrl+Z memudahkan memperbaiki salah ketik atau salah hapus."],
+[2,"Agar tugas tidak hilang saat listrik tiba-tiba padam, kebiasaan terbaik adalah…","Menyimpan file secara berkala dan mengaktifkan simpan otomatis","Menyimpan hanya pada akhir bulan","Tidak pernah menyimpan","Menutup dokumen tanpa menyimpan","Penyimpanan berkala (dan autosave) mengurangi risiko kehilangan pekerjaan."],
+[2,"Manfaat penyimpanan awan (cloud) seperti Google Drive adalah…","File dapat diakses dari berbagai perangkat melalui akun","File otomatis menjadi lebih kecil","File tidak bisa dibagikan","Komputer tidak membutuhkan listrik","Cloud menyimpan file di server sehingga bisa dibuka dari ponsel atau laptop selama login dan terkoneksi."],
+[3,"Slide presentasi yang baik sebaiknya…","Berisi teks singkat, huruf cukup besar, dan kontras warna jelas","Penuh paragraf panjang","Memakai warna teks mirip warna latar","Memakai banyak animasi berkedip","Slide adalah pendukung. Teks singkat dan kontras yang baik membuat audiens tetap fokus."],
+[3,"Saat mengerjakan dokumen kelompok, cara terbaik mengurangi bentrok versi file adalah…","Mengedit satu dokumen bersama di cloud dan memanfaatkan riwayat versi","Setiap orang mengedit salinan sendiri lalu digabung di menit terakhir","Mengirim file lewat chat berulang kali","Menyimpan di satu flashdisk saja","Dokumen bersama memastikan semua orang mengubah file yang sama, dan riwayat versi memudahkan memulihkan perubahan."],
+[3,"Agar Word dapat membuat daftar isi otomatis, bagian judul sebaiknya diformat menggunakan…","Gaya judul (Heading)","Huruf tebal biasa","Warna merah","Spasi berulang","Heading memberi struktur yang dibaca Word untuk menyusun daftar isi."],
+[4,"Kamu punya lima tugas dengan tenggat berbeda. Strategi paling produktif adalah…","Menyusun daftar prioritas berdasarkan tenggat dan tingkat kepentingan","Mengerjakan yang paling disukai saja","Menunda semuanya sampai malam terakhir","Mengerjakan secara acak","Prioritas membantu kita fokus pada hal yang mendesak dan penting terlebih dahulu."],
+[4,"Saat memakai gambar dari internet untuk presentasi sekolah, sikap yang paling etis adalah…","Menggunakan gambar berlisensi bebas atau mencantumkan sumbernya","Mengaku sebagai pembuat gambar","Mengambil gambar mana pun tanpa melihat aturannya","Menghapus watermark agar tidak terlihat","Menghargai karya orang lain berarti mengikuti lisensi dan mencantumkan sumber."],
+[4,"Manakah nama file yang paling baik untuk tugas yang akan dikumpulkan?","Informatika_Algoritma_Andi_2026-10-13.docx","tugas_final_FIX_revisi2_beneran.docx","dokumen1.docx","asdfgh.docx","Nama yang jelas dan konsisten memuat mata pelajaran, topik, nama, dan tanggal sehingga mudah dicari dan tidak tertukar."]
+]};
+const BANK=[];
+Object.keys(RAW).forEach(c=>RAW[c].forEach((r,i)=>BANK.push({id:c+i,c:c,d:r[0],q:r[1],right:r[2],wrong:[r[3],r[4],r[5]],exp:r[6]})));
+
+/* ====================== PENYIMPANAN ====================== */
+const KEY='qbi_v1';
+const DEF={name:'Pemain',stats:{battles:0,best:0,correct:0,answered:0,xp:0,bestLevel:0},set:{music:true,sfx:true,voice:true,mv:60,sv:80,vv:100,rate:10,voiceURI:'',offset:0,rm:false},board:[]};
+const num=(v,a,b,d)=>{v=Number(v);return Number.isFinite(v)?clamp(v,a,b):d;};
+function validate(r){
+  const d=JSON.parse(JSON.stringify(DEF));
+  if(!r||typeof r!=='object')return d;
+  if(typeof r.name==='string'){d.name=r.name.replace(/[<>]/g,'').trim().slice(0,16)||'Pemain';}
+  if(r.stats&&typeof r.stats==='object'){Object.keys(d.stats).forEach(k=>{d.stats[k]=Math.round(num(r.stats[k],0,1e9,0));});d.stats.bestLevel=clamp(d.stats.bestLevel,0,4);}
+  if(r.set&&typeof r.set==='object'){
+    ['music','sfx','voice','rm'].forEach(k=>{if(typeof r.set[k]==='boolean')d.set[k]=r.set[k];});
+    d.set.mv=num(r.set.mv,0,100,60);d.set.sv=num(r.set.sv,0,100,80);d.set.vv=num(r.set.vv,0,100,100);d.set.rate=Math.round(num(r.set.rate,7,13,10));
+    d.set.offset=[-5,0,5,10].indexOf(r.set.offset)>=0?r.set.offset:0;
+    if(typeof r.set.voiceURI==='string')d.set.voiceURI=r.set.voiceURI.slice(0,200);
+  }
+  if(Array.isArray(r.board)){d.board=r.board.filter(e=>e&&typeof e.name==='string'&&Number.isFinite(Number(e.score))).slice(0,50).map(e=>({name:String(e.name).replace(/[<>]/g,'').slice(0,16),score:Math.max(0,Math.round(Number(e.score))),level:Math.round(num(e.level,1,4,1)),acc:Math.round(num(e.acc,0,100,0)),cat:String(e.cat||'').slice(0,30),date:String(e.date||'').slice(0,10),t:Math.round(num(e.t,0,9e15,0))}));}
+  return d;
+}
+let hadStore=false;
+function load(){try{const raw=localStorage.getItem(KEY);hadStore=!!raw;return validate(raw?JSON.parse(raw):null);}catch(e){return validate(null);}}
+let DB=load();
+if(!hadStore&&window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)DB.set.rm=true;
+function save(){try{localStorage.setItem(KEY,JSON.stringify(DB));}catch(e){}}
+const levelOf=xp=>1+Math.floor(Math.sqrt(xp/40));
+
+/* ====================== AUDIO (Web Audio) ====================== */
+const A=(function(){
+  let ctx=null,master,mGain,sGain,noiseBuf,timer=null,cur=null,want=null,step=0,nextT=0;
+  const f=m=>440*Math.pow(2,(m-69)/12);
+  const P=s=>Array.from(s).map(c=>c==='x'?1:0);
+  const CH={Am:[57,60,64],F:[53,57,60],C:[60,64,67],G:[55,59,62],Dm:[50,53,57],E:[52,56,59]};
+  const RT={Am:45,F:41,C:48,G:43,Dm:38,E:40};
+  const mk=(prog,o)=>Object.assign({},o,{
+    bass:prog.reduce((a,c)=>a.concat(o.bp.map(x=>x?RT[c]+(x===2?12:0):0)),[]),
+    lead:prog.reduce((a,c)=>a.concat(o.ap.map(x=>x<0?0:[CH[c][0],CH[c][1],CH[c][2],CH[c][0]+12][x]+(o.oct||0))),[])
+  });
+  const TR={
+    menu:mk(['Am','F','C','G'],{bpm:92,bp:[1,0,0,1,0,0,1,0],ap:[0,-1,1,-1,2,-1,1,-1],lt:'triangle',bt:'sine',lv:.16,bv:.3,k:P('x.......x.......'),h:P('..x...x...x...x.'),s:[],oct:12}),
+    level:mk(['C','G','Am','F'],{bpm:112,bp:[1,0,1,0,2,0,1,0],ap:[0,1,2,1,0,1,2,3],lt:'square',bt:'sawtooth',lv:.06,bv:.2,k:P('x...x...x...x...'),h:P('..x...x...x...x.'),s:P('....x.......x...'),oct:12}),
+    game:mk(['Am','F','C','G'],{bpm:122,bp:[1,1,0,1,2,0,1,0],ap:[0,2,1,2,0,2,1,3],lt:'square',bt:'sawtooth',lv:.045,bv:.19,k:P('x...x...x...x...'),h:P('x.x.x.x.x.x.x.x.'),s:P('....x.......x...'),oct:12}),
+    tense:mk(['Am','Am','F','G'],{bpm:148,bp:[1,1,1,1,1,1,1,1],ap:[0,2,0,2,1,3,1,3],lt:'sawtooth',bt:'sawtooth',lv:.035,bv:.17,k:P('x.x.x.x.x.x.x.x.'),h:P('xxxxxxxxxxxxxxxx'),s:P('....x.......x...'),oct:12}),
+    win:mk(['C','F','G','C'],{bpm:116,bp:[1,0,1,0,2,0,1,0],ap:[0,1,2,3,2,1,2,3],lt:'triangle',bt:'sawtooth',lv:.13,bv:.2,k:P('x...x...x...x...'),h:P('..x...x...x...x.'),s:P('....x.......x...'),oct:12}),
+    calm:mk(['Am','F','Dm','E'],{bpm:78,bp:[1,0,0,0,0,0,0,0],ap:[0,-1,1,-1,2,-1,1,-1],lt:'sine',bt:'sine',lv:.15,bv:.26,k:P('x.......x.......'),h:[],s:[],oct:12})
+  };
+  function init(){
+    if(ctx)return true;
+    const C=window.AudioContext||window.webkitAudioContext;
+    if(!C)return false;
+    try{ctx=new C();}catch(e){ctx=null;return false;}
+    master=ctx.createGain();master.gain.value=.9;
+    const comp=ctx.createDynamicsCompressor();master.connect(comp);comp.connect(ctx.destination);
+    mGain=ctx.createGain();sGain=ctx.createGain();mGain.connect(master);sGain.connect(master);
+    const len=ctx.sampleRate;noiseBuf=ctx.createBuffer(1,len,ctx.sampleRate);
+    const d=noiseBuf.getChannelData(0);for(let i=0;i<len;i++)d[i]=Math.random()*2-1;
+    apply();return true;
+  }
+  function apply(){
+    if(!ctx)return;const t=ctx.currentTime;
+    mGain.gain.setTargetAtTime(DB.set.music?DB.set.mv/100*.45:0,t,.05);
+    sGain.gain.setTargetAtTime(DB.set.sfx?DB.set.sv/100:0,t,.05);
+    sync();
+  }
+  function resume(){if(ctx&&ctx.state==='suspended'){try{ctx.resume();}catch(e){}}}
+  function tone(m,t,dur,type,vol,dest,o){
+    o=o||{};const os=ctx.createOscillator(),g=ctx.createGain();os.type=type;os.frequency.setValueAtTime(f(m),t);
+    if(o.slide)os.frequency.exponentialRampToValueAtTime(f(m+o.slide),t+dur);
+    g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(Math.max(.0002,vol),t+.012);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    let n=os;if(o.lp){const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=o.lp;os.connect(lp);n=lp;}
+    n.connect(g);g.connect(dest);os.start(t);os.stop(t+dur+.05);
+  }
+  function kick(t){const o=ctx.createOscillator(),g=ctx.createGain();o.frequency.setValueAtTime(150,t);o.frequency.exponentialRampToValueAtTime(45,t+.12);g.gain.setValueAtTime(.8,t);g.gain.exponentialRampToValueAtTime(.001,t+.18);o.connect(g);g.connect(mGain);o.start(t);o.stop(t+.2);}
+  function noise(t,dur,fr,v,type){const s=ctx.createBufferSource();s.buffer=noiseBuf;const fl=ctx.createBiquadFilter();fl.type=type||'highpass';fl.frequency.value=fr;const g=ctx.createGain();g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);s.connect(fl);fl.connect(g);g.connect(mGain);s.start(t,Math.random()*.5);s.stop(t+dur+.02);}
+  function sched(){
+    if(!ctx||!cur)return;const T=TR[cur];const sd=60/T.bpm/4;
+    if(nextT<ctx.currentTime-.5)nextT=ctx.currentTime+.05;
+    while(nextT<ctx.currentTime+.15){
+      const i=step%32,j=step%16;
+      const b=T.bass[i];if(b)tone(b,nextT,sd*1.8,T.bt,T.bv,mGain,{lp:650});
+      const l=T.lead[i];if(l)tone(l,nextT,sd*1.6,T.lt,T.lv,mGain);
+      if(T.k[j])kick(nextT);
+      if(T.h[j])noise(nextT,.04,7000,.14);
+      if(T.s[j])noise(nextT,.12,1800,.22,'bandpass');
+      nextT+=sd;step++;
+    }
+  }
+  function sync(){
+    if(!ctx||!DB.set.music||!want){if(timer){clearInterval(timer);timer=null;}cur=null;return;}
+    if(cur!==want){cur=want;step=0;nextT=ctx.currentTime+.08;}
+    if(!timer)timer=setInterval(sched,40);
+  }
+  function play(n){want=n;sync();}
+  function stop(){want=null;sync();}
+  function sfx(n){
+    if(!ctx||!DB.set.sfx)return;resume();const t=ctx.currentTime+.01,d=sGain;
+    const seq=(arr,type,v,dur,gap)=>arr.forEach((m,i)=>tone(m,t+i*gap,dur,type,v,d));
+    switch(n){
+      case 'click':tone(84,t,.05,'square',.1,d);break;
+      case 'ok':seq([72,76,79,84],'triangle',.3,.16,.07);break;
+      case 'no':tone(60,t,.2,'triangle',.3,d,{slide:-3});tone(55,t+.13,.26,'triangle',.26,d);break;
+      case 'tick':tone(88,t,.04,'square',.1,d);break;
+      case 'warn':tone(81,t,.07,'square',.16,d);tone(81,t+.11,.07,'square',.16,d);break;
+      case 'combo':seq([76,79,83,88,91],'square',.14,.12,.06);break;
+      case 'win':[[72,0],[72,.13],[72,.26],[76,.4],[79,.62],[76,.84],[79,1],[84,1.2]].forEach(a=>{tone(a[0],t+a[1],.24,'square',.14,d);tone(a[0]-12,t+a[1],.24,'triangle',.18,d);});break;
+      case 'lose':seq([67,64,60,55],'triangle',.22,.3,.2);break;
+      case 'rank':seq([60,64,67,72,76,79,84],'square',.13,.14,.08);break;
+    }
+  }
+  function stopAll(){stop();}
+  return{init,resume,apply,play,stop,sfx,stopAll,get ready(){return !!ctx;}};
+})();
+
+/* ====================== MASKOT & SUARA KARAKTER ====================== */
+const M=(function(){
+  let t=0;
+  return{set(s,ms){clearTimeout(t);$('#mascot').className='mascot s-'+s;if(ms)t=setTimeout(()=>{$('#mascot').className='mascot s-idle';},ms);}};
+})();
+const V=(function(){
+  const ss='speechSynthesis' in window&&typeof window.SpeechSynthesisUtterance!=='undefined';
+  let voices=[],tok=0,spkT=0,bubT=0,last='',lastT=0;
+  const isId=v=>/^id([-_]|$)/i.test(v.lang||'');
+  function load(){if(!ss)return;try{voices=window.speechSynthesis.getVoices()||[];}catch(e){voices=[];}}
+  if(ss){load();try{window.speechSynthesis.addEventListener('voiceschanged',()=>{load();fillVoices();});}catch(e){}}
+  function pick(){
+    if(DB.set.voiceURI){const v=voices.find(x=>x.voiceURI===DB.set.voiceURI);if(v)return v;}
+    return voices.find(isId)||voices.find(x=>/^ms([-_]|$)/i.test(x.lang||''))||null;
+  }
+  function bubble(text){
+    $('#btxt').textContent=text;const b=$('#bubble');b.classList.add('show');
+    clearTimeout(bubT);bubT=setTimeout(()=>b.classList.remove('show'),Math.max(3500,1800+text.length*55));
+  }
+  function stop(){tok++;clearTimeout(spkT);if(ss){try{window.speechSynthesis.cancel();}catch(e){}}}
+  function say(key,o){
+    o=o||{};const text=D[key];if(!text)return;
+    const now=Date.now();if(!o.force&&key===last&&now-lastT<2500)return;last=key;lastT=now;
+    stop();const my=tok;bubble(text);
+    let done=false;const fin=()=>{if(done||my!==tok)return;done=true;if(o.cb)o.cb();};
+    const est=1200+text.length*62;
+    if(!ss||!DB.set.voice){setTimeout(fin,est);return;}
+    spkT=setTimeout(()=>{
+      if(my!==tok)return;
+      try{
+        const u=new window.SpeechSynthesisUtterance(text);u.lang='id-ID';
+        const v=pick();if(v){u.voice=v;u.lang=v.lang;}
+        u.rate=DB.set.rate/10;u.pitch=1.15;u.volume=DB.set.vv/100;
+        u.onend=fin;u.onerror=fin;
+        window.speechSynthesis.speak(u);
+        setTimeout(fin,est/Math.max(.7,DB.set.rate/10)+4000);
+      }catch(e){setTimeout(fin,est);}
+    },80);
+  }
+  function status(){
+    if(!ss)return '⚠ Browser ini tidak mendukung suara karakter. Dialog tetap tampil sebagai teks.';
+    if(voices.some(isId))return '✔ Suara bahasa Indonesia ditemukan di perangkat ini.';
+    return '⚠ Suara bahasa Indonesia belum ditemukan. Karakter memakai suara terdekat yang tersedia, dan teks dialog selalu tampil. Ketersediaan suara bergantung pada perangkat dan browser.';
+  }
+  return{say,stop,status,get supported(){return ss;},list(){return voices.slice().sort((a,b)=>(isId(b)?1:0)-(isId(a)?1:0));}};
+})();
+
+/* ====================== EFEK VISUAL ====================== */
+const FX=(function(){
+  const c=$('#fx'),x=c.getContext&&c.getContext('2d');let P=[],raf=0;
+  const cols=['#35C7FF','#5EF1FF','#9B68FF','#FFCA38','#38EDAB','#FF547E'];
+  function size(){c.width=window.innerWidth;c.height=window.innerHeight;}
+  function burst(n,ox,oy,spread){
+    if(DB.set.rm||!x)return;size();
+    n=Math.min(n,window.innerWidth<700?45:120);
+    for(let i=0;i<n;i++)P.push({x:ox,y:oy,vx:(Math.random()-.5)*(spread||10),vy:Math.random()*-9-3,s:4+Math.random()*5,r:Math.random()*6,vr:(Math.random()-.5)*.4,col:cols[i%cols.length],l:80+Math.random()*60});
+    if(!raf)raf=requestAnimationFrame(loop);
+  }
+  function loop(){
+    x.clearRect(0,0,c.width,c.height);
+    P.forEach(p=>{p.vy+=.28;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;p.l--;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.col;x.globalAlpha=Math.max(0,Math.min(1,p.l/30));x.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6);x.restore();});
+    P=P.filter(p=>p.l>0&&p.y<window.innerHeight+30);
+    if(P.length)raf=requestAnimationFrame(loop);else{raf=0;x.clearRect(0,0,c.width,c.height);}
+  }
+  function win(){const w=window.innerWidth,h=window.innerHeight;burst(60,w*.2,h*.6,12);setTimeout(()=>burst(60,w*.8,h*.6,12),250);setTimeout(()=>burst(70,w*.5,h*.35,14),500);}
+  return{burst,win};
+})();
+const BG=(function(){
+  const c=$('#bg'),x=c.getContext&&c.getContext('2d');let pts=[],w=0,h=0,raf=0,tick=0;
+  function init(){
+    if(!x)return;w=c.width=window.innerWidth;h=c.height=window.innerHeight;
+    const n=DB.set.rm?0:(w<700?26:60);
+    pts=Array.from({length:n},()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*2+.6,v:Math.random()*.4+.12,c:Math.random()<.5?'94,241,255':'155,104,255'}));
+    draw();
+  }
+  function draw(){
+    x.clearRect(0,0,w,h);
+    pts.forEach(p=>{p.y-=p.v;if(p.y<-5){p.y=h+5;p.x=Math.random()*w;}x.beginPath();x.fillStyle='rgba('+p.c+',.7)';x.arc(p.x,p.y,p.r,0,6.2832);x.fill();});
+  }
+  function loop(){tick++;if(!document.hidden&&!DB.set.rm&&tick%2===0)draw();raf=requestAnimationFrame(loop);}
+  function start(){init();if(!raf)raf=requestAnimationFrame(loop);}
+  return{start,init};
+})();
+document.addEventListener('mousemove',e=>{
+  if(DB.set.rm||window.innerWidth<900)return;
+  $('#shapes').style.transform='translate('+((e.clientX/window.innerWidth-.5)*-26).toFixed(1)+'px,'+((e.clientY/window.innerHeight-.5)*-18).toFixed(1)+'px)';
+});
+function countUp(el,to,ms,fmt){
+  fmt=fmt||(v=>fmtN(v));
+  if(DB.set.rm||to===0){el.textContent=fmt(to);return;}
+  const t0=performance.now();
+  (function s(t){const p=Math.min(1,(t-t0)/ms);el.textContent=fmt(Math.round(to*(1-Math.pow(1-p,3))));if(p<1)requestAnimationFrame(s);})(t0);
+}
+let toastT=0;
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2600);}
+
+/* ====================== MODAL ====================== */
+let modalOpen=false,modalCancel=null;
+function modal(title,text,btns,onCancel){
+  $('#mTitle').textContent=title;$('#mText').textContent=text;
+  const box=$('#mBtns');box.innerHTML='';
+  btns.forEach(b=>{const e=document.createElement('button');e.className='btn '+(b.cls||'');e.textContent=b.label;e.addEventListener('click',()=>{closeModal();if(b.fn)b.fn();});box.appendChild(e);});
+  $('#modal').hidden=false;modalOpen=true;modalCancel=onCancel||null;box.firstChild.focus();
+}
+function closeModal(){$('#modal').hidden=true;modalOpen=false;modalCancel=null;}
+
+/* ====================== NAVIGASI ====================== */
+let cur='';
+const SEL={level:1,cat:null};
+const MUSIC={menu:'menu',levels:'level',cats:'level',game:'game',board:'menu',profile:'menu',settings:'menu'};
+function go(id){
+  if(cur==='game'&&id!=='game')gameCleanup();
+  V.stop();closeModal();
+  $$('.screen').forEach(s=>s.classList.toggle('active',s.id==='s-'+id));
+  cur=id;$('#top').hidden=(id==='splash');
+  const slot=$('#slot-'+id);const mb=$('#mbox');
+  if(slot){slot.appendChild(mb);mb.hidden=false;}else mb.hidden=true;
+  if(MUSIC[id])A.play(MUSIC[id]);
+  M.set(id==='game'?'think':'idle');
+  if(id==='menu')renderMenu();
+  if(id==='levels'){renderLevels();V.say('level');}
+  if(id==='cats')renderCats();
+  if(id==='board')renderBoard();
+  if(id==='profile')renderProfile();
+  if(id==='settings')renderSettings();
+  window.scrollTo(0,0);
+  const hd=$('#s-'+id+' h1,#s-'+id+' h2');
+  if(hd&&id!=='game'){hd.setAttribute('tabindex','-1');try{hd.focus({preventScroll:true});}catch(e){}}
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  if(b.closest('#answers'))return;
+  A.sfx('click');
+  const g=b.getAttribute('data-go');if(g)go(g);
+});
+
+/* ====================== MENU / PROFIL / PAPAN ====================== */
+function renderMenu(){
+  $('#hello').textContent='Halo, '+DB.name+'! Siap menaklukkan soal Informatika?';
+  $('#stB').textContent=fmtN(DB.stats.battles);$('#stS').textContent=fmtN(DB.stats.best);
+  $('#stL').textContent=DB.stats.bestLevel?LV[DB.stats.bestLevel-1].name:'Belum ada';
+  M.set('greet',2600);
+}
+function renderProfile(){
+  const s=DB.stats,r=levelOf(s.xp),lo=40*(r-1)*(r-1),hi=40*r*r;
+  $('#inName').value=DB.name;
+  $('#pRank').textContent='Rank '+r+' · '+RANKS[Math.min(r-1,RANKS.length-1)];
+  const pct=Math.round((s.xp-lo)/(hi-lo)*100);$('#pBarI').style.width=pct+'%';$('#pBar').setAttribute('aria-valuenow',pct);
+  $('#pXp').textContent=fmtN(s.xp-lo)+' / '+fmtN(hi-lo)+' XP menuju rank berikutnya';
+  $('#pB').textContent=fmtN(s.battles);$('#pS').textContent=fmtN(s.best);
+  $('#pA').textContent=(s.answered?Math.round(s.correct/s.answered*100):0)+'%';
+  $('#pC').textContent=fmtN(s.correct);$('#pX').textContent=fmtN(s.xp);
+  $('#pL').textContent=s.bestLevel?LV[s.bestLevel-1].name:'Belum ada';
+}
+function renderBoard(){
+  const f=$('#bFilter');
+  if(!f.options.length){f.innerHTML='<option value="0">Semua level</option>'+LV.map(l=>'<option value="'+l.id+'">'+esc(l.name)+'</option>').join('');f.addEventListener('change',renderBoard);}
+  const fl=Number(f.value),rows=DB.board.filter(e=>!fl||e.level===fl).slice().sort((a,b)=>b.score-a.score||b.acc-a.acc).slice(0,10);
+  const lastT=DB.board.reduce((m,e)=>Math.max(m,e.t),0);
+  const med=['🥇','🥈','🥉'];
+  $('#bBody').innerHTML=rows.length?rows.map((e,i)=>'<tr'+(e.t===lastT&&e.t?' class="me"':'')+'><td>'+(i<3?med[i]+'<span class="sr" style="position:absolute;left:-9999px"> '+(i+1)+'</span>':(i+1))+'</td><td>'+esc(e.name)+'<span class="sub">'+esc(e.cat)+'</span></td><td class="sc">'+fmtN(e.score)+'</td><td>'+esc(LV[e.level-1].name)+'</td><td>'+e.acc+'%</td><td>'+esc(e.cat)+'</td></tr>').join(''):'<tr><td colspan="6" style="text-align:center;color:var(--mut)">Belum ada skor. Mainkan battle pertamamu!</td></tr>';
+}
+
+/* ====================== LEVEL & MATERI ====================== */
+const effTime=l=>Math.max(10,l.time+DB.set.offset);
+function buildLevels(){
+  const g=$('#lvGrid');g.innerHTML='';
+  LV.forEach(l=>{
+    const b=document.createElement('button');b.className='lv';b.type='button';b.style.setProperty('--c',l.color);b.dataset.lv=l.id;
+    b.innerHTML='<span class="sel">✔ Dipilih</span><div class="row"><div class="emb"><span>'+l.icon+'</span></div><h3>'+esc(l.name)+'</h3></div><p>'+esc(l.desc)+'</p><div class="meta"><span class="d"></span><span>Soal: '+l.n+'–'+Math.ceil(l.n*1.5)+'</span><span class="tt"></span></div>';
+    b.addEventListener('click',()=>{SEL.level=l.id;renderLevels();V.say('level');M.set('happy',1200);});
+    g.appendChild(b);
+  });
+}
+function renderLevels(){
+  $$('#lvGrid .lv').forEach(b=>{
+    const l=LV[b.dataset.lv-1];b.setAttribute('aria-pressed',String(SEL.level===l.id));
+    b.querySelector('.d').textContent='Kesulitan: '+'★'.repeat(l.diff)+'☆'.repeat(4-l.diff)+' '+l.label;
+    b.querySelector('.tt').textContent='Waktu: '+effTime(l)+' detik';
+  });
+}
+function buildCats(){
+  const g=$('#catGrid');g.innerHTML='';
+  CATS.forEach(c=>{
+    const b=document.createElement('button');b.className='cat';b.type='button';b.dataset.cat=c.id;
+    const cnt=c.id==='mix'?BANK.length:BANK.filter(q=>q.c===c.id).length;
+    b.innerHTML='<span class="sel">✔ Dipilih</span><span class="ci" aria-hidden="true">'+c.i+'</span><h3>'+esc(c.n)+'</h3><p>'+esc(c.d)+'</p><small>'+cnt+' soal tersedia</small>';
+    b.addEventListener('click',()=>{SEL.cat=c.id;renderCats();});
+    g.appendChild(b);
+  });
+}
+function renderCats(){
+  const l=LV[SEL.level-1];$('#catLv').textContent='Level: '+l.name;
+  $$('#catGrid .cat').forEach(b=>b.setAttribute('aria-pressed',String(SEL.cat===b.dataset.cat)));
+  $('#btnStart').disabled=!SEL.cat;
+}
+
+/* ====================== PERMAINAN ====================== */
+let G=null;
+function pickQuestions(level,cat){
+  let pool=BANK.filter(q=>cat==='mix'||q.c===cat);
+  const base=LV[level-1].n,n=Math.min(pool.length,cat==='mix'?Math.ceil(base*1.5):base);
+  pool=shuffle(pool).sort((a,b)=>Math.abs(a.d-level)-Math.abs(b.d-level));
+  return shuffle(pool.slice(0,n)).map(q=>({
+    id:q.id,q:q.q,exp:q.exp,
+    opts:shuffle([{t:q.right,ok:true}].concat(q.wrong.map(t=>({t:t,ok:false}))))
+  }));
+}
+function startGame(){
+  if(!SEL.cat||!SEL.level)return;
+  const l=LV[SEL.level-1],cat=CATS.find(c=>c.id===SEL.cat);
+  gameCleanup();
+  G={level:SEL.level,cat:SEL.cat,catName:cat.n,qs:pickQuestions(SEL.level,SEL.cat),i:0,score:0,correct:0,wrong:0,timeout:0,combo:0,maxCombo:0,
+     helpLeft:1,helpUsed:false,locked:true,paused:false,tid:0,t0:performance.now(),pausedMs:0,pauseStart:0,review:[],total:0,remain:0,deadline:0,warned:false,lastSec:-1,scored:{}};
+  go('game');
+  $('#hLv').textContent='Level: '+l.name;$('#hCat').textContent=cat.i+' '+cat.n;
+  $('#hScore').textContent='0';$('#hCombo').textContent='0';
+  renderQ();
+  V.say('start',{cb:()=>{if(cur==='game'&&G&&G.i===0&&!G.locked)V.say('question');}});
+}
+function gameCleanup(){
+  if(G){clearInterval(G.tid);G.tid=0;}
+  G=null;
+}
+function renderQ(){
+  const q=G.qs[G.i],N=G.qs.length;
+  G.locked=false;G.usedHelpThis=false;G.warned=false;G.lastSec=-1;
+  $('#hNo').textContent='Soal '+(G.i+1)+' dari '+N;
+  const pct=Math.round(G.i/N*100);$('#progI').style.width=pct+'%';$('#prog').setAttribute('aria-valuenow',pct);
+  $('#qText').textContent=q.q;
+  const box=$('#answers');box.innerHTML='';
+  q.opts.forEach((o,k)=>{
+    const b=document.createElement('button');b.type='button';b.className='ans';b.dataset.k=k;
+    b.innerHTML='<span class="let">'+'ABCD'[k]+'</span><span class="at"></span><span class="mk" aria-hidden="true"></span>';
+    b.querySelector('.at').textContent=o.t;
+    b.addEventListener('click',()=>resolve(k));
+    box.appendChild(b);
+  });
+  $('#fb').hidden=true;
+  $('#btnHelp').disabled=G.helpLeft<1;
+  $('#btnHelp').textContent=G.helpLeft>0?'💡 50:50 (1×)':'💡 50:50 terpakai';
+  $('#btnPause').disabled=false;
+  M.set('think');
+  if(G.i>0)A.play('game');
+  startTimer(effTime(LV[G.level-1]));
+}
+function clearT(){if(G&&G.tid){clearInterval(G.tid);G.tid=0;}}
+function startTimer(sec){
+  clearT();G.total=sec*1000;G.remain=G.total;G.deadline=performance.now()+G.remain;
+  tick();G.tid=setInterval(tick,200);
+}
+function tick(){
+  if(!G||G.paused||G.locked)return;
+  const r=Math.max(0,G.deadline-performance.now());G.remain=r;
+  const s=Math.ceil(r/1000);
+  $('#tI').style.width=(r/G.total*100)+'%';$('#tN').textContent=s;
+  const tm=$('#tm');tm.classList.toggle('warn',s<=10&&s>5);tm.classList.toggle('danger',s<=5);
+  if(s!==G.lastSec){
+    G.lastSec=s;
+    if(s<=5&&s>0)A.sfx(s<=3?'warn':'tick');
+    if(s<=5&&s>0&&!G.warned){G.warned=true;A.play('tense');V.say('hurry');}
+  }
+  if(r<=0){clearT();resolve(-1);}
+}
+function calcPts(level,remain,total,combo,help){
+  let base=LV[level-1].base;if(help)base=Math.round(base/2);
+  const speed=Math.round(base*.5*clamp(remain/total,0,1));
+  const cb=combo>=2?Math.min(combo-1,4)*10:0;
+  return{base:base,speed:speed,combo:cb,total:base+speed+cb};
+}
+function resolve(k){
+  if(!G||G.locked)return;
+  G.locked=true;clearT();
+  const idx=G.i,q=G.qs[idx];
+  if(G.scored[idx])return;G.scored[idx]=true;
+  const ok=k>=0&&q.opts[k].ok;
+  let pts=null;
+  if(ok){
+    G.correct++;G.combo++;G.maxCombo=Math.max(G.maxCombo,G.combo);
+    pts=calcPts(G.level,G.remain,G.total,G.combo,G.usedHelpThis);G.score+=pts.total;
+  }else{
+    G.wrong++;if(k<0)G.timeout++;G.combo=0;
+    G.review.push({q:q.q,mine:k<0?'Waktu habis (tidak dijawab)':q.opts[k].t,right:q.opts.find(o=>o.ok).t,exp:q.exp});
+  }
+  $$('#answers .ans').forEach((b,i)=>{
+    b.classList.add('locked');
+    const mk=b.querySelector('.mk');
+    if(q.opts[i].ok){b.classList.add('correct');mk.textContent='✔ Benar';}
+    else if(i===k){b.classList.add('wrong');mk.textContent='✘ Salah';}
+  });
+  const fb=$('#fb');fb.hidden=false;fb.classList.toggle('bad',!ok);
+  $('#fbIco').textContent=ok?'✅':(k<0?'⏰':'❌');
+  $('#fbT').textContent=ok?'Benar!':(k<0?'Waktu habis!':'Belum tepat');
+  $('#fbPts').textContent=ok?'+'+pts.total+' poin (dasar '+pts.base+(pts.speed?' + kecepatan '+pts.speed:'')+(pts.combo?' + combo '+pts.combo:'')+')'+(G.usedHelpThis?' · poin dasar dihitung setengah karena memakai 50:50':''):'Jawaban benar: '+q.opts.find(o=>o.ok).t;
+  $('#fbExp').textContent='Pembahasan: '+q.exp;
+  $('#hScore').textContent=fmtN(G.score);$('#hCombo').textContent=G.combo?'🔥 ×'+G.combo:'0';
+  $('#btnNext').textContent=G.i>=G.qs.length-1?'Lihat hasil 🏆':'Soal berikutnya ➜';
+  $('#btnPause').disabled=true;$('#btnHelp').disabled=true;
+  $('#tm').classList.remove('warn','danger');
+  const panel=$('#qText').parentNode;panel.classList.remove('flash-ok','flash-no');void panel.offsetWidth;panel.classList.add(ok?'flash-ok':'flash-no');
+  A.play('game');
+  if(ok){
+    A.sfx('ok');M.set('happy',1800);
+    const btn=$$('#answers .ans')[k],r=btn.getBoundingClientRect();
+    FX.burst(34,r.left+r.width/2,r.top+r.height/2,9);
+    if(G.combo===3||G.combo===5||G.combo===8){A.sfx('combo');V.say('combo');}else V.say('correct');
+  }else{A.sfx('no');M.set('sad',2200);V.say('wrong');}
+  try{$('#btnNext').focus({preventScroll:false});}catch(e){}
+}
+function nextQ(){
+  if(!G||!G.locked||$('#fb').hidden)return;
+  V.stop();
+  G.i++;
+  if(G.i>=G.qs.length)finishGame();else renderQ();
+}
+function useHelp(){
+  if(!G||G.locked||G.helpLeft<1||G.paused)return;
+  const q=G.qs[G.i],wrongIdx=shuffle(q.opts.map((o,i)=>i).filter(i=>!q.opts[i].ok)).slice(0,2);
+  wrongIdx.forEach(i=>{const b=$$('#answers .ans')[i];b.classList.add('gone');b.setAttribute('aria-disabled','true');b.querySelector('.mk').textContent='—';});
+  G.helpLeft--;G.usedHelpThis=true;G.helpUsed=true;
+  $('#btnHelp').disabled=true;$('#btnHelp').textContent='💡 50:50 terpakai';
+  toast('Dua jawaban salah dihilangkan. Poin dasar soal ini dihitung setengah.');
+}
+function pauseGame(){
+  if(!G||G.paused||G.locked||cur!=='game')return;
+  G.paused=true;G.pauseStart=performance.now();G.remain=Math.max(0,G.deadline-performance.now());
+  modal('⏸ Permainan dijeda','Waktu berhenti. Lanjutkan battle atau keluar ke menu utama (skor battle ini tidak disimpan).',[
+    {label:'▶ Lanjutkan',cls:'gold',fn:resumeGame},
+    {label:'Keluar ke menu',cls:'ghost',fn:()=>go('menu')}
+  ],resumeGame);
+}
+function resumeGame(){
+  if(!G||!G.paused)return;
+  G.paused=false;G.pausedMs+=performance.now()-G.pauseStart;G.deadline=performance.now()+G.remain;
+}
+function finishGame(){
+  const g=G,N=g.qs.length;
+  const acc=N?Math.round(g.correct/N*100):0;
+  const dur=Math.max(1,Math.round((performance.now()-g.t0-g.pausedMs)/1000));
+  const xp=Math.round(g.score/10)+5;
+  const rankBefore=levelOf(DB.stats.xp);
+  const s=DB.stats;
+  s.battles++;s.best=Math.max(s.best,g.score);s.correct+=g.correct;s.answered+=N;s.xp+=xp;
+  const cleared=acc>=60;if(cleared)s.bestLevel=Math.max(s.bestLevel,g.level);
+  const t=Date.now();
+  const entry={name:DB.name,score:g.score,level:g.level,acc:acc,cat:g.catName,date:new Date().toISOString().slice(0,10),t:t};
+  const all=DB.board.concat([entry]).sort((a,b)=>b.score-a.score||b.acc-a.acc);
+  const pos=all.findIndex(e=>e.t===t)+1;
+  DB.board=all.slice(0,50);save();
+  const rankAfter=levelOf(s.xp);
+  const R={score:g.score,correct:g.correct,wrong:g.wrong,timeout:g.timeout,acc:acc,dur:dur,xp:xp,level:g.level,cleared:cleared,pos:pos,total:all.length,review:g.review,rankUp:rankAfter>rankBefore?rankAfter:0,maxCombo:g.maxCombo,cat:g.catName};
+  LAST={level:g.level,cat:g.cat};
+  gameCleanup();
+  go('result');
+  renderResult(R);
+}
+let LAST=null;
+function renderResult(R){
+  const win=R.acc>=70,mid=R.acc>=50;
+  $('#h-result').textContent=win?'🏆 Kemenangan!':(mid?'🎯 Battle selesai!':'💪 Terus semangat!');
+  $('#rSub').textContent=R.cat+' · Level '+LV[R.level-1].name;
+  countUp($('#rScore'),R.score,1000);
+  $('#rOk').textContent=R.correct;$('#rNo').textContent=R.wrong+(R.timeout?' ('+R.timeout+' habis waktu)':'');
+  $('#rAcc').textContent=R.acc+'%';$('#rDur').textContent=fmtT(R.dur);$('#rXp').textContent='+'+R.xp;
+  $('#rPos').textContent='#'+R.pos+' dari '+R.total;
+  $('#rLv').textContent=(R.cleared?'✔ Level '+LV[R.level-1].name+' diselesaikan':'Level '+LV[R.level-1].name+' belum diselesaikan (butuh akurasi minimal 60%)')+' · Combo terbaik ×'+R.maxCombo;
+  let ev=R.acc>=90?'Hebat sekali! Pemahamanmu sangat kuat. Coba naik ke level berikutnya.':R.acc>=75?'Bagus! Sedikit lagi sempurna. Tinjau soal yang salah untuk memantapkan konsep.':R.acc>=50?'Lumayan! Konsep dasarnya mulai kuat. Pelajari pembahasan lalu coba lagi.':'Tidak apa-apa. Baca pembahasan di bawah, lalu ulangi battle, mungkin dengan level yang lebih ringan.';
+  if(R.timeout)ev+=' Ada '+R.timeout+' soal yang kehabisan waktu, jadi latih kecepatan membaca soal.';
+  $('#rEval').textContent=ev;
+  const rr=$('#rRank');
+  if(R.rankUp){rr.hidden=false;rr.textContent='⬆ RANK UP! Kamu naik ke Rank '+R.rankUp+' · '+RANKS[Math.min(R.rankUp-1,RANKS.length-1)];}else rr.hidden=true;
+  const lst=$('#rvList');lst.innerHTML='';
+  $('#rvBox').hidden=!R.review.length;
+  R.review.forEach(r=>{const d=document.createElement('div');d.className='rv';
+    const a=document.createElement('b');a.textContent=r.q;d.appendChild(a);
+    [['Jawabanmu: ',r.mine],['Jawaban benar: ',r.right],['Pembahasan: ',r.exp]].forEach(p=>{const s=document.createElement('small');s.textContent=p[0]+p[1];d.appendChild(s);});
+    lst.appendChild(d);});
+  if(win){A.play('win');A.sfx('win');M.set('win');FX.win();V.say(R.acc>=80?'high':'final');}
+  else if(mid){A.play('win');A.sfx('win');M.set('cheer');V.say('final');}
+  else{A.play('calm');A.sfx('lose');M.set('cheer');V.say('fail');}
+  if(R.rankUp)setTimeout(()=>A.sfx('rank'),1300);
+}
+
+/* ====================== PENGATURAN ====================== */
+function setOpt(k,v){
+  DB.set[k]=v;save();
+  if(k==='voice'&&!v)V.stop();
+  if(k==='rm'){document.documentElement.classList.toggle('rm',v);BG.init();}
+  if(k==='music'||k==='sfx'){if(v){A.init();A.resume();}}
+  A.apply();syncUI();
+}
+function syncUI(){
+  $('#tMusic').setAttribute('aria-pressed',String(DB.set.music));
+  $('#tSfx').setAttribute('aria-pressed',String(DB.set.sfx));
+  $('#tVoice').setAttribute('aria-pressed',String(DB.set.voice));
+  $('#swMusic').setAttribute('aria-checked',String(DB.set.music));
+  $('#swSfx').setAttribute('aria-checked',String(DB.set.sfx));
+  $('#swVoice').setAttribute('aria-checked',String(DB.set.voice));
+  $('#swRm').setAttribute('aria-checked',String(DB.set.rm));
+}
+function fillVoices(){
+  const sel=$('#selVoice');if(!sel)return;
+  const list=V.list();
+  sel.innerHTML='<option value="">Otomatis (Indonesia bila tersedia)</option>'+list.map(v=>'<option value="'+esc(v.voiceURI)+'">'+esc(v.name+' ('+v.lang+')')+'</option>').join('');
+  sel.value=DB.set.voiceURI;if(sel.value!==DB.set.voiceURI)sel.value='';
+  $('#voiceStatus').textContent=V.status();
+}
+function renderSettings(){
+  syncUI();fillVoices();
+  $('#rngM').value=DB.set.mv;$('#vM').textContent=DB.set.mv+'%';
+  $('#rngS').value=DB.set.sv;$('#vS').textContent=DB.set.sv+'%';
+  $('#rngV').value=DB.set.vv;$('#vV').textContent=DB.set.vv+'%';
+  $('#rngR').value=DB.set.rate;$('#vR').textContent=(DB.set.rate/10).toFixed(1)+'×';
+  $('#selTime').value=String(DB.set.offset);
+}
+function initSettings(){
+  [['#swMusic','music'],['#swSfx','sfx'],['#swVoice','voice'],['#swRm','rm'],['#tMusic','music'],['#tSfx','sfx'],['#tVoice','voice']].forEach(p=>{
+    $(p[0]).addEventListener('click',()=>{const n=!DB.set[p[1]];setOpt(p[1],n);if(p[1]==='voice'&&n)V.say('open',{force:true});});
+  });
+  [['#rngM','mv','#vM','%'],['#rngS','sv','#vS','%'],['#rngV','vv','#vV','%']].forEach(p=>{
+    $(p[0]).addEventListener('input',e=>{DB.set[p[1]]=Number(e.target.value);$(p[2]).textContent=e.target.value+'%';A.apply();});
+    $(p[0]).addEventListener('change',()=>{save();if(p[1]==='sv')A.sfx('ok');});
+  });
+  $('#rngR').addEventListener('input',e=>{DB.set.rate=Number(e.target.value);$('#vR').textContent=(DB.set.rate/10).toFixed(1)+'×';});
+  $('#rngR').addEventListener('change',save);
+  $('#selVoice').addEventListener('change',e=>{DB.set.voiceURI=e.target.value;save();});
+  $('#selTime').addEventListener('change',e=>{DB.set.offset=Number(e.target.value);DB.set.offset=[-5,0,5,10].indexOf(DB.set.offset)>=0?DB.set.offset:0;save();});
+  $('#btnTest').addEventListener('click',()=>{if(!DB.set.voice){toast('Suara karakter sedang nonaktif. Aktifkan dulu.');return;}V.say('open',{force:true});M.set('greet',2600);});
+  $('#btnSilent').addEventListener('click',()=>{
+    const silent=!DB.set.music&&!DB.set.sfx&&!DB.set.voice;
+    DB.set.music=DB.set.sfx=DB.set.voice=silent;save();
+    if(!silent)V.stop();else{A.init();A.resume();}
+    A.apply();syncUI();toast(silent?'Suara diaktifkan kembali.':'Mode senyap aktif.');
+  });
+  $('#btnReset').addEventListener('click',()=>{
+    modal('Reset semua data?','Profil, statistik, papan peringkat lokal, dan pengaturan akan dihapus dari browser ini. Tindakan ini tidak dapat dibatalkan.',[
+      {label:'Ya, hapus semua',cls:'danger',fn:()=>{try{localStorage.removeItem(KEY);}catch(e){}DB=validate(null);save();SEL.level=1;SEL.cat=null;document.documentElement.classList.toggle('rm',DB.set.rm);A.apply();renderSettings();toast('Data permainan telah direset.');}},
+      {label:'Batal',cls:'ghost'}
+    ]);
+  });
+  $('#btnName').addEventListener('click',saveName);
+  $('#inName').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();saveName();}});
+}
+function saveName(){
+  const v=$('#inName').value.replace(/[<>]/g,'').trim().slice(0,16);
+  if(!v){toast('Nama tidak boleh kosong.');return;}
+  DB.name=v;save();$('#inName').value=v;toast('Nama disimpan: '+v);A.sfx('ok');
+}
+
+/* ====================== INISIALISASI ====================== */
+function init(){
+  document.documentElement.classList.toggle('rm',DB.set.rm);
+  buildLevels();buildCats();initSettings();syncUI();BG.start();
+  $('#toCats').addEventListener('click',()=>{go('cats');});
+  $('#btnStart').addEventListener('click',startGame);
+  $('#btnNext').addEventListener('click',nextQ);
+  $('#btnHelp').addEventListener('click',useHelp);
+  $('#btnPause').addEventListener('click',pauseGame);
+  $('#rAgain').addEventListener('click',()=>{if(LAST){SEL.level=LAST.level;SEL.cat=LAST.cat;}startGame();});
+  $('#rOther').addEventListener('click',()=>{if(LAST)SEL.level=LAST.level;SEL.cat=null;go('cats');});
+  $('#btnEnter').addEventListener('click',()=>{A.init();A.resume();A.apply();go('menu');V.say('open');});
+  $('#btnEnterSilent').addEventListener('click',()=>{DB.set.music=DB.set.sfx=DB.set.voice=false;save();syncUI();go('menu');});
+  // audio dibuka hanya setelah interaksi pengguna (kebijakan autoplay)
+  const unlock=()=>{if(DB.set.music||DB.set.sfx){A.init();A.resume();A.apply();}};
+  document.addEventListener('pointerdown',unlock,{once:true});
+  document.addEventListener('keydown',unlock,{once:true});
+  // keyboard
+  document.addEventListener('keydown',e=>{
+    if(e.ctrlKey||e.metaKey||e.altKey)return;
+    if(e.key==='Escape'&&modalOpen){const c=modalCancel;closeModal();if(c)c();return;}
+    if(modalOpen||cur!=='game'||!G)return;
+    const tag=(e.target.tagName||'').toLowerCase();if(tag==='input'||tag==='select'||tag==='textarea')return;
+    const k=e.key.toLowerCase();
+    if(!G.locked){
+      const i='1234'.indexOf(k)>=0&&k.length===1?Number(k)-1:'abcd'.indexOf(k)>=0&&k.length===1?'abcd'.indexOf(k):-1;
+      if(i>=0){const b=$$('#answers .ans')[i];if(b&&!b.classList.contains('gone')){e.preventDefault();resolve(i);}return;}
+      if(k==='p'||k==='escape'){e.preventDefault();pauseGame();}
+    }else if((k==='enter'||k===' ')&&tag!=='button'){e.preventDefault();nextQ();}
+  });
+  // jeda otomatis & hentikan audio saat halaman disembunyikan/ditutup
+  document.addEventListener('visibilitychange',()=>{
+    if(document.hidden){V.stop();if(cur==='game')pauseGame();}
+  });
+  window.addEventListener('pagehide',()=>{V.stop();A.stopAll();});
+  window.addEventListener('resize',()=>{BG.init();});
+  go('splash');
+  window.__QBI={bank:BANK,state:()=>G,db:()=>DB,pick:pickQuestions,calc:calcPts};
+}
+init();
+})();
+</script>
+</body>
+</html>

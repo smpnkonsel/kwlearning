@@ -1,0 +1,580 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coding Master 3D</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:radial-gradient(circle at top,#174c89,#06152f 65%,#020817);
+  color:white;
+  font-family:Nunito,Arial,sans-serif;
+}
+button{cursor:pointer;font:inherit;font-weight:900;border:0;color:white}
+button:hover{filter:brightness(1.15);transform:translateY(-2px)}
+.app{max-width:1500px;margin:auto;padding:20px}
+header{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;margin-bottom:20px}
+h1{font-size:clamp(30px,4vw,52px);line-height:1;margin:0;text-shadow:0 4px #06458a}
+h1 span{color:#ffd34d}
+.subtitle{color:#a8d9ff;font-size:12px;font-weight:900;letter-spacing:2px;margin-top:8px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.pill,.secondary{background:#103766;border:1px solid #3286cf;border-radius:12px;padding:10px 14px}
+.layout{display:grid;grid-template-columns:1.1fr 1fr;gap:18px}
+.card{border:1px solid #268ce5;border-radius:22px;background:linear-gradient(145deg,#0d2d5b,#071832);box-shadow:0 15px 40px #0006;overflow:hidden}
+.cardhead{padding:16px 18px;border-bottom:1px solid #245080}
+.eyebrow{color:#59eaff;font-size:11px;font-weight:900;letter-spacing:2px}
+h2{font-size:21px;margin:5px 0 0}
+#world{display:block;width:100%;height:470px;background:linear-gradient(#6bd2ff,#c5f1ff 60%,#39b9d8)}
+.stats{display:flex;gap:8px;padding:12px}
+.stat{flex:1;padding:10px;background:#061a37;border:1px solid #244a78;border-radius:12px}
+.stat small{display:block;color:#8bc7ed;font-size:10px;font-weight:900}
+.stat strong{font-size:16px}
+.codebody{display:grid;grid-template-columns:.8fr 1fr;gap:12px;padding:14px}
+.label{font-size:11px;font-weight:900;letter-spacing:1px;color:#9fc9f1;margin-bottom:10px}
+.blocks{display:flex;flex-direction:column;gap:9px}
+.cmd{display:flex;align-items:center;gap:9px;padding:12px;border-radius:12px;text-align:left;box-shadow:0 4px #0004}
+.cmd b{font-size:22px}
+.move{background:linear-gradient(100deg,#168bff,#0860ca)}
+.turn{background:linear-gradient(100deg,#9857ff,#6034d8)}
+.jump{background:linear-gradient(100deg,#ff5b98,#df1c61)}
+.loop{background:linear-gradient(100deg,#ffca37,#ed8d00);color:#152345}
+.program{height:330px;overflow:auto;padding:10px;background:#04152f;border:1px dashed #3679b5;border-radius:14px}
+.empty{color:#6e9ac5;text-align:center;padding:80px 5px;font-weight:900}
+.item{display:flex;align-items:center;gap:8px;padding:9px;margin-bottom:7px;border-radius:9px;font-weight:900;font-size:13px}
+.item button{margin-left:auto;background:#ffffff30;border-radius:6px;padding:2px 8px}
+.controls{display:grid;grid-template-columns:1fr 1fr 48px;gap:9px;padding:0 14px 14px}
+.run{border-radius:12px;padding:14px;background:linear-gradient(#13f5a2,#00a96a);color:#032f2a}
+.message{margin:0 14px 14px;padding:12px;border:1px solid #245080;background:#0a2850;border-radius:12px;font-size:13px;font-weight:900}
+footer{text-align:center;color:#739ec4;font-size:11px;padding:16px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}#world{height:380px}}
+@media(max-width:500px){.app{padding:10px}.codebody{grid-template-columns:1fr}.blocks{display:grid;grid-template-columns:1fr 1fr}.program{height:230px}#world{height:310px}.controls{grid-template-columns:1fr 1fr 42px}}
+</style>
+</head>
+
+<body>
+<div class="app">
+<header>
+  <div>
+    <h1><span>CODING</span><br>MASTER 🎮</h1>
+    <div class="subtitle">SUSUN BLOK • JALANKAN KARAKTER</div>
+  </div>
+  <div class="actions">
+    <button class="pill" id="soundBtn">🔊 Suara ON</button>
+    <button class="pill" id="voiceBtn">🗣️ Narator ON</button>
+    <button class="pill" id="helpBtn">❔ Bantuan</button>
+  </div>
+</header>
+
+<main class="layout">
+  <section class="card">
+    <div class="cardhead">
+      <div class="eyebrow">DUNIA PETUALANGAN 3D</div>
+      <h2>🏝️ Pulau Kode Rahasia</h2>
+    </div>
+    <canvas id="world"></canvas>
+    <div class="stats">
+      <div class="stat"><small>🎯 TUJUAN</small><strong>Bendera</strong></div>
+      <div class="stat"><small>👣 LANGKAH</small><strong id="steps">0</strong></div>
+      <div class="stat"><small>🏆 LEVEL</small><strong id="level">1</strong></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="cardhead">
+      <div class="eyebrow">LABORATORIUM LOGIKA</div>
+      <h2>🧩 Susun Program</h2>
+    </div>
+
+    <div class="codebody">
+      <div>
+        <div class="label">BLOK PERINTAH</div>
+        <div class="blocks">
+          <button class="cmd move" data-cmd="forward"><b>⬆️</b>Maju</button>
+          <button class="cmd turn" data-cmd="right"><b>↪️</b>Kanan</button>
+          <button class="cmd turn" data-cmd="left"><b>↩️</b>Kiri</button>
+          <button class="cmd jump" data-cmd="jump"><b>🏃</b>Lompat</button>
+          <button class="cmd loop" data-cmd="loop"><b>🔁</b>Ulangi 2×</button>
+        </div>
+      </div>
+      <div>
+        <div class="label">AREA PROGRAM</div>
+        <div class="program" id="program">
+          <div class="empty">🧠<br>Tambahkan blok perintah di kiri!</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="run" id="runBtn">▶ JALANKAN</button>
+      <button class="secondary" id="resetBtn">⟳ RESET</button>
+      <button class="secondary" id="speedBtn" title="Kecepatan">⚙</button>
+    </div>
+    <div class="message" id="message">
+      ✨ Misi: bantu Robo mencapai bendera merah!
+    </div>
+  </section>
+</main>
+<footer>CODING MASTER • BELAJAR LOGIKA SAMBIL BERMAIN</footer>
+</div>
+
+<!-- Three.js untuk grafis 3D -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
+<script>
+const $ = id => document.getElementById(id);
+
+let soundOn = true;
+let voiceOn = true;
+let running = false;
+let commands = [];
+let steps = 0;
+let delayTime = 500;
+let audioContext;
+let renderer, scene, camera, character;
+let x = 0, z = 2, direction = 0;
+
+const SIZE = 5;
+const goal = {x:4,z:0};
+
+function message(text){
+  $("message").textContent = text;
+}
+
+function speak(text){
+  if(!voiceOn || !("speechSynthesis" in window)) return;
+  speechSynthesis.cancel();
+  const speech = new SpeechSynthesisUtterance(text);
+  speech.lang = "id-ID";
+  speech.rate = 1;
+  speech.pitch = 1.1;
+  speechSynthesis.speak(speech);
+}
+
+function tone(freq=440,duration=.12,type="sine"){
+  if(!soundOn) return;
+  try{
+    audioContext = audioContext ||
+      new (window.AudioContext || window.webkitAudioContext)();
+
+    if(audioContext.state === "suspended") audioContext.resume();
+
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+
+    oscillator.type = type;
+    oscillator.frequency.value = freq;
+    gain.gain.setValueAtTime(.06,audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(
+      .001,audioContext.currentTime+duration
+    );
+
+    oscillator.connect(gain);
+    gain.connect(audioContext.destination);
+    oscillator.start();
+    oscillator.stop(audioContext.currentTime+duration);
+  }catch(error){
+    console.log("Audio tidak tersedia",error);
+  }
+}
+
+function effect(name){
+  if(name==="click") tone(650,.07,"triangle");
+  if(name==="step") tone(300,.08,"sine");
+  if(name==="jump"){
+    tone(350,.1,"triangle");
+    setTimeout(()=>tone(650,.13,"triangle"),90);
+  }
+  if(name==="error") tone(150,.3,"sawtooth");
+  if(name==="win"){
+    [523,659,784,1046].forEach((f,i)=>
+      setTimeout(()=>tone(f,.2,"triangle"),i*130)
+    );
+  }
+}
+
+/* Membuat dunia 3D */
+function initWorld(){
+  const canvas = $("world");
+
+  if(!window.THREE){
+    drawFallback();
+    return;
+  }
+
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x83d9ff);
+  scene.fog = new THREE.Fog(0x83d9ff,13,28);
+
+  camera = new THREE.PerspectiveCamera(40,1,.1,100);
+  camera.position.set(6,9,10);
+  camera.lookAt(0,0,0);
+
+  renderer = new THREE.WebGLRenderer({
+    canvas,
+    antialias:true
+  });
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.shadowMap.enabled = true;
+
+  scene.add(new THREE.HemisphereLight(0xffffff,0x487444,2));
+
+  const sunlight = new THREE.DirectionalLight(0xffffff,2.5);
+  sunlight.position.set(-5,10,6);
+  sunlight.castShadow = true;
+  scene.add(sunlight);
+
+  const material = color => new THREE.MeshStandardMaterial({
+    color,
+    roughness:.78
+  });
+
+  const grass = [
+    material(0x70d943),
+    material(0x91e950),
+    material(0x5bc538)
+  ];
+  const dirt = material(0x80502e);
+  const water = material(0x13b9f4);
+  const wood = material(0x9c592c);
+
+  function box(w,h,d,mat,px,py,pz,parent=scene){
+    const mesh = new THREE.Mesh(
+      new THREE.BoxGeometry(w,h,d),mat
+    );
+    mesh.position.set(px,py,pz);
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    parent.add(mesh);
+    return mesh;
+  }
+
+  function ball(radius,mat,px,py,pz,parent=scene){
+    const mesh = new THREE.Mesh(
+      new THREE.SphereGeometry(radius,16,12),mat
+    );
+    mesh.position.set(px,py,pz);
+    mesh.castShadow = true;
+    parent.add(mesh);
+    return mesh;
+  }
+
+  // Pulau terapung
+  box(5.8,.7,5.8,dirt,0,-.45,0);
+
+  // Papan permainan
+  for(let gx=0;gx<SIZE;gx++){
+    for(let gz=0;gz<SIZE;gz++){
+      const px=gx-2, pz=gz-2;
+      const isWater=(gx===2 && gz===2);
+
+      box(
+        1.05,.18,1.05,
+        isWater ? water : grass[(gx+gz)%grass.length],
+        px,.02,pz
+      );
+    }
+  }
+
+  // Jembatan kayu
+  box(1.05,.12,.45,wood,0,.18,0);
+  for(let i=-1;i<=1;i++){
+    box(.06,.14,.5,material(0x56301b),i*.32,.25,0);
+  }
+
+  // Pepohonan
+  const leaves=[
+    material(0x158e4b),
+    material(0x2eb85c),
+    material(0x48d66a)
+  ];
+
+  [[-2,-2],[0,-2],[2,-1],[-2,1],[2,2]].forEach((p,i)=>{
+    box(.15,.6,.15,wood,p[0],.4,p[1]);
+    ball(.42,leaves[i%3],p[0],.88,p[1]);
+    ball(.29,leaves[(i+1)%3],p[0]-.18,1.05,p[1]+.08);
+  });
+
+  // Bendera tujuan
+  box(.07,1.25,.07,material(0xffffff),2,.75,-2);
+  box(.55,.34,.06,material(0xff3155),2.27,1.25,-2);
+  ball(.11,material(0xffd34d),2,1.45,-2);
+
+  // Karakter kartun sederhana
+  character = new THREE.Group();
+  scene.add(character);
+
+  ball(.25,material(0x168bff),0,.65,0,character)
+    .scale.set(.85,1.2,.7);
+  ball(.22,material(0xf2bd8b),0,1.03,0,character);
+  ball(.24,material(0x4a2b24),0,1.17,-.04,character)
+    .scale.set(1,.55,.9);
+
+  ball(.04,material(0x17223a),-.08,1.04,.19,character);
+  ball(.04,material(0x17223a),.08,1.04,.19,character);
+  box(.13,.25,.14,material(0x18335a),-.1,.22,0,character);
+  box(.13,.25,.14,material(0x18335a),.1,.22,0,character);
+
+  placeCharacter();
+  resizeWorld();
+  window.addEventListener("resize",resizeWorld);
+  animate();
+}
+
+function resizeWorld(){
+  if(!renderer) return;
+  const rect=$("world").getBoundingClientRect();
+  renderer.setSize(rect.width,rect.height,false);
+  camera.aspect=rect.width/rect.height;
+  camera.updateProjectionMatrix();
+}
+
+function animate(){
+  requestAnimationFrame(animate);
+  if(renderer){
+    if(character){
+      character.position.y=.03+Math.sin(performance.now()*.004)*.025;
+    }
+    renderer.render(scene,camera);
+  }
+}
+
+function placeCharacter(){
+  if(!character) return;
+  character.position.x=x-2;
+  character.position.z=z-2;
+  character.rotation.y=-direction*Math.PI/2;
+}
+
+function drawFallback(){
+  const canvas=$("world");
+  const ctx=canvas.getContext("2d");
+  canvas.width=600;
+  canvas.height=450;
+  ctx.fillStyle="#73d0ff";
+  ctx.fillRect(0,0,600,450);
+
+  for(let row=0;row<5;row++){
+    for(let col=0;col<5;col++){
+      ctx.fillStyle=(row+col)%2?"#80df47":"#65cb38";
+      ctx.fillRect(65+col*92,40+row*72,86,66);
+    }
+  }
+
+  ctx.font="42px sans-serif";
+  ctx.fillText("🧒",65,265);
+  ctx.fillText("🚩",420,110);
+}
+
+/* Blok program */
+const names={
+  forward:"⬆️ Maju",
+  right:"↪️ Belok Kanan",
+  left:"↩️ Belok Kiri",
+  jump:"🏃 Lompat",
+  loop:"🔁 Ulangi 2×"
+};
+
+function renderProgram(){
+  const container=$("program");
+  container.innerHTML="";
+
+  if(commands.length===0){
+    container.innerHTML=
+      '<div class="empty">🧠<br>Tambahkan blok perintah di kiri!</div>';
+  }
+
+  commands.forEach((cmd,index)=>{
+    const item=document.createElement("div");
+    item.className="item "+(
+      cmd==="forward"?"move":
+      cmd==="jump"?"jump":
+      cmd==="loop"?"loop":"turn"
+    );
+
+    const label=document.createElement("span");
+    label.textContent=(index+1)+". "+names[cmd];
+
+    const remove=document.createElement("button");
+    remove.textContent="×";
+    remove.title="Hapus blok";
+
+    remove.onclick=()=>{
+      if(running) return;
+      commands.splice(index,1);
+      renderProgram();
+      effect("click");
+    };
+
+    item.append(label,remove);
+    container.appendChild(item);
+  });
+}
+
+document.querySelectorAll("[data-cmd]").forEach(button=>{
+  button.addEventListener("click",()=>{
+    if(running) return;
+
+    if(commands.length>=25){
+      message("⚠️ Maksimal 25 blok perintah.");
+      effect("error");
+      return;
+    }
+
+    commands.push(button.dataset.cmd);
+    renderProgram();
+    effect("click");
+  });
+});
+
+function wait(ms){
+  return new Promise(resolve=>setTimeout(resolve,ms));
+}
+
+function reset(){
+  running=false;
+  x=0;
+  z=2;
+  direction=0;
+  steps=0;
+  placeCharacter();
+  $("steps").textContent=steps;
+  $("runBtn").textContent="▶ JALANKAN";
+  message("🔄 Karakter kembali ke posisi awal. Susun program lagi!");
+  effect("click");
+}
+
+async function runProgram(){
+  if(running) return;
+
+  if(commands.length===0){
+    message("👆 Tambahkan blok perintah terlebih dahulu.");
+    effect("error");
+    speak("Tambahkan blok perintah terlebih dahulu.");
+    return;
+  }
+
+  running=true;
+  x=0;
+  z=2;
+  direction=0;
+  steps=0;
+  placeCharacter();
+  $("steps").textContent=steps;
+
+  // Ulangi 2 kali berarti menjalankan dua langkah maju
+  const list=[];
+  commands.forEach(cmd=>{
+    if(cmd==="loop") list.push("forward","forward");
+    else list.push(cmd);
+  });
+
+  message("🚀 Program dimulai! Ayo Robo!");
+  speak("Program dimulai. Ayo Robo!");
+
+  for(const cmd of list){
+    if(!running) break;
+    await wait(delayTime);
+
+    if(cmd==="right"){
+      direction=(direction+1)%4;
+    }else if(cmd==="left"){
+      direction=(direction+3)%4;
+    }else{
+      let nx=x,nz=z;
+
+      if(direction===0) nx++;
+      if(direction===1) nz--;
+      if(direction===2) nx--;
+      if(direction===3) nz++;
+
+      // Lompat melewati satu petak
+      if(cmd==="jump"){
+        if(direction===0) nx++;
+        if(direction===1) nz--;
+        if(direction===2) nx--;
+        if(direction===3) nz++;
+        effect("jump");
+      }else{
+        effect("step");
+      }
+
+      if(nx<0||nx>4||nz<0||nz>4){
+        message("🧱 Robo hampir jatuh! Coba susun ulang perintah.");
+        effect("error");
+        speak("Ups. Coba susun ulang perintah.");
+        break;
+      }
+
+      x=nx;
+      z=nz;
+    }
+
+    steps++;
+    placeCharacter();
+    $("steps").textContent=steps;
+
+    if(x===goal.x && z===goal.z){
+      message("🏆 MISI BERHASIL! Robo mencapai bendera!");
+      effect("win");
+      speak("Luar biasa! Kamu berhasil mencapai bendera!");
+      break;
+    }
+  }
+
+  if(running && !(x===goal.x && z===goal.z)){
+    message("🔎 Program selesai. Robo belum sampai ke bendera. Coba lagi!");
+    effect("error");
+    speak("Coba lagi. Susun urutan blok dengan benar.");
+  }
+
+  running=false;
+  $("runBtn").textContent="▶ JALANKAN";
+}
+
+$("runBtn").onclick=runProgram;
+$("resetBtn").onclick=reset;
+
+$("soundBtn").onclick=()=>{
+  soundOn=!soundOn;
+  $("soundBtn").textContent=soundOn?"🔊 Suara ON":"🔇 Suara OFF";
+  if(soundOn) effect("click");
+};
+
+$("voiceBtn").onclick=()=>{
+  voiceOn=!voiceOn;
+  $("voiceBtn").textContent=voiceOn?"🗣️ Narator ON":"🤫 Narator OFF";
+  if(!voiceOn && window.speechSynthesis){
+    speechSynthesis.cancel();
+  }else{
+    speak("Narator diaktifkan.");
+  }
+};
+
+$("helpBtn").onclick=()=>{
+  message("💡 Maju bergerak satu petak. Belok mengubah arah. Lompat melewati petak. X menghapus blok.");
+  speak("Susun blok perintah, kemudian tekan jalankan.");
+};
+
+$("speedBtn").onclick=()=>{
+  const value=prompt("Kecepatan gerakan dalam milidetik (250–1200):",delayTime);
+  if(value!==null){
+    delayTime=Math.max(250,Math.min(1200,Number(value)||500));
+    message("⚙️ Kecepatan diperbarui: "+delayTime+" ms.");
+  }
+};
+
+initWorld();
+renderProgram();
+
+setTimeout(()=>{
+  speak("Selamat datang di Coding Master! Bantu Robo mencapai bendera.");
+},1000);
+</script>
+</body>
+</html>
