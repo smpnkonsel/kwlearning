@@ -3,246 +3,307 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Ujian Berpikir Komputasional — KW Learning</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>Ujian Membuat dan Mendiseminasikan Konten — KW Learning</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--paper:#F0F2F5;--panel:#fff;--ink:#1B2430;--soft:#5B6473;--navy:#0F3D63;--deep:#0A2B48;--gold:#D79A2C;--line:#DDE2E8;
---sedang:#2E86AB;--sedang-bg:#EAF3F8;--sulit:#C9642A;--sulit-bg:#FBEEE4;--hots:#7B4FA6;--hots-bg:#F1EAF8;--olimpiade:#B23A48;--olimpiade-bg:#FAEBEC;
---ok:#2F9E5B;--ok-bg:#E7F5EC;--no:#C0392B;--no-bg:#FBEBE9;color-scheme:light}
-*{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--paper)}
+:root{--paper:#F0F2F5;--panel:#fff;--ink:#1B2430;--soft:#5B6473;--navy:#0F3D63;--navy2:#0A2B48;--gold:#D79A2C;--line:#DDE2E8;--sel:#F2F6FA;--figbg:#EEF3F8;--sedang:#2E86AB;--sulit:#C9642A;--hots:#7B4FA6;--olimpiade:#B23A48;--ok:#2F9E5B;--bad:#C0392B;color-scheme:light}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);overscroll-behavior-y:none}
 body{color:var(--ink);font-family:'Public Sans',system-ui,sans-serif;line-height:1.5;overflow:hidden}
-h2,h3{font-family:'Fraunces',Georgia,serif;margin:0}button{font-family:inherit}
+h2,h3{font-family:'Fraunces',Georgia,serif;margin:0}
+button{font-family:inherit}
 .app{height:100dvh;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-header{flex:none;background:linear-gradient(120deg,var(--navy),var(--deep) 65%,#0C3452);color:#F4F1E8;padding:10px 26px 0}
-.row{display:flex;align-items:baseline;justify-content:space-between;gap:20px;flex-wrap:wrap}
-.brand{font-size:13.5px;color:#B9C6D6;font-weight:600}.title{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(16px,2vw,19px);color:#fff}
-.sub{margin:4px 0 8px;color:#C7D2DE;font-size:12.5px;max-width:820px}
+header{flex:none;background:linear-gradient(120deg,#0F3D63,#0A2B48);color:#F4F1E8;padding:10px 26px 0}
+.row{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.hl{display:flex;align-items:center;gap:14px;flex:1;min-width:0}.ht{min-width:0}
+.logo{width:56px;height:56px;border-radius:50%;object-fit:cover;background:#fff;border:2px solid var(--gold);padding:2px;flex:none}
+.brand{display:block;font-size:13px;color:#B9C6D6;font-weight:600}
+.et{font-family:'Fraunces',serif;font-weight:600;font-size:18px;color:#fff}
+.hr{display:flex;flex-direction:column;align-items:flex-end;gap:6px;min-height:62px}
+.timer{display:inline-flex;align-items:baseline;gap:8px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.32);border-radius:8px;padding:4px 14px;font-size:12px;color:#C7D2DE}
+.timer b{font-size:19px;color:#fff;font-weight:700;font-variant-numeric:tabular-nums}
+.timer.warn{background:rgba(215,154,44,.3);border-color:var(--gold)}
+.timer.crit{background:rgba(192,57,43,.45);border-color:#F1948A}
+.fin{background:var(--gold);color:#2A1D06;border:0;border-radius:8px;padding:7px 22px;font-size:14.5px;font-weight:700;cursor:pointer}
+.sub{margin:4px 0 12px;color:#C7D2DE;font-size:12.5px;max-width:820px}
 .strip{display:flex;height:4px}.strip span{flex:1}
 .body{flex:1;display:flex;min-height:0}
 aside{width:280px;flex:none;background:var(--panel);border-right:1px solid var(--line);border-top:3px solid var(--gold);display:flex;flex-direction:column;min-height:0}
-.sc{flex:1;overflow-y:auto;padding:18px 18px 12px}aside h3{font-family:'Public Sans';font-size:13px;color:var(--soft);margin-bottom:10px}
-.pt{height:7px;background:#E7EAEF;border-radius:99px;overflow:hidden;margin-bottom:6px}.pf{height:100%;background:var(--gold);width:0;transition:width .25s}
+.side{flex:1;overflow-y:auto;padding:18px}
+aside h3{font-family:'Public Sans';font-size:13px;color:var(--soft);margin-bottom:10px}
+.pt{height:7px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:6px}
+.pf{height:100%;background:var(--gold);width:0;transition:width .25s}
 .pl{font-size:12.5px;color:var(--soft);margin-bottom:16px}
-.ng{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:18px}
-.nc{aspect-ratio:1;border-radius:6px;border:1.5px solid var(--line);background:#fff;font-size:12.5px;font-weight:700;color:var(--soft);cursor:pointer;padding:0}
-.nc.sedang{border-color:var(--sedang);color:var(--sedang);background:var(--sedang-bg)}.nc.sulit{border-color:var(--sulit);color:var(--sulit);background:var(--sulit-bg)}
-.nc.hots{border-color:var(--hots);color:var(--hots);background:var(--hots-bg)}.nc.olimpiade{border-color:var(--olimpiade);color:var(--olimpiade);background:var(--olimpiade-bg)}
-.nc.sedang.a{background:var(--sedang);color:#fff}.nc.sulit.a{background:var(--sulit);color:#fff}.nc.hots.a{background:var(--hots);color:#fff}.nc.olimpiade.a{background:var(--olimpiade);color:#fff}
-.nc.cur{outline:2.5px solid var(--gold);outline-offset:1px}
-.lg{display:flex;flex-direction:column;gap:7px;font-size:12px;color:var(--soft)}.li{display:flex;align-items:center;gap:8px}
-.dot{width:9px;height:9px;border-radius:50%;flex:none}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:18px}
+.cell{aspect-ratio:1;border-radius:6px;border:1.5px solid var(--c);color:var(--c);background:color-mix(in srgb,var(--c) 12%,var(--panel));font-weight:700;font-size:12.5px;cursor:pointer;padding:0}
+.cell.ans{background:var(--c);color:#fff}
+.cell.cur{outline:2.5px solid var(--gold);outline-offset:1px}
+.lg{display:flex;flex-direction:column;gap:7px;font-size:12px;color:var(--soft)}
+.lg div{display:flex;align-items:center;gap:8px}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--c)}
 .sf{flex:none;padding:14px 18px;border-top:1px solid var(--line)}
-.bs{width:100%;background:var(--gold);color:#2A1D06;border:none;border-radius:8px;padding:12px;font-size:14.5px;font-weight:700;cursor:pointer}
+.bsub{width:100%;background:var(--gold);color:#2A1D06;border:0;border-radius:8px;padding:12px;font-size:14.5px;font-weight:700;cursor:pointer}
 main{flex:1;min-width:0;overflow-y:auto;display:flex;justify-content:center;padding:30px 26px 40px}
-.card{width:100%;max-width:760px;background:var(--panel);border:1px solid var(--line);border-top:5px solid var(--navy);border-radius:10px;padding:26px 30px 30px;align-self:flex-start}
-.card.sedang{border-top-color:var(--sedang)}.card.sulit{border-top-color:var(--sulit)}.card.hots{border-top-color:var(--hots)}.card.olimpiade{border-top-color:var(--olimpiade)}
-.br{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
-.chip{font-size:12.5px;font-weight:700;padding:5px 12px;border-radius:99px}
-.chip.sedang{background:var(--sedang-bg);color:var(--sedang)}.chip.sulit{background:var(--sulit-bg);color:var(--sulit)}.chip.hots{background:var(--hots-bg);color:var(--hots)}.chip.olimpiade{background:var(--olimpiade-bg);color:var(--olimpiade)}
+.qc{width:100%;max-width:760px;background:var(--panel);border:1px solid var(--line);border-top:5px solid var(--c);border-radius:10px;padding:26px 30px 30px;align-self:flex-start}
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.lc{font-size:12.5px;font-weight:700;padding:5px 12px;border-radius:99px;background:color-mix(in srgb,var(--c) 14%,var(--panel));color:var(--c)}
 .tc{font-size:12.5px;color:var(--soft);border:1px solid var(--line);padding:5px 12px;border-radius:99px}
 .qn{font-family:'Fraunces',serif;font-size:14.5px;color:var(--soft);margin-bottom:6px}
-.vz{background:#F7FAFD;border:1px solid var(--line);border-radius:10px;padding:12px;margin:0 0 18px}
+.qt{font-size:19px;line-height:1.55;margin:0 0 16px}
+.fig{background:var(--figbg);border-radius:10px;padding:10px;margin:0 0 20px;text-align:center}
+.fig svg{max-width:100%;height:auto;max-height:240px}
+fieldset{border:0;margin:0 0 26px;padding:0;display:flex;flex-direction:column;gap:10px}
+.opt{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:8px;padding:13px 16px;cursor:pointer}
+.opt:hover{border-color:var(--navy)}
+.opt input{margin-top:3px;accent-color:var(--navy)}
+.opt.sel{border-color:var(--navy);background:var(--sel)}
+.L{font-weight:700;color:var(--navy);width:18px;flex:none}
+.nb{display:flex;justify-content:space-between;gap:12px}
+.bg,.bp{font-size:15px;font-weight:700;border-radius:8px;padding:11px 22px;cursor:pointer;border:1px solid var(--line)}
+.bg{background:var(--panel);color:var(--ink)}.bg:disabled{opacity:.4;cursor:not-allowed}
+.bp{background:var(--c,var(--navy));color:#fff;border-color:var(--c,var(--navy))}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.res{max-width:820px;width:100%;align-self:flex-start}
+.res h2{font-size:24px}
+.hero{display:flex;align-items:baseline;gap:10px;margin:10px 0 22px}
+.hero .n{font-family:'Fraunces',serif;font-size:52px;font-weight:600}
+.hero .o{color:var(--soft);font-size:15px}
+.bd{display:grid;gap:12px;margin-bottom:24px}
+.br{display:grid;grid-template-columns:100px 1fr 56px;align-items:center;gap:12px;font-size:14px}
+.bt{height:9px;background:var(--line);border-radius:99px;overflow:hidden}.bt div{height:100%;border-radius:99px;background:var(--c)}
+.ri{border-top:1px solid var(--line);padding:20px 0}
+.rq{font-size:16px;margin:10px 0 12px}
+.ro{padding:8px 12px;border-radius:6px;font-size:14px;margin-bottom:6px;border:1px solid var(--line)}
+.ro.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,var(--panel))}
+.ro.no{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 16%,var(--panel))}
+.ex{font-size:14px;color:var(--soft);background:var(--figbg);border-radius:8px;padding:12px 14px;margin-top:10px}
+.ex b{color:var(--ink)}
+.vz{background:#F7FAFD;border:1px solid var(--line);border-radius:10px;padding:12px;margin:0 0 18px;color:#1B2430}
 .vz svg{display:block;width:100%;height:auto;max-height:320px}
 .cd{background:#14202E;color:#E6EDF6;font:14px/1.75 ui-monospace,Menlo,Consolas,monospace;padding:14px 18px;border-radius:10px;white-space:pre;overflow-x:auto;margin:0}
 .tb{width:100%;border-collapse:collapse;font-size:15px}.tb th,.tb td{border:1px solid var(--line);padding:8px 12px;text-align:center}
-.tb th{background:var(--sedang-bg);color:var(--navy)}.tb .q{background:#FFF5DC;font-weight:700;color:#8a5a00}
-.qt{font-size:19px;line-height:1.55;margin:0 0 22px}
-fieldset{border:none;margin:0 0 26px;padding:0;display:flex;flex-direction:column;gap:10px}
-.opt{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:8px;padding:13px 16px;cursor:pointer;background:#fff}
-.opt:hover{border-color:var(--navy)}.opt input{margin-top:3px;accent-color:var(--navy)}.opt.sel{border-color:var(--navy);background:#F2F6FA}
-.ol{font-weight:700;color:var(--navy);width:18px;flex:none}
-.nb{display:flex;justify-content:space-between;gap:12px}
-.bg,.bp{font-size:15px;font-weight:700;border-radius:8px;padding:11px 22px;cursor:pointer;border:1px solid transparent}
-.bg{background:#fff;border-color:var(--line);color:var(--ink)}.bg:disabled{opacity:.4;cursor:not-allowed}.bp{background:var(--navy);color:#fff}
-.bp.sedang{background:var(--sedang)}.bp.sulit{background:var(--sulit)}.bp.hots{background:var(--hots)}.bp.olimpiade{background:var(--olimpiade)}
-button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
-.rw{max-width:820px;margin:0 auto;width:100%}.rw h2{font-size:24px}
-.hero{display:flex;align-items:baseline;gap:10px;margin:10px 0 22px}.hero .n{font-family:'Fraunces',serif;font-size:52px;font-weight:600}.hero .o{color:var(--soft);font-size:15px}
-.bd{display:grid;gap:12px;margin-bottom:24px}.bdr{display:grid;grid-template-columns:100px 1fr 56px;align-items:center;gap:12px;font-size:14px}
-.bt{height:9px;background:#EEEAE0;border-radius:99px;overflow:hidden}.bf{height:100%;border-radius:99px}
-.bf.sedang{background:var(--sedang)}.bf.sulit{background:var(--sulit)}.bf.hots{background:var(--hots)}.bf.olimpiade{background:var(--olimpiade)}
-.ri{border-top:1px solid var(--line);padding:20px 0}.rq{font-size:16px;margin:10px 0 8px}
-.ro{padding:8px 12px;border-radius:6px;font-size:14px;margin-bottom:6px;border:1px solid var(--line)}
-.ro.c{border-color:var(--ok);background:var(--ok-bg);color:#1E6B3E}.ro.w{border-color:var(--no);background:var(--no-bg);color:#8E2A20}
-.ex{font-size:14px;color:var(--soft);background:#F6F4EC;border-radius:8px;padding:12px 14px;margin-top:10px}.ex b{color:var(--ink)}
-.hidden{display:none!important}
-.mo{position:fixed;inset:0;background:rgba(10,20,32,.55);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}
-.mb{background:#fff;border-radius:12px;padding:26px 28px;max-width:380px;width:100%;border-top:4px solid var(--gold)}
-.mb h3{font-size:18px;margin-bottom:10px}.mb p{font-size:14.5px;color:var(--soft);margin:0 0 22px}.ma{display:flex;justify-content:flex-end;gap:10px}
-@media(max-width:820px){.body{flex-direction:column}aside{width:100%;max-height:34vh;border-right:none;border-bottom:1px solid var(--line)}main{padding:20px 16px 30px}.card{padding:20px 18px}}
+.tb th{background:#EAF3F8;color:var(--navy)}.tb .q{background:#FFF5DC;font-weight:700;color:#8a5a00}
+.hid{display:none!important}
+.ov{position:fixed;inset:0;background:rgba(10,20,32,.55);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}
+#intro{z-index:200;background:rgba(10,20,32,.72)}
+.mb{background:var(--panel);border-radius:12px;padding:26px 28px;max-width:380px;width:100%;border-top:4px solid var(--gold)}
+.mb.big{max-width:560px;max-height:90vh;overflow-y:auto}
+.mb h3{font-size:18px;margin-bottom:10px}.mb.big h3{font-size:21px}
+.mb p{font-size:14.5px;color:var(--soft);margin:0 0 22px}
+.mb ol{margin:12px 0 20px;padding-left:20px;font-size:14.5px;color:var(--ink)}.mb li{margin-bottom:8px}
+.ma{display:flex;justify-content:flex-end;gap:10px}
+.ma button{font-size:14.5px;font-weight:700;border-radius:8px;padding:10px 18px;cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--ink)}
+.ma .y{background:var(--navy);color:#fff;border-color:var(--navy)}
+@media (max-width:820px){
+ .body{flex-direction:column}
+ header{padding:8px 12px 0}
+ .row{gap:6px}
+ .hl{flex:none;width:100%;gap:10px}
+ .logo{width:36px;height:36px;padding:1px}
+ .brand{font-size:12px}.sub{display:none}
+ .hr{width:100%;flex-direction:row;align-items:center;justify-content:space-between;min-height:0;gap:8px;margin-bottom:8px}
+ .et{font-size:15px}
+ .timer{padding:3px 10px;font-size:11px}.timer b{font-size:16px}
+ .fin{padding:6px 16px;font-size:13.5px}
+ aside{width:100%;flex-direction:row;align-items:center;border-right:0;border-bottom:1px solid var(--line);border-top-width:2px;max-height:none}
+ .side{padding:8px 0 8px 12px;min-width:0;overflow:hidden}
+ aside h3,.lg{display:none}
+ .pt{margin-bottom:4px}.pl{font-size:11.5px;margin-bottom:6px}
+ .grid{display:flex;overflow-x:auto;gap:6px;margin-bottom:0;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+ .cell{flex:none;width:36px;height:36px;aspect-ratio:auto}
+ .sf{padding:8px 12px;border-top:0}
+ .bsub{width:auto;white-space:nowrap;padding:10px 12px;font-size:13px}
+ main{padding:12px 10px 24px}
+ .qc{padding:16px 14px 18px;border-radius:8px}
+ .chips{margin-bottom:10px}
+ .qt{font-size:16.5px;margin-bottom:14px}
+ .fig{padding:6px;margin-bottom:14px}
+ fieldset{margin-bottom:18px;gap:8px}
+ .opt{padding:11px 12px}
+ .bg,.bp{padding:11px 16px;font-size:14.5px}
+ .nb .bg,.nb .bp{flex:1}
+ .res h2{font-size:21px}.hero .n{font-size:42px}
+ .br{grid-template-columns:78px 1fr 44px;gap:8px}
+ .mb,.mb.big{padding:20px 18px}.mb.big ol{font-size:14px;padding-left:18px}
+}
 </style>
 </head>
 <body>
 <div class="app">
 <header>
-  <div class="row"><span class="brand">KW Learning · Ruang Belajar Informatika</span><span class="title">Ujian Penerapan Berpikir Komputasional</span></div>
-  <p class="sub">45 soal pilihan ganda dengan diagram alir, pseudocode, array, graf, grid robot, dan tabel — sedang, sulit, HOTS, dan olimpiade. Jawaban bisa diubah sebelum dikumpulkan.</p>
-  <div class="strip"><span style="background:var(--sedang)"></span><span style="background:var(--sulit)"></span><span style="background:var(--hots)"></span><span style="background:var(--olimpiade)"></span></div>
+  <div class="row"><div class="hl"><img class="logo" src="../assets/logo-sekolah.png" alt="Logo sekolah"><div class="ht"><span class="brand">KW Learning · Ruang Belajar Informatika</span><p class="sub">45 soal pilihan ganda tentang pembuatan dan penyebaran konten digital, dengan tabel, grafik, palet warna, kontras, storyboard, dan diagram alir — sedang, sulit, HOTS, dan olimpiade.</p></div></div>
+  <div class="hr"><span class="et">Ujian Membuat dan Mendiseminasikan Konten</span>
+  <div class="timer" id="tmr" role="timer"><span>Sisa waktu</span><b id="tv">1:30:00</b></div>
+  <button type="button" class="fin hid" id="fin">Selesai</button></div></div>
+  <div class="strip"><span style="background:#2E86AB"></span><span style="background:#C9642A"></span><span style="background:#7B4FA6"></span><span style="background:#B23A48"></span></div>
 </header>
 <div class="body">
-  <aside id="side">
-    <div class="sc">
-      <h3>Progres</h3><div class="pt"><div class="pf" id="pf"></div></div><div class="pl" id="pl"></div>
-      <h3>Navigasi soal</h3><div class="ng" id="ng"></div>
-      <div class="lg">
-        <div class="li"><span class="dot" style="background:var(--navy)"></span> Sudah dijawab (warna penuh)</div>
-        <div class="li"><span class="dot" style="background:var(--sedang)"></span> Sedang (1–15)</div>
-        <div class="li"><span class="dot" style="background:var(--sulit)"></span> Sulit (16–30)</div>
-        <div class="li"><span class="dot" style="background:var(--hots)"></span> HOTS (31–40)</div>
-        <div class="li"><span class="dot" style="background:var(--olimpiade)"></span> Olimpiade (41–45)</div>
-      </div>
+<aside id="side">
+  <div class="side">
+    <h3>Progres</h3><div class="pt"><div class="pf" id="pf"></div></div><div class="pl" id="pl"></div>
+    <h3>Navigasi soal</h3><div class="grid" id="grid"></div>
+    <div class="lg">
+      <div><span class="dot" style="--c:var(--sedang)"></span>Sedang (1–15)</div>
+      <div><span class="dot" style="--c:var(--sulit)"></span>Sulit (16–30)</div>
+      <div><span class="dot" style="--c:var(--hots)"></span>HOTS (31–40)</div>
+      <div><span class="dot" style="--c:var(--olimpiade)"></span>Olimpiade (41–45)</div>
     </div>
-    <div class="sf"><button class="bs" id="bs">Kumpulkan jawaban</button></div>
-  </aside>
-  <main id="panel" aria-live="polite"></main>
+  </div>
+  <div class="sf"><button type="button" class="bsub" id="bsub">Kumpulkan jawaban</button></div>
+</aside>
+<main id="panel" aria-live="polite"></main>
 </div>
 </div>
-<div class="mo hidden" id="mo"><div class="mb"><h3>Kumpulkan jawaban?</h3><p id="mm"></p><div class="ma"><button class="bg" id="no">Kembali</button><button class="bp" id="yes">Ya, kumpulkan</button></div></div></div>
+<div class="ov hid" id="ov"><div class="mb"><h3>Kumpulkan jawaban?</h3><p id="msg"></p><div class="ma"><button type="button" id="no">Kembali</button><button type="button" class="y" id="yes">Ya, kumpulkan</button></div></div></div>
+
+<div class="ov" id="intro" role="dialog" aria-modal="true" aria-labelledby="it"><div class="mb big">
+<h3 id="it">Petunjuk Mengerjakan Soal</h3>
+<ol>
+<li>Ujian terdiri dari <b>45 soal pilihan ganda</b>: Sedang (1–15), Sulit (16–30), HOTS (31–40), dan Olimpiade (41–45).</li>
+<li>Waktu mengerjakan <b>90 menit</b>. Waktu <b>langsung berjalan</b> setelah kamu menekan tombol OK dan tidak dapat dihentikan.</li>
+<li>Pilih satu jawaban yang paling tepat untuk setiap soal. Jawaban boleh diubah selama waktu masih ada.</li>
+<li>Gunakan kotak navigasi soal untuk berpindah soal, dan perhatikan sisa waktu di bagian atas layar.</li>
+<li>Tekan <b>Kumpulkan jawaban</b> bila sudah selesai. Jika waktu habis, jawaban akan dikumpulkan secara otomatis.</li>
+<li>Setelah dikumpulkan, nilai dan pembahasan setiap soal akan ditampilkan.</li>
+</ol>
+<div class="ma"><button type="button" class="y" id="okb">OK, mulai mengerjakan</button></div>
+</div></div>
 
 <script>
 /* Pembuat visual */
-const Cd=l=>({t:'cd',l}),Ar=(v,ix)=>({t:'ar',v,ix}),Fl=n=>({t:'fl',n}),Gp=(n,e)=>({t:'gp',n,e}),Gd=r=>({t:'gd',r}),Tb=(h,r)=>({t:'tbl',h,r});
-/* Data soal: [level, topik, visual, soal, jawaban, 3 pengecoh, satuan, pembahasan] */
+const Tb=(h,r)=>({t:'tbl',h,r}),Fl=n=>({t:'fl',n}),Sw=i=>({t:'sw',i}),Cm=i=>({t:'cmp',i}),Br=(ti,i)=>({t:'bar',ti,i}),Sb=f=>({t:'sb',f});
 const RAW=[
 // ===== SEDANG =====
-['sedang','Dekomposisi',null,'Memecah masalah besar menjadi bagian-bagian kecil yang lebih mudah diselesaikan disebut ...','Dekomposisi',['Abstraksi','Pengenalan pola','Algoritma'],'','Dekomposisi adalah salah satu pilar berpikir komputasional: masalah kompleks dipecah menjadi sub-masalah yang lebih sederhana.'],
-['sedang','Pengenalan Pola',Ar([2,4,8,16,'?']),'Bilangan yang tepat menggantikan tanda ? pada pola di gambar adalah ...',32,[24,30,20],'','Setiap bilangan dikalikan 2 untuk mendapat bilangan berikutnya: 16 × 2 = 32.'],
-['sedang','Abstraksi',null,'Menyaring detail yang tidak penting dan hanya fokus pada informasi yang relevan disebut ...','Abstraksi',['Dekomposisi','Pengenalan pola','Algoritma'],'','Abstraksi berarti menyederhanakan masalah dengan mengabaikan detail yang tidak diperlukan. Contohnya peta transportasi yang hanya menampilkan jalur dan stasiun.'],
-['sedang','Algoritma',Tb(['No','Langkah'],[['1','Tuang air panas ke gelas'],['2','Masukkan teh celup ke gelas'],['3','Aduk lalu sajikan'],['4','Didihkan air']]),'Urutan langkah yang benar untuk membuat teh berdasarkan tabel adalah ...','4 – 2 – 1 – 3',['2 – 4 – 3 – 1','1 – 2 – 4 – 3','3 – 1 – 2 – 4'],'','Air didihkan dahulu (4), teh dimasukkan ke gelas (2), air panas dituang (1), lalu diaduk dan disajikan (3). Algoritma harus berurutan dan logis.'],
-['sedang','Variabel dan Operasi',Cd(['a ← 5','b ← 3','c ← a + b × 2','TAMPILKAN c']),'Nilai yang ditampilkan oleh pseudocode pada gambar adalah ...',11,[16,13,8],'','Perkalian dikerjakan lebih dulu: b × 2 = 6, lalu c = 5 + 6 = 11.'],
-['sedang','Percabangan',Cd(['nilai ← 75','JIKA nilai ≥ 70 MAKA','    TAMPILKAN "Lulus"','LAINNYA','    TAMPILKAN "Remedial"']),'Keluaran dari pseudocode pada gambar adalah ...','Lulus',['Remedial','75','Lulus dan Remedial'],'','Kondisi 75 ≥ 70 bernilai benar, sehingga hanya blok JIKA yang dijalankan dan yang tampil "Lulus".'],
-['sedang','Perulangan',Cd(['UNTUK i ← 1 SAMPAI 4','    TAMPILKAN i × 2']),'Keluaran dari pseudocode pada gambar adalah ...','2, 4, 6, 8',['1, 2, 3, 4','2, 4, 6','4, 8, 12, 16'],'','i bernilai 1, 2, 3, 4 sehingga yang ditampilkan 1×2, 2×2, 3×2, 4×2 = 2, 4, 6, 8.'],
-['sedang','Diagram Alir',Fl([{t:'s',x:'Mulai'},{t:'io',x:'Masukkan n (n = 7)'},{t:'d',x:'n MOD 2 = 0 ?',no:'Cetak "Ganjil"'},{t:'p',x:'Cetak "Genap"'},{t:'s',x:'Selesai'}]),'Jika n = 7, keluaran diagram alir pada gambar adalah ...','Ganjil',['Genap','7','Genap dan Ganjil'],'','7 MOD 2 = 1 (bukan 0), sehingga kondisi bernilai tidak dan alur menuju cetak "Ganjil".'],
-['sedang','Sistem Biner',Tb(['8','4','2','1'],[['1','0','1','1']]),'Bilangan biner 1011 pada tabel bernilai desimal ...',11,[13,9,7],'','Nilai tempat yang bernilai 1: 8 + 2 + 1 = 11.'],
-['sedang','Array',Ar([4,9,2,7,5],true),'Pada array di gambar (indeks dimulai dari 0), elemen berindeks 3 bernilai ...',7,[2,9,5],'','Indeks 0 = 4, 1 = 9, 2 = 2, 3 = 7. Jadi elemen berindeks 3 adalah 7.'],
-['sedang','Variabel dan Operasi',Cd(['x ← 10','x ← x + 5','x ← x − 3','TAMPILKAN x']),'Nilai yang ditampilkan oleh pseudocode pada gambar adalah ...',12,[10,15,18],'','x = 10, lalu x = 10 + 5 = 15, kemudian x = 15 − 3 = 12.'],
-['sedang','Dekomposisi',null,'Sebuah tim membuat aplikasi toko online. Contoh dekomposisi yang tepat adalah ...','Membagi aplikasi menjadi modul katalog produk, keranjang belanja, dan pembayaran',['Menyalin seluruh kode dari toko online lain','Membuat semua fitur dalam satu halaman tanpa rencana','Menghapus fitur yang sulit dibuat'],'','Dekomposisi memecah aplikasi besar menjadi bagian-bagian (modul) yang dapat dikerjakan terpisah, lalu digabungkan.'],
-['sedang','Pengenalan Pola',Ar(['A','C','E','G','?']),'Huruf yang tepat menggantikan tanda ? pada pola di gambar adalah ...','I',['H','J','K'],'','Pola melompati satu huruf: A, (B), C, (D), E, (F), G, (H), I.'],
-['sedang','Logika',null,'Nilai dari pernyataan (Benar DAN Salah) ATAU Benar adalah ...','Benar',['Salah','Tergantung urutan operasi','Error'],'','Benar DAN Salah = Salah. Lalu Salah ATAU Benar = Benar.'],
-['sedang','Konsep Algoritma',null,'Ciri algoritma yang baik adalah ...','Langkahnya jelas, berhingga, dan menghasilkan keluaran',['Langkahnya boleh berulang tanpa akhir','Hasilnya berbeda setiap dijalankan dengan masukan yang sama','Langkahnya dapat ditafsirkan bermacam-macam'],'','Algoritma harus jelas (tidak ambigu), berhingga (berhenti), dan menghasilkan keluaran yang benar untuk masukan yang sama.'],
+['sedang','Jenis Konten',null,'Konten yang menyajikan informasi dan data secara visual melalui gambar, ikon, dan grafik ringkas disebut ...','Infografis',['Podcast','Artikel teks','Webinar'],'','Infografis memadukan teks singkat, ikon, dan grafik agar informasi atau data mudah dipahami sekilas.'],
+['sedang','Tahapan Produksi',Fl([{t:'p',x:'Perencanaan (ide, tujuan, audiens)'},{t:'p',x:'?'},{t:'p',x:'Penyuntingan (editing)'},{t:'p',x:'Publikasi'}]),'Tahap yang tepat menggantikan tanda ? pada diagram alir tahapan pembuatan konten adalah ...','Produksi (pengambilan gambar atau rekaman)',['Evaluasi hasil','Pengukuran jangkauan','Monetisasi'],'','Urutannya: perencanaan → produksi (merekam, memotret, menulis) → penyuntingan → publikasi. Evaluasi dilakukan setelah konten dipublikasikan.'],
+['sedang','Target Audiens',null,'Sekelompok orang yang menjadi sasaran penyampaian sebuah konten disebut ...','Target audiens',['Kreator','Platform','Editor'],'','Target audiens menentukan gaya bahasa, desain, dan saluran penyebaran konten.'],
+['sedang','Format File',null,'Format file gambar yang mendukung latar belakang transparan adalah ...','PNG',['JPG','MP3','DOCX'],'','PNG mendukung transparansi (kanal alfa), sedangkan JPG tidak.'],
+['sedang','Format File',null,'Format file yang umum dipakai untuk menyimpan audio seperti musik atau podcast adalah ...','MP3',['JPG','PNG','DOCX'],'','MP3 adalah format audio terkompresi yang sangat umum. JPG dan PNG untuk gambar, DOCX untuk dokumen.'],
+['sedang','Rasio Aspek',null,'Video untuk Reels atau TikTok yang ditonton secara tegak di ponsel umumnya memakai rasio aspek ...','9:16',['16:9','1:1','4:3'],'','Rasio 9:16 berbentuk tegak (potret) dan memenuhi layar ponsel. Rasio 16:9 untuk video mendatar seperti di YouTube.'],
+['sedang','Teori Warna',Sw([{c:'#E53935',l:'Merah'},{c:'#FDD835',l:'Kuning'},{c:'#1E88E5',l:'Biru'}]),'Warna-warna pada gambar tergolong warna ...','Primer',['Sekunder','Tersier','Netral'],'','Merah, kuning, dan biru adalah warna primer, yaitu warna dasar yang tidak dapat dibuat dari campuran warna lain.'],
+['sedang','Teori Warna',Sw([{c:'#E53935',l:'Merah'},{op:'+'},{c:'#FDD835',l:'Kuning'},{op:'='},{c:'#F5F5F5',l:'?'}]),'Campuran warna merah dan kuning pada gambar menghasilkan warna ...','Oranye',['Hijau','Ungu','Cokelat'],'','Merah + kuning = oranye. Kuning + biru = hijau, merah + biru = ungu.'],
+['sedang','Tipografi',null,'Untuk teks yang cukup panjang pada poster, jenis huruf (font) yang sebaiknya dipilih adalah ...','Sederhana dan mudah dibaca',['Sangat dekoratif agar menarik','Berukuran sangat kecil agar muat','Memakai lima jenis font sekaligus'],'','Teks panjang membutuhkan font yang jelas dan mudah dibaca. Font dekoratif cocok hanya untuk judul pendek, dan sebaiknya tidak memakai terlalu banyak jenis font.'],
+['sedang','Hak Cipta',null,'Hak eksklusif yang dimiliki pembuat sebuah karya foto, tulisan, atau video atas karyanya disebut ...','Hak cipta',['Hak paten','Hak merek','Hak guna bangunan'],'','Hak cipta melindungi karya kreatif sehingga pihak lain harus mendapat izin atau mengikuti lisensi untuk memakainya.'],
+['sedang','Diseminasi',null,'Kegiatan menyebarluaskan konten kepada audiens melalui berbagai saluran disebut ...','Diseminasi',['Kurasi','Dokumentasi','Enkripsi'],'','Diseminasi berarti penyebarluasan, misalnya lewat media sosial, blog, situs web, atau buletin email.'],
+['sedang','Memilih Platform',Tb(['Platform','Jenis konten yang cocok'],[['Blog','Artikel tertulis'],['Podcast','Audio'],['YouTube','Video panjang'],['Instagram','Foto dan video pendek']]),'Berdasarkan tabel, platform yang paling cocok untuk menyebarkan konten berupa rekaman audio adalah ...','Podcast',['Blog','YouTube','Instagram'],'','Tabel menunjukkan podcast sesuai untuk konten audio.'],
+['sedang','Call to Action',null,'Ajakan di akhir konten, misalnya "Ikuti akun kami dan bagikan video ini!", disebut ...','Call to action (CTA)',['Hashtag','Watermark','Thumbnail'],'','CTA mengarahkan audiens melakukan tindakan tertentu setelah menikmati konten, misalnya mengikuti, membagikan, atau mendaftar.'],
+['sedang','Hashtag',null,'Tanda pagar (#) pada unggahan media sosial berfungsi untuk ...','Mengelompokkan dan memudahkan pencarian konten bertopik sama',['Mengompres ukuran file','Mengubah warna unggahan','Mencegah konten disalin orang lain'],'','Hashtag menjadi penanda topik sehingga konten lebih mudah ditemukan oleh audiens yang mencari topik tersebut.'],
+['sedang','Storyboard',Sb([{s:'Long shot',t:'Siswa memasuki kelas'},{s:'Close-up',t:'Tangan membuka laptop'},{s:'Medium shot',t:'Siswa mulai mendesain'}]),'Rangkaian sketsa berurutan beserta keterangan adegan seperti pada gambar disebut ...','Storyboard',['Thumbnail','Watermark','Timeline'],'','Storyboard menggambarkan alur visual video per adegan sebelum proses pengambilan gambar dilakukan.'],
 // ===== SULIT =====
-['sulit','Perulangan',Cd(['s ← 0','UNTUK i ← 1 SAMPAI 5','    s ← s + i','TAMPILKAN s']),'Nilai yang ditampilkan oleh pseudocode pada gambar adalah ...',15,[10,5,20],'','s = 1 + 2 + 3 + 4 + 5 = 15.'],
-['sulit','Perulangan dan Percabangan',Cd(['s ← 0','UNTUK i ← 1 SAMPAI 10','    JIKA i MOD 2 = 0 MAKA','        s ← s + i','TAMPILKAN s']),'Nilai yang ditampilkan oleh pseudocode pada gambar adalah ...',30,[25,55,20],'','Hanya bilangan genap yang dijumlahkan: 2 + 4 + 6 + 8 + 10 = 30.'],
-['sulit','Perulangan SELAMA',Cd(['n ← 20','k ← 0','SELAMA n > 1','    n ← n ÷ 2     (dibulatkan ke bawah)','    k ← k + 1','TAMPILKAN k']),'Nilai k yang ditampilkan oleh pseudocode pada gambar adalah ...',4,[3,5,10],'','n berturut-turut: 20 → 10 → 5 → 2 → 1, dan perulangan berhenti saat n = 1. Terjadi 4 kali pembagian, sehingga k = 4.'],
-['sulit','Pencarian Linear',Ar([8,3,9,4,7],true),'Pencarian linear mencari nilai 4 dari indeks 0 ke kanan. Banyak elemen yang diperiksa sampai 4 ditemukan adalah ...',4,[3,5,2],'','Elemen diperiksa berurutan: 8, 3, 9, lalu 4 (ditemukan). Total 4 elemen.'],
-['sulit','Pencarian Biner',Ar([2,5,8,12,16,23,38],true),'Pencarian biner mencari nilai 23 pada array terurut di gambar. Banyak elemen tengah yang diperiksa sampai 23 ditemukan adalah ...',2,[1,3,7],'','Rentang indeks 0–6: tengah = indeks 3 (12). 12 < 23, maka cari di kanan. Rentang 4–6: tengah = indeks 5 (23), ditemukan. Total 2 pemeriksaan.'],
-['sulit','Bubble Sort',Ar([5,2,4,1],true),'Array di gambar diurutkan menaik dengan bubble sort. Keadaan array setelah satu putaran (pass) pertama adalah ...','2, 4, 1, 5',['2, 4, 5, 1','1, 2, 4, 5','2, 5, 4, 1'],'','Bandingkan pasangan bersebelahan dari kiri: (5,2) tukar → 2,5,4,1; (5,4) tukar → 2,4,5,1; (5,1) tukar → 2,4,1,5. Elemen terbesar sudah di ujung kanan.'],
-['sulit','Selection Sort',Ar([6,3,5,1,4],true),'Array di gambar diurutkan menaik dengan selection sort. Keadaan array setelah langkah pertama adalah ...','1, 3, 5, 6, 4',['1, 6, 3, 5, 4','1, 3, 4, 5, 6','3, 6, 5, 1, 4'],'','Nilai terkecil adalah 1 (indeks 3), ditukar dengan elemen indeks 0 (yaitu 6): 1, 3, 5, 6, 4.'],
-['sulit','Perulangan SELAMA',Cd(['a ← 2','SELAMA a < 20','    a ← a × 3','TAMPILKAN a']),'Nilai a yang ditampilkan oleh pseudocode pada gambar adalah ...',54,[18,20,60],'','a: 2 → 6 → 18 → 54. Setelah a = 54 kondisi a < 20 salah sehingga berhenti. Yang tampil 54.'],
-['sulit','Percabangan Bertingkat',Cd(['x ← 15','JIKA x > 20 MAKA','    y ← 1','LAINNYA JIKA x > 10 MAKA','    y ← 2','LAINNYA','    y ← 3','TAMPILKAN y']),'Nilai y yang ditampilkan oleh pseudocode pada gambar adalah ...',2,[1,3,15],'','15 > 20 salah, lalu 15 > 10 benar sehingga y = 2. Cabang berikutnya tidak dijalankan.'],
-['sulit','Jalur Terpendek',Gp([{n:'A',x:70,y:110},{n:'B',x:260,y:40},{n:'C',x:260,y:190},{n:'D',x:480,y:110}],[[0,1,4],[0,2,2],[2,1,1],[1,3,5],[2,3,8]]),'Angka pada garis menunjukkan jarak (km). Jalur terpendek dari A ke D memiliki panjang ...',8,[9,10,7],'km','Jalur A–C–B–D = 2 + 1 + 5 = 8. Bandingkan: A–B–D = 9 dan A–C–D = 10. Jalur terpendek 8 km.'],
-['sulit','Sistem Biner',Tb(['32','16','8','4','2','1'],[['1','1','0','1','0','1']]),'Bilangan biner 110101 pada tabel bernilai desimal ...',53,[51,57,43],'','32 + 16 + 4 + 1 = 53.'],
-['sulit','Sistem Biner',null,'Bilangan desimal 37 jika diubah ke biner adalah ...','100101',['101001','100011','110001'],'','37 = 32 + 4 + 1 → nilai tempat 32, 4, dan 1 bernilai 1: 100101. (101001 = 41, 100011 = 35, 110001 = 49.)'],
-['sulit','Pengenalan Pola',Ar([1,1,2,3,5,8,'?']),'Bilangan yang tepat menggantikan tanda ? pada pola di gambar adalah ...',13,[11,12,14],'','Setiap bilangan adalah jumlah dua bilangan sebelumnya (pola Fibonacci): 5 + 8 = 13.'],
-['sulit','Logika',null,'Kondisi (x > 5 DAN x < 10) ATAU x = 0 bernilai benar untuk x = ...','7',['10','5','−3'],'','x = 7: 7 > 5 dan 7 < 10 → benar. x = 10 gagal pada x < 10, x = 5 gagal pada x > 5, dan x = −3 gagal pada semua bagian.'],
-['sulit','Enkripsi Sederhana',null,'Sandi Caesar menggeser setiap huruf 3 posisi ke kanan (A → D, B → E, dan seterusnya). Hasil enkripsi kata BUDI adalah ...','EXGL',['ERGL','FXGM','YRAF'],'','B → E, U → X, D → G, I → L, sehingga BUDI menjadi EXGL.'],
+['sulit','Hierarki Visual',null,'Pada desain poster, elemen yang sebaiknya tampil paling besar dan mencolok menurut prinsip hierarki visual adalah ...','Judul atau pesan utama',['Alamat penyelenggara','Logo mitra','Catatan kaki'],'','Hierarki visual mengatur urutan perhatian pembaca. Pesan terpenting dibuat paling menonjol, lalu disusul informasi pendukung.'],
+['sulit','Kontras Warna',Cm([{bg:'#FFFFFF',fg:'#FFF176',t:'Lomba Poster',l:'A'},{bg:'#0F3D63',fg:'#FFFFFF',t:'Lomba Poster',l:'B'},{bg:'#FFFFFF',fg:'#DDDDDD',t:'Lomba Poster',l:'C'}]),'Dari tiga kombinasi warna teks dan latar pada gambar, yang paling mudah dibaca adalah ...','B (putih di atas biru tua)',['A (kuning muda di atas putih)','C (abu-abu muda di atas putih)','Ketiganya sama mudah dibaca'],'','Kontras yang tinggi antara teks dan latar membuat tulisan mudah dibaca. Putih di atas biru tua memiliki kontras paling kuat.'],
+['sulit','Lisensi Creative Commons',Tb(['Kode lisensi','Arti'],[['BY','Wajib mencantumkan nama pembuat (atribusi)'],['NC','Tidak boleh untuk tujuan komersial'],['ND','Tidak boleh diubah'],['SA','Hasil modifikasi dibagikan dengan lisensi sama']]),'Sebuah gambar berlisensi CC BY-NC. Penggunaan yang diperbolehkan adalah ...','Memakainya untuk poster sekolah dengan mencantumkan nama pembuatnya',['Menjualnya sebagai stiker tanpa mencantumkan pembuatnya','Memakainya pada iklan produk berbayar','Mengaku sebagai karya sendiri'],'','CC BY mewajibkan atribusi, dan NC melarang penggunaan komersial. Poster sekolah nonkomersial dengan mencantumkan pembuat sudah sesuai.'],
+['sulit','Engagement Rate',Tb(['Data unggahan','Jumlah'],[['Jangkauan (reach)','2.000'],['Suka','120'],['Komentar','30'],['Dibagikan','50']]),'Engagement rate = (suka + komentar + dibagikan) ÷ jangkauan × 100%. Berdasarkan tabel, engagement rate unggahan tersebut adalah ...',10,[8,12,5],'%','Interaksi = 120 + 30 + 50 = 200. Engagement rate = 200 ÷ 2.000 × 100% = 10%.'],
+['sulit','Click-Through Rate',null,'Sebuah iklan ditayangkan 5.000 kali dan diklik 150 kali. Click-through rate (CTR) = klik ÷ tayangan × 100%. Nilai CTR iklan tersebut adalah ...',3,[1.5,5,30],'%','CTR = 150 ÷ 5.000 × 100% = 3%.'],
+['sulit','Membaca Grafik',Br('Pengunjung konten per hari',[['Sen',120],['Sel',90],['Rab',150],['Kam',110],['Jum',200],['Sab',320],['Min',280]]),'Berdasarkan grafik, waktu publikasi yang paling berpeluang menjangkau banyak pengunjung adalah hari ...','Sabtu',['Selasa','Rabu','Jumat'],'','Pengunjung tertinggi terjadi pada hari Sabtu (320), sehingga publikasi sebaiknya dijadwalkan menjelang atau pada hari tersebut.'],
+['sulit','Kompresi File',null,'Sebuah foto berukuran 3 MB dikompres menjadi 600 KB (1 MB = 1.000 KB). Ukuran file berkurang sebesar ...',80,[20,60,40],'%','3 MB = 3.000 KB. Pengurangan = 3.000 − 600 = 2.400 KB. Persentasenya = 2.400 ÷ 3.000 × 100% = 80%.'],
+['sulit','Resolusi Gambar',null,'Gambar berukuran 1.920 × 1.080 piksel memiliki total piksel sebanyak ...',2073600,[207360,20736000,3000],'piksel','1.920 × 1.080 = 2.073.600 piksel.'],
+['sulit','Kompresi',null,'Format JPG memakai kompresi lossy. Artinya ...','Sebagian data hilang permanen demi ukuran file yang lebih kecil',['Seluruh data tetap persis sama setelah dikompres','Gambar otomatis mendukung latar transparan','File hanya dapat berisi gambar bergerak'],'','Kompresi lossy membuang sebagian informasi gambar yang kurang kasatmata sehingga file lebih kecil, tetapi kualitas tidak bisa dikembalikan sepenuhnya.'],
+['sulit','Frame Video',null,'Video berdurasi 10 detik dengan kecepatan 30 frame per detik (fps) memiliki ... frame.',300,[40,100,3000],'frame','Banyak frame = 30 × 10 = 300.'],
+['sulit','Jenis Pengambilan Gambar',Tb(['Jenis shot','Keterangan'],[['Close-up','Fokus pada detail, misalnya wajah atau benda'],['Medium shot','Subjek dari pinggang ke atas'],['Long shot','Seluruh tubuh beserta latar']]),'Untuk menampilkan ekspresi wajah narator secara detail, jenis pengambilan gambar yang paling tepat adalah ...','Close-up',['Long shot','Medium shot','Bird eye view'],'','Close-up memperlihatkan detail seperti ekspresi wajah dengan jelas.'],
+['sulit','Urutan Produksi',null,'Urutan penyusunan yang tepat sebelum mengambil gambar video edukasi adalah ...','Ide → naskah → storyboard → pengambilan gambar',['Pengambilan gambar → naskah → ide → storyboard','Storyboard → publikasi → naskah → ide','Naskah → penyuntingan → ide → pengambilan gambar'],'','Ide dikembangkan menjadi naskah, naskah divisualkan lewat storyboard, baru kemudian dilakukan pengambilan gambar.'],
+['sulit','Literasi Digital',null,'Sebelum membagikan informasi dari pesan berantai, langkah yang paling tepat adalah ...','Memeriksa kebenarannya melalui sumber tepercaya',['Langsung membagikan karena banyak orang membagikannya','Menambahkan kata "viral" agar dipercaya','Menghapus nama sumber agar terlihat orisinal'],'','Cek fakta mencegah penyebaran hoaks. Banyaknya pembagi tidak menjamin kebenaran sebuah informasi.'],
+['sulit','Judul dan Kata Kunci',Tb(['Judul','Isi konten'],[['A. "Wow! Lihat ini!!!"','Tutorial membuat poster di Canva'],['B. "Tutorial Membuat Poster Digital dengan Canva untuk Pemula"','Tutorial membuat poster di Canva']]),'Judul yang lebih baik agar konten mudah ditemukan lewat mesin pencari adalah ...','Judul B karena memuat kata kunci yang jelas dan sesuai isi',['Judul A karena singkat dan memancing penasaran','Judul A karena memakai tanda seru','Keduanya sama baiknya'],'','Mesin pencari mengenali kata kunci. Judul B memuat kata seperti tutorial, poster digital, dan Canva yang sesuai dengan isi.'],
+['sulit','Prinsip Desain',null,'Prinsip desain proximity (kedekatan) berarti ...','Elemen yang saling berhubungan ditempatkan berdekatan',['Semua elemen diberi warna yang sama','Elemen yang sama diulang di setiap halaman','Semua elemen diletakkan di tengah'],'','Proximity mengelompokkan elemen yang berkaitan agar tampak sebagai satu kesatuan. Mengulang elemen disebut repetisi.'],
 // ===== HOTS =====
-['hots','Perulangan Bersarang',Cd(['c ← 0','UNTUK i ← 1 SAMPAI 3','    UNTUK j ← 1 SAMPAI i','        c ← c + 1','TAMPILKAN c']),'Nilai c yang ditampilkan oleh pseudocode pada gambar adalah ...',6,[9,3,4],'','Perulangan dalam berjalan i kali: i = 1 → 1 kali, i = 2 → 2 kali, i = 3 → 3 kali. Total c = 1 + 2 + 3 = 6.'],
-['hots','Debugging',Cd(['total ← 0','UNTUK i ← 1 SAMPAI 4','    total ← total + nilai[i]','rata ← total ÷ 3','TAMPILKAN rata']),'Program pada gambar ingin menghitung rata-rata 4 nilai tetapi hasilnya salah. Kesalahannya adalah ...','Pembagi seharusnya 4, bukan 3',['Perulangan seharusnya sampai 3','Variabel total tidak boleh bernilai 0 di awal','Operasi ÷ seharusnya diganti ×'],'','Rata-rata = jumlah ÷ banyak data. Ada 4 data, jadi pembaginya 4. Bagian lain sudah benar.'],
-['hots','Efisiensi Algoritma',null,'Pencarian biner dipakai pada data terurut berisi 100 elemen. Banyak perbandingan paling banyak yang diperlukan adalah ...',7,[5,10,50],'','Tiap langkah membagi data menjadi dua: 100 → 50 → 25 → 12 → 6 → 3 → 1. Dibutuhkan paling banyak 7 perbandingan (2⁷ = 128 ≥ 100).'],
-['hots','Logika Boolean',null,'Untuk A = 1 dan B = 0, hasil dari (NOT A) ATAU (A DAN B) adalah ...','0',['1','Tidak terdefinisi','10'],'','NOT 1 = 0. A DAN B = 1 DAN 0 = 0. Lalu 0 ATAU 0 = 0.'],
-['hots','Representasi Data',null,'Banyak nilai berbeda yang dapat disimpan oleh 4 bit adalah ...',16,[8,15,32],'','Tiap bit memiliki 2 kemungkinan, sehingga 2⁴ = 16 nilai (0 sampai 15).'],
-['hots','Jalur Robot',Gd(['S....','###.#','.....','.###G']),'Robot hanya dapat bergerak satu petak ke atas, bawah, kiri, atau kanan dan tidak boleh melewati petak # . Banyak langkah minimum dari S ke G adalah ...',7,[6,8,9],'langkah','Satu-satunya jalan turun adalah melalui petak kosong di baris kedua kolom ke-4. Jalur: kanan 3 langkah, bawah 2 langkah, kanan 1 langkah, bawah 1 langkah = 7 langkah.'],
-['hots','Algoritma Greedy',Tb(['Koin tersedia','Nilai yang ditukar'],[['25, 10, dan 1','30']]),'Strategi greedy selalu memilih koin terbesar yang masih muat. Pernyataan yang benar untuk penukaran 30 dengan koin di tabel adalah ...','Greedy memakai 6 koin, padahal minimum 3 koin',['Greedy menghasilkan jumlah koin paling sedikit, yaitu 3 koin','Greedy memakai 2 koin','Tidak mungkin menukar 30 dengan koin tersebut'],'','Greedy: 25 + 1 + 1 + 1 + 1 + 1 = 6 koin. Padahal 10 + 10 + 10 = 3 koin. Greedy tidak selalu menghasilkan solusi optimal.'],
-['hots','Efisiensi Algoritma',null,'Pada data terurut berisi 1.000 elemen, kasus terburuk pencarian linear memerlukan 1.000 perbandingan, sedangkan pencarian biner paling banyak 10 perbandingan. Selisihnya adalah ...',990,[500,100,999],'perbandingan','Selisih = 1.000 − 10 = 990. (Pencarian biner: 2¹⁰ = 1.024 ≥ 1.000, sehingga paling banyak 10 langkah.)'],
-['hots','Pola dan Rumus',Tb(['Banyak segitiga','1','2','3','10'],[['Banyak batang korek api','3','5','7','?']]),'Segitiga disusun dari batang korek api seperti pada tabel. Banyak batang yang diperlukan untuk 10 segitiga adalah ...',21,[30,23,19],'batang','Setiap penambahan satu segitiga menambah 2 batang. Rumusnya 2n + 1, sehingga untuk n = 10: 2 × 10 + 1 = 21 batang.'],
-['hots','Debugging',Cd(['i ← 1','SELAMA i ≤ 5','    TAMPILKAN i']),'Program pada gambar bermaksud menampilkan 1 sampai 5, tetapi tidak pernah berhenti. Perbaikan yang tepat adalah ...','Menambahkan i ← i + 1 di dalam perulangan',['Mengganti ≤ menjadi <','Mengganti SELAMA menjadi JIKA','Menghapus TAMPILKAN i'],'','Nilai i tidak pernah bertambah sehingga i ≤ 5 selalu benar (perulangan tak berhingga). Tambahkan i ← i + 1 di akhir isi perulangan.'],
+['hots','Membandingkan Kinerja',Tb(['Konten','Jangkauan','Interaksi'],[['A','4.000','200'],['B','1.500','120']]),'Interaksi adalah jumlah suka, komentar, dan bagikan. Konten yang memiliki engagement rate lebih tinggi dan nilainya adalah ...','Konten B, 8%',['Konten A, 5%','Konten A, 8%','Konten B, 5%'],'','Konten A: 200 ÷ 4.000 = 5%. Konten B: 120 ÷ 1.500 = 8%. Meskipun jangkauan A lebih besar, tingkat keterlibatan B lebih tinggi.'],
+['hots','Membaca Grafik',Br('Jumlah dibagikan per jenis konten',[['Infografis',450],['Video pendek',900],['Artikel',300],['Podcast',150]]),'Berdasarkan grafik, persentase jumlah bagikan video pendek terhadap seluruh jenis konten adalah ...',50,[25,45,60],'%','Total = 450 + 900 + 300 + 150 = 1.800. Video pendek = 900 ÷ 1.800 × 100% = 50%.'],
+['hots','Etika dan Hak Cipta',null,'Rina memakai lagu populer berhak cipta sebagai musik latar video promosi jualannya tanpa izin. Risiko yang paling mungkin terjadi adalah ...','Video dapat dihapus atau terkena klaim hak cipta',['Tidak ada risiko karena videonya singkat','Lagu tersebut otomatis menjadi milik Rina','Videonya pasti menjadi viral'],'','Memakai karya berhak cipta tanpa izin dapat menyebabkan video diturunkan, dimonetisasi pemilik hak, atau berujung masalah hukum. Alternatifnya memakai musik berlisensi bebas.'],
+['hots','Memilih Saluran Diseminasi',Tb(['Kelompok','Kebiasaan'],[['Pelajar SMP','Menonton video pendek di ponsel'],['Pekerja kantoran','Membaca artikel profesional'],['Orang tua','Memakai grup pesan keluarga']]),'Sebuah sekolah ingin mengajak pelajar SMP mengikuti lomba literasi digital. Berdasarkan tabel, cara diseminasi yang paling tepat adalah ...','Video pendek yang dibagikan di media sosial',['Artikel panjang di situs profesional','Poster yang ditempel di kantor perusahaan','Pesan berantai di grup keluarga'],'','Saluran harus sesuai kebiasaan target audiens. Pelajar SMP lebih sering menonton video pendek di ponsel.'],
+['hots','Aksesibilitas',null,'Agar video dapat dipahami penyandang tunarungu dan penonton yang menonton tanpa suara, tambahan yang paling tepat adalah ...','Teks terjemahan (subtitle atau closed caption)',['Musik latar yang lebih keras','Durasi video diperpanjang','Menghapus seluruh narasi'],'','Subtitle membuat isi audio dapat diakses oleh lebih banyak orang, termasuk saat suara dimatikan.'],
+['hots','Pengolahan File',null,'Foto berukuran 4 MB akan diunggah ke platform yang membatasi file maksimal 2 MB. Langkah yang paling tepat adalah ...','Mengompres atau memperkecil resolusi hingga di bawah 2 MB',['Mengganti nama file','Mengganti ekstensi .jpg menjadi .png tanpa mengubah isi','Menggandakan file agar lolos'],'','Ukuran file berkurang melalui kompresi atau pengecilan resolusi. Mengganti nama atau ekstensi tidak mengubah ukuran sesungguhnya.'],
+['hots','Analisis CTR',Tb(['Hari','Tayangan','Klik'],[['Kamis','1.000','20'],['Jumat','800','32'],['Sabtu','1.200','24']]),'CTR = klik ÷ tayangan × 100%. Hari dengan CTR tertinggi dan nilainya adalah ...','Jumat (4%)',['Kamis (2%)','Sabtu (2%)','Sabtu (4%)'],'','Kamis: 20 ÷ 1.000 = 2%. Jumat: 32 ÷ 800 = 4%. Sabtu: 24 ÷ 1.200 = 2%. Meski tayangan Sabtu terbanyak, CTR tertinggi pada hari Jumat.'],
+['hots','Evaluasi Konten',Tb(['Data video','Nilai'],[['Penayangan','12.000'],['Durasi video','60 detik'],['Rata-rata waktu tonton','5 detik']]),'Berdasarkan tabel, kesimpulan yang paling tepat adalah ...','Judul atau thumbnail menarik klik, tetapi bagian pembuka belum mampu menahan perhatian penonton',['Konten sudah berhasil sepenuhnya','Audiens menyukai seluruh isi video','Durasi video terlalu pendek'],'','Penayangan banyak berarti orang tertarik membuka, tetapi rata-rata hanya menonton 5 dari 60 detik. Pembuka video perlu diperbaiki.'],
+['hots','Rasio Aspek',Tb(['Rasio','Lebar (piksel)','Tinggi (piksel)'],[['16:9','1.280','?']]),'Tinggi video dengan rasio aspek 16:9 dan lebar 1.280 piksel pada tabel adalah ...',720,[640,960,1080],'piksel','Tinggi = 1.280 × 9 ÷ 16 = 720 piksel.'],
+['hots','Perencanaan Konten',null,'Tim konten membuat 12 konten dalam sebulan. Sebanyak 50% berupa video, sedangkan sisanya berupa infografis dan artikel dengan perbandingan 1 : 1. Banyak artikel adalah ...',3,[2,4,6],'konten','Video = 6 konten. Sisa 6 konten dibagi 1 : 1, sehingga artikel = 3 konten.'],
 // ===== OLIMPIADE =====
-['olimpiade','Rekursi',Cd(['FUNGSI f(n)','    JIKA n ≤ 1 MAKA','        KEMBALIKAN 1','    KEMBALIKAN n × f(n − 1)','','TAMPILKAN f(5)']),'Nilai yang ditampilkan oleh pseudocode pada gambar adalah ...',120,[24,25,15],'','f(5) = 5 × f(4) = 5 × 4 × f(3) = 5 × 4 × 3 × f(2) = 5 × 4 × 3 × 2 × f(1) = 5 × 4 × 3 × 2 × 1 = 120.'],
-['olimpiade','Tabel Penelusuran',Cd(['a ← 1','b ← 1','UNTUK i ← 1 SAMPAI 5','    t ← a + b','    a ← b','    b ← t','TAMPILKAN b']),'Nilai b yang ditampilkan oleh pseudocode pada gambar adalah ...',13,[8,21,5],'','Nilai b setelah tiap putaran: 2, 3, 5, 8, 13. Setelah putaran kelima b = 13 (pola Fibonacci).'],
-['olimpiade','Kombinatorika Biner',null,'Banyak bilangan biner 5 bit yang diawali angka 1 dan memiliki tepat dua angka 1 adalah ...',4,[5,6,10],'','Angka pertama sudah 1, jadi tinggal memilih satu posisi dari 4 posisi sisa untuk angka 1 yang kedua: 4 cara.'],
-['olimpiade','Banyak Jalur',Gp([{n:'A',x:70,y:110},{n:'B',x:250,y:40},{n:'C',x:250,y:190},{n:'D',x:470,y:110}],[[0,1],[0,2],[1,2],[1,3],[2,3]]),'Banyak jalur berbeda dari A ke D pada graf di gambar tanpa melewati titik yang sama dua kali adalah ...',4,[3,5,6],'jalur','Jalur: A–B–D, A–B–C–D, A–C–D, dan A–C–B–D. Total 4 jalur.'],
-['olimpiade','Bubble Sort',Ar([4,3,2,1],true),'Array di gambar diurutkan menaik dengan bubble sort. Banyak pertukaran (swap) yang terjadi sampai array terurut adalah ...',6,[3,4,10],'kali','Putaran 1: 3 pertukaran, putaran 2: 2 pertukaran, putaran 3: 1 pertukaran. Total 6 (sama dengan banyak pasangan terbalik: 3 + 2 + 1).']
+['olimpiade','Bitrate',null,'Video berdurasi 2 menit berukuran 60 MB (1 byte = 8 bit). Bitrate rata-ratanya adalah ... Mbps (megabit per detik).',4,[0.5,8,30],'Mbps','60 MB × 8 = 480 Mb. Durasi 2 menit = 120 detik. Bitrate = 480 ÷ 120 = 4 Mbps.'],
+['olimpiade','Kedalaman Warna',null,'Gambar 24-bit memakai 8 bit untuk tiap kanal warna (merah, hijau, dan biru). Banyak warna berbeda yang dapat dihasilkan adalah ...',16777216,[65536,16384,1048576],'warna','Tiap kanal memiliki 2⁸ = 256 nilai, sehingga total warna = 256 × 256 × 256 = 16.777.216.'],
+['olimpiade','Ukuran File Mentah',null,'Gambar 1.000 × 1.000 piksel berkedalaman 24-bit (3 byte per piksel) disimpan tanpa kompresi. Ukuran file kira-kira ... MB (1 MB = 1.000.000 byte).',3,[1,8,24],'MB','Jumlah piksel = 1.000.000 dan tiap piksel 3 byte, sehingga ukuran = 3.000.000 byte = 3 MB.'],
+['olimpiade','Animasi',null,'Animasi berdurasi 15 detik dibuat dengan 12 gambar per detik. Jika seorang animator menggambar 90 gambar per hari, waktu yang dibutuhkan adalah ...',2,[1,3,4],'hari','Total gambar = 12 × 15 = 180. Waktu = 180 ÷ 90 = 2 hari.'],
+['olimpiade','Kombinatorika Desain',null,'Seorang desainer memilih 1 warna latar dari 4 pilihan, 1 jenis font dari 3 pilihan, dan 1 tata letak dari 2 pilihan. Banyak kombinasi desain berbeda yang dapat dibuat adalah ...',24,[9,12,18],'kombinasi','Banyak kombinasi = 4 × 3 × 2 = 24.']
 ];
-const fmt=n=>n.toLocaleString('id-ID',{maximumFractionDigits:2});
-const QUESTIONS=RAW.map((r,i)=>{const [level,topic,vis,q,a,w,u,exp]=r;
- const f=x=>typeof x==='number'?fmt(x)+(u?' '+u:''):x;
- const opts=w.map(f);const ci=(i*3+1)%4;opts.splice(ci,0,f(a));return{level,topic,vis,q,opts,correct:ci,exp}});
-const LBL={sedang:'Sedang',sulit:'Sulit',hots:'HOTS',olimpiade:'Olimpiade'};
-
-/* ===== Visual ===== */
+const fnum=n=>n.toLocaleString('id-ID',{maximumFractionDigits:2});
+const QUESTIONS=RAW.map((r,i)=>{const [level,topic,vz,q,a,w,u,exp]=r;
+ const f=x=>typeof x==='number'?fnum(x)+(u?' '+u:''):x;
+ const opts=w.map(f);const ci=(i*3+1)%4;opts.splice(ci,0,f(a));return{level,topic,vz,q,opts,correct:ci,exp}});
 const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-const txt=(x,y,t,a='middle',sz=15)=>`<text x="${x}" y="${y}" text-anchor="${a}" font-size="${sz}" ${String(t).includes('?')?'fill="#C9642A" font-weight="700"':'fill="#1B2430"'}>${esc(t)}</text>`;
+const txt=(x,y,t,a='middle',sz=15,fill)=>`<text x="${x}" y="${y}" text-anchor="${a}" font-size="${sz}" ${fill?`fill="${fill}"`:String(t).includes('?')?'fill="#C9642A" font-weight="700"':'fill="#1B2430"'}>${esc(t)}</text>`;
 const wrap=(s,h)=>`<div class="vz"><svg viewBox="0 0 600 ${h}" role="img" aria-label="Gambar soal">${s}</svg></div>`;
 const NV='#0F3D63';
 function vis(v){
  if(!v)return'';
- if(v.t==='cd')return`<div class="vz"><pre class="cd">${v.l.map(esc).join('\n')}</pre></div>`;
  if(v.t==='tbl')return`<div class="vz"><table class="tb"><tr>${v.h.map(h=>`<th>${esc(h)}</th>`).join('')}</tr>${v.r.map(r=>`<tr>${r.map(c=>`<td class="${String(c).includes('?')?'q':''}">${esc(c)}</td>`).join('')}</tr>`).join('')}</table></div>`;
- if(v.t==='ar'){const n=v.v.length,w=64,ox=(600-n*w)/2;let s='';
-  v.v.forEach((x,i)=>{const q=String(x)==='?';s+=`<rect x="${ox+i*w+3}" y="18" width="${w-6}" height="48" rx="6" fill="${q?'#FFF5DC':'#EAF3F8'}" stroke="${NV}" stroke-width="2"/>`+txt(ox+i*w+w/2,50,x,'middle',20);
-   if(v.ix)s+=txt(ox+i*w+w/2,88,i,'middle',13).replace('#1B2430','#5B6473')});
-  if(v.ix)s+=txt(300,110,'indeks',  'middle',12).replace('#1B2430','#5B6473');
-  return wrap(s,v.ix?120:84)}
- if(v.t==='fl'){let y=12,prev=null,cx=170,s='<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#0F3D63"/></marker></defs>';
-  const ln=(x1,y1,x2,y2)=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${NV}" stroke-width="2" marker-end="url(#ah)"/>`;
-  v.n.forEach(n=>{const h=n.t==='d'?66:44,cy=y+h/2;if(prev!==null)s+=ln(cx,prev,cx,y);
-   if(n.t==='s')s+=`<rect x="${cx-80}" y="${y}" width="160" height="${h}" rx="22" fill="#E7F5EC" stroke="${NV}" stroke-width="2"/>`;
-   else if(n.t==='p')s+=`<rect x="${cx-110}" y="${y}" width="220" height="${h}" fill="#EAF3F8" stroke="${NV}" stroke-width="2"/>`;
-   else if(n.t==='io')s+=`<polygon points="${cx-95},${y} ${cx+120},${y} ${cx+95},${y+h} ${cx-120},${y+h}" fill="#F1EAF8" stroke="${NV}" stroke-width="2"/>`;
-   else{s+=`<polygon points="${cx},${y} ${cx+125},${cy} ${cx},${y+h} ${cx-125},${cy}" fill="#FFF5DC" stroke="${NV}" stroke-width="2"/>`;
-    if(n.no)s+=ln(cx+125,cy,cx+170,cy)+txt(cx+148,cy-8,'Tidak','middle',13)+`<rect x="${cx+170}" y="${cy-22}" width="${600-cx-182}" height="44" fill="#EAF3F8" stroke="${NV}" stroke-width="2"/>`+txt(cx+170+(600-cx-182)/2,cy+5,n.no)+txt(cx+8,y+h+19,'Ya','start',13)}
-   s+=txt(cx,cy+5,n.x);prev=y+h;y+=h+30});
-  return wrap(s,y)}
- if(v.t==='gp'){let s='';
-  v.e.forEach(([a,b,w])=>{const A=v.n[a],B=v.n[b];s+=`<line x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}" stroke="#5B6473" stroke-width="3"/>`;
-   if(w!==undefined){const mx=(A.x+B.x)/2,my=(A.y+B.y)/2;s+=`<rect x="${mx-14}" y="${my-13}" width="28" height="22" rx="5" fill="#fff" stroke="#DDE2E8"/>`+txt(mx,my+4,w,'middle',15)}});
-  v.n.forEach(n=>{s+=`<circle cx="${n.x}" cy="${n.y}" r="22" fill="#EAF3F8" stroke="${NV}" stroke-width="2.5"/>`+txt(n.x,n.y+6,n.n,'middle',18)});
-  return wrap(s,230)}
- if(v.t==='gd'){const c=54,R=v.r.length,C=v.r[0].length,ox=(600-C*c)/2;let s='';
-  v.r.forEach((row,i)=>[...row].forEach((ch,j)=>{const x=ox+j*c,y=10+i*c;
-   const f=ch==='#'?'#5B6473':ch==='S'?'#2E86AB':ch==='G'?'#2F9E5B':'#fff';
-   s+=`<rect x="${x}" y="${y}" width="${c}" height="${c}" fill="${f}" stroke="#B8C2CF" stroke-width="1.5"/>`;
-   if(ch==='S'||ch==='G')s+=`<text x="${x+c/2}" y="${y+c/2+7}" text-anchor="middle" font-size="22" font-weight="700" fill="#fff">${ch}</text>`}));
-  return wrap(s,R*c+20)}
+ if(v.t==='fl'){let y=12,prev=null,cx=300,s='<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#0F3D63"/></marker></defs>';
+  v.n.forEach(n=>{const h=44,cy=y+h/2,hl=n.x==='?';if(prev!==null)s+=`<line x1="${cx}" y1="${prev}" x2="${cx}" y2="${y}" stroke="${NV}" stroke-width="2" marker-end="url(#ah)"/>`;
+   s+=`<rect x="${cx-160}" y="${y}" width="320" height="${h}" rx="8" fill="${hl?'#FFF5DC':'#EAF3F8'}" stroke="${NV}" stroke-width="2"/>`+txt(cx,cy+5,n.x,'middle',hl?22:15);
+   prev=y+h;y+=h+28});
+  return wrap(s,y-16)}
+ if(v.t==='sw'){const W=v.i.map(i=>i.op?44:96),tot=W.reduce((a,b)=>a+b,0);let x=(600-tot)/2,s='';
+  v.i.forEach((i,k)=>{if(i.op)s+=txt(x+22,58,i.op,'middle',30);
+   else{const q=i.l==='?';s+=`<rect x="${x+4}" y="14" width="88" height="70" rx="10" fill="${i.c}" stroke="${NV}" stroke-width="2"/>`+(q?txt(x+48,64,'?','middle',34):'')+txt(x+48,108,q?'warna hasil':i.l,'middle',14,'#1B2430')}
+   x+=W[k]});
+  return wrap(s,124)}
+ if(v.t==='cmp'){let s='';
+  v.i.forEach((i,k)=>{const x=20+k*190;s+=`<rect x="${x}" y="30" width="170" height="80" rx="8" fill="${i.bg}" stroke="${NV}" stroke-width="2"/>`+txt(x+85,78,i.t,'middle',20,i.fg)+txt(x+85,22,i.l,'middle',16,'#1B2430').replace('<text','<text font-weight="700"')});
+  return wrap(s,124)}
+ if(v.t==='bar'){const max=Math.max(...v.i.map(x=>x[1])),top=Math.ceil(max/100)*100,H=170,n=v.i.length,bw=Math.min(54,480/n-14),gap=480/n;let s=txt(300,18,v.ti,'middle',14,'#5B6473');
+  s+=`<line x1="60" y1="30" x2="60" y2="${30+H}" stroke="#8892A0" stroke-width="2"/><line x1="60" y1="${30+H}" x2="560" y2="${30+H}" stroke="#8892A0" stroke-width="2"/>`;
+  v.i.forEach((it,k)=>{const h=it[1]/top*H,x=70+k*gap+(gap-bw)/2;s+=`<rect x="${x}" y="${30+H-h}" width="${bw}" height="${h}" rx="4" fill="#2E86AB"/>`+txt(x+bw/2,30+H-h-6,it[1],'middle',13)+txt(x+bw/2,30+H+18,it[0],'middle',13)});
+  return wrap(s,236)}
+ if(v.t==='sb'){let s='';
+  v.f.forEach((f,k)=>{const x=20+k*190;s+=`<rect x="${x}" y="12" width="170" height="100" rx="6" fill="#fff" stroke="${NV}" stroke-width="2" stroke-dasharray="6 4"/>`+txt(x+85,48,'Panel '+(k+1),'middle',15,'#5B6473')+txt(x+85,76,f.s,'middle',17,NV).replace('<text','<text font-weight="700"')+txt(x+85,138,f.t,'middle',13)});
+  return wrap(s,156)}
  return''}
+const LB={sedang:"Sedang",sulit:"Sulit",hots:"HOTS",olimpiade:"Olimpiade"},LT=['A','B','C','D'];
+const st={cur:0,ans:new Array(QUESTIONS.length).fill(null),done:false};
+const $=id=>document.getElementById(id),panel=$('panel'),grid=$('grid');
+const cv=l=>`style="--c:var(--${l})"`;
 
-/* ===== UI ===== */
-const state={cur:0,ans:new Array(QUESTIONS.length).fill(null),done:false};
-const $=id=>document.getElementById(id),panel=$('panel'),ng=$('ng');
-QUESTIONS.forEach((q,i)=>{const b=document.createElement('button');b.className='nc '+q.level;b.textContent=i+1;b.setAttribute('aria-label','Soal '+(i+1)+', '+LBL[q.level]);b.onclick=()=>{state.cur=i;render()};ng.appendChild(b)});
-function upd(){const n=state.ans.filter(a=>a!==null).length;$('pf').style.width=Math.round(n/QUESTIONS.length*100)+'%';$('pl').textContent=n+' dari '+QUESTIONS.length+' soal terjawab';
- ng.querySelectorAll('.nc').forEach((c,i)=>{c.classList.toggle('a',state.ans[i]!==null);c.classList.toggle('cur',i===state.cur&&!state.done)})}
-function confirmBox(msg,ok){const m=$('mo');$('mm').textContent=msg;m.classList.remove('hidden');
- const y=$('yes'),n=$('no');const off=()=>{m.classList.add('hidden');y.onclick=n.onclick=null};y.onclick=()=>{off();ok()};n.onclick=off}
-function submit(){const un=state.ans.filter(a=>a===null).length;const go=()=>{state.done=true;results()};
- un?confirmBox('Masih ada '+un+' soal belum dijawab. Tetap kumpulkan?',go):go()}
-$('bs').onclick=submit;
-function question(){
- const i=state.cur,q=QUESTIONS[i];
- panel.innerHTML=`<div class="card ${q.level}"><div class="br"><span class="chip ${q.level}">${LBL[q.level]}</span><span class="tc">${q.topic}</span></div>
- <div class="qn">Soal ${i+1} dari ${QUESTIONS.length}</div>
- ${vis(q.vis)}
- <p class="qt">${q.q}</p>
- <fieldset>${q.opts.map((o,k)=>`<label class="opt${state.ans[i]===k?' sel':''}"><input type="radio" name="o" value="${k}" ${state.ans[i]===k?'checked':''}><span class="ol">${'ABCD'[k]}.</span><span>${esc(o)}</span></label>`).join('')}</fieldset>
- <div class="nb"><button class="bg" id="pv" ${i?'':'disabled'}>Sebelumnya</button>
- <button class="bp ${q.level}" id="nx">${i===QUESTIONS.length-1?'Ke ringkasan':'Berikutnya'}</button></div></div>`;
- panel.querySelectorAll('input').forEach(x=>x.onchange=e=>{state.ans[i]=+e.target.value;upd();panel.querySelectorAll('.opt').forEach((l,k)=>l.classList.toggle('sel',k===state.ans[i]))});
- $('pv').onclick=()=>{state.cur--;render()};
- $('nx').onclick=()=>i===QUESTIONS.length-1?submit():(state.cur++,render());
-}
-function results(){
- const lv=['sedang','sulit','hots','olimpiade'],c={};lv.forEach(l=>c[l]={c:0,t:0});let tot=0;
- QUESTIONS.forEach((q,i)=>{c[q.level].t++;if(state.ans[i]===q.correct){c[q.level].c++;tot++}});
- const sc=Math.round(tot/QUESTIONS.length*100),col=sc>=75?'var(--ok)':sc>=50?'var(--gold)':'var(--no)';
- $('side').classList.add('hidden');
- panel.innerHTML=`<div class="rw"><h2>Hasil ujian</h2>
- <div class="hero"><span class="n" style="color:${col}">${tot}</span><span class="o">dari ${QUESTIONS.length} soal benar · nilai akhir <b style="color:${col}">${sc}</b></span></div>
- <div class="bd">${lv.map(l=>`<div class="bdr"><span>${LBL[l]}</span><div class="bt"><div class="bf ${l}" style="width:${c[l].c/c[l].t*100}%"></div></div><span>${c[l].c}/${c[l].t}</span></div>`).join('')}</div>
- <button class="bg" id="rt">Ulangi ujian</button>
- <div style="margin-top:30px">${QUESTIONS.map((q,i)=>{const a=state.ans[i],ok=a===q.correct;
- return `<div class="ri"><div class="br"><span class="chip ${q.level}">${LBL[q.level]}</span><span class="tc">${q.topic}</span>
- <span class="tc" style="border-color:${ok?'var(--ok)':'var(--no)'};color:${ok?'var(--ok)':'var(--no)'}">${ok?'Benar':a===null?'Tidak dijawab':'Salah'}</span></div>
- <p class="rq">${i+1}. ${q.q}</p>${vis(q.vis)}
- ${q.opts.map((o,k)=>`<div class="ro ${k===q.correct?'c':k===a?'w':''}">${'ABCD'[k]}. ${esc(o)}</div>`).join('')}
- <div class="ex"><b>Pembahasan:</b> ${q.exp}</div></div>`}).join('')}</div></div>`;
- $('rt').onclick=()=>{state.cur=0;state.ans.fill(null);state.done=false;$('side').classList.remove('hidden');render()};
- panel.scrollTo({top:0});
-}
-function render(){if(state.done){results();return}question();upd();panel.scrollTo({top:0})}
-render();
+// ===== Timer & penyimpanan (90 menit) =====
+const DUR=90*60;let endAt=0,tick=null,running=false;
+const KEY='ujian-konten-digital-v1';
+function save(){try{localStorage.setItem(KEY,JSON.stringify({endAt,ans:st.ans,cur:st.cur,done:st.done}))}catch(e){}}
+function clearSave(){try{localStorage.removeItem(KEY)}catch(e){}}
+function fmt(s){const h=Math.floor(s/3600),m=Math.floor(s%3600/60),c=s%60;return h+':'+String(m).padStart(2,'0')+':'+String(c).padStart(2,'0')}
+function tickFn(){const r=Math.max(0,Math.ceil((endAt-Date.now())/1000));$('tv').textContent=fmt(r);
+ $('tmr').className='timer'+(r<=300?' crit':r<=600?' warn':'');
+ if(r<=0){clearInterval(tick);$('ov').classList.add('hid');st.done=true;results()}}
+function startTimer(resume){if(!resume)endAt=Date.now()+DUR*1000;running=true;save();clearInterval(tick);tick=setInterval(tickFn,250);tickFn()}
+
+QUESTIONS.forEach((q,i)=>{const b=document.createElement('button');b.type='button';b.className='cell';b.style.setProperty('--c','var(--'+q.level+')');b.textContent=i+1;b.setAttribute('aria-label','Soal '+(i+1)+', '+LB[q.level]);b.onclick=()=>{st.cur=i;render()};grid.appendChild(b)});
+function upd(){const n=st.ans.filter(a=>a!==null).length;grid.querySelectorAll('.cell').forEach((c,i)=>{c.classList.toggle('ans',st.ans[i]!==null);c.classList.toggle('cur',i===st.cur&&!st.done)});$('pf').style.width=Math.round(n/QUESTIONS.length*100)+'%';$('pl').textContent=n+' dari '+QUESTIONS.length+' soal terjawab'}
+function confirmBox(m,fn){const o=$('ov');$('msg').textContent=m;o.classList.remove('hid');const y=$('yes'),n=$('no');const off=()=>{o.classList.add('hid');y.onclick=n.onclick=null};y.onclick=()=>{off();fn()};n.onclick=off}
+function submit(){const u=st.ans.filter(a=>a===null).length;const go=()=>{st.done=true;results()};u?confirmBox('Masih ada '+u+' soal belum dijawab. Tetap kumpulkan?',go):go()}
+$('bsub').onclick=submit;
+function question(){const i=st.cur,q=QUESTIONS[i],last=i===QUESTIONS.length-1;
+panel.innerHTML=`<div class="qc" ${cv(q.level)}><div class="chips"><span class="lc">${LB[q.level]}</span><span class="tc">${q.topic}</span></div><div class="qn">Soal ${i+1} dari ${QUESTIONS.length}</div><p class="qt">${q.q}</p>${vis(q.vz)}<fieldset>${q.opts.map((o,k)=>`<label class="opt${st.ans[i]===k?' sel':''}"><input type="radio" name="o" value="${k}" ${st.ans[i]===k?'checked':''}><span class="L">${LT[k]}.</span><span>${esc(o)}</span></label>`).join('')}</fieldset><div class="nb"><button type="button" class="bg" id="pv" ${i?'':'disabled'}>Sebelumnya</button><button type="button" class="bp" id="nx">${last?'Ke ringkasan':'Berikutnya'}</button></div></div>`;
+panel.querySelectorAll('input').forEach(inp=>inp.onchange=e=>{st.ans[i]=+e.target.value;upd();panel.querySelectorAll('.opt').forEach((el,k)=>el.classList.toggle('sel',k===st.ans[i]));save()});
+$('pv').onclick=()=>{st.cur--;render()};$('nx').onclick=()=>last?submit():(st.cur++,render())}
+function results(){clearInterval(tick);running=false;$('tmr').classList.add('hid');$('fin').classList.remove('hid');save();
+const lv=['sedang','sulit','hots','olimpiade'],c={};lv.forEach(l=>c[l]={r:0,t:0});let tot=0;
+QUESTIONS.forEach((q,i)=>{c[q.level].t++;if(st.ans[i]===q.correct){c[q.level].r++;tot++}});
+const sc=Math.round(tot/QUESTIONS.length*100),col=sc>=75?'var(--ok)':sc>=50?'var(--gold)':'var(--bad)';
+const bd=lv.map(l=>`<div class="br" ${cv(l)}><span>${LB[l]}</span><div class="bt"><div style="width:${c[l].t?c[l].r/c[l].t*100:0}%"></div></div><span>${c[l].r}/${c[l].t}</span></div>`).join('');
+const rv=QUESTIONS.map((q,i)=>{const u=st.ans[i],ok=u===q.correct;return `<div class="ri"><div class="chips" ${cv(q.level)}><span class="lc">${LB[q.level]}</span><span class="tc">${q.topic}</span><span class="tc" style="color:${ok?'var(--ok)':'var(--bad)'};border-color:currentColor">${ok?'Benar':u===null?'Tidak dijawab':'Salah'}</span></div><p class="rq">${i+1}. ${q.q}</p>${vis(q.vz)}${q.opts.map((o,k)=>`<div class="ro ${k===q.correct?'ok':k===u?'no':''}">${LT[k]}. ${esc(o)}</div>`).join('')}<div class="ex"><b>Pembahasan:</b> ${q.exp}</div></div>`}).join('');
+$('side').classList.add('hid');
+panel.innerHTML=`<div class="res"><h2>Hasil ujian</h2><div class="hero"><span class="n" style="color:${col}">${tot}</span><span class="o">dari ${QUESTIONS.length} soal benar · nilai akhir <b style="color:${col}">${sc}</b></span></div><div class="bd">${bd}</div><button type="button" class="bg" id="rt">Ulangi ujian</button><div style="margin-top:30px">${rv}</div></div>`;
+$('rt').onclick=again;panel.scrollTo(0,0)}
+function again(){st.cur=0;st.ans.fill(null);st.done=false;clearInterval(tick);running=false;clearSave();
+ $('side').classList.remove('hid');$('fin').classList.add('hid');$('tmr').classList.remove('hid');$('tmr').className='timer';$('tv').textContent=fmt(DUR);
+ render();$('intro').classList.remove('hid')}
+const SOAL_URL='../soal.html'; // ganti dengan nama/alamat file HTML tujuan
+$('fin').onclick=()=>{clearSave();location.href=SOAL_URL};
+$('okb').onclick=()=>{$('intro').classList.add('hid');startTimer()};
+function render(){if(st.done){results();return}question();upd();if(running)save();panel.scrollTo(0,0)}
+// Cegah refresh saat ujian berjalan + pulihkan jawaban dan sisa waktu bila halaman tetap termuat ulang
+addEventListener('beforeunload',e=>{if(running){e.preventDefault();e.returnValue=''}});
+addEventListener('keydown',e=>{if(!running)return;if(e.key==='F5'||((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='r'))e.preventDefault()});
+(function(){try{const d=JSON.parse(localStorage.getItem(KEY)||'null');
+ if(d&&Array.isArray(d.ans)&&d.ans.length===QUESTIONS.length){st.ans=d.ans;st.cur=d.cur||0;endAt=d.endAt;$('intro').classList.add('hid');
+  if(d.done||Date.now()>=endAt){st.done=true;render();return}
+  startTimer(true);render();return}}catch(e){}
+ render()})();
 </script>
 </body>
 </html>

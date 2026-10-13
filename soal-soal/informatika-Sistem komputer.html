@@ -8,7 +8,7 @@
 <style>
 :root{--paper:#F0F2F5;--panel:#fff;--ink:#1B2430;--soft:#5B6473;--navy:#0F3D63;--deep:#0A2B48;--gold:#D79A2C;--line:#DDE2E8;
 --sedang:#2E86AB;--sedang-bg:#EAF3F8;--sulit:#C9642A;--sulit-bg:#FBEEE4;--hots:#7B4FA6;--hots-bg:#F1EAF8;--olimpiade:#B23A48;--olimpiade-bg:#FAEBEC;--ok:#2F9E5B;--ok-bg:#E7F5EC;--bad:#C0392B;--bad-bg:#FBEBE9;color-scheme:light}
-*{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--paper)}
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--paper);overscroll-behavior-y:none}
 body{color:var(--ink);font-family:'Public Sans',system-ui,sans-serif;line-height:1.5;overflow:hidden}
 h2,h3{font-family:'Fraunces',Georgia,serif;margin:0}button{font-family:inherit}
 .app{height:100dvh;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -58,13 +58,26 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 .ov{position:fixed;inset:0;background:rgba(10,20,32,.55);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}
 .mb{background:#fff;border-radius:12px;padding:24px 26px;max-width:380px;border-top:4px solid var(--gold)}
 .mb p{font-size:14.5px;color:var(--soft);margin:8px 0 18px}.ma{display:flex;justify-content:flex-end;gap:10px}
-@media(max-width:820px){.body{flex-direction:column}aside{width:100%;max-height:36vh;border-right:0}main{padding:18px 14px 30px}}
+/* === Tambahan fitur: timer, tombol selesai, petunjuk === */
+.hr{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.timer{display:inline-flex;align-items:baseline;gap:8px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.32);border-radius:8px;padding:4px 14px;font-size:12px;color:#C7D2DE}
+.timer b{font-size:19px;color:#fff;font-weight:700;font-variant-numeric:tabular-nums}
+.timer.warn{background:rgba(215,154,44,.3);border-color:var(--gold)}
+.timer.crit{background:rgba(192,57,43,.45);border-color:#F1948A}
+.fin{background:var(--gold);color:#2A1D06;border:0;border-radius:8px;padding:7px 22px;font-size:14.5px;font-weight:700;cursor:pointer}
+#intro{z-index:200;background:rgba(10,20,32,.72)}
+.mb h3{font-size:19px}.mb.big{max-width:560px;max-height:90vh;overflow-y:auto}.mb.big h3{font-size:21px}
+.mb ol{margin:12px 0 20px;padding-left:20px;font-size:14.5px;color:var(--ink)}.mb li{margin-bottom:8px}
+@media(max-width:820px){.body{flex-direction:column}aside{width:100%;max-height:36vh;border-right:0}main{padding:18px 14px 30px}header{padding:8px 14px 0}}
 </style>
 </head>
 <body>
 <div class="app">
 <header>
-<div class="row"><span class="brand">KW Learning · Ruang Belajar Informatika</span><span class="et">Ujian Sistem Komputer</span></div>
+<div class="row"><span class="brand">KW Learning · Ruang Belajar Informatika</span>
+<div class="hr"><span class="et">Ujian Sistem Komputer</span>
+<div class="timer" id="tmr" role="timer"><span>Sisa waktu</span><b id="tv">1:30:00</b></div>
+<button type="button" class="fin hidden" id="fin">Selesai</button></div></div>
 <p class="sub">45 soal pilihan ganda dengan gambar perangkat keras, diagram blok, dan bilangan biner — sedang, sulit, HOTS, dan olimpiade.</p>
 <div class="strip"><span style="background:var(--sedang)"></span><span style="background:var(--sulit)"></span><span style="background:var(--hots)"></span><span style="background:var(--olimpiade)"></span></div>
 </header>
@@ -77,6 +90,19 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 <main id="panel" aria-live="polite"></main>
 </div></div>
 <div class="ov hidden" id="ov"><div class="mb"><h3>Kumpulkan jawaban?</h3><p id="cm"></p><div class="ma"><button class="g" id="no">Kembali</button><button class="p" id="yes">Ya, kumpulkan</button></div></div></div>
+
+<div class="ov" id="intro" role="dialog" aria-modal="true" aria-labelledby="it"><div class="mb big">
+<h3 id="it">Petunjuk Mengerjakan Soal</h3>
+<ol>
+<li>Ujian terdiri dari <b>45 soal pilihan ganda</b>: Sedang (1–15), Sulit (16–30), HOTS (31–40), dan Olimpiade (41–45).</li>
+<li>Waktu mengerjakan <b>90 menit</b>. Waktu <b>langsung berjalan</b> setelah kamu menekan tombol OK dan tidak dapat dihentikan.</li>
+<li>Pilih satu jawaban yang paling tepat untuk setiap soal. Jawaban boleh diubah selama waktu masih ada.</li>
+<li>Gunakan kotak navigasi soal untuk berpindah soal, dan perhatikan sisa waktu di bagian atas layar.</li>
+<li>Tekan <b>Kumpulkan jawaban</b> bila sudah selesai. Jika waktu habis, jawaban akan dikumpulkan secara otomatis.</li>
+<li>Setelah dikumpulkan, nilai dan pembahasan setiap soal akan ditampilkan.</li>
+</ol>
+<div class="ma"><button class="p" id="okb">OK, mulai mengerjakan</button></div>
+</div></div>
 
 <script>
 const NS='http://www.w3.org/2000/svg';
@@ -166,6 +192,22 @@ const Q=[
 const LB={sedang:"Sedang",sulit:"Sulit",hots:"HOTS",olimpiade:"Olimpiade"},LT=['A','B','C','D'];
 const S={cur:0,ans:Q.map(()=>null),done:false};
 const $=id=>document.getElementById(id),panel=$('panel'),grid=$('grid');
+
+/* === Tambahan fitur: timer 90 menit, simpan progres, cegah refresh === */
+const DUR=90*60,KEY='ujian-sistem-komputer-v1',SOAL_URL='../soal.html'; // ganti SOAL_URL dengan alamat file HTML tujuan
+let endAt=0,tick=null,running=false;
+function save(){try{localStorage.setItem(KEY,JSON.stringify({endAt,ans:S.ans,cur:S.cur,done:S.done}))}catch(e){}}
+function clearSave(){try{localStorage.removeItem(KEY)}catch(e){}}
+function fmtT(s){const h=Math.floor(s/3600),m=Math.floor(s%3600/60),c=s%60;return h+':'+String(m).padStart(2,'0')+':'+String(c).padStart(2,'0')}
+function tickFn(){const r=Math.max(0,Math.ceil((endAt-Date.now())/1000));$('tv').textContent=fmtT(r);
+ $('tmr').className='timer'+(r<=300?' crit':r<=600?' warn':'');
+ if(r<=0){clearInterval(tick);$('ov').classList.add('hidden');S.done=true;results()}}
+function startTimer(resume){if(!resume)endAt=Date.now()+DUR*1000;running=true;save();clearInterval(tick);tick=setInterval(tickFn,250);tickFn()}
+$('okb').onclick=()=>{$('intro').classList.add('hidden');startTimer()};
+$('fin').onclick=()=>{clearSave();location.href=SOAL_URL};
+addEventListener('beforeunload',e=>{if(running){e.preventDefault();e.returnValue=''}});
+addEventListener('keydown',e=>{if(!running)return;if(e.key==='F5'||((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='r'))e.preventDefault()});
+
 Q.forEach((q,i)=>{const b=document.createElement('button');b.type='button';b.className='cell '+q.l;b.textContent=i+1;b.setAttribute('aria-label','Soal '+(i+1)+', '+LB[q.l]);b.onclick=()=>{S.cur=i;render()};grid.appendChild(b)});
 function upd(){grid.childNodes.forEach((c,i)=>{c.classList.toggle('answered',S.ans[i]!==null);c.classList.toggle('current',i===S.cur&&!S.done)});
  const n=S.ans.filter(a=>a!==null).length;$('pf').style.width=Math.round(n/Q.length*100)+'%';$('pl').textContent=n+' dari '+Q.length+' soal terjawab'}
@@ -178,11 +220,15 @@ function question(){
   <div class="qn">Soal ${i+1} dari ${Q.length}</div>${q.f||''}<p class="qt">${q.q}</p>
   <fieldset>${q.o.map((o,k)=>`<label class="opt${S.ans[i]===k?' sel':''}"><input type="radio" name="o" value="${k}"${S.ans[i]===k?' checked':''}><span class="ol">${LT[k]}.</span><span>${o}</span></label>`).join('')}</fieldset>
   <div class="nb"><button type="button" class="g" id="pv"${i?'':' disabled'}>Sebelumnya</button><button type="button" class="p" id="nx">${i===Q.length-1?'Ke ringkasan':'Berikutnya'}</button></div></div>`;
-  panel.querySelectorAll('input').forEach(inp=>inp.onchange=e=>{S.ans[i]=+e.target.value;panel.querySelectorAll('.opt').forEach((el,k)=>el.classList.toggle('sel',k===S.ans[i]));upd()});
+  panel.querySelectorAll('input').forEach(inp=>inp.onchange=e=>{S.ans[i]=+e.target.value;panel.querySelectorAll('.opt').forEach((el,k)=>el.classList.toggle('sel',k===S.ans[i]));upd();save()});
   $('pv').onclick=()=>{S.cur--;render()};
   $('nx').onclick=()=>i===Q.length-1?submit():(S.cur++,render());
 }
+function again(){S.cur=0;S.ans=Q.map(()=>null);S.done=false;clearInterval(tick);running=false;clearSave();
+  $('side').classList.remove('hidden');$('fin').classList.add('hidden');$('tmr').classList.remove('hidden');$('tmr').className='timer';$('tv').textContent=fmtT(DUR);
+  render();$('intro').classList.remove('hidden')}
 function results(){
+  clearInterval(tick);running=false;$('tmr').classList.add('hidden');$('fin').classList.remove('hidden');save();
   const cnt={};Object.keys(LB).forEach(k=>cnt[k]=[0,0]);let tot=0;
   Q.forEach((q,i)=>{cnt[q.l][1]++;if(S.ans[i]===q.c){cnt[q.l][0]++;tot++}});
   const sc=Math.round(tot/Q.length*100),col=sc>=75?'var(--ok)':sc>=50?'var(--gold)':'var(--bad)';
@@ -191,11 +237,16 @@ function results(){
   ${Object.keys(LB).map(k=>`<div class="bd ${k}"><span>${LB[k]}</span><div class="bt"><div style="width:${cnt[k][1]?cnt[k][0]/cnt[k][1]*100:0}%"></div></div><span>${cnt[k][0]}/${cnt[k][1]}</span></div>`).join('')}
   <button class="g" id="rt">Ulangi ujian</button>
   <div style="margin-top:24px">${Q.map((q,i)=>{const a=S.ans[i],ok=a===q.c;return `<div class="ri ${q.l}"><div class="chips"><span class="chip">${LB[q.l]}</span><span class="tc">${q.t}</span><span class="tc" style="color:${ok?'var(--ok)':'var(--bad)'};border-color:currentColor">${ok?'Benar':a===null?'Tidak dijawab':'Salah'}</span></div>${q.f||''}<p class="rq">${i+1}. ${q.q}</p>${q.o.map((o,k)=>`<div class="ro ${k===q.c?'c':k===a?'w':''}">${LT[k]}. ${o}</div>`).join('')}<div class="ex"><b>Pembahasan:</b> ${q.e}</div></div>`}).join('')}</div></div>`;
-  $('rt').onclick=()=>{S.cur=0;S.ans=Q.map(()=>null);S.done=false;$('side').classList.remove('hidden');render()};
+  $('rt').onclick=again;
   panel.scrollTo(0,0);
 }
-function render(){if(S.done)return results();question();upd();panel.scrollTo(0,0)}
-render();
+function render(){if(S.done)return results();question();upd();if(running)save();panel.scrollTo(0,0)}
+/* Pulihkan jawaban dan sisa waktu bila halaman termuat ulang */
+(function(){try{const d=JSON.parse(localStorage.getItem(KEY)||'null');
+ if(d&&Array.isArray(d.ans)&&d.ans.length===Q.length){S.ans=d.ans;S.cur=d.cur||0;endAt=d.endAt;$('intro').classList.add('hidden');
+  if(d.done||Date.now()>=endAt){S.done=true;render();return}
+  startTimer(true);render();return}}catch(e){}
+ render()})();
 </script>
 </body>
 </html>

@@ -8,14 +8,22 @@
 <style>
 :root{--paper:#F0F2F5;--panel:#fff;--ink:#1B2430;--soft:#5B6473;--navy:#0F3D63;--deep:#0A2B48;--gold:#D79A2C;--line:#DDE2E8;
 --sedang:#2E86AB;--sedang-bg:#EAF3F8;--sulit:#C9642A;--sulit-bg:#FBEEE4;--hots:#7B4FA6;--hots-bg:#F1EAF8;--olimpiade:#B23A48;--olimpiade-bg:#FAEBEC;--ok:#2F9E5B;--ok-bg:#E7F5EC;--bad:#C0392B;--bad-bg:#FBEBE9;color-scheme:light}
-*{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--paper)}
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--paper);overscroll-behavior-y:none}
 body{color:var(--ink);font-family:'Public Sans',system-ui,sans-serif;line-height:1.5;overflow:hidden}
 h2,h3{font-family:'Fraunces',Georgia,serif;margin:0}button{font-family:inherit}
 .app{height:100dvh;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 header{flex:none;background:linear-gradient(120deg,var(--navy),var(--deep));color:#fff;padding:10px 26px 0}
-.row{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:baseline}
-.brand{font-size:13px;color:#B9C6D6;font-weight:600}.et{font-family:'Fraunces',serif;font-weight:600;font-size:18px}
-.sub{margin:4px 0 8px;color:#C7D2DE;font-size:12.5px}
+.row{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.hl{display:flex;align-items:center;gap:14px;flex:1;min-width:0}.ht{min-width:0}
+.logo{width:56px;height:56px;border-radius:50%;object-fit:cover;background:#fff;border:2px solid var(--gold);padding:2px;flex:none}
+.brand{display:block;font-size:13px;color:#B9C6D6;font-weight:600}.et{font-family:'Fraunces',serif;font-weight:600;font-size:18px}
+.sub{margin:4px 0 12px;color:#C7D2DE;font-size:12.5px}
+.hr{display:flex;flex-direction:column;align-items:flex-end;gap:6px;min-height:62px}
+.timer{display:inline-flex;align-items:baseline;gap:8px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.32);border-radius:8px;padding:4px 14px;font-size:12px;color:#C7D2DE}
+.timer b{font-size:19px;color:#fff;font-weight:700;font-variant-numeric:tabular-nums}
+.timer.warn{background:rgba(215,154,44,.3);border-color:var(--gold)}
+.timer.crit{background:rgba(192,57,43,.45);border-color:#F1948A}
+.fin{background:var(--gold);color:#2A1D06;border:0;border-radius:8px;padding:7px 22px;font-size:14.5px;font-weight:700;cursor:pointer}
 .strip{display:flex;height:4px}.strip span{flex:1}
 .body{flex:1;display:flex;min-height:0}
 aside{width:270px;flex:none;background:var(--panel);border-right:1px solid var(--line);border-top:3px solid var(--gold);display:flex;flex-direction:column;min-height:0}
@@ -56,16 +64,39 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 .ex{font-size:14px;color:var(--soft);background:#F6F4EC;border-radius:8px;padding:12px 14px;margin-top:10px}.ex b{color:var(--ink)}
 .hidden{display:none!important}
 .ov{position:fixed;inset:0;background:rgba(10,20,32,.55);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}
+#intro{z-index:200;background:rgba(10,20,32,.72)}
 .mb{background:#fff;border-radius:12px;padding:24px 26px;max-width:380px;border-top:4px solid var(--gold)}
+.mb.big{max-width:560px;max-height:90vh;overflow-y:auto}.mb h3{font-size:21px}
 .mb p{font-size:14.5px;color:var(--soft);margin:8px 0 18px}.ma{display:flex;justify-content:flex-end;gap:10px}
-@media(max-width:820px){.body{flex-direction:column}aside{width:100%;max-height:36vh;border-right:0}main{padding:18px 14px 30px}}
+.mb ol{margin:12px 0 20px;padding-left:20px;font-size:14.5px;color:var(--ink)}.mb li{margin-bottom:8px}
+@media(max-width:820px){
+.body{flex-direction:column}
+header{padding:8px 14px 0}.row{flex-direction:column;gap:6px;align-items:stretch}
+.hl{gap:10px}.logo{width:42px;height:42px}.brand{font-size:12px}
+.sub{font-size:11px;margin:2px 0 8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.hr{flex-direction:row;align-items:center;justify-content:space-between;min-height:0;gap:10px;padding-bottom:8px}
+.timer{padding:3px 10px}.timer b{font-size:17px}.fin{padding:6px 16px;font-size:14px}
+aside{width:100%;max-height:none;border-right:0;border-bottom:1px solid var(--line);flex:none}
+.sc{flex:none;overflow:visible;padding:10px 14px 4px}.pl{margin-bottom:8px}
+.sf{padding:8px 14px 10px}.bs{padding:10px}
+main{min-height:0;padding:14px 12px 24px}.card{padding:18px 16px 20px}.qt{font-size:16.5px}.opt{padding:11px 12px}
+.hero .n{font-size:40px}.mb{padding:20px 18px}.mb.big h3{font-size:19px}.mb ol{font-size:14px}
+.et{font-size:15px}
+.grid{position:relative;grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:38px;overflow-x:auto;padding-bottom:6px;margin-bottom:4px;-webkit-overflow-scrolling:touch}
+.legend{display:none}aside h2{margin-bottom:6px}
+.nb .g,.nb .p{flex:1;padding:12px 10px}.ma .g,.ma .p{flex:1}.bd{grid-template-columns:70px 1fr 44px;gap:8px}
+}
 </style>
 </head>
 <body>
 <div class="app">
 <header>
-<div class="row"><span class="brand">KW Learning · Ruang Belajar Matematika</span><span class="et">Ujian Statistika</span></div>
-<p class="sub">45 soal pilihan ganda dengan gambar diagram batang, garis, dan lingkaran — sedang, sulit, HOTS, dan olimpiade.</p>
+<div class="row">
+<div class="hl"><img class="logo" src="../assets/logo-sekolah.png" alt="Logo sekolah"><div class="ht"><span class="brand">KW Learning · Ruang Belajar Matematika</span><p class="sub">45 soal pilihan ganda dengan gambar diagram batang, garis, dan lingkaran — sedang, sulit, HOTS, dan olimpiade.</p></div></div>
+<div class="hr"><span class="et">Ujian Statistika</span>
+<div class="timer" id="tmr" role="timer"><span>Sisa waktu</span><b id="tv">1:30:00</b></div>
+<button type="button" class="fin hidden" id="fin">Selesai</button></div>
+</div>
 <div class="strip"><span style="background:var(--sedang)"></span><span style="background:var(--sulit)"></span><span style="background:var(--hots)"></span><span style="background:var(--olimpiade)"></span></div>
 </header>
 <div class="body">
@@ -78,8 +109,21 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 </div></div>
 <div class="ov hidden" id="ov"><div class="mb"><h3>Kumpulkan jawaban?</h3><p id="cm"></p><div class="ma"><button class="g" id="no">Kembali</button><button class="p" id="yes">Ya, kumpulkan</button></div></div></div>
 
+<div class="ov" id="intro" role="dialog" aria-modal="true" aria-labelledby="it"><div class="mb big">
+<h3 id="it">Petunjuk Mengerjakan Soal</h3>
+<ol>
+<li>Ujian terdiri dari <b>45 soal pilihan ganda</b>: Sedang (1–15), Sulit (16–30), HOTS (31–40), dan Olimpiade (41–45).</li>
+<li>Waktu mengerjakan <b>90 menit</b>. Waktu <b>langsung berjalan</b> setelah kamu menekan tombol OK dan tidak dapat dihentikan.</li>
+<li>Pilih satu jawaban yang paling tepat untuk setiap soal. Jawaban boleh diubah selama waktu masih ada.</li>
+<li>Gunakan kotak navigasi soal di sebelah kiri untuk berpindah soal, dan perhatikan sisa waktu di pojok kanan atas.</li>
+<li>Selama ujian berjalan, halaman tidak boleh di-refresh atau ditutup.</li>
+<li>Tekan <b>Kumpulkan jawaban</b> bila sudah selesai. Jika waktu habis, jawaban akan dikumpulkan secara otomatis.</li>
+<li>Setelah dikumpulkan, nilai dan pembahasan setiap soal akan ditampilkan.</li>
+</ol>
+<div class="ma"><button class="p" id="okb">OK, mulai mengerjakan</button></div>
+</div></div>
+
 <script>
-const NS='http://www.w3.org/2000/svg';
 // Gambar: diagram batang, garis, lingkaran
 const COL=['#2E86AB','#C9642A','#7B4FA6','#2F9E5B','#D79A2C'];
 function axes(max,step){
@@ -117,7 +161,6 @@ const BK=F(bars(['7A','7B','7C','7D'],[32,28,30,34],40,10));
 const P3=F(pie([['Membaca 25%',25],['Musik 35%',35],['Olahraga 30%',30],['Lainnya 10%',10]]));
 const LB2=F(line(['Jan','Feb','Mar','Apr','Mei'],[10,11,13,12,15],20,5));
 const Q=[
-// SEDANG
 {l:"sedang",t:"Rata-rata (Mean)",q:"Rata-rata dari data 4, 6, 8, 10, 12 adalah ...",o:["6","7","8","9"],c:2,e:"(4+6+8+10+12) : 5 = 40 : 5 = 8."},
 {l:"sedang",t:"Modus",q:"Modus dari data 3, 4, 4, 5, 6, 4, 7 adalah ...",o:["3","4","5","6"],c:1,e:"Modus adalah data yang paling sering muncul, yaitu 4 (muncul 3 kali)."},
 {l:"sedang",t:"Median",q:"Median dari data 3, 5, 6, 7, 9 adalah ...",o:["5","7","6","8"],c:2,e:"Data sudah terurut dan banyaknya 5, sehingga nilai tengahnya adalah data ke-3 = 6."},
@@ -133,7 +176,6 @@ const Q=[
 {l:"sedang",t:"Diagram Garis",f:LP,q:"Banyak pengunjung perpustakaan pada hari Selasa adalah ...",o:["30","35","40","45"],c:1,e:"Titik pada hari Selasa menunjukkan 35."},
 {l:"sedang",t:"Modus",q:"Nilai 6 diperoleh 2 siswa, nilai 7 diperoleh 3 siswa, dan nilai 8 diperoleh 5 siswa. Modus nilai tersebut adalah ...",o:["6","7","8","5"],c:2,e:"Nilai 8 paling banyak muncul (5 siswa)."},
 {l:"sedang",t:"Diagram Lingkaran",q:"Besar sudut pusat pada diagram lingkaran yang mewakili 25% adalah ...",o:["45°","90°","25°","100°"],c:1,e:"25% × 360° = 90°."},
-// SULIT
 {l:"sulit",t:"Rata-rata (Mean)",q:"Rata-rata dari 5 bilangan adalah 12. Jumlah kelima bilangan tersebut adalah ...",o:["48","60","72","17"],c:1,e:"Jumlah = rata-rata × banyak data = 12 × 5 = 60."},
 {l:"sulit",t:"Rata-rata Baru",q:"Nilai rata-rata 8 siswa adalah 75. Jika ditambah nilai siswa lain sebesar 84, rata-rata barunya adalah ...",o:["74","75","76","77"],c:2,e:"Jumlah = 600 + 84 = 684. Rata-rata = 684 : 9 = 76."},
 {l:"sulit",t:"Median Data Genap",q:"Median dari data 4, 6, 7, 8, 10, 12 adalah ...",o:["7","7,5","8","9"],c:1,e:"Banyak data 6 (genap), median = (7 + 8) : 2 = 7,5."},
@@ -149,7 +191,6 @@ const Q=[
 {l:"sulit",t:"Diagram Lingkaran",q:"Pada diagram lingkaran, sudut pusat 72° mewakili 40 siswa. Jumlah seluruh siswa adalah ...",o:["100","150","200","250"],c:2,e:"72/360 = 1/5 bagian. Seluruh siswa = 40 × 5 = 200."},
 {l:"sulit",t:"Diagram Batang",f:BK,q:"Rata-rata banyak siswa per kelas pada diagram di atas adalah ...",o:["30","31","32","33"],c:1,e:"(32 + 28 + 30 + 34) : 4 = 124 : 4 = 31."},
 {l:"sulit",t:"Mencari Data",q:"Rata-rata dari data 4, 6, x, 10 adalah 7. Nilai x adalah ...",o:["6","7","8","9"],c:2,e:"Jumlah = 28, sehingga 4 + 6 + x + 10 = 28 → x = 8."},
-// HOTS
 {l:"hots",t:"Diagram Lingkaran",f:P3,q:"Dari 40 siswa, banyak siswa yang gemar musik pada diagram di atas adalah ...",o:["10","12","14","16"],c:2,e:"35% × 40 = 14 siswa."},
 {l:"hots",t:"Diagram Lingkaran",f:P3,q:"Selisih banyak siswa yang gemar membaca dan olahraga (dari 40 siswa) adalah ...",o:["2","4","6","8"],c:0,e:"(30% − 25%) × 40 = 5% × 40 = 2 siswa."},
 {l:"hots",t:"Rata-rata Gabungan",q:"Kelas A (30 siswa) rata-rata nilainya 70 dan kelas B (20 siswa) rata-rata nilainya 80. Rata-rata gabungan kedua kelas adalah ...",o:["72","74","75","76"],c:1,e:"(2.100 + 1.600) : 50 = 3.700 : 50 = 74."},
@@ -160,7 +201,6 @@ const Q=[
 {l:"hots",t:"Rata-rata Baru",q:"Rata-rata 9 bilangan adalah 20. Setelah ditambah satu bilangan, rata-ratanya menjadi 22. Bilangan yang ditambahkan adalah ...",o:["38","40","42","44"],c:1,e:"Jumlah baru = 220, jumlah lama = 180. Bilangan baru = 40."},
 {l:"hots",t:"Median",q:"Median dari data 12, 15, 11, 18, 14, 16, 13 adalah ...",o:["13","14","15","16"],c:1,e:"Urutkan: 11, 12, 13, 14, 15, 16, 18. Data ke-4 adalah 14."},
 {l:"hots",t:"Jangkauan",q:"Selisih nilai tertinggi dan terendah dari data 62, 75, 80, 58, 90, 71 adalah ...",o:["28","30","32","34"],c:2,e:"90 − 58 = 32."},
-// OLIMPIADE
 {l:"olimpiade",t:"Rata-rata",q:"Rata-rata lima bilangan bulat berurutan adalah 12. Bilangan terbesarnya adalah ...",o:["13","14","15","16"],c:1,e:"Rata-rata = bilangan tengah = 12, sehingga bilangannya 10, 11, 12, 13, 14."},
 {l:"olimpiade",t:"Rata-rata Gabungan",q:"Rata-rata a, b, c adalah 8 dan rata-rata a, b, c, d, e adalah 9. Rata-rata d dan e adalah ...",o:["9,5","10","10,5","11"],c:2,e:"a+b+c = 24 dan jumlah lima bilangan = 45. d + e = 21, rata-ratanya 10,5."},
 {l:"olimpiade",t:"Median",q:"Tujuh bilangan asli berbeda memiliki median 10. Jumlah terkecil ketujuh bilangan tersebut adalah ...",o:["49","52","55","58"],c:1,e:"Bilangan terkecil: 1, 2, 3, 10, 11, 12, 13. Jumlahnya 52."},
@@ -168,11 +208,24 @@ const Q=[
 {l:"olimpiade",t:"Rata-rata Berubah",q:"Rata-rata tinggi 11 pemain adalah 170 cm. Setelah seorang pemain keluar, rata-ratanya menjadi 169 cm. Tinggi pemain yang keluar adalah ...",o:["175 cm","178 cm","180 cm","185 cm"],c:2,e:"1.870 − (10 × 169) = 1.870 − 1.690 = 180 cm."}
 ];
 const LB={sedang:"Sedang",sulit:"Sulit",hots:"HOTS",olimpiade:"Olimpiade"},LT=['A','B','C','D'];
-const S={cur:0,ans:Q.map(()=>null),done:false};
+const S={cur:0,ans:Q.map(()=>null),done:false,score:0};
 const $=id=>document.getElementById(id),panel=$('panel'),grid=$('grid');
+// Timer 90 menit, simpan progres, cegah refresh
+const DUR=90*60,KEY='ujian-statistika-v1',SOAL_URL='../soal.html';
+let endAt=0,tick=null,running=false;
+function save(){try{localStorage.setItem(KEY,JSON.stringify({endAt,ans:S.ans,cur:S.cur,done:S.done}))}catch(e){}}
+function clearSave(){try{localStorage.removeItem(KEY)}catch(e){}}
+function tfmt(s){const h=Math.floor(s/3600),m=Math.floor(s%3600/60),c=s%60;return h+':'+String(m).padStart(2,'0')+':'+String(c).padStart(2,'0')}
+function tickFn(){const r=Math.max(0,Math.ceil((endAt-Date.now())/1000));$('tv').textContent=tfmt(r);
+ $('tmr').className='timer'+(r<=300?' crit':r<=600?' warn':'');
+ if(r<=0){clearInterval(tick);$('ov').classList.add('hidden');S.done=true;results()}}
+function startTimer(resume){if(!resume)endAt=Date.now()+DUR*1000;running=true;save();clearInterval(tick);tick=setInterval(tickFn,250);tickFn()}
+function again(){S.cur=0;S.ans=Q.map(()=>null);S.done=false;S.score=0;clearInterval(tick);running=false;clearSave();
+ $('side').classList.remove('hidden');$('fin').classList.add('hidden');$('tmr').classList.remove('hidden');$('tmr').className='timer';$('tv').textContent=tfmt(DUR);
+ render();$('intro').classList.remove('hidden')}
 Q.forEach((q,i)=>{const b=document.createElement('button');b.type='button';b.className='cell '+q.l;b.textContent=i+1;b.setAttribute('aria-label','Soal '+(i+1)+', '+LB[q.l]);b.onclick=()=>{S.cur=i;render()};grid.appendChild(b)});
 function upd(){grid.childNodes.forEach((c,i)=>{c.classList.toggle('answered',S.ans[i]!==null);c.classList.toggle('current',i===S.cur&&!S.done)});
- const n=S.ans.filter(a=>a!==null).length;$('pf').style.width=Math.round(n/Q.length*100)+'%';$('pl').textContent=n+' dari '+Q.length+' soal terjawab'}
+ const n=S.ans.filter(a=>a!==null).length;$('pf').style.width=Math.round(n/Q.length*100)+'%';$('pl').textContent=n+' dari '+Q.length+' soal terjawab';if(innerWidth<=820){const c=grid.childNodes[S.cur];if(c)grid.scrollLeft=c.offsetLeft-grid.clientWidth/2+c.offsetWidth/2}}
 function confirmBox(msg,ok){$('cm').textContent=msg;$('ov').classList.remove('hidden');$('no').onclick=()=>$('ov').classList.add('hidden');$('yes').onclick=()=>{$('ov').classList.add('hidden');ok()}}
 function submit(){const u=S.ans.filter(a=>a===null).length;const go=()=>{S.done=true;results()};u?confirmBox('Masih ada '+u+' soal belum dijawab. Tetap kumpulkan?',go):go()}
 $('bsub').onclick=submit;
@@ -182,24 +235,33 @@ function question(){
   <div class="qn">Soal ${i+1} dari ${Q.length}</div>${q.f||''}<p class="qt">${q.q}</p>
   <fieldset>${q.o.map((o,k)=>`<label class="opt${S.ans[i]===k?' sel':''}"><input type="radio" name="o" value="${k}"${S.ans[i]===k?' checked':''}><span class="ol">${LT[k]}.</span><span>${o}</span></label>`).join('')}</fieldset>
   <div class="nb"><button type="button" class="g" id="pv"${i?'':' disabled'}>Sebelumnya</button><button type="button" class="p" id="nx">${i===Q.length-1?'Ke ringkasan':'Berikutnya'}</button></div></div>`;
-  panel.querySelectorAll('input').forEach(inp=>inp.onchange=e=>{S.ans[i]=+e.target.value;panel.querySelectorAll('.opt').forEach((el,k)=>el.classList.toggle('sel',k===S.ans[i]));upd()});
+  panel.querySelectorAll('input').forEach(inp=>inp.onchange=e=>{S.ans[i]=+e.target.value;panel.querySelectorAll('.opt').forEach((el,k)=>el.classList.toggle('sel',k===S.ans[i]));upd();save()});
   $('pv').onclick=()=>{S.cur--;render()};
   $('nx').onclick=()=>i===Q.length-1?submit():(S.cur++,render());
 }
 function results(){
+  clearInterval(tick);running=false;$('tmr').classList.add('hidden');$('fin').classList.remove('hidden');
   const cnt={};Object.keys(LB).forEach(k=>cnt[k]=[0,0]);let tot=0;
   Q.forEach((q,i)=>{cnt[q.l][1]++;if(S.ans[i]===q.c){cnt[q.l][0]++;tot++}});
-  const sc=Math.round(tot/Q.length*100),col=sc>=75?'var(--ok)':sc>=50?'var(--gold)':'var(--bad)';
+  const sc=Math.round(tot/Q.length*100),col=sc>=75?'var(--ok)':sc>=50?'var(--gold)':'var(--bad)';S.score=sc;save();
   $('side').classList.add('hidden');
   panel.innerHTML=`<div class="rw"><h2>Hasil ujian</h2><div class="hero"><span class="n" style="color:${col}">${tot}</span><span class="o">dari ${Q.length} soal benar · nilai akhir <b style="color:${col}">${sc}</b></span></div>
   ${Object.keys(LB).map(k=>`<div class="bd ${k}"><span>${LB[k]}</span><div class="bt"><div style="width:${cnt[k][1]?cnt[k][0]/cnt[k][1]*100:0}%"></div></div><span>${cnt[k][0]}/${cnt[k][1]}</span></div>`).join('')}
   <button class="g" id="rt">Ulangi ujian</button>
   <div style="margin-top:24px">${Q.map((q,i)=>{const a=S.ans[i],ok=a===q.c;return `<div class="ri ${q.l}"><div class="chips"><span class="chip">${LB[q.l]}</span><span class="tc">${q.t}</span><span class="tc" style="color:${ok?'var(--ok)':'var(--bad)'};border-color:currentColor">${ok?'Benar':a===null?'Tidak dijawab':'Salah'}</span></div>${q.f||''}<p class="rq">${i+1}. ${q.q}</p>${q.o.map((o,k)=>`<div class="ro ${k===q.c?'c':k===a?'w':''}">${LT[k]}. ${o}</div>`).join('')}<div class="ex"><b>Pembahasan:</b> ${q.e}</div></div>`}).join('')}</div></div>`;
-  $('rt').onclick=()=>{S.cur=0;S.ans=Q.map(()=>null);S.done=false;$('side').classList.remove('hidden');render()};
+  $('rt').onclick=again;
   panel.scrollTo(0,0);
 }
-function render(){if(S.done)return results();question();upd();panel.scrollTo(0,0)}
-render();
+function render(){if(S.done)return results();question();upd();if(running)save();panel.scrollTo(0,0)}
+$('fin').onclick=()=>{clearSave();location.href=SOAL_URL};
+$('okb').onclick=()=>{$('intro').classList.add('hidden');startTimer()};
+addEventListener('beforeunload',e=>{if(running){e.preventDefault();e.returnValue=''}});
+addEventListener('keydown',e=>{if(!running)return;if(e.key==='F5'||((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='r'))e.preventDefault()});
+(function(){try{const d=JSON.parse(localStorage.getItem(KEY)||'null');
+ if(d&&Array.isArray(d.ans)&&d.ans.length===Q.length){S.ans=d.ans;S.cur=d.cur||0;endAt=d.endAt;$('intro').classList.add('hidden');
+  if(d.done||Date.now()>=endAt){S.done=true;render();return}
+  startTimer(true);render();return}}catch(e){}
+ render()})();
 </script>
 </body>
 </html>

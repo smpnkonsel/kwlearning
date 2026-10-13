@@ -3,559 +3,288 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Ujian Matematika Kelas 7 — KW Learning</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>Ujian Persamaan Garis Lurus Kelas 8 — KW Learning</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --paper:#F0F2F5;
-    --panel:#FFFFFF;
-    --ink:#1B2430;
-    --ink-soft:#5B6473;
-    --navy:#0F3D63;
-    --navy-deep:#0A2B48;
-    --gold:#D79A2C;
-    --line:#DDE2E8;
-
-    --sedang:#2E86AB; --sedang-bg:#EAF3F8;
-    --sulit:#C9642A;  --sulit-bg:#FBEEE4;
-    --hots:#7B4FA6;   --hots-bg:#F1EAF8;
-    --olimpiade:#B23A48; --olimpiade-bg:#FAEBEC;
-
-    --correct:#2F9E5B; --correct-bg:#E7F5EC;
-    --wrong:#C0392B;   --wrong-bg:#FBEBE9;
-
-    color-scheme: light;
-  }
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;height:100%;background:var(--paper);}
-  body{
-    color:var(--ink);
-    font-family:'Public Sans', system-ui, -apple-system, sans-serif;
-    line-height:1.5;
-    -webkit-font-smoothing:antialiased;
-    overflow:hidden;
-  }
-  h1,h2,h3{font-family:'Fraunces', Georgia, serif; margin:0;}
-  button{font-family:inherit;}
-
-  .skip-link{position:absolute;left:-999px;top:0;}
-  .skip-link:focus{left:8px;top:8px;background:var(--navy);color:#fff;padding:8px 12px;border-radius:6px;z-index:80;}
-
-  .app{
-    height:100dvh;
-    display:flex;
-    flex-direction:column;
-    padding-top:env(safe-area-inset-top,0px);
-    padding-bottom:env(safe-area-inset-bottom,0px);
-  }
-
-  header.topbar{
-    flex:none;
-    background:linear-gradient(120deg, var(--navy) 0%, var(--navy-deep) 65%, #0C3452 100%);
-    color:#F4F1E8;
-    padding:10px 26px 0;
-  }
-  .topbar-inner{padding-bottom:8px;}
-  .level-strip{display:flex;height:4px;margin-top:8px;}
-  .level-strip span{flex:1;}
-  .level-strip .s-sedang{background:var(--sedang);}
-  .level-strip .s-sulit{background:var(--sulit);}
-  .level-strip .s-hots{background:var(--hots);}
-  .level-strip .s-olimpiade{background:var(--olimpiade);}
-  .topbar-row{display:flex;align-items:baseline;justify-content:space-between;gap:20px;flex-wrap:wrap;}
-  .brand{font-size:13.5px;letter-spacing:.02em;color:#B9C6D6;font-weight:600;}
-  .exam-title{font-family:'Fraunces', serif;font-weight:600;font-size:clamp(16px,2vw,19px);color:#fff;}
-  .subtitle{margin:4px 0 0;color:#C7D2DE;font-size:12.5px;max-width:820px;}
-
-  .body{flex:1;display:flex;min-height:0;}
-
-  aside.sidebar{
-    width:280px;flex:none;background:var(--panel);
-    border-right:1px solid var(--line);border-top:3px solid var(--gold);
-    display:flex;flex-direction:column;min-height:0;
-  }
-  .sidebar-scroll{flex:1;overflow-y:auto;padding:18px 18px 12px;}
-  .sidebar h2{font-size:13px;font-weight:700;color:var(--ink-soft);margin-bottom:10px;}
-  .progress-track{height:7px;background:#E7EAEF;border-radius:99px;overflow:hidden;margin-bottom:6px;}
-  .progress-fill{height:100%;background:var(--gold);width:0%;transition:width .25s ease;}
-  .progress-label{font-size:12.5px;color:var(--ink-soft);margin-bottom:16px;}
-
-  .nav-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:18px;}
-  .nav-cell{
-    aspect-ratio:1;border-radius:6px;border:1.5px solid var(--line);background:#fff;
-    font-size:12.5px;font-weight:700;color:var(--ink-soft);cursor:pointer;
-    display:flex;align-items:center;justify-content:center;padding:0;
-  }
-  .nav-cell:hover{border-color:var(--navy);}
-  .nav-cell.lvl-sedang{border-color:var(--sedang);color:var(--sedang);background:var(--sedang-bg);}
-  .nav-cell.lvl-sulit{border-color:var(--sulit);color:var(--sulit);background:var(--sulit-bg);}
-  .nav-cell.lvl-hots{border-color:var(--hots);color:var(--hots);background:var(--hots-bg);}
-  .nav-cell.lvl-olimpiade{border-color:var(--olimpiade);color:var(--olimpiade);background:var(--olimpiade-bg);}
-  .nav-cell.lvl-sedang.answered{background:var(--sedang);color:#fff;}
-  .nav-cell.lvl-sulit.answered{background:var(--sulit);color:#fff;}
-  .nav-cell.lvl-hots.answered{background:var(--hots);color:#fff;}
-  .nav-cell.lvl-olimpiade.answered{background:var(--olimpiade);color:#fff;}
-  .nav-cell.current{outline:2.5px solid var(--gold);outline-offset:1px;}
-
-  .legend{display:flex;flex-direction:column;gap:7px;font-size:12px;color:var(--ink-soft);margin-bottom:4px;}
-  .legend-item{display:flex;align-items:center;gap:8px;}
-  .dot{width:9px;height:9px;border-radius:50%;flex:none;}
-  .dot.sedang{background:var(--sedang);} .dot.sulit{background:var(--sulit);}
-  .dot.hots{background:var(--hots);} .dot.olimpiade{background:var(--olimpiade);}
-  .dot.answered-dot{background:var(--navy);}
-  .dot.unanswered-dot{background:#fff;border:1.5px solid var(--line);}
-
-  .sidebar-footer{flex:none;padding:14px 18px;border-top:1px solid var(--line);}
-  .btn-submit-side{
-    width:100%;background:var(--gold);color:#2A1D06;border:none;border-radius:8px;
-    padding:12px;font-size:14.5px;font-weight:700;cursor:pointer;
-  }
-  .btn-submit-side:hover{filter:brightness(0.96);}
-
-  main.question-area{flex:1;min-width:0;overflow-y:auto;display:flex;justify-content:center;padding:30px 26px 40px;}
-  .q-card{
-    width:100%;max-width:760px;background:var(--panel);border:1px solid var(--line);
-    border-top:5px solid var(--navy);border-radius:10px;padding:26px 30px 30px;
-  }
-  .q-card.lvl-sedang{border-top-color:var(--sedang);}
-  .q-card.lvl-sulit{border-top-color:var(--sulit);}
-  .q-card.lvl-hots{border-top-color:var(--hots);}
-  .q-card.lvl-olimpiade{border-top-color:var(--olimpiade);}
-
-  .badge-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px;}
-  .level-chip{display:inline-block;font-size:12.5px;font-weight:700;padding:5px 12px;border-radius:99px;}
-  .level-chip.sedang{background:var(--sedang-bg);color:var(--sedang);}
-  .level-chip.sulit{background:var(--sulit-bg);color:var(--sulit);}
-  .level-chip.hots{background:var(--hots-bg);color:var(--hots);}
-  .level-chip.olimpiade{background:var(--olimpiade-bg);color:var(--olimpiade);}
-  .topic-chip{font-size:12.5px;color:var(--ink-soft);border:1px solid var(--line);padding:5px 12px;border-radius:99px;}
-
-  .q-number{font-family:'Fraunces', serif;font-size:14.5px;color:var(--ink-soft);margin-bottom:6px;}
-  .q-text{font-size:19px;line-height:1.55;margin:0 0 22px;color:var(--ink);}
-
-  .options{display:flex;flex-direction:column;gap:10px;margin-bottom:26px;}
-  .option{
-    display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:8px;
-    padding:13px 16px;cursor:pointer;background:#fff;transition:border-color .15s ease, background .15s ease;
-  }
-  .option:hover{border-color:var(--navy);}
-  .option input{margin-top:3px;accent-color:var(--navy);flex:none;}
-  .option.selected{border-color:var(--navy);background:#F2F6FA;}
-  .option .opt-letter{font-weight:700;color:var(--navy);flex:none;width:18px;}
-  .option.correct{border-color:var(--correct);background:var(--correct-bg);}
-  .option.incorrect{border-color:var(--wrong);background:var(--wrong-bg);}
-  .option input:disabled{cursor:default;}
-  fieldset{border:none;margin:0;padding:0;}
-
-  .nav-buttons{display:flex;justify-content:space-between;gap:12px;}
-  .btn-ghost, .btn-primary{font-size:15px;font-weight:700;border-radius:8px;padding:11px 22px;cursor:pointer;border:1px solid transparent;}
-  .btn-ghost:focus-visible, .btn-primary:focus-visible, .btn-submit-side:focus-visible, .nav-cell:focus-visible{outline:3px solid var(--gold);outline-offset:2px;}
-  .btn-ghost{background:#fff;border:1px solid var(--line);color:var(--ink);}
-  .btn-ghost:hover{border-color:var(--navy);}
-  .btn-ghost:disabled{opacity:.4;cursor:not-allowed;}
-  .btn-primary{background:var(--navy);color:#fff;}
-  .btn-primary:hover{background:var(--navy-deep);}
-  .btn-primary.lvl-sedang{background:var(--sedang);} .btn-primary.lvl-sedang:hover{filter:brightness(.92);}
-  .btn-primary.lvl-sulit{background:var(--sulit);} .btn-primary.lvl-sulit:hover{filter:brightness(.92);}
-  .btn-primary.lvl-hots{background:var(--hots);} .btn-primary.lvl-hots:hover{filter:brightness(.92);}
-  .btn-primary.lvl-olimpiade{background:var(--olimpiade);} .btn-primary.lvl-olimpiade:hover{filter:brightness(.92);}
-
-  .results-wrap{max-width:820px;margin:0 auto;}
-  .results h2{font-size:24px;margin-bottom:4px;}
-  .score-hero{display:flex;align-items:baseline;gap:10px;margin:10px 0 22px;}
-  .score-hero .num{font-family:'Fraunces', serif;font-size:52px;font-weight:600;}
-  .score-hero .of{color:var(--ink-soft);font-size:15px;}
-
-  .breakdown{display:grid;gap:12px;margin-bottom:24px;}
-  .bd-row{display:grid;grid-template-columns:100px 1fr 56px;align-items:center;gap:12px;font-size:14px;}
-  .bd-track{height:9px;background:#EEEAE0;border-radius:99px;overflow:hidden;}
-  .bd-fill{height:100%;border-radius:99px;}
-  .bd-fill.sedang{background:var(--sedang);} .bd-fill.sulit{background:var(--sulit);}
-  .bd-fill.hots{background:var(--hots);} .bd-fill.olimpiade{background:var(--olimpiade);}
-
-  .review-item{border-top:1px solid var(--line);padding:20px 0;}
-  .review-item:first-child{border-top:none;}
-  .review-q{font-size:16px;margin:10px 0 12px;}
-  .review-opt{padding:8px 12px;border-radius:6px;font-size:14px;margin-bottom:6px;border:1px solid var(--line);}
-  .review-opt.correct{border-color:var(--correct);background:var(--correct-bg);color:#1E6B3E;}
-  .review-opt.wrong-pick{border-color:var(--wrong);background:var(--wrong-bg);color:#8E2A20;}
-  .explanation{font-size:14px;color:var(--ink-soft);background:#F6F4EC;border-radius:8px;padding:12px 14px;margin-top:10px;}
-  .explanation b{color:var(--ink);}
-
-  .hidden{display:none !important;}
-
-  .modal-overlay{
-    position:fixed;inset:0;background:rgba(10,20,32,.55);
-    display:flex;align-items:center;justify-content:center;
-    z-index:100;padding:20px;
-  }
-  .modal-box{
-    background:#fff;border-radius:12px;padding:26px 28px;
-    max-width:380px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.28);
-    border-top:4px solid var(--gold);
-  }
-  .modal-box h3{font-family:'Fraunces', serif;font-size:18px;margin-bottom:10px;color:var(--ink);}
-  .modal-box p{font-size:14.5px;color:var(--ink-soft);margin:0 0 22px;line-height:1.5;}
-  .modal-actions{display:flex;justify-content:flex-end;gap:10px;}
-  .modal-actions button{font-size:14.5px;font-weight:700;border-radius:8px;padding:10px 18px;cursor:pointer;border:1px solid transparent;}
-  .modal-btn-cancel{background:#fff;border:1px solid var(--line);color:var(--ink);}
-  .modal-btn-cancel:hover{border-color:var(--navy);}
-  .modal-btn-confirm{background:var(--navy);color:#fff;}
-  .modal-btn-confirm:hover{background:var(--navy-deep);}
-
-  .btn-finish-link{
-    display:inline-block;text-decoration:none;
-    background:var(--navy);color:#fff;
-    font-size:15px;font-weight:700;border-radius:8px;
-    padding:12px 28px;
-  }
-  .btn-finish-link:hover{background:var(--navy-deep);}
-  .finish-row{text-align:center;margin-top:36px;padding-top:28px;border-top:1px solid var(--line);}
-
-  @media (max-width:820px){
-    .body{flex-direction:column;}
-    aside.sidebar{width:100%;max-height:38vh;border-right:none;border-bottom:1px solid var(--line);}
-    main.question-area{padding:20px 16px 30px;}
-  }
+:root{--paper:#F0F2F5;--panel:#fff;--ink:#1B2430;--soft:#5B6473;--navy:#0F3D63;--navy2:#0A2B48;--gold:#D79A2C;--line:#DDE2E8;--sel:#F2F6FA;--figbg:#EEF3F8;--sedang:#2E86AB;--sulit:#C9642A;--hots:#7B4FA6;--olimpiade:#B23A48;--ok:#2F9E5B;--bad:#C0392B}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#0E141B;--panel:#17202A;--ink:#E8ECF1;--soft:#9AA6B5;--line:#2A3644;--sel:#1F2D3B;--figbg:#1D2A38;--navy:#4C8FC4}}
+:root[data-theme="dark"]{--paper:#0E141B;--panel:#17202A;--ink:#E8ECF1;--soft:#9AA6B5;--line:#2A3644;--sel:#1F2D3B;--figbg:#1D2A38;--navy:#4C8FC4}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);overscroll-behavior-y:none}
+body{color:var(--ink);font-family:'Public Sans',system-ui,sans-serif;line-height:1.5;overflow:hidden}
+h2,h3{font-family:'Fraunces',Georgia,serif;margin:0}
+button{font-family:inherit}
+.app{height:100dvh;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+header{flex:none;background:linear-gradient(120deg,#0F3D63,#0A2B48);color:#F4F1E8;padding:10px 26px 0}
+.row{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.hl{display:flex;align-items:center;gap:14px;flex:1;min-width:0}.ht{min-width:0}
+.logo{width:56px;height:56px;border-radius:50%;object-fit:cover;background:#fff;border:2px solid var(--gold);padding:2px;flex:none}
+.brand{display:block;font-size:13px;color:#B9C6D6;font-weight:600}
+.et{font-family:'Fraunces',serif;font-weight:600;font-size:18px;color:#fff}
+.hr{display:flex;flex-direction:column;align-items:flex-end;gap:6px;min-height:62px}
+.timer{display:inline-flex;align-items:baseline;gap:8px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.32);border-radius:8px;padding:4px 14px;font-size:12px;color:#C7D2DE}
+.timer b{font-size:19px;color:#fff;font-weight:700;font-variant-numeric:tabular-nums}
+.timer.warn{background:rgba(215,154,44,.3);border-color:var(--gold)}
+.timer.crit{background:rgba(192,57,43,.45);border-color:#F1948A}
+.fin{background:var(--gold);color:#2A1D06;border:0;border-radius:8px;padding:7px 22px;font-size:14.5px;font-weight:700;cursor:pointer}
+.sub{margin:4px 0 12px;color:#C7D2DE;font-size:12.5px;max-width:820px}
+.strip{display:flex;height:4px}.strip span{flex:1}
+.body{flex:1;display:flex;min-height:0}
+aside{width:280px;flex:none;background:var(--panel);border-right:1px solid var(--line);border-top:3px solid var(--gold);display:flex;flex-direction:column;min-height:0}
+.side{flex:1;overflow-y:auto;padding:18px}
+aside h3{font-family:'Public Sans';font-size:13px;color:var(--soft);margin-bottom:10px}
+.pt{height:7px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:6px}
+.pf{height:100%;background:var(--gold);width:0;transition:width .25s}
+.pl{font-size:12.5px;color:var(--soft);margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:18px}
+.cell{aspect-ratio:1;border-radius:6px;border:1.5px solid var(--c);color:var(--c);background:color-mix(in srgb,var(--c) 12%,var(--panel));font-weight:700;font-size:12.5px;cursor:pointer;padding:0}
+.cell.ans{background:var(--c);color:#fff}
+.cell.cur{outline:2.5px solid var(--gold);outline-offset:1px}
+.lg{display:flex;flex-direction:column;gap:7px;font-size:12px;color:var(--soft)}
+.lg div{display:flex;align-items:center;gap:8px}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--c)}
+.sf{flex:none;padding:14px 18px;border-top:1px solid var(--line)}
+.bsub{width:100%;background:var(--gold);color:#2A1D06;border:0;border-radius:8px;padding:12px;font-size:14.5px;font-weight:700;cursor:pointer}
+main{flex:1;min-width:0;overflow-y:auto;display:flex;justify-content:center;padding:30px 26px 40px}
+.qc{width:100%;max-width:760px;background:var(--panel);border:1px solid var(--line);border-top:5px solid var(--c);border-radius:10px;padding:26px 30px 30px;align-self:flex-start}
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.lc{font-size:12.5px;font-weight:700;padding:5px 12px;border-radius:99px;background:color-mix(in srgb,var(--c) 14%,var(--panel));color:var(--c)}
+.tc{font-size:12.5px;color:var(--soft);border:1px solid var(--line);padding:5px 12px;border-radius:99px}
+.qn{font-family:'Fraunces',serif;font-size:14.5px;color:var(--soft);margin-bottom:6px}
+.qt{font-size:19px;line-height:1.55;margin:0 0 16px}
+.fig{background:var(--figbg);border-radius:10px;padding:10px;margin:0 0 20px;text-align:center}
+.fig svg{max-width:100%;height:auto;max-height:240px}
+svg text{fill:var(--ink);font-family:'Public Sans',sans-serif}
+fieldset{border:0;margin:0 0 26px;padding:0;display:flex;flex-direction:column;gap:10px}
+.opt{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:8px;padding:13px 16px;cursor:pointer}
+.opt:hover{border-color:var(--navy)}
+.opt input{margin-top:3px;accent-color:var(--navy)}
+.opt.sel{border-color:var(--navy);background:var(--sel)}
+.L{font-weight:700;color:var(--navy);width:18px;flex:none}
+.nb{display:flex;justify-content:space-between;gap:12px}
+.bg,.bp{font-size:15px;font-weight:700;border-radius:8px;padding:11px 22px;cursor:pointer;border:1px solid var(--line)}
+.bg{background:var(--panel);color:var(--ink)}.bg:disabled{opacity:.4;cursor:not-allowed}
+.bp{background:var(--c,var(--navy));color:#fff;border-color:var(--c,var(--navy))}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.res{max-width:820px;width:100%;align-self:flex-start}
+.res h2{font-size:24px}
+.hero{display:flex;align-items:baseline;gap:10px;margin:10px 0 22px}
+.hero .n{font-family:'Fraunces',serif;font-size:52px;font-weight:600}
+.hero .o{color:var(--soft);font-size:15px}
+.bd{display:grid;gap:12px;margin-bottom:24px}
+.br{display:grid;grid-template-columns:100px 1fr 56px;align-items:center;gap:12px;font-size:14px}
+.bt{height:9px;background:var(--line);border-radius:99px;overflow:hidden}.bt div{height:100%;border-radius:99px;background:var(--c)}
+.ri{border-top:1px solid var(--line);padding:20px 0}
+.rq{font-size:16px;margin:10px 0 12px}
+.ro{padding:8px 12px;border-radius:6px;font-size:14px;margin-bottom:6px;border:1px solid var(--line)}
+.ro.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,var(--panel))}
+.ro.no{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 16%,var(--panel))}
+.ex{font-size:14px;color:var(--soft);background:var(--figbg);border-radius:8px;padding:12px 14px;margin-top:10px}
+.ex b{color:var(--ink)}
+.hid{display:none!important}
+.ov{position:fixed;inset:0;background:rgba(10,20,32,.55);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}
+#intro{z-index:200;background:rgba(10,20,32,.72)}
+.mb{background:var(--panel);border-radius:12px;padding:26px 28px;max-width:380px;width:100%;border-top:4px solid var(--gold)}
+.mb.big{max-width:560px;max-height:90vh;overflow-y:auto}
+.mb h3{font-size:18px;margin-bottom:10px}.mb.big h3{font-size:21px}
+.mb p{font-size:14.5px;color:var(--soft);margin:0 0 22px}
+.mb ol{margin:12px 0 20px;padding-left:20px;font-size:14.5px;color:var(--ink)}.mb li{margin-bottom:8px}
+.ma{display:flex;justify-content:flex-end;gap:10px}
+.ma button{font-size:14.5px;font-weight:700;border-radius:8px;padding:10px 18px;cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--ink)}
+.ma .y{background:var(--navy);color:#fff;border-color:var(--navy)}
+@media (max-width:820px){
+ .body{flex-direction:column}
+ header{padding:8px 12px 0}
+ .row{gap:6px}
+ .hl{flex:none;width:100%;gap:10px}
+ .logo{width:36px;height:36px;padding:1px}
+ .brand{font-size:12px}.sub{display:none}
+ .hr{width:100%;flex-direction:row;align-items:center;justify-content:space-between;min-height:0;gap:8px;margin-bottom:8px}
+ .et{font-size:15px}
+ .timer{padding:3px 10px;font-size:11px}.timer b{font-size:16px}
+ .fin{padding:6px 16px;font-size:13.5px}
+ aside{width:100%;flex-direction:row;align-items:center;border-right:0;border-bottom:1px solid var(--line);border-top-width:2px;max-height:none}
+ .side{padding:8px 0 8px 12px;min-width:0;overflow:hidden}
+ aside h3,.lg{display:none}
+ .pt{margin-bottom:4px}.pl{font-size:11.5px;margin-bottom:6px}
+ .grid{display:flex;overflow-x:auto;gap:6px;margin-bottom:0;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+ .cell{flex:none;width:36px;height:36px;aspect-ratio:auto}
+ .sf{padding:8px 12px;border-top:0}
+ .bsub{width:auto;white-space:nowrap;padding:10px 12px;font-size:13px}
+ main{padding:12px 10px 24px}
+ .qc{padding:16px 14px 18px;border-radius:8px}
+ .chips{margin-bottom:10px}
+ .qt{font-size:16.5px;margin-bottom:14px}
+ .fig{padding:6px;margin-bottom:14px}
+ fieldset{margin-bottom:18px;gap:8px}
+ .opt{padding:11px 12px}
+ .bg,.bp{padding:11px 16px;font-size:14.5px}
+ .nb .bg,.nb .bp{flex:1}
+ .res h2{font-size:21px}.hero .n{font-size:42px}
+ .br{grid-template-columns:78px 1fr 44px;gap:8px}
+ .mb,.mb.big{padding:20px 18px}.mb.big ol{font-size:14px;padding-left:18px}
+}
 </style>
 </head>
 <body>
-
-<a class="skip-link" href="#soal-panel">Langsung ke soal</a>
-
 <div class="app">
-  <header class="topbar">
-    <div class="topbar-inner">
-      <div class="topbar-row">
-        <span class="brand">KW Learning · Ruang Belajar Matematika</span>
-        <span class="exam-title">Ujian Matematika Kelas 7</span>
-      </div>
-      <p class="subtitle">45 soal pilihan ganda mencakup seluruh materi kelas 7 — jenjang sedang, sulit, HOTS, dan olimpiade. Kerjakan semua soal, jawaban bisa diubah sebelum dikumpulkan.</p>
-    </div>
-    <div class="level-strip">
-      <span class="s-sedang"></span><span class="s-sulit"></span><span class="s-hots"></span><span class="s-olimpiade"></span>
-    </div>
-  </header>
-
-  <div class="body">
-    <aside class="sidebar" id="sidebarPanel">
-      <div class="sidebar-scroll">
-        <h2>Progres</h2>
-        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
-        <div class="progress-label" id="progressLabel">0 dari 45 soal terjawab</div>
-
-        <h2>Navigasi soal</h2>
-        <div class="nav-grid" id="navGrid"></div>
-
-        <div class="legend">
-          <div class="legend-item"><span class="dot answered-dot"></span> Sudah dijawab</div>
-          <div class="legend-item"><span class="dot unanswered-dot"></span> Belum dijawab</div>
-          <div class="legend-item"><span class="dot sedang"></span> Sedang (1–15)</div>
-          <div class="legend-item"><span class="dot sulit"></span> Sulit (16–30)</div>
-          <div class="legend-item"><span class="dot hots"></span> HOTS (31–40)</div>
-          <div class="legend-item"><span class="dot olimpiade"></span> Olimpiade (41–45)</div>
-        </div>
-      </div>
-      <div class="sidebar-footer">
-        <button type="button" class="btn-submit-side" id="btnSubmitSide">Kumpulkan jawaban</button>
-      </div>
-    </aside>
-
-    <main class="question-area" id="soal-panel" aria-live="polite"></main>
-  </div>
-</div>
-
-<div class="modal-overlay hidden" id="confirmOverlay">
-  <div class="modal-box">
-    <h3>Kumpulkan jawaban?</h3>
-    <p id="confirmMessage"></p>
-    <div class="modal-actions">
-      <button type="button" class="modal-btn-cancel" id="modalNo">Kembali</button>
-      <button type="button" class="modal-btn-confirm" id="modalYes">Ya, kumpulkan</button>
+<header>
+  <div class="row"><div class="hl"><img class="logo" src="../assets/logo-sekolah.png" alt="Logo sekolah"><div class="ht"><span class="brand">KW Learning · Ruang Belajar Matematika</span><p class="sub">45 soal pilihan ganda tentang persamaan garis lurus, dengan gambar grafik pada bidang koordinat: gradien, titik potong, garis sejajar, dan tegak lurus. Jenjang sedang, sulit, HOTS, dan olimpiade.</p></div></div>
+  <div class="hr"><span class="et">Ujian Persamaan Garis Lurus</span>
+  <div class="timer" id="tmr" role="timer"><span>Sisa waktu</span><b id="tv">1:30:00</b></div>
+  <button type="button" class="fin hid" id="fin">Selesai</button></div></div>
+  <div class="strip"><span style="background:#2E86AB"></span><span style="background:#C9642A"></span><span style="background:#7B4FA6"></span><span style="background:#B23A48"></span></div>
+</header>
+<div class="body">
+<aside id="side">
+  <div class="side">
+    <h3>Progres</h3><div class="pt"><div class="pf" id="pf"></div></div><div class="pl" id="pl"></div>
+    <h3>Navigasi soal</h3><div class="grid" id="grid"></div>
+    <div class="lg">
+      <div><span class="dot" style="--c:var(--sedang)"></span>Sedang (1–15)</div>
+      <div><span class="dot" style="--c:var(--sulit)"></span>Sulit (16–30)</div>
+      <div><span class="dot" style="--c:var(--hots)"></span>HOTS (31–40)</div>
+      <div><span class="dot" style="--c:var(--olimpiade)"></span>Olimpiade (41–45)</div>
     </div>
   </div>
+  <div class="sf"><button type="button" class="bsub" id="bsub">Kumpulkan jawaban</button></div>
+</aside>
+<main id="panel" aria-live="polite"></main>
 </div>
+</div>
+<div class="ov hid" id="ov"><div class="mb"><h3>Kumpulkan jawaban?</h3><p id="msg"></p><div class="ma"><button type="button" id="no">Kembali</button><button type="button" class="y" id="yes">Ya, kumpulkan</button></div></div></div>
+
+<div class="ov" id="intro" role="dialog" aria-modal="true" aria-labelledby="it"><div class="mb big">
+<h3 id="it">Petunjuk Mengerjakan Soal</h3>
+<ol>
+<li>Ujian terdiri dari <b>45 soal pilihan ganda</b>: Sedang (1–15), Sulit (16–30), HOTS (31–40), dan Olimpiade (41–45).</li>
+<li>Waktu mengerjakan <b>90 menit</b>. Waktu <b>langsung berjalan</b> setelah kamu menekan tombol OK dan tidak dapat dihentikan.</li>
+<li>Pilih satu jawaban yang paling tepat untuk setiap soal. Jawaban boleh diubah selama waktu masih ada.</li>
+<li>Gunakan kotak navigasi soal untuk berpindah soal, dan perhatikan sisa waktu di bagian atas layar.</li>
+<li>Tekan <b>Kumpulkan jawaban</b> bila sudah selesai. Jika waktu habis, jawaban akan dikumpulkan secara otomatis.</li>
+<li>Setelah dikumpulkan, nilai dan pembahasan setiap soal akan ditampilkan.</li>
+</ol>
+<div class="ma"><button type="button" class="y" id="okb">OK, mulai mengerjakan</button></div>
+</div></div>
 
 <script>
-const QUESTIONS = [
-// ---------- SEDANG (1-15) ----------
-{level:"sedang", topic:"Bilangan Bulat", q:"Hasil dari -8 + 15 adalah ...", opts:["5","6","7","8"], correct:2, exp:"-8 + 15 = 7."},
-{level:"sedang", topic:"Bilangan Bulat", q:"Hasil dari 6 × (-4) adalah ...", opts:["-24","-10","10","24"], correct:0, exp:"6 × (-4) = -24 (bilangan positif dikali negatif menghasilkan negatif)."},
-{level:"sedang", topic:"Bilangan Pecahan", q:"Hasil dari 1/2 + 1/4 adalah ...", opts:["1/2","2/3","3/4","5/4"], correct:2, exp:"Samakan penyebut: 2/4 + 1/4 = 3/4."},
-{level:"sedang", topic:"Bilangan Pecahan", q:"Bentuk desimal dari 3/5 adalah ...", opts:["0,3","0,5","0,6","0,8"], correct:2, exp:"3/5 = 3 × 2 / 10 = 6/10 = 0,6."},
-{level:"sedang", topic:"Himpunan", q:"Diketahui A = {1,2,3,4} dan B = {3,4,5,6}. Hasil dari A ∩ B adalah ...", opts:["{1,2}","{3,4}","{5,6}","{1,2,3,4,5,6}"], correct:1, exp:"Irisan (∩) adalah anggota yang sama pada kedua himpunan, yaitu {3,4}."},
-{level:"sedang", topic:"Himpunan", q:"Banyak anggota himpunan P = {a,b,c,d,e} adalah ...", opts:["3","4","5","6"], correct:2, exp:"Himpunan P memiliki 5 anggota: a, b, c, d, e."},
-{level:"sedang", topic:"Bentuk Aljabar", q:"Bentuk sederhana dari 3x + 5x adalah ...", opts:["8x","8x²","15x","2x"], correct:0, exp:"Suku sejenis dijumlahkan koefisiennya: 3x + 5x = 8x."},
-{level:"sedang", topic:"Bentuk Aljabar", q:"Hasil dari 2(x + 3) adalah ...", opts:["2x + 3","2x + 6","x + 6","2x + 5"], correct:1, exp:"Sifat distributif: 2(x+3) = 2x + 6."},
-{level:"sedang", topic:"Persamaan Linear Satu Variabel", q:"Penyelesaian dari x + 5 = 12 adalah ...", opts:["5","6","7","8"], correct:2, exp:"x = 12 - 5 = 7."},
-{level:"sedang", topic:"Persamaan Linear Satu Variabel", q:"Penyelesaian dari 3x = 18 adalah ...", opts:["4","5","6","7"], correct:2, exp:"x = 18 ÷ 3 = 6."},
-{level:"sedang", topic:"Perbandingan", q:"Perbandingan 4 : 8 jika disederhanakan menjadi ...", opts:["1:2","2:1","1:4","4:1"], correct:0, exp:"4:8 dibagi FPB-nya (4) menjadi 1:2."},
-{level:"sedang", topic:"Aritmetika Sosial", q:"Seorang pedagang membeli barang seharga Rp50.000 dan menjualnya seharga Rp60.000. Untung yang diperoleh adalah ...", opts:["Rp5.000","Rp10.000","Rp15.000","Rp20.000"], correct:1, exp:"Untung = harga jual - harga beli = 60.000 - 50.000 = Rp10.000."},
-{level:"sedang", topic:"Garis dan Sudut", q:"Sudut yang besarnya tepat 90° disebut sudut ...", opts:["Lancip","Siku-siku","Tumpul","Lurus"], correct:1, exp:"Sudut 90° disebut sudut siku-siku."},
-{level:"sedang", topic:"Segiempat", q:"Keliling persegi dengan panjang sisi 6 cm adalah ...", opts:["18 cm","20 cm","24 cm","28 cm"], correct:2, exp:"Keliling persegi = 4 × sisi = 4 × 6 = 24 cm."},
-{level:"sedang", topic:"Penyajian Data", q:"Rata-rata dari data 4, 6, 8, 10, 12 adalah ...", opts:["6","7","8","9"], correct:2, exp:"Rata-rata = (4+6+8+10+12)/5 = 40/5 = 8."},
-
-// ---------- SULIT (16-30) ----------
-{level:"sulit", topic:"Bilangan Bulat", q:"Hasil dari (-12) : 4 + (-3) × 2 adalah ...", opts:["-9","-6","-3","3"], correct:0, exp:"(-12):4 = -3, dan (-3)×2 = -6. Maka -3 + (-6) = -9."},
-{level:"sulit", topic:"Bilangan Pecahan", q:"Hasil dari 2 1/3 - 1 1/4 adalah ...", opts:["1 1/12","1 1/6","1 1/4","1 1/3"], correct:0, exp:"2 1/3 = 28/12 dan 1 1/4 = 15/12. Selisihnya = 13/12 = 1 1/12."},
-{level:"sulit", topic:"Himpunan", q:"Diketahui A = {1,2,3,4,5} dan B = {2,4,6,8}. Hasil dari A ∪ B adalah ...", opts:["{2,4}","{1,2,3,4,5,6,8}","{1,3,5}","{2,4,6,8}"], correct:1, exp:"Gabungan (∪) memuat semua anggota dari kedua himpunan tanpa pengulangan: {1,2,3,4,5,6,8}."},
-{level:"sulit", topic:"Bentuk Aljabar", q:"Hasil dari (2x + 3)(x - 1) adalah ...", opts:["2x² + x - 3","2x² - x - 3","2x² + 5x - 3","2x² - 5x + 3"], correct:0, exp:"(2x+3)(x-1) = 2x² - 2x + 3x - 3 = 2x² + x - 3."},
-{level:"sulit", topic:"Persamaan Linear Satu Variabel", q:"Penyelesaian dari 2x - 5 = 3x + 1 adalah ...", opts:["-6","-4","4","6"], correct:0, exp:"2x - 3x = 1 + 5 → -x = 6 → x = -6."},
-{level:"sulit", topic:"Pertidaksamaan Linear Satu Variabel", q:"Himpunan penyelesaian dari 2x + 3 < 11, dengan x bilangan asli, adalah ...", opts:["{1,2,3}","{1,2,3,4}","{2,3,4}","{0,1,2,3}"], correct:0, exp:"2x < 8 → x < 4. Karena x bilangan asli, HP = {1,2,3}."},
-{level:"sulit", topic:"Perbandingan", q:"Jika 3 kg apel harganya Rp45.000, maka harga 5 kg apel adalah ...", opts:["Rp60.000","Rp70.000","Rp75.000","Rp80.000"], correct:2, exp:"Harga per kg = 45.000/3 = 15.000. Harga 5 kg = 5 × 15.000 = Rp75.000."},
-{level:"sulit", topic:"Perbandingan", q:"Sebanyak 8 pekerja menyelesaikan suatu pekerjaan dalam 15 hari. Jika pekerja ditambah menjadi 12 orang, pekerjaan tersebut selesai dalam ...", opts:["8 hari","9 hari","10 hari","12 hari"], correct:2, exp:"Perbandingan berbalik nilai: 8 × 15 = 12 × x → x = 120/12 = 10 hari."},
-{level:"sulit", topic:"Aritmetika Sosial", q:"Harga sepatu Rp200.000 didiskon 15%. Harga sepatu setelah diskon adalah ...", opts:["Rp160.000","Rp165.000","Rp170.000","Rp175.000"], correct:2, exp:"Diskon = 15% × 200.000 = 30.000. Harga setelah diskon = 200.000 - 30.000 = Rp170.000."},
-{level:"sulit", topic:"Garis dan Sudut", q:"Dua sudut saling berpelurus (bersuplemen). Jika salah satu sudut besarnya 65°, maka sudut lainnya adalah ...", opts:["105°","110°","115°","125°"], correct:2, exp:"Jumlah dua sudut berpelurus = 180°, sehingga sudut lainnya = 180° - 65° = 115°."},
-{level:"sulit", topic:"Segiempat", q:"Luas trapesium dengan sisi sejajar 8 cm dan 12 cm serta tinggi 5 cm adalah ...", opts:["40 cm²","45 cm²","50 cm²","55 cm²"], correct:2, exp:"Luas trapesium = ½ × (8+12) × 5 = ½ × 20 × 5 = 50 cm²."},
-{level:"sulit", topic:"Segitiga", q:"Keliling segitiga sama sisi dengan panjang sisi 9 cm adalah ...", opts:["18 cm","24 cm","27 cm","36 cm"], correct:2, exp:"Keliling segitiga sama sisi = 3 × sisi = 3 × 9 = 27 cm."},
-{level:"sulit", topic:"Penyajian Data", q:"Median dari data 3, 7, 5, 9, 6 adalah ...", opts:["5","6","7","8"], correct:1, exp:"Urutkan data: 3,5,6,7,9. Nilai tengahnya adalah 6."},
-{level:"sulit", topic:"Bilangan Bulat", q:"KPK dari 12 dan 18 adalah ...", opts:["24","30","36","72"], correct:2, exp:"Faktorisasi: 12=2²×3, 18=2×3². KPK = 2²×3² = 36."},
-{level:"sulit", topic:"Bilangan Bulat", q:"FPB dari 24 dan 36 adalah ...", opts:["6","8","12","18"], correct:2, exp:"Faktorisasi: 24=2³×3, 36=2²×3². FPB = 2²×3 = 12."},
-
-// ---------- HOTS (31-40) ----------
-{level:"hots", topic:"Aritmetika Sosial", q:"Seorang pedagang membeli 20 kg beras seharga Rp180.000, kemudian menjualnya dengan harga Rp10.000 per kg. Persentase keuntungan yang diperoleh pedagang tersebut adalah ...", opts:["10%","11,1%","12%","15%"], correct:1, exp:"Modal = Rp180.000, hasil jual = 20×10.000 = Rp200.000. Untung = Rp20.000. Persentase untung = 20.000/180.000 × 100% ≈ 11,1%."},
-{level:"hots", topic:"Persamaan Linear Satu Variabel", q:"Keliling suatu persegi panjang adalah 46 cm. Jika panjangnya 5 cm lebih dari lebarnya, maka lebar persegi panjang tersebut adalah ...", opts:["7 cm","8 cm","9 cm","10 cm"], correct:2, exp:"p + l = 23, dengan p = l + 5, sehingga l + 5 + l = 23 → 2l = 18 → l = 9 cm."},
-{level:"hots", topic:"Himpunan", q:"Dalam suatu kelas terdapat 30 siswa. 18 siswa gemar matematika, 15 siswa gemar IPA, dan 8 siswa gemar keduanya. Banyak siswa yang tidak gemar keduanya adalah ...", opts:["3","5","7","8"], correct:1, exp:"Gemar matematika atau IPA = 18+15-8 = 25 siswa. Tidak gemar keduanya = 30-25 = 5 siswa."},
-{level:"hots", topic:"Perbandingan", q:"Sebuah peta berskala 1:2.500.000. Jika jarak dua kota pada peta 6 cm, maka jarak sebenarnya kedua kota tersebut adalah ...", opts:["100 km","120 km","150 km","180 km"], correct:2, exp:"Jarak sebenarnya = 6 × 2.500.000 cm = 15.000.000 cm = 150 km."},
-{level:"hots", topic:"Bentuk Aljabar", q:"Jika x = 3, nilai dari 2x² - 5x + 4 adalah ...", opts:["5","6","7","8"], correct:2, exp:"2(3)² - 5(3) + 4 = 18 - 15 + 4 = 7."},
-{level:"hots", topic:"Segiempat", q:"Sebuah taman berbentuk persegi panjang berukuran 20 m × 15 m akan dipasangi paving dengan biaya Rp75.000 per m². Total biaya yang diperlukan adalah ...", opts:["Rp18.750.000","Rp20.250.000","Rp22.500.000","Rp24.000.000"], correct:2, exp:"Luas = 20×15 = 300 m². Total biaya = 300 × 75.000 = Rp22.500.000."},
-{level:"hots", topic:"Penyajian Data", q:"Nilai rata-rata 8 siswa adalah 75. Jika ditambahkan nilai siswa ke-9 sebesar 84, rata-rata baru kesembilan siswa tersebut adalah ...", opts:["74","75","76","77"], correct:2, exp:"Jumlah nilai 8 siswa = 8×75 = 600. Jumlah 9 siswa = 600+84 = 684. Rata-rata baru = 684/9 = 76."},
-{level:"hots", topic:"Garis dan Sudut", q:"Besar sudut pelurus dari sudut 112° adalah ...", opts:["58°","62°","68°","72°"], correct:2, exp:"Sudut pelurus = 180° - 112° = 68°."},
-{level:"hots", topic:"Pertidaksamaan Linear Satu Variabel", q:"Suatu bilangan asli x memenuhi 3x - 4 ≤ 11. Nilai x terbesar yang memenuhi pertidaksamaan tersebut adalah ...", opts:["3","4","5","6"], correct:2, exp:"3x ≤ 15 → x ≤ 5. Nilai x terbesar yang memenuhi adalah 5."},
-{level:"hots", topic:"Aritmetika Sosial", q:"Sebuah karung beras memiliki bruto 52 kg dengan tara 2%. Neto beras dalam karung tersebut adalah ...", opts:["49,96 kg","50,48 kg","50,96 kg","51,48 kg"], correct:2, exp:"Tara = 2% × 52 = 1,04 kg. Neto = bruto - tara = 52 - 1,04 = 50,96 kg."},
-
-// ---------- OLIMPIADE (41-45) ----------
-{level:"olimpiade", topic:"Bilangan Bulat", q:"Jumlah semua bilangan bulat dari -10 sampai 15 adalah ...", opts:["55","60","65","70"], correct:2, exp:"Banyak suku dari -10 sampai 15 ada 26. Jumlah = 26/2 × (-10+15) = 13 × 5 = 65."},
-{level:"olimpiade", topic:"Himpunan", q:"Banyaknya himpunan bagian dari suatu himpunan yang memiliki 5 anggota adalah ...", opts:["16","24","32","64"], correct:2, exp:"Banyak himpunan bagian = 2ⁿ = 2⁵ = 32."},
-{level:"olimpiade", topic:"Bentuk Aljabar", q:"Jika a + b = 10 dan a² + b² = 58, nilai dari ab adalah ...", opts:["18","20","21","24"], correct:2, exp:"(a+b)² = a² + 2ab + b² → 100 = 58 + 2ab → 2ab = 42 → ab = 21."},
-{level:"olimpiade", topic:"Perbandingan", q:"Suatu pekerjaan dapat diselesaikan oleh A dalam 12 hari dan oleh B dalam 8 hari. Jika mereka bekerja bersama, pekerjaan tersebut selesai dalam ...", opts:["4 hari","4,5 hari","4,8 hari","5 hari"], correct:2, exp:"Laju gabungan = 1/12 + 1/8 = 5/24 bagian per hari. Waktu = 24/5 = 4,8 hari."},
-{level:"olimpiade", topic:"Segitiga", q:"Sebuah segitiga siku-siku memiliki keliling 60 cm dengan panjang sisi-sisinya berbanding 3:4:5. Luas segitiga tersebut adalah ...", opts:["120 cm²","135 cm²","150 cm²","160 cm²"], correct:2, exp:"3k+4k+5k=60 → k=5, sehingga sisi-sisinya 15, 20, 25 cm. Luas = ½ × 15 × 20 = 150 cm²."}
+const sv=(w,h,b)=>`<svg viewBox="0 0 ${w} ${h}" width="${w}" role="img" aria-label="Bidang koordinat">${b}</svg>`;
+const F={};
+F.plane=(lines,pts,R)=>{R=R||6;const u=20,c=R*u+20,S=2*R*u+40,X=x=>c+x*u,Y=y=>c-y*u,N=i=>i<0?'\u2212'+(-i):i;
+ let b=`<defs><clipPath id="cp${R}"><rect x="20" y="20" width="${2*R*u}" height="${2*R*u}"/></clipPath></defs>`;
+ for(let i=-R;i<=R;i++){b+=`<line x1="${X(i)}" y1="20" x2="${X(i)}" y2="${S-20}" stroke="#8892A0" stroke-opacity=".22"/><line x1="20" y1="${Y(i)}" x2="${S-20}" y2="${Y(i)}" stroke="#8892A0" stroke-opacity=".22"/>`}
+ b+=`<line x1="14" y1="${c}" x2="${S-14}" y2="${c}" stroke="#8892A0" stroke-width="2"/><line x1="${c}" y1="14" x2="${c}" y2="${S-14}" stroke="#8892A0" stroke-width="2"/><text x="${S-8}" y="${c-6}" font-size="12" font-weight="700" text-anchor="end">X</text><text x="${c+8}" y="16" font-size="12" font-weight="700">Y</text>`;
+ for(let i=-R;i<=R;i++){if(!i)continue;b+=`<text x="${X(i)}" y="${c+13}" font-size="9" text-anchor="middle" style="fill:var(--soft)">${N(i)}</text><text x="${c-5}" y="${Y(i)+3}" font-size="9" text-anchor="end" style="fill:var(--soft)">${N(i)}</text>`}
+ b+='<g clip-path="url(#cp'+R+')">';
+ lines.forEach(l=>{const col=l.col||'#C9642A';
+  if(l.x!==undefined)b+=`<line x1="${X(l.x)}" y1="20" x2="${X(l.x)}" y2="${S-20}" stroke="${col}" stroke-width="3"/>`;
+  else b+=`<line x1="${X(-R-1)}" y1="${Y(l.m*(-R-1)+l.c)}" x2="${X(R+1)}" y2="${Y(l.m*(R+1)+l.c)}" stroke="${col}" stroke-width="3"/>`});
+ b+='</g>';
+ lines.forEach(l=>{if(l.lab){const px=X(l.lx),py=Y(l.m*l.lx+l.c);b+=`<text x="${px+8}" y="${py-8}" font-size="14" font-weight="700" style="fill:${l.col||'#C9642A'}">${l.lab}</text>`}});
+ (pts||[]).forEach(p=>{b+=`<circle cx="${X(p.x)}" cy="${Y(p.y)}" r="4.5" fill="#7B4FA6" stroke="#fff" stroke-width="1.2"/>`;if(p.l)b+=`<text x="${X(p.x)+8}" y="${Y(p.y)-8}" font-size="13" font-weight="700" style="fill:#7B4FA6">${p.l}</text>`});
+ return sv(S,S,b)};
+const Q=(level,topic,q,opts,correct,exp,fig)=>({level,topic,q,opts,correct,exp,fig});
+const B='#2E86AB';
+const QUESTIONS=[
+// SEDANG
+Q("sedang","Gradien dari Grafik","Garis pada gambar melalui titik A(1, 1) dan B(3, 5). Gradien garis tersebut adalah ...",["1/2","2","−2","4"],1,"m = (5 − 1) : (3 − 1) = 4 : 2 = 2.",F.plane([{m:2,c:-1}],[{x:1,y:1,l:'A'},{x:3,y:5,l:'B'}])),
+Q("sedang","Gradien","Gradien garis y = 3x − 5 adalah ...",["−5","−3","3","5"],2,"Pada bentuk y = mx + c, gradien m = 3."),
+Q("sedang","Gradien","Gradien garis 2x + y = 6 adalah ...",["−2","2","6","−6"],0,"y = −2x + 6, sehingga gradiennya −2."),
+Q("sedang","Titik Potong Sumbu","Garis pada gambar memotong sumbu Y di titik ...",["(4, 0)","(0, −4)","(−4, 0)","(0, 4)"],3,"Garis memotong sumbu Y saat x = 0, yaitu di titik (0, 4).",F.plane([{m:-1,c:4}],[])),
+Q("sedang","Titik Potong Sumbu","Garis y = 2x − 6 memotong sumbu X di titik ...",["(0, −6)","(3, 0)","(−3, 0)","(0, 3)"],1,"Sumbu X: y = 0 → 2x − 6 = 0 → x = 3. Titiknya (3, 0)."),
+Q("sedang","Gradien dari Grafik","Garis pada gambar melalui titik A(1, 2) dan B(2, 5). Gradien garis tersebut adalah ...",["2","4","3","6"],2,"m = (5 − 2) : (2 − 1) = 3.",F.plane([{m:3,c:-1}],[{x:1,y:2,l:'A'},{x:2,y:5,l:'B'}])),
+Q("sedang","Persamaan Garis","Persamaan garis yang bergradien 2 dan melalui titik (0, 5) adalah ...",["y = 5x + 2","y = 2x + 5","y = 2x − 5","y = −2x + 5"],1,"Titik (0, 5) berarti c = 5, sehingga y = 2x + 5."),
+Q("sedang","Persamaan Garis","Persamaan garis pada gambar adalah ...",["y = x + 3","y = −x − 3","y = x − 3","y = −x + 3"],3,"Memotong sumbu Y di (0, 3) dan sumbu X di (3, 0), sehingga m = −1 dan y = −x + 3.",F.plane([{m:-1,c:3}],[{x:0,y:3},{x:3,y:0}])),
+Q("sedang","Garis Horizontal","Gradien garis y = 4 pada gambar adalah ...",["4","1","0","tidak terdefinisi"],2,"Garis horizontal tidak naik maupun turun, sehingga gradiennya 0.",F.plane([{m:0,c:4}],[])),
+Q("sedang","Garis Vertikal","Gradien garis x = 3 pada gambar adalah ...",["0","3","1","tidak terdefinisi"],3,"Garis vertikal memiliki perubahan x = 0, sehingga gradiennya tidak terdefinisi.",F.plane([{x:3}],[])),
+Q("sedang","Garis Sejajar","Garis yang sejajar dengan y = 2x + 1 memiliki gradien ...",["−2","1/2","2","−1/2"],2,"Garis sejajar memiliki gradien sama, yaitu 2."),
+Q("sedang","Garis Tegak Lurus","Garis yang tegak lurus dengan garis bergradien 3 memiliki gradien ...",["−3","−1/3","3","1/3"],1,"m₁ × m₂ = −1, sehingga m₂ = −1/3."),
+Q("sedang","Titik pada Garis","Titik yang terletak pada garis y = 3x + 1 adalah ...",["(0, 3)","(1, 3)","(3, 9)","(2, 7)"],3,"Untuk x = 2: y = 3(2) + 1 = 7, jadi (2, 7) terletak pada garis."),
+Q("sedang","Persamaan dari Grafik","Garis pada gambar melalui O(0, 0) dan titik (2, 4). Persamaannya adalah ...",["y = ½x","y = 2x","y = x + 2","y = 4x"],1,"m = 4 : 2 = 2 dan melalui titik asal, sehingga y = 2x.",F.plane([{m:2,c:0}],[{x:0,y:0},{x:2,y:4}])),
+Q("sedang","Gradien","Gradien garis x + 2y = 4 adalah ...",["2","−2","1/2","−1/2"],3,"2y = −x + 4 → y = −½x + 2, sehingga m = −1/2."),
+// SULIT
+Q("sulit","Persamaan Garis","Persamaan garis yang melalui titik (2, 3) dan bergradien 4 adalah ...",["y = 4x + 5","y = 4x − 5","y = 4x − 11","y = 4x + 3"],1,"y − 3 = 4(x − 2) → y = 4x − 8 + 3 = 4x − 5."),
+Q("sulit","Persamaan Garis","Garis pada gambar melalui titik A(1, 2) dan B(3, 6). Persamaan garisnya adalah ...",["y = 2x + 2","y = x + 1","y = 2x","y = 3x − 1"],2,"m = (6 − 2) : (3 − 1) = 2. y − 2 = 2(x − 1) → y = 2x.",F.plane([{m:2,c:0}],[{x:1,y:2,l:'A'},{x:3,y:6,l:'B'}])),
+Q("sulit","Persamaan Garis","Garis pada gambar melalui A(−1, 4) dan B(2, −2). Persamaan garisnya adalah ...",["y = −2x + 6","y = 2x + 6","y = −2x − 2","y = −2x + 2"],3,"m = (−2 − 4) : (2 + 1) = −2. y − 4 = −2(x + 1) → y = −2x + 2.",F.plane([{m:-2,c:2}],[{x:-1,y:4,l:'A'},{x:2,y:-2,l:'B'}])),
+Q("sulit","Garis Sejajar","Persamaan garis yang melalui (1, 5) dan sejajar y = 3x − 2 adalah ...",["y = 3x − 2","y = 3x + 2","y = 3x + 5","y = −3x + 8"],1,"Gradien sama, m = 3. y − 5 = 3(x − 1) → y = 3x + 2."),
+Q("sulit","Garis Tegak Lurus","Persamaan garis yang melalui (0, 3) dan tegak lurus 2x + y = 5 adalah ...",["y = −2x + 3","y = 2x + 3","y = ½x + 3","y = −½x + 3"],2,"Garis 2x + y = 5 bergradien −2, sehingga gradien tegak lurusnya ½. Melalui (0, 3): y = ½x + 3."),
+Q("sulit","Titik Potong Sumbu","Garis pada gambar adalah 3x + 4y = 12. Garis tersebut memotong sumbu X dan sumbu Y berturut-turut di ...",["(3, 0) dan (0, 4)","(4, 0) dan (0, 3)","(12, 0) dan (0, 12)","(0, 4) dan (3, 0)"],1,"Sumbu X (y = 0): x = 4. Sumbu Y (x = 0): y = 3.",F.plane([{m:-0.75,c:3}],[])),
+Q("sulit","Garis Sejajar","Garis k dan l pada gambar sejajar. Garis k: y = ½x + 1 dan garis l memotong sumbu Y di (0, −2). Persamaan garis l adalah ...",["y = −½x − 2","y = 2x − 2","y = ½x + 2","y = ½x − 2"],3,"Sejajar berarti gradien sama (½), dan c = −2, sehingga y = ½x − 2.",F.plane([{m:.5,c:1,col:B,lab:'k',lx:4},{m:.5,c:-2,lab:'l',lx:4}],[])),
+Q("sulit","Garis Sejajar","Agar garis y = (k + 1)x + 3 sejajar dengan y = 4x − 1, nilai k adalah ...",["2","3","4","5"],1,"k + 1 = 4 → k = 3."),
+Q("sulit","Garis Tegak Lurus","Agar garis 2x + py = 6 tegak lurus dengan y = x + 1, nilai p adalah ...",["−2","−1","1","2"],3,"Gradien garis pertama = −2/p. Tegak lurus dengan gradien 1 berarti −2/p = −1, sehingga p = 2."),
+Q("sulit","Garis Horizontal","Persamaan garis yang melalui titik (4, −3) dan sejajar sumbu X adalah ...",["x = 4","y = −3","x = −3","y = 4"],1,"Garis sejajar sumbu X berbentuk y = konstan, yaitu y = −3.",F.plane([{m:0,c:-3}],[{x:4,y:-3}])),
+Q("sulit","Garis Vertikal","Persamaan garis yang melalui titik (−2, 5) dan sejajar sumbu Y adalah ...",["y = 5","x = 5","x = −2","y = −2"],2,"Garis sejajar sumbu Y berbentuk x = konstan, yaitu x = −2.",F.plane([{x:-2}],[{x:-2,y:5}])),
+Q("sulit","Gradien","Gradien garis yang melalui (−2, 5) dan (4, −1) adalah ...",["1","−6","−1","6"],2,"m = (−1 − 5) : (4 + 2) = −6 : 6 = −1."),
+Q("sulit","Titik pada Garis","Titik (a, 7) terletak pada garis y = 2x − 3. Nilai a adalah ...",["5","2","4","11"],0,"7 = 2a − 3 → 2a = 10 → a = 5."),
+Q("sulit","Gradien","Gradien garis 2x − 3y = 12 adalah ...",["−2/3","3/2","2/3","−3/2"],2,"−3y = −2x + 12 → y = (2/3)x − 4, sehingga m = 2/3."),
+Q("sulit","Titik Potong Dua Garis","Titik potong kedua garis pada gambar adalah ...",["(1, 2)","(3, 4)","(2, 3)","(2, 4)"],2,"Garis biru y = x + 1 dan garis oranye y = −x + 5. x + 1 = −x + 5 → x = 2, y = 3.",F.plane([{m:1,c:1,col:B},{m:-1,c:5}],[])),
+// HOTS
+Q("hots","Soal Cerita","Tarif taksi terdiri dari biaya awal Rp10.000 ditambah Rp4.000 per kilometer. Biaya perjalanan sejauh 8 km adalah ...",["Rp32.000","Rp40.000","Rp42.000","Rp48.000"],2,"y = 4.000x + 10.000. Untuk x = 8: y = 32.000 + 10.000 = Rp42.000."),
+Q("hots","Grafik Biaya","Grafik menunjukkan biaya sewa y (dalam ribuan rupiah) untuk x jam. Garis melalui (0, 2) dan (2, 6). Biaya sewa 10 jam adalah ... ribu rupiah.",["20","22","24","26"],1,"m = (6 − 2) : 2 = 2 dan c = 2, sehingga y = 2x + 2. Untuk x = 10: y = 22.",F.plane([{m:2,c:2}],[{x:0,y:2},{x:2,y:6}])),
+Q("hots","Titik Potong Sumbu","Garis pada gambar melalui A(2, 1) dan B(4, 5). Garis tersebut memotong sumbu Y di titik ...",["(0, 3)","(0, −1)","(0, −3)","(0, 5)"],2,"m = (5 − 1) : (4 − 2) = 2. y − 1 = 2(x − 2) → y = 2x − 3, sehingga memotong sumbu Y di (0, −3).",F.plane([{m:2,c:-3}],[{x:2,y:1,l:'A'},{x:4,y:5,l:'B'}])),
+Q("hots","Luas Daerah","Garis 2x + 3y = 12 pada gambar memotong sumbu X dan sumbu Y. Luas segitiga yang dibentuk garis dan kedua sumbu adalah ... satuan luas.",["10","12","18","24"],1,"Titik potongnya (6, 0) dan (0, 4). Luas = ½ × 6 × 4 = 12.",F.plane([{m:-2/3,c:4}],[{x:6,y:0},{x:0,y:4}],7)),
+Q("hots","Garis Tegak Lurus","Garis g melalui P(3, −1) dan tegak lurus garis yang melalui O(0, 0) dan (2, 4) seperti pada gambar. Persamaan garis g adalah ...",["2x + y = 5","x + 2y = 1","x − 2y = 5","2x − y = 7"],1,"Garis melalui O dan (2, 4) bergradien 2, sehingga gradien g = −½. y + 1 = −½(x − 3) → 2y + 2 = −x + 3 → x + 2y = 1.",F.plane([{m:2,c:0}],[{x:0,y:0},{x:2,y:4},{x:3,y:-1,l:'P'}])),
+Q("hots","Garis Sejajar","Agar garis (m + 1)x − 2y = 5 sejajar dengan garis 3x − y = 2, nilai m adalah ...",["2","4","5","7"],2,"Gradien 3x − y = 2 adalah 3. Gradien garis pertama = (m + 1)/2 = 3 → m = 5."),
+Q("hots","Tiga Titik Segaris","Titik A(−2, −3), B(1, 3), dan C(k, 9) terletak pada satu garis lurus seperti pada gambar. Nilai k adalah ...",["3","4","5","6"],1,"Gradien AB = 6 : 3 = 2. Gradien AC = 12 : (k + 2) = 2 → k + 2 = 6 → k = 4.",F.plane([{m:2,c:1}],[{x:-2,y:-3,l:'A'},{x:1,y:3,l:'B'}])),
+Q("hots","Titik Potong Dua Garis","Garis yang melalui titik potong garis y = x + 2 dan y = −2x + 8 serta titik asal O(0, 0) memiliki persamaan ...",["y = x","y = 2x","y = 3x","y = ½x"],1,"x + 2 = −2x + 8 → x = 2 dan y = 4. Garis melalui O(0, 0) dan (2, 4): y = 2x."),
+Q("hots","Persamaan dari Titik Potong","Garis pada gambar memotong sumbu X di (−4, 0) dan sumbu Y di (0, 2). Persamaan garis tersebut adalah ...",["x + 2y = 4","2x − y = −4","x − 2y = 4","x − 2y = −4"],3,"m = 2 : 4 = ½ dan c = 2, sehingga y = ½x + 2 → 2y = x + 4 → x − 2y = −4.",F.plane([{m:.5,c:2}],[{x:-4,y:0},{x:0,y:2}])),
+Q("hots","Jarak Dua Titik","Garis 5x + 12y = 60 memotong sumbu X di A dan sumbu Y di B. Jarak titik A dan B adalah ... satuan.",["15","17","13","60"],2,"A(12, 0) dan B(0, 5). AB = √(12² + 5²) = √169 = 13."),
+// OLIMPIADE
+Q("olimpiade","Luas Segitiga","Garis y = mx + 4 dengan m < 0 bersama kedua sumbu koordinat membentuk segitiga yang luasnya 8 satuan luas. Nilai m adalah ...",["−2","−1","−½","−4"],1,"Titik potong sumbu: (−4/m, 0) dan (0, 4). Luas = ½ × (−4/m) × 4 = −8/m = 8 → m = −1."),
+Q("olimpiade","Jarak Titik ke Garis","Jarak titik asal O(0, 0) ke garis 3x + 4y = 10 adalah ...",["1","2","2,5","5"],1,"Jarak = |3(0) + 4(0) − 10| : √(3² + 4²) = 10 : 5 = 2."),
+Q("olimpiade","Titik Tengah","Garis melalui P(2, 3) memotong sumbu X di A dan sumbu Y di B seperti pada gambar, dengan P titik tengah AB. Persamaan garis tersebut adalah ...",["2x + 3y = 13","x + y = 5","3x + 2y = 13","3x + 2y = 12"],3,"P titik tengah AB sehingga A(4, 0) dan B(0, 6). Persamaannya x/4 + y/6 = 1 → 3x + 2y = 12.",F.plane([{m:-1.5,c:6}],[{x:4,y:0,l:'A'},{x:0,y:6,l:'B'},{x:2,y:3,l:'P'}],7)),
+Q("olimpiade","Pencerminan","Garis y = 2x + 1 dicerminkan terhadap sumbu X. Persamaan bayangannya adalah ...",["y = −2x + 1","y = 2x − 1","y = −2x − 1","y = ½x + 1"],2,"Pencerminan terhadap sumbu X: (x, y) → (x, −y). Maka −y = 2x + 1 → y = −2x − 1."),
+Q("olimpiade","Titik Bilangan Bulat","Banyak titik (x, y) dengan x dan y bilangan bulat positif yang terletak pada garis 3x + 2y = 20 adalah ...",["2","3","4","5"],1,"x harus genap: x = 2 → y = 7; x = 4 → y = 4; x = 6 → y = 1. Jadi ada 3 titik.")
 ];
+const LB={sedang:"Sedang",sulit:"Sulit",hots:"HOTS",olimpiade:"Olimpiade"},LT=['A','B','C','D'];
+const st={cur:0,ans:new Array(QUESTIONS.length).fill(null),done:false};
+const $=id=>document.getElementById(id),panel=$('panel'),grid=$('grid');
+const cv=l=>`style="--c:var(--${l})"`;
 
-const LEVEL_LABEL = {sedang:"Sedang", sulit:"Sulit", hots:"HOTS", olimpiade:"Olimpiade"};
+// ===== Timer & penyimpanan (90 menit) =====
+const DUR=90*60;let endAt=0,tick=null,running=false;
+const KEY='ujian-persamaan-garis-v1';
+function save(){try{localStorage.setItem(KEY,JSON.stringify({endAt,ans:st.ans,cur:st.cur,done:st.done}))}catch(e){}}
+function clearSave(){try{localStorage.removeItem(KEY)}catch(e){}}
+function fmt(s){const h=Math.floor(s/3600),m=Math.floor(s%3600/60),c=s%60;return h+':'+String(m).padStart(2,'0')+':'+String(c).padStart(2,'0')}
+function tickFn(){const r=Math.max(0,Math.ceil((endAt-Date.now())/1000));$('tv').textContent=fmt(r);
+ $('tmr').className='timer'+(r<=300?' crit':r<=600?' warn':'');
+ if(r<=0){clearInterval(tick);$('ov').classList.add('hid');st.done=true;results()}}
+function startTimer(resume){if(!resume)endAt=Date.now()+DUR*1000;running=true;save();clearInterval(tick);tick=setInterval(tickFn,250);tickFn()}
 
-const state = {
-  current: 0,
-  answers: new Array(QUESTIONS.length).fill(null),
-  submitted: false
-};
-
-const panel = document.getElementById('soal-panel');
-const navGrid = document.getElementById('navGrid');
-const progressFill = document.getElementById('progressFill');
-const progressLabel = document.getElementById('progressLabel');
-const sidebarPanel = document.getElementById('sidebarPanel');
-const btnSubmitSide = document.getElementById('btnSubmitSide');
-
-function buildNavGrid(){
-  navGrid.innerHTML = '';
-  QUESTIONS.forEach((q, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'nav-cell lvl-' + q.level;
-    btn.type = 'button';
-    btn.textContent = i + 1;
-    btn.setAttribute('aria-label', 'Soal nomor ' + (i+1) + ', tingkat ' + LEVEL_LABEL[q.level]);
-    btn.addEventListener('click', () => { state.current = i; render(); });
-    navGrid.appendChild(btn);
-  });
-}
-
-function updateNavGrid(){
-  const cells = navGrid.querySelectorAll('.nav-cell');
-  cells.forEach((cell, i) => {
-    cell.classList.toggle('answered', state.answers[i] !== null);
-    cell.classList.toggle('current', i === state.current && !state.submitted);
-  });
-}
-
-function updateProgress(){
-  const answered = state.answers.filter(a => a !== null).length;
-  const pct = Math.round((answered / QUESTIONS.length) * 100);
-  progressFill.style.width = pct + '%';
-  progressLabel.textContent = answered + ' dari ' + QUESTIONS.length + ' soal terjawab';
-}
-
-function showConfirmModal(message, onConfirm){
-  const overlay = document.getElementById('confirmOverlay');
-  document.getElementById('confirmMessage').textContent = message;
-  overlay.classList.remove('hidden');
-  const yesBtn = document.getElementById('modalYes');
-  const noBtn = document.getElementById('modalNo');
-  function cleanup(){
-    overlay.classList.add('hidden');
-    yesBtn.removeEventListener('click', yesHandler);
-    noBtn.removeEventListener('click', noHandler);
-  }
-  function yesHandler(){ cleanup(); onConfirm(); }
-  function noHandler(){ cleanup(); }
-  yesBtn.addEventListener('click', yesHandler);
-  noBtn.addEventListener('click', noHandler);
-}
-
-function submitExam(){
-  const unanswered = state.answers.filter(a => a === null).length;
-  if (unanswered > 0) {
-    showConfirmModal('Masih ada ' + unanswered + ' soal belum dijawab. Tetap kumpulkan?', () => {
-      state.submitted = true;
-      renderResults();
-    });
-  } else {
-    state.submitted = true;
-    renderResults();
-  }
-}
-btnSubmitSide.addEventListener('click', submitExam);
-
-function renderQuestion(){
-  const i = state.current;
-  const q = QUESTIONS[i];
-  const letters = ['A','B','C','D'];
-
-  const optionsHtml = q.opts.map((opt, idx) => {
-    const selected = state.answers[i] === idx;
-    return `
-      <label class="option${selected ? ' selected' : ''}">
-        <input type="radio" name="opt" value="${idx}" ${selected ? 'checked' : ''}>
-        <span class="opt-letter">${letters[idx]}.</span>
-        <span>${opt}</span>
-      </label>`;
-  }).join('');
-
-  panel.innerHTML = `
-    <div class="q-card lvl-${q.level}">
-      <div class="badge-row">
-        <span class="level-chip ${q.level}">${LEVEL_LABEL[q.level]}</span>
-        <span class="topic-chip">${q.topic}</span>
-      </div>
-      <div class="q-number">Soal ${i + 1} dari ${QUESTIONS.length}</div>
-      <p class="q-text">${q.q}</p>
-      <fieldset class="options" id="optionsGroup">${optionsHtml}</fieldset>
-      <div class="nav-buttons">
-        <button type="button" class="btn-ghost" id="btnPrev" ${i === 0 ? 'disabled' : ''}>Sebelumnya</button>
-        ${i === QUESTIONS.length - 1
-          ? `<button type="button" class="btn-primary lvl-${q.level}" id="btnFinish">Ke ringkasan</button>`
-          : `<button type="button" class="btn-primary lvl-${q.level}" id="btnNext">Berikutnya</button>`}
-      </div>
-    </div>
-  `;
-
-  panel.querySelectorAll('input[name="opt"]').forEach(input => {
-    input.addEventListener('change', (e) => {
-      state.answers[i] = parseInt(e.target.value, 10);
-      updateNavGrid();
-      updateProgress();
-      panel.querySelectorAll('.option').forEach((el, idx) => {
-        el.classList.toggle('selected', idx === state.answers[i]);
-      });
-    });
-  });
-
-  const prevBtn = document.getElementById('btnPrev');
-  if (prevBtn) prevBtn.addEventListener('click', () => { state.current--; render(); });
-
-  const nextBtn = document.getElementById('btnNext');
-  if (nextBtn) nextBtn.addEventListener('click', () => { state.current++; render(); });
-
-  const finishBtn = document.getElementById('btnFinish');
-  if (finishBtn) finishBtn.addEventListener('click', submitExam);
-}
-
-function renderResults(){
-  const levels = ['sedang','sulit','hots','olimpiade'];
-  const counts = {};
-  levels.forEach(l => counts[l] = {correct:0, total:0});
-
-  let totalCorrect = 0;
-  QUESTIONS.forEach((q, i) => {
-    counts[q.level].total++;
-    if (state.answers[i] === q.correct) {
-      counts[q.level].correct++;
-      totalCorrect++;
-    }
-  });
-  const finalScore = Math.round((totalCorrect / QUESTIONS.length) * 100);
-  const scoreColor = finalScore >= 75 ? 'var(--correct)' : (finalScore >= 50 ? 'var(--gold)' : 'var(--wrong)');
-
-  const breakdownHtml = levels.map(l => {
-    const c = counts[l];
-    const pct = c.total ? Math.round((c.correct / c.total) * 100) : 0;
-    return `
-      <div class="bd-row">
-        <span>${LEVEL_LABEL[l]}</span>
-        <div class="bd-track"><div class="bd-fill ${l}" style="width:${pct}%"></div></div>
-        <span>${c.correct}/${c.total}</span>
-      </div>`;
-  }).join('');
-
-  const letters = ['A','B','C','D'];
-  const reviewHtml = QUESTIONS.map((q, i) => {
-    const userAns = state.answers[i];
-    const isCorrect = userAns === q.correct;
-    const optsHtml = q.opts.map((opt, idx) => {
-      let cls = '';
-      if (idx === q.correct) cls = 'correct';
-      else if (idx === userAns) cls = 'wrong-pick';
-      return `<div class="review-opt ${cls}">${letters[idx]}. ${opt}</div>`;
-    }).join('');
-
-    return `
-      <div class="review-item">
-        <div class="badge-row">
-          <span class="level-chip ${q.level}">${LEVEL_LABEL[q.level]}</span>
-          <span class="topic-chip">${q.topic}</span>
-          <span class="topic-chip" style="border-color:${isCorrect ? 'var(--correct)' : 'var(--wrong)'};color:${isCorrect ? 'var(--correct)' : 'var(--wrong)'}">${isCorrect ? 'Benar' : (userAns === null ? 'Tidak dijawab' : 'Salah')}</span>
-        </div>
-        <p class="review-q">${i + 1}. ${q.q}</p>
-        ${optsHtml}
-        <div class="explanation"><b>Pembahasan:</b> ${q.exp}</div>
-      </div>`;
-  }).join('');
-
-  sidebarPanel.classList.add('hidden');
-
-  panel.innerHTML = `
-    <div class="results-wrap">
-      <div class="results">
-        <h2>Hasil ujian</h2>
-        <div class="score-hero">
-          <span class="num" style="color:${scoreColor};">${totalCorrect}</span>
-          <span class="of">dari ${QUESTIONS.length} soal benar &nbsp;·&nbsp; nilai akhir <b style="color:${scoreColor};">${finalScore}</b></span>
-        </div>
-        <div class="breakdown">${breakdownHtml}</div>
-        <button type="button" class="btn-ghost" id="btnRetry">Ulangi ujian</button>
-        <div style="margin-top:30px;">${reviewHtml}</div>
-        <div class="finish-row">
-          <a class="btn-finish-link" href="soal.html">Selesai</a>
-        </div>
-      </div>
-    </div>
-  `;
-
-  document.getElementById('btnRetry').addEventListener('click', () => {
-    state.current = 0;
-    state.answers = new Array(QUESTIONS.length).fill(null);
-    state.submitted = false;
-    sidebarPanel.classList.remove('hidden');
-    updateNavGrid();
-    updateProgress();
-    render();
-  });
-
-  panel.scrollTo({top:0, behavior:'auto'});
-}
-
-function render(){
-  if (state.submitted) { renderResults(); return; }
-  renderQuestion();
-  updateNavGrid();
-  updateProgress();
-  panel.scrollTo({top:0, behavior:'auto'});
-}
-
-buildNavGrid();
-render();
+QUESTIONS.forEach((q,i)=>{const b=document.createElement('button');b.type='button';b.className='cell';b.style.setProperty('--c','var(--'+q.level+')');b.textContent=i+1;b.setAttribute('aria-label','Soal '+(i+1)+', '+LB[q.level]);b.onclick=()=>{st.cur=i;render()};grid.appendChild(b)});
+function upd(){const n=st.ans.filter(a=>a!==null).length;grid.querySelectorAll('.cell').forEach((c,i)=>{c.classList.toggle('ans',st.ans[i]!==null);c.classList.toggle('cur',i===st.cur&&!st.done)});$('pf').style.width=Math.round(n/QUESTIONS.length*100)+'%';$('pl').textContent=n+' dari '+QUESTIONS.length+' soal terjawab'}
+function confirmBox(m,fn){const o=$('ov');$('msg').textContent=m;o.classList.remove('hid');const y=$('yes'),n=$('no');const off=()=>{o.classList.add('hid');y.onclick=n.onclick=null};y.onclick=()=>{off();fn()};n.onclick=off}
+function submit(){const u=st.ans.filter(a=>a===null).length;const go=()=>{st.done=true;results()};u?confirmBox('Masih ada '+u+' soal belum dijawab. Tetap kumpulkan?',go):go()}
+$('bsub').onclick=submit;
+function question(){const i=st.cur,q=QUESTIONS[i],last=i===QUESTIONS.length-1;
+panel.innerHTML=`<div class="qc" ${cv(q.level)}><div class="chips"><span class="lc">${LB[q.level]}</span><span class="tc">${q.topic}</span></div><div class="qn">Soal ${i+1} dari ${QUESTIONS.length}</div><p class="qt">${q.q}</p>${q.fig?`<div class="fig">${q.fig}</div>`:''}<fieldset>${q.opts.map((o,k)=>`<label class="opt${st.ans[i]===k?' sel':''}"><input type="radio" name="o" value="${k}" ${st.ans[i]===k?'checked':''}><span class="L">${LT[k]}.</span><span>${o}</span></label>`).join('')}</fieldset><div class="nb"><button type="button" class="bg" id="pv" ${i?'':'disabled'}>Sebelumnya</button><button type="button" class="bp" id="nx">${last?'Ke ringkasan':'Berikutnya'}</button></div></div>`;
+panel.querySelectorAll('input').forEach(inp=>inp.onchange=e=>{st.ans[i]=+e.target.value;upd();panel.querySelectorAll('.opt').forEach((el,k)=>el.classList.toggle('sel',k===st.ans[i]));save()});
+$('pv').onclick=()=>{st.cur--;render()};$('nx').onclick=()=>last?submit():(st.cur++,render())}
+function results(){clearInterval(tick);running=false;$('tmr').classList.add('hid');$('fin').classList.remove('hid');save();
+const lv=['sedang','sulit','hots','olimpiade'],c={};lv.forEach(l=>c[l]={r:0,t:0});let tot=0;
+QUESTIONS.forEach((q,i)=>{c[q.level].t++;if(st.ans[i]===q.correct){c[q.level].r++;tot++}});
+const sc=Math.round(tot/QUESTIONS.length*100),col=sc>=75?'var(--ok)':sc>=50?'var(--gold)':'var(--bad)';
+const bd=lv.map(l=>`<div class="br" ${cv(l)}><span>${LB[l]}</span><div class="bt"><div style="width:${c[l].t?c[l].r/c[l].t*100:0}%"></div></div><span>${c[l].r}/${c[l].t}</span></div>`).join('');
+const rv=QUESTIONS.map((q,i)=>{const u=st.ans[i],ok=u===q.correct;return `<div class="ri"><div class="chips" ${cv(q.level)}><span class="lc">${LB[q.level]}</span><span class="tc">${q.topic}</span><span class="tc" style="color:${ok?'var(--ok)':'var(--bad)'};border-color:currentColor">${ok?'Benar':u===null?'Tidak dijawab':'Salah'}</span></div><p class="rq">${i+1}. ${q.q}</p>${q.fig?`<div class="fig">${q.fig}</div>`:''}${q.opts.map((o,k)=>`<div class="ro ${k===q.correct?'ok':k===u?'no':''}">${LT[k]}. ${o}</div>`).join('')}<div class="ex"><b>Pembahasan:</b> ${q.exp}</div></div>`}).join('');
+$('side').classList.add('hid');
+panel.innerHTML=`<div class="res"><h2>Hasil ujian</h2><div class="hero"><span class="n" style="color:${col}">${tot}</span><span class="o">dari ${QUESTIONS.length} soal benar · nilai akhir <b style="color:${col}">${sc}</b></span></div><div class="bd">${bd}</div><button type="button" class="bg" id="rt">Ulangi ujian</button><div style="margin-top:30px">${rv}</div></div>`;
+$('rt').onclick=again;panel.scrollTo(0,0)}
+function again(){st.cur=0;st.ans.fill(null);st.done=false;clearInterval(tick);running=false;clearSave();
+ $('side').classList.remove('hid');$('fin').classList.add('hid');$('tmr').classList.remove('hid');$('tmr').className='timer';$('tv').textContent=fmt(DUR);
+ render();$('intro').classList.remove('hid')}
+const SOAL_URL='../soal.html'; // ganti dengan nama/alamat file HTML tujuan
+$('fin').onclick=()=>{clearSave();location.href=SOAL_URL};
+$('okb').onclick=()=>{$('intro').classList.add('hid');startTimer()};
+function render(){if(st.done){results();return}question();upd();if(running)save();panel.scrollTo(0,0)}
+// Cegah refresh saat ujian berjalan + pulihkan jawaban dan sisa waktu bila halaman tetap termuat ulang
+addEventListener('beforeunload',e=>{if(running){e.preventDefault();e.returnValue=''}});
+addEventListener('keydown',e=>{if(!running)return;if(e.key==='F5'||((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='r'))e.preventDefault()});
+(function(){try{const d=JSON.parse(localStorage.getItem(KEY)||'null');
+ if(d&&Array.isArray(d.ans)&&d.ans.length===QUESTIONS.length){st.ans=d.ans;st.cur=d.cur||0;endAt=d.endAt;$('intro').classList.add('hid');
+  if(d.done||Date.now()>=endAt){st.done=true;render();return}
+  startTimer(true);render();return}}catch(e){}
+ render()})();
 </script>
 </body>
 </html>

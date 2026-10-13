@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ujian Komunikasi dan Keamanan Data — KW Learning</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F0F2F5;--panel:#fff;--ink:#1B2430;--soft:#5B6473;--navy:#0F3D63;--navy2:#0A2B48;--gold:#D79A2C;--line:#DDE2E8;--sel:#F2F6FA;--figbg:#EEF3F8;--sedang:#2E86AB;--sulit:#C9642A;--hots:#7B4FA6;--olimpiade:#B23A48;--ok:#2F9E5B;--bad:#C0392B;color-scheme:light}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--paper);overscroll-behavior-y:none}
+body{color:var(--ink);font-family:'Public Sans',system-ui,sans-serif;line-height:1.5;overflow:hidden}
+h2,h3{font-family:'Fraunces',Georgia,serif;margin:0}
+button{font-family:inherit}
+.app{height:100dvh;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+header{flex:none;background:linear-gradient(120deg,#0F3D63,#0A2B48);color:#F4F1E8;padding:10px 26px 0}
+.row{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.hl{display:flex;align-items:center;gap:14px;flex:1;min-width:0}.ht{min-width:0}
+.logo{width:56px;height:56px;border-radius:50%;object-fit:cover;background:#fff;border:2px solid var(--gold);padding:2px;flex:none}
+.brand{display:block;font-size:13px;color:#B9C6D6;font-weight:600}
+.et{font-family:'Fraunces',serif;font-weight:600;font-size:18px;color:#fff}
+.hr{display:flex;flex-direction:column;align-items:flex-end;gap:6px;min-height:62px}
+.timer{display:inline-flex;align-items:baseline;gap:8px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.32);border-radius:8px;padding:4px 14px;font-size:12px;color:#C7D2DE}
+.timer b{font-size:19px;color:#fff;font-weight:700;font-variant-numeric:tabular-nums}
+.timer.warn{background:rgba(215,154,44,.3);border-color:var(--gold)}
+.timer.crit{background:rgba(192,57,43,.45);border-color:#F1948A}
+.fin{background:var(--gold);color:#2A1D06;border:0;border-radius:8px;padding:7px 22px;font-size:14.5px;font-weight:700;cursor:pointer}
+.sub{margin:4px 0 12px;color:#C7D2DE;font-size:12.5px;max-width:820px}
+.strip{display:flex;height:4px}.strip span{flex:1}
+.body{flex:1;display:flex;min-height:0}
+aside{width:280px;flex:none;background:var(--panel);border-right:1px solid var(--line);border-top:3px solid var(--gold);display:flex;flex-direction:column;min-height:0}
+.side{flex:1;overflow-y:auto;padding:18px}
+aside h3{font-family:'Public Sans';font-size:13px;color:var(--soft);margin-bottom:10px}
+.pt{height:7px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:6px}
+.pf{height:100%;background:var(--gold);width:0;transition:width .25s}
+.pl{font-size:12.5px;color:var(--soft);margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:18px}
+.cell{aspect-ratio:1;border-radius:6px;border:1.5px solid var(--c);color:var(--c);background:color-mix(in srgb,var(--c) 12%,var(--panel));font-weight:700;font-size:12.5px;cursor:pointer;padding:0}
+.cell.ans{background:var(--c);color:#fff}
+.cell.cur{outline:2.5px solid var(--gold);outline-offset:1px}
+.lg{display:flex;flex-direction:column;gap:7px;font-size:12px;color:var(--soft)}
+.lg div{display:flex;align-items:center;gap:8px}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--c)}
+.sf{flex:none;padding:14px 18px;border-top:1px solid var(--line)}
+.bsub{width:100%;background:var(--gold);color:#2A1D06;border:0;border-radius:8px;padding:12px;font-size:14.5px;font-weight:700;cursor:pointer}
+main{flex:1;min-width:0;overflow-y:auto;display:flex;justify-content:center;padding:30px 26px 40px}
+.qc{width:100%;max-width:760px;background:var(--panel);border:1px solid var(--line);border-top:5px solid var(--c);border-radius:10px;padding:26px 30px 30px;align-self:flex-start}
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.lc{font-size:12.5px;font-weight:700;padding:5px 12px;border-radius:99px;background:color-mix(in srgb,var(--c) 14%,var(--panel));color:var(--c)}
+.tc{font-size:12.5px;color:var(--soft);border:1px solid var(--line);padding:5px 12px;border-radius:99px}
+.qn{font-family:'Fraunces',serif;font-size:14.5px;color:var(--soft);margin-bottom:6px}
+.qt{font-size:19px;line-height:1.55;margin:0 0 16px}
+.fig{background:var(--figbg);border-radius:10px;padding:10px;margin:0 0 20px;text-align:center}
+.fig svg{max-width:100%;height:auto;max-height:240px}
+fieldset{border:0;margin:0 0 26px;padding:0;display:flex;flex-direction:column;gap:10px}
+.opt{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:8px;padding:13px 16px;cursor:pointer}
+.opt:hover{border-color:var(--navy)}
+.opt input{margin-top:3px;accent-color:var(--navy)}
+.opt.sel{border-color:var(--navy);background:var(--sel)}
+.L{font-weight:700;color:var(--navy);width:18px;flex:none}
+.nb{display:flex;justify-content:space-between;gap:12px}
+.bg,.bp{font-size:15px;font-weight:700;border-radius:8px;padding:11px 22px;cursor:pointer;border:1px solid var(--line)}
+.bg{background:var(--panel);color:var(--ink)}.bg:disabled{opacity:.4;cursor:not-allowed}
+.bp{background:var(--c,var(--navy));color:#fff;border-color:var(--c,var(--navy))}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.res{max-width:820px;width:100%;align-self:flex-start}
+.res h2{font-size:24px}
+.hero{display:flex;align-items:baseline;gap:10px;margin:10px 0 22px}
+.hero .n{font-family:'Fraunces',serif;font-size:52px;font-weight:600}
+.hero .o{color:var(--soft);font-size:15px}
+.bd{display:grid;gap:12px;margin-bottom:24px}
+.br{display:grid;grid-template-columns:100px 1fr 56px;align-items:center;gap:12px;font-size:14px}
+.bt{height:9px;background:var(--line);border-radius:99px;overflow:hidden}.bt div{height:100%;border-radius:99px;background:var(--c)}
+.ri{border-top:1px solid var(--line);padding:20px 0}
+.rq{font-size:16px;margin:10px 0 12px}
+.ro{padding:8px 12px;border-radius:6px;font-size:14px;margin-bottom:6px;border:1px solid var(--line)}
+.ro.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,var(--panel))}
+.ro.no{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 16%,var(--panel))}
+.ex{font-size:14px;color:var(--soft);background:var(--figbg);border-radius:8px;padding:12px 14px;margin-top:10px}
+.ex b{color:var(--ink)}
+.vz{background:#F7FAFD;border:1px solid var(--line);border-radius:10px;padding:12px;margin:0 0 18px;color:#1B2430}
+.vz svg{display:block;width:100%;height:auto;max-height:320px}
+.cd{background:#14202E;color:#E6EDF6;font:14px/1.75 ui-monospace,Menlo,Consolas,monospace;padding:14px 18px;border-radius:10px;white-space:pre;overflow-x:auto;margin:0}
+.tb{width:100%;border-collapse:collapse;font-size:15px}.tb th,.tb td{border:1px solid var(--line);padding:8px 12px;text-align:center}
+.tb th{background:#EAF3F8;color:var(--navy)}.tb .q{background:#FFF5DC;font-weight:700;color:#8a5a00}
+.hid{display:none!important}
+.ov{position:fixed;inset:0;background:rgba(10,20,32,.55);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}
+#intro{z-index:200;background:rgba(10,20,32,.72)}
+.mb{background:var(--panel);border-radius:12px;padding:26px 28px;max-width:380px;width:100%;border-top:4px solid var(--gold)}
+.mb.big{max-width:560px;max-height:90vh;overflow-y:auto}
+.mb h3{font-size:18px;margin-bottom:10px}.mb.big h3{font-size:21px}
+.mb p{font-size:14.5px;color:var(--soft);margin:0 0 22px}
+.mb ol{margin:12px 0 20px;padding-left:20px;font-size:14.5px;color:var(--ink)}.mb li{margin-bottom:8px}
+.ma{display:flex;justify-content:flex-end;gap:10px}
+.ma button{font-size:14.5px;font-weight:700;border-radius:8px;padding:10px 18px;cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--ink)}
+.ma .y{background:var(--navy);color:#fff;border-color:var(--navy)}
+@media (max-width:820px){
+ .body{flex-direction:column}
+ header{padding:8px 12px 0}
+ .row{gap:6px}
+ .hl{flex:none;width:100%;gap:10px}
+ .logo{width:36px;height:36px;padding:1px}
+ .brand{font-size:12px}.sub{display:none}
+ .hr{width:100%;flex-direction:row;align-items:center;justify-content:space-between;min-height:0;gap:8px;margin-bottom:8px}
+ .et{font-size:15px}
+ .timer{padding:3px 10px;font-size:11px}.timer b{font-size:16px}
+ .fin{padding:6px 16px;font-size:13.5px}
+ aside{width:100%;flex-direction:row;align-items:center;border-right:0;border-bottom:1px solid var(--line);border-top-width:2px;max-height:none}
+ .side{padding:8px 0 8px 12px;min-width:0;overflow:hidden}
+ aside h3,.lg{display:none}
+ .pt{margin-bottom:4px}.pl{font-size:11.5px;margin-bottom:6px}
+ .grid{display:flex;overflow-x:auto;gap:6px;margin-bottom:0;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+ .cell{flex:none;width:36px;height:36px;aspect-ratio:auto}
+ .sf{padding:8px 12px;border-top:0}
+ .bsub{width:auto;white-space:nowrap;padding:10px 12px;font-size:13px}
+ main{padding:12px 10px 24px}
+ .qc{padding:16px 14px 18px;border-radius:8px}
+ .chips{margin-bottom:10px}
+ .qt{font-size:16.5px;margin-bottom:14px}
+ .fig{padding:6px;margin-bottom:14px}
+ fieldset{margin-bottom:18px;gap:8px}
+ .opt{padding:11px 12px}
+ .bg,.bp{padding:11px 16px;font-size:14.5px}
+ .nb .bg,.nb .bp{flex:1}
+ .res h2{font-size:21px}.hero .n{font-size:42px}
+ .br{grid-template-columns:78px 1fr 44px;gap:8px}
+ .mb,.mb.big{padding:20px 18px}.mb.big ol{font-size:14px;padding-left:18px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="row"><div class="hl"><img class="logo" src="../assets/logo-sekolah.png" alt="Logo sekolah"><div class="ht"><span class="brand">KW Learning · Ruang Belajar Informatika</span><p class="sub">45 soal pilihan ganda tentang komunikasi data dan keamanan data, dengan topologi jaringan, diagram alir, tabel, alamat situs, email phishing, dan sandi — sedang, sulit, HOTS, dan olimpiade.</p></div></div>
+  <div class="hr"><span class="et">Ujian Komunikasi dan Keamanan Data</span>
+  <div class="timer" id="tmr" role="timer"><span>Sisa waktu</span><b id="tv">1:30:00</b></div>
+  <button type="button" class="fin hid" id="fin">Selesai</button></div></div>
+  <div class="strip"><span style="background:#2E86AB"></span><span style="background:#C9642A"></span><span style="background:#7B4FA6"></span><span style="background:#B23A48"></span></div>
+</header>
+<div class="body">
+<aside id="side">
+  <div class="side">
+    <h3>Progres</h3><div class="pt"><div class="pf" id="pf"></div></div><div class="pl" id="pl"></div>
+    <h3>Navigasi soal</h3><div class="grid" id="grid"></div>
+    <div class="lg">
+      <div><span class="dot" style="--c:var(--sedang)"></span>Sedang (1–15)</div>
+      <div><span class="dot" style="--c:var(--sulit)"></span>Sulit (16–30)</div>
+      <div><span class="dot" style="--c:var(--hots)"></span>HOTS (31–40)</div>
+      <div><span class="dot" style="--c:var(--olimpiade)"></span>Olimpiade (41–45)</div>
+    </div>
+  </div>
+  <div class="sf"><button type="button" class="bsub" id="bsub">Kumpulkan jawaban</button></div>
+</aside>
+<main id="panel" aria-live="polite"></main>
+</div>
+</div>
+<div class="ov hid" id="ov"><div class="mb"><h3>Kumpulkan jawaban?</h3><p id="msg"></p><div class="ma"><button type="button" id="no">Kembali</button><button type="button" class="y" id="yes">Ya, kumpulkan</button></div></div></div>
+
+<div class="ov" id="intro" role="dialog" aria-modal="true" aria-labelledby="it"><div class="mb big">
+<h3 id="it">Petunjuk Mengerjakan Soal</h3>
+<ol>
+<li>Ujian terdiri dari <b>45 soal pilihan ganda</b>: Sedang (1–15), Sulit (16–30), HOTS (31–40), dan Olimpiade (41–45).</li>
+<li>Waktu mengerjakan <b>90 menit</b>. Waktu <b>langsung berjalan</b> setelah kamu menekan tombol OK dan tidak dapat dihentikan.</li>
+<li>Pilih satu jawaban yang paling tepat untuk setiap soal. Jawaban boleh diubah selama waktu masih ada.</li>
+<li>Gunakan kotak navigasi soal untuk berpindah soal, dan perhatikan sisa waktu di bagian atas layar.</li>
+<li>Tekan <b>Kumpulkan jawaban</b> bila sudah selesai. Jika waktu habis, jawaban akan dikumpulkan secara otomatis.</li>
+<li>Setelah dikumpulkan, nilai dan pembahasan setiap soal akan ditampilkan.</li>
+</ol>
+<div class="ma"><button type="button" class="y" id="okb">OK, mulai mengerjakan</button></div>
+</div></div>
+
+<script>
+/* Pembuat visual */
+const Tb=(h,r)=>({t:'tbl',h,r}),Fl=n=>({t:'fl',n}),Cd=l=>({t:'cd',l}),Nt=(n,e,h)=>({t:'net',n,e,h}),Ur=u=>({t:'url',u}),Em=(f,s,b)=>({t:'em',f,s,b});
+const RAW=[
+// ===== SEDANG =====
+['sedang','Unsur Komunikasi Data',Fl([{t:'p',x:'Pengirim (sender)'},{t:'p',x:'Media transmisi'},{t:'p',x:'?'}]),'Pihak yang menerima pesan pada diagram alir komunikasi data (tanda ?) disebut ...','Penerima (receiver)',['Protokol','Enkripsi','Router'],'','Komunikasi data melibatkan pengirim, pesan, media transmisi, dan penerima.'],
+['sedang','Protokol',null,'Seperangkat aturan yang mengatur cara dua perangkat saling berkomunikasi di jaringan disebut ...','Protokol',['Topologi','Bandwidth','Firewall'],'','Protokol, misalnya HTTP, TCP/IP, dan SMTP, menyamakan aturan format dan urutan pengiriman data antarperangkat.'],
+['sedang','Topologi Jaringan',Nt([{n:'Switch',x:300,y:100,k:'sw'},{n:'PC 1',x:110,y:40,k:'pc'},{n:'PC 2',x:110,y:160,k:'pc'},{n:'PC 3',x:490,y:40,k:'pc'},{n:'PC 4',x:490,y:160,k:'pc'}],[[0,1],[0,2],[0,3],[0,4]],200),'Topologi jaringan pada gambar adalah topologi ...','Bintang (star)',['Bus','Cincin (ring)','Mesh'],'','Semua perangkat terhubung ke satu titik pusat (switch), itulah ciri topologi bintang.'],
+['sedang','Perangkat Jaringan',null,'Perangkat yang menghubungkan jaringan lokal dengan internet dan meneruskan paket data antarjaringan adalah ...','Router',['Switch','Printer','Speaker'],'','Router menentukan jalur pengiriman paket antarjaringan. Switch hanya menghubungkan perangkat dalam satu jaringan lokal.'],
+['sedang','Media Transmisi',null,'Media transmisi yang mengirim data dengan pulsa cahaya dan berkecepatan sangat tinggi adalah ...','Kabel serat optik',['Kabel UTP','Kabel koaksial','Gelombang radio Wi-Fi'],'','Serat optik memakai cahaya sehingga kecepatan tinggi dan tahan gangguan elektromagnetik.'],
+['sedang','Jaringan Nirkabel',null,'Teknologi jaringan nirkabel yang umum dipakai di rumah dan sekolah untuk menghubungkan perangkat ke internet adalah ...','Wi-Fi',['Kabel UTP','Serat optik','Port USB'],'','Wi-Fi memakai gelombang radio sehingga perangkat dapat terhubung tanpa kabel.'],
+['sedang','Alamat Jaringan',null,'Alamat 192.168.1.10 merupakan contoh ...','Alamat IP versi 4',['Nama domain','Alamat email','Kata sandi'],'','Alamat IPv4 terdiri atas empat bilangan (0 sampai 255) yang dipisahkan titik.'],
+['sedang','DNS',null,'Layanan yang menerjemahkan nama domain seperti sekolah.sch.id menjadi alamat IP adalah ...','DNS (Domain Name System)',['Firewall','Antivirus','Bluetooth'],'','DNS bertindak seperti buku telepon internet: manusia mengingat nama, komputer memakai alamat IP.'],
+['sedang','HTTPS',null,'Awalan HTTPS dan ikon gembok pada alamat situs menunjukkan bahwa ...','Data antara browser dan situs dienkripsi',['Situs pasti bebas hoaks','Situs pasti milik pemerintah','Situs tidak memiliki iklan'],'','HTTPS mengamankan jalur komunikasi, tetapi tidak menjamin isi situs benar atau dapat dipercaya.'],
+['sedang','Prinsip Keamanan Data',Tb(['Prinsip','Arti'],[['Kerahasiaan','Hanya pihak berwenang yang dapat mengakses data'],['Integritas','Data tidak diubah tanpa izin'],['Ketersediaan','Data dapat diakses saat dibutuhkan']]),'Laporan hasil ujian hanya boleh dibuka oleh guru dan siswa yang bersangkutan. Prinsip keamanan data yang dijaga adalah ...','Kerahasiaan',['Integritas','Ketersediaan','Kompresi'],'','Membatasi akses hanya untuk pihak berwenang adalah penerapan prinsip kerahasiaan (confidentiality).'],
+['sedang','Malware',null,'Perangkat lunak berbahaya yang dirancang untuk merusak sistem atau mencuri data disebut ...','Malware',['Firmware','Freeware','Middleware'],'','Malware adalah gabungan kata malicious software, misalnya virus, worm, trojan, ransomware, dan spyware.'],
+['sedang','Kata Sandi',null,'Kata sandi yang paling kuat di antara pilihan berikut adalah ...','Kb7#mT2$pQ9z',['12345678','namasaya2010','password'],'','Kata sandi kuat panjang, memadukan huruf besar, huruf kecil, angka, dan simbol, serta tidak memakai data pribadi atau kata umum.'],
+['sedang','Antivirus',null,'Perangkat lunak untuk mendeteksi dan menghapus virus serta malware disebut ...','Antivirus',['Browser','Kompresor file','Pemutar media'],'','Antivirus memindai berkas dan aktivitas sistem untuk menemukan ancaman.'],
+['sedang','Firewall',null,'Sistem yang menyaring lalu lintas data masuk dan keluar jaringan berdasarkan aturan keamanan disebut ...','Firewall',['Router nirkabel','Server email','Kabel penghubung'],'','Firewall mengizinkan atau memblokir koneksi sesuai aturan yang ditetapkan.'],
+['sedang','Pencadangan',null,'Menyalin data penting ke tempat penyimpanan lain untuk mencegah kehilangan data disebut ...','Pencadangan (backup)',['Defragmentasi','Enkripsi','Instalasi'],'','Backup memungkinkan data dipulihkan saat perangkat rusak, hilang, atau terkena ransomware.'],
+// ===== SULIT =====
+['sulit','Waktu Transfer',null,'Sebuah file 120 MB diunduh dengan kecepatan 8 MB per detik. Waktu yang diperlukan adalah ...',15,[12,20,960],'detik','Waktu = ukuran ÷ kecepatan = 120 ÷ 8 = 15 detik.'],
+['sulit','Bit dan Byte',null,'Koneksi internet berkecepatan 40 Mbps (megabit per detik). Kecepatan unduh teoretis maksimum dalam MB per detik (1 byte = 8 bit) adalah ...',5,[8,40,320],'MB/detik','40 Mbps ÷ 8 = 5 MB per detik.'],
+['sulit','Topologi Bus',Nt([{n:'',x:50,y:100,k:'dot'},{n:'',x:150,y:100,k:'dot'},{n:'',x:260,y:100,k:'dot'},{n:'',x:370,y:100,k:'dot'},{n:'',x:480,y:100,k:'dot'},{n:'',x:550,y:100,k:'dot'},{n:'PC A',x:150,y:35,k:'pc'},{n:'PC B',x:260,y:165,k:'pc'},{n:'PC C',x:370,y:35,k:'pc'},{n:'PC D',x:480,y:165,k:'pc'}],[[0,1],[1,2],[2,3],[3,4],[4,5],[1,6],[2,7],[3,8],[4,9]],200),'Pada topologi bus seperti gambar, jika kabel utama (garis tengah) terputus, akibatnya adalah ...','Seluruh jaringan dapat terganggu karena semua perangkat bergantung pada satu kabel utama',['Hanya satu komputer yang tidak dapat terhubung','Jaringan menjadi lebih cepat','Tidak ada pengaruh apa pun'],'','Topologi bus memakai satu kabel utama bersama. Jika kabel utama putus, komunikasi antarperangkat dapat terhenti.'],
+['sulit','Mode Transmisi',Tb(['Mode','Arah komunikasi'],[['Simpleks','Satu arah saja'],['Half-duplex','Dua arah bergantian'],['Full-duplex','Dua arah bersamaan']]),'Panggilan video, saat kedua orang dapat berbicara dan mendengar secara bersamaan, memakai mode ...','Full-duplex',['Simpleks','Half-duplex','Multipleks'],'','Full-duplex memungkinkan pengiriman dan penerimaan data pada saat yang sama.'],
+['sulit','Sandi Caesar',Cd(['Pesan asli : SEKOLAH','Aturan     : tiap huruf digeser 3 ke kanan','             (A → D, B → E, ..., Z → C)']),'Hasil enkripsi pesan pada gambar adalah ...','VHNRODK',['TFLPMBI','PBHLIXE','WIOSPEL'],'','S → V, E → H, K → N, O → R, L → O, A → D, H → K sehingga menjadi VHNRODK.'],
+['sulit','Dekripsi Sandi Caesar',Cd(['Pesan sandi : FDQWLN','Aturan      : tiap huruf digeser 3 ke kanan saat enkripsi']),'Pesan asli dari sandi pada gambar adalah ...','CANTIK',['ECPVKM','DBOUJL','IGTZOQ'],'','Dekripsi dilakukan dengan menggeser 3 huruf ke kiri: F → C, D → A, Q → N, W → T, L → I, N → K sehingga menjadi CANTIK.'],
+['sulit','Kriptografi',null,'Enkripsi yang memakai sepasang kunci berbeda, yaitu kunci publik dan kunci privat, disebut ...','Enkripsi asimetris',['Enkripsi simetris','Hashing','Kompresi data'],'','Pada enkripsi asimetris, kunci publik untuk mengenkripsi dan kunci privat untuk mendekripsi. Enkripsi simetris memakai satu kunci yang sama.'],
+['sulit','Hash',null,'Kata sandi pengguna sebaiknya disimpan dalam bentuk hash karena ...','Hasil hash sulit dibalik menjadi kata sandi asli',['Hash dapat didekripsi kapan saja dengan kunci','Hash memperbesar ukuran kata sandi','Hash membuat kata sandi tampil di layar'],'','Hash adalah fungsi satu arah. Jika basis data bocor, penyerang tidak langsung memperoleh kata sandi asli.'],
+['sulit','Phishing',Em('bantuan@bank-sejahtra-login.com','URGENT! Akun Anda akan diblokir',['Klik tautan berikut dan masukkan PIN serta OTP Anda','dalam 1 jam, atau akun akan ditutup permanen.']),'Pesan pada gambar merupakan contoh ...','Phishing',['Notifikasi resmi dari bank','Enkripsi data','Pencadangan akun'],'','Phishing berusaha menipu korban agar menyerahkan data sensitif, ditandai alamat pengirim mencurigakan, nada mendesak, dan permintaan PIN atau OTP.'],
+['sulit','Membaca Alamat Situs',Ur('https://bank-sejahtera.co.id.login-aman.xyz/masuk'),'Domain sebenarnya dari alamat situs pada gambar adalah ...','login-aman.xyz',['bank-sejahtera.co.id','https','masuk'],'','Domain sebenarnya ada di bagian akhir sebelum tanda garis miring pertama, yaitu login-aman.xyz. Bagian bank-sejahtera.co.id hanyalah subdomain yang dipakai untuk menipu.'],
+['sulit','Autentikasi',null,'Autentikasi dua faktor (2FA) meningkatkan keamanan karena ...','Selain kata sandi, dibutuhkan faktor kedua seperti kode OTP',['Kata sandi tidak diperlukan lagi','Semua akun otomatis kebal malware','Data tidak perlu dienkripsi lagi'],'','Walaupun kata sandi bocor, penyerang tetap membutuhkan faktor kedua untuk masuk.'],
+['sulit','Ransomware',null,'Malware yang mengunci atau mengenkripsi data korban lalu meminta tebusan disebut ...','Ransomware',['Spyware','Adware','Worm'],'','Ransomware menyandera data. Cadangan data yang tersimpan terpisah menjadi perlindungan terbaik.'],
+['sulit','Serangan DDoS',null,'Serangan yang membanjiri server dengan permintaan palsu dari banyak perangkat sehingga layanan tidak dapat diakses terutama mengancam prinsip ...','Ketersediaan',['Kerahasiaan','Integritas','Kompresi'],'','DDoS membuat layanan tidak tersedia bagi pengguna sah, sehingga menyerang aspek ketersediaan (availability).'],
+['sulit','Wi-Fi Publik',null,'Saat memakai Wi-Fi publik tanpa kata sandi, tindakan yang paling aman adalah ...','Menghindari transaksi sensitif atau memakai VPN',['Membuka rekening bank karena koneksinya cepat','Mematikan firewall agar lancar','Membagikan kata sandi akun ke teman'],'','Jaringan publik rawan penyadapan. Hindari login atau transaksi sensitif, atau gunakan VPN agar lalu lintas terenkripsi.'],
+['sulit','Strategi Backup',null,'Aturan pencadangan 3-2-1 menyarankan menyimpan 3 salinan data pada 2 jenis media berbeda, dan 1 salinan ...','Disimpan di lokasi lain (di luar tempat utama)',['Dihapus setelah seminggu','Dibagikan secara publik','Disimpan di komputer yang sama'],'','Satu salinan di lokasi berbeda, misalnya penyimpanan awan atau gedung lain, melindungi data dari kebakaran, pencurian, atau bencana.'],
+// ===== HOTS =====
+['hots','Analisis Jaringan',Nt([{n:'Internet',x:70,y:100,k:'cl'},{n:'Router',x:200,y:100,k:'rt'},{n:'Switch',x:340,y:40,k:'sw'},{n:'Lab',x:520,y:15,k:'pc'},{n:'Perpus',x:520,y:65,k:'pc'},{n:'TU',x:520,y:115,k:'pc'},{n:'AP',x:340,y:165,k:'ap'},{n:'Ponsel guru',x:500,y:170,k:'pc'}],[[0,1],[1,2],[2,3],[2,4],[2,5],[1,6],[6,7,'w']],200),'Pada jaringan sekolah di gambar, switch tiba-tiba rusak. Perangkat yang masih dapat terhubung ke internet adalah ...','Ponsel guru melalui access point',['Komputer Lab','Komputer Perpustakaan','Komputer TU'],'','Komputer Lab, Perpustakaan, dan TU terhubung lewat switch. Ponsel guru terhubung nirkabel ke access point yang langsung terhubung ke router.'],
+['hots','Hak Akses',Tb(['Pengguna','Lihat','Ubah','Hapus'],[['Siswa','Ya','Tidak','Tidak'],['Guru','Ya','Ya','Tidak'],['Admin','Ya','Ya','Ya']]),'Berdasarkan tabel hak akses file nilai, pengguna yang dapat mengubah tetapi tidak dapat menghapus file adalah ...','Guru',['Siswa','Admin','Siswa dan guru'],'','Guru memiliki hak Lihat dan Ubah, tetapi tidak Hapus. Pembatasan ini menerapkan prinsip hak akses minimum (least privilege).'],
+['hots','Analisis Log',Tb(['Waktu','Percobaan masuk (akun / sandi)','Hasil'],[['02:01','admin / 123456','Gagal'],['02:01','admin / password','Gagal'],['02:02','admin / qwerty','Gagal'],['02:02','admin / admin123','Gagal']]),'Pola pada catatan (log) di tabel paling mungkin menunjukkan serangan ...','Brute force (menebak kata sandi berulang)',['Phishing','Ransomware','Man-in-the-middle'],'','Banyak percobaan masuk gagal dalam waktu singkat dengan sandi umum berbeda adalah ciri serangan tebak sandi (brute force atau dictionary).'],
+['hots','Waktu Transfer',null,'File 600 MB dikirim melalui jaringan berkecepatan 100 Mbps (1 byte = 8 bit). Waktu minimum teoretis pengiriman adalah ...',48,[6,60,480],'detik','600 MB × 8 = 4.800 Mb. Waktu = 4.800 ÷ 100 = 48 detik.'],
+['hots','Etika dan Privasi',null,'Dina menerima foto memalukan milik teman sekelasnya dan berniat membagikannya ke grup. Tindakan yang paling tepat adalah ...','Tidak membagikannya, menghapusnya, dan menghormati privasi temannya',['Membagikannya agar menjadi viral','Menyimpannya lalu membagikannya nanti','Mengubah wajahnya lalu menyebarkannya'],'','Menyebarkan data atau foto pribadi tanpa izin melanggar privasi dan dapat berdampak hukum serta merugikan korban.'],
+['hots','Keamanan Situs',Ur('http://sekolah-hadiah.xyz/klaim'),'Alasan paling tepat mengapa situs pada gambar tidak aman untuk mengisi data pribadi adalah ...','Tidak memakai HTTPS dan alamatnya mencurigakan',['Alamatnya terlalu pendek','Seluruh hurufnya huruf kecil','Memuat tanda hubung'],'','Tanpa HTTPS data tidak dienkripsi, dan domain dengan tawaran hadiah yang tidak jelas adalah tanda situs penipuan.'],
+['hots','Kombinasi Kata Sandi',null,'PIN hanya terdiri atas 4 digit angka (0 sampai 9). Banyak kemungkinan kombinasi PIN adalah ...',10000,[40,1000,100000],'kombinasi','Tiap digit memiliki 10 pilihan sehingga 10 × 10 × 10 × 10 = 10.000 kombinasi.'],
+['hots','Enkripsi End-to-End',null,'Sebuah pesan dikirim dengan enkripsi end-to-end. Pihak yang dapat membaca isi pesan tersebut adalah ...','Hanya pengirim dan penerima',['Penyedia layanan dan seluruh pengguna','Siapa pun di jaringan Wi-Fi yang sama','Hanya server perusahaan'],'','Pada enkripsi end-to-end, pesan hanya dapat didekripsi oleh perangkat pengirim dan penerima.'],
+['hots','Penanganan Insiden',Fl([{t:'p',x:'Mendeteksi insiden'},{t:'p',x:'Mengisolasi perangkat dari jaringan'},{t:'p',x:'?'},{t:'p',x:'Memulihkan data dari cadangan'}]),'Langkah yang tepat menggantikan tanda ? pada alur penanganan insiden adalah ...','Menghapus malware dan menutup celah keamanan',['Mengabaikan insiden','Membagikan kata sandi kepada rekan','Menyalakan kembali jaringan tanpa pemeriksaan'],'','Setelah perangkat diisolasi, malware dibersihkan dan celah ditutup agar tidak terulang, baru data dipulihkan dari cadangan.'],
+['hots','Social Engineering',null,'Sebuah flashdisk ditemukan di tempat parkir sekolah. Tindakan paling aman adalah ...','Tidak mencolokkannya ke komputer dan menyerahkannya ke petugas TI',['Mencolokkannya untuk melihat isinya','Memakainya untuk menyimpan tugas','Membagikannya kepada teman'],'','Flashdisk asing dapat berisi malware (baiting). Jangan dicolokkan ke perangkat, serahkan kepada pihak berwenang.'],
+// ===== OLIMPIADE =====
+['olimpiade','Kombinasi Kata Sandi',null,'Kata sandi terdiri atas 4 huruf kecil (a sampai z) dan huruf boleh berulang. Banyak kemungkinan kata sandi adalah ...',456976,[104,17576,1000000],'kombinasi','Tiap posisi memiliki 26 pilihan, sehingga 26⁴ = 456.976.'],
+['olimpiade','Topologi Mesh',null,'Pada topologi mesh penuh dengan 6 komputer, setiap pasang komputer dihubungkan langsung oleh satu kabel. Banyak kabel yang diperlukan adalah ...',15,[6,12,30],'kabel','Banyak kabel = banyak pasangan = 6 × 5 ÷ 2 = 15.'],
+['olimpiade','Sandi Caesar',null,'Kata ZEBRA dienkripsi dengan sandi Caesar menjadi EJGWF. Besar pergeseran huruf ke kanan yang digunakan adalah ...',5,[4,6,21],'huruf','Z digeser ke kanan menjadi E (melewati A, B, C, D, E) berarti 5 huruf. Pengecekan: E → J, B → G, R → W, A → F.'],
+['olimpiade','Waktu Transfer',null,'Dua file berukuran 300 MB dan 500 MB diunduh satu per satu melalui koneksi efektif 80 Mbps (1 byte = 8 bit). Total waktu yang diperlukan adalah ...',80,[10,64,640],'detik','Total 800 MB × 8 = 6.400 Mb. Waktu = 6.400 ÷ 80 = 80 detik.'],
+['olimpiade','Kombinatorika Kata Sandi',null,'Kata sandi terdiri atas 3 huruf kecil berbeda (tidak boleh berulang) dari a sampai z, dengan urutan diperhatikan. Banyak kemungkinan kata sandi adalah ...',15600,[17576,78,2600],'kata sandi','Posisi pertama 26 pilihan, kedua 25, ketiga 24: 26 × 25 × 24 = 15.600.']
+];
+const fnum=n=>n.toLocaleString('id-ID',{maximumFractionDigits:2});
+const QUESTIONS=RAW.map((r,i)=>{const [level,topic,vz,q,a,w,u,exp]=r;
+ const f=x=>typeof x==='number'?fnum(x)+(u?' '+u:''):x;
+ const opts=w.map(f);const ci=(i*3+1)%4;opts.splice(ci,0,f(a));return{level,topic,vz,q,opts,correct:ci,exp}});
+const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const txt=(x,y,t,a='middle',sz=15,fill,extra='')=>`<text x="${x}" y="${y}" text-anchor="${a}" font-size="${sz}" ${extra} ${fill?`fill="${fill}"`:String(t).includes('?')?'fill="#C9642A" font-weight="700"':'fill="#1B2430"'}>${esc(t)}</text>`;
+const wrap=(s,h)=>`<div class="vz"><svg viewBox="0 0 600 ${h}" role="img" aria-label="Gambar soal">${s}</svg></div>`;
+const NV='#0F3D63';
+function vis(v){
+ if(!v)return'';
+ if(v.t==='cd')return`<div class="vz"><pre class="cd">${v.l.map(esc).join('\n')}</pre></div>`;
+ if(v.t==='tbl')return`<div class="vz"><table class="tb"><tr>${v.h.map(h=>`<th>${esc(h)}</th>`).join('')}</tr>${v.r.map(r=>`<tr>${r.map(c=>`<td class="${String(c).includes('?')?'q':''}">${esc(c)}</td>`).join('')}</tr>`).join('')}</table></div>`;
+ if(v.t==='fl'){let y=12,prev=null,cx=300,s='<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#0F3D63"/></marker></defs>';
+  v.n.forEach(n=>{const h=44,cy=y+h/2,hl=n.x==='?';if(prev!==null)s+=`<line x1="${cx}" y1="${prev}" x2="${cx}" y2="${y}" stroke="${NV}" stroke-width="2" marker-end="url(#ah)"/>`;
+   s+=`<rect x="${cx-160}" y="${y}" width="320" height="${h}" rx="8" fill="${hl?'#FFF5DC':'#EAF3F8'}" stroke="${NV}" stroke-width="2"/>`+txt(cx,cy+5,n.x,'middle',hl?22:15);
+   prev=y+h;y+=h+28});
+  return wrap(s,y-16)}
+ if(v.t==='net'){let s='';
+  v.e.forEach(([a,b,w])=>{const A=v.n[a],B=v.n[b];s+=`<line x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}" stroke="${w?'#C9642A':'#5B6473'}" stroke-width="3" ${w?'stroke-dasharray="7 5"':''}/>`});
+  const fill={pc:'#EAF3F8',sw:'#E7F5EC',rt:'#FFF5DC',ap:'#FBEEE4'};
+  v.n.forEach(n=>{
+   if(n.k==='dot')s+=`<circle cx="${n.x}" cy="${n.y}" r="5" fill="${NV}"/>`;
+   else if(n.k==='cl')s+=`<ellipse cx="${n.x}" cy="${n.y}" rx="58" ry="26" fill="#F1EAF8" stroke="${NV}" stroke-width="2"/>`+txt(n.x,n.y+5,n.n,'middle',14);
+   else{const w=n.n.length>8?104:88;s+=`<rect x="${n.x-w/2}" y="${n.y-16}" width="${w}" height="32" rx="${n.k==='rt'?16:6}" fill="${fill[n.k]}" stroke="${NV}" stroke-width="2"/>`+txt(n.x,n.y+5,n.n,'middle',13)}});
+  return wrap(s,v.h)}
+ if(v.t==='url')return wrap(`<rect x="20" y="14" width="560" height="44" rx="22" fill="#fff" stroke="${NV}" stroke-width="2"/><circle cx="48" cy="36" r="9" fill="#EAF3F8" stroke="${NV}" stroke-width="1.5"/>`+txt(72,42,v.u,'start',15,'#1B2430','font-family="ui-monospace,Menlo,Consolas,monospace"'),72);
+ if(v.t==='em')return wrap(`<rect x="20" y="10" width="560" height="140" rx="8" fill="#fff" stroke="${NV}" stroke-width="2"/><rect x="20" y="10" width="560" height="34" rx="8" fill="#EAF3F8"/>`+txt(34,32,'Dari: '+v.f,'start',14)+txt(34,70,'Subjek: '+v.s,'start',14,'#B23A48','font-weight="700"')+`<line x1="34" y1="82" x2="566" y2="82" stroke="#DDE2E8"/>`+v.b.map((l,k)=>txt(34,110+k*22,l,'start',14)).join(''),160);
+ return''}
+const LB={sedang:"Sedang",sulit:"Sulit",hots:"HOTS",olimpiade:"Olimpiade"},LT=['A','B','C','D'];
+const st={cur:0,ans:new Array(QUESTIONS.length).fill(null),done:false};
+const $=id=>document.getElementById(id),panel=$('panel'),grid=$('grid');
+const cv=l=>`style="--c:var(--${l})"`;
+
+// ===== Timer & penyimpanan (90 menit) =====
+const DUR=90*60;let endAt=0,tick=null,running=false;
+const KEY='ujian-komunikasi-keamanan-data-v1';
+function save(){try{localStorage.setItem(KEY,JSON.stringify({endAt,ans:st.ans,cur:st.cur,done:st.done}))}catch(e){}}
+function clearSave(){try{localStorage.removeItem(KEY)}catch(e){}}
+function fmt(s){const h=Math.floor(s/3600),m=Math.floor(s%3600/60),c=s%60;return h+':'+String(m).padStart(2,'0')+':'+String(c).padStart(2,'0')}
+function tickFn(){const r=Math.max(0,Math.ceil((endAt-Date.now())/1000));$('tv').textContent=fmt(r);
+ $('tmr').className='timer'+(r<=300?' crit':r<=600?' warn':'');
+ if(r<=0){clearInterval(tick);$('ov').classList.add('hid');st.done=true;results()}}
+function startTimer(resume){if(!resume)endAt=Date.now()+DUR*1000;running=true;save();clearInterval(tick);tick=setInterval(tickFn,250);tickFn()}
+
+QUESTIONS.forEach((q,i)=>{const b=document.createElement('button');b.type='button';b.className='cell';b.style.setProperty('--c','var(--'+q.level+')');b.textContent=i+1;b.setAttribute('aria-label','Soal '+(i+1)+', '+LB[q.level]);b.onclick=()=>{st.cur=i;render()};grid.appendChild(b)});
+function upd(){const n=st.ans.filter(a=>a!==null).length;grid.querySelectorAll('.cell').forEach((c,i)=>{c.classList.toggle('ans',st.ans[i]!==null);c.classList.toggle('cur',i===st.cur&&!st.done)});$('pf').style.width=Math.round(n/QUESTIONS.length*100)+'%';$('pl').textContent=n+' dari '+QUESTIONS.length+' soal terjawab'}
+function confirmBox(m,fn){const o=$('ov');$('msg').textContent=m;o.classList.remove('hid');const y=$('yes'),n=$('no');const off=()=>{o.classList.add('hid');y.onclick=n.onclick=null};y.onclick=()=>{off();fn()};n.onclick=off}
+function submit(){const u=st.ans.filter(a=>a===null).length;const go=()=>{st.done=true;results()};u?confirmBox('Masih ada '+u+' soal belum dijawab. Tetap kumpulkan?',go):go()}
+$('bsub').onclick=submit;
+function question(){const i=st.cur,q=QUESTIONS[i],last=i===QUESTIONS.length-1;
+panel.innerHTML=`<div class="qc" ${cv(q.level)}><div class="chips"><span class="lc">${LB[q.level]}</span><span class="tc">${q.topic}</span></div><div class="qn">Soal ${i+1} dari ${QUESTIONS.length}</div><p class="qt">${q.q}</p>${vis(q.vz)}<fieldset>${q.opts.map((o,k)=>`<label class="opt${st.ans[i]===k?' sel':''}"><input type="radio" name="o" value="${k}" ${st.ans[i]===k?'checked':''}><span class="L">${LT[k]}.</span><span>${esc(o)}</span></label>`).join('')}</fieldset><div class="nb"><button type="button" class="bg" id="pv" ${i?'':'disabled'}>Sebelumnya</button><button type="button" class="bp" id="nx">${last?'Ke ringkasan':'Berikutnya'}</button></div></div>`;
+panel.querySelectorAll('input').forEach(inp=>inp.onchange=e=>{st.ans[i]=+e.target.value;upd();panel.querySelectorAll('.opt').forEach((el,k)=>el.classList.toggle('sel',k===st.ans[i]));save()});
+$('pv').onclick=()=>{st.cur--;render()};$('nx').onclick=()=>last?submit():(st.cur++,render())}
+function results(){clearInterval(tick);running=false;$('tmr').classList.add('hid');$('fin').classList.remove('hid');save();
+const lv=['sedang','sulit','hots','olimpiade'],c={};lv.forEach(l=>c[l]={r:0,t:0});let tot=0;
+QUESTIONS.forEach((q,i)=>{c[q.level].t++;if(st.ans[i]===q.correct){c[q.level].r++;tot++}});
+const sc=Math.round(tot/QUESTIONS.length*100),col=sc>=75?'var(--ok)':sc>=50?'var(--gold)':'var(--bad)';
+const bd=lv.map(l=>`<div class="br" ${cv(l)}><span>${LB[l]}</span><div class="bt"><div style="width:${c[l].t?c[l].r/c[l].t*100:0}%"></div></div><span>${c[l].r}/${c[l].t}</span></div>`).join('');
+const rv=QUESTIONS.map((q,i)=>{const u=st.ans[i],ok=u===q.correct;return `<div class="ri"><div class="chips" ${cv(q.level)}><span class="lc">${LB[q.level]}</span><span class="tc">${q.topic}</span><span class="tc" style="color:${ok?'var(--ok)':'var(--bad)'};border-color:currentColor">${ok?'Benar':u===null?'Tidak dijawab':'Salah'}</span></div><p class="rq">${i+1}. ${q.q}</p>${vis(q.vz)}${q.opts.map((o,k)=>`<div class="ro ${k===q.correct?'ok':k===u?'no':''}">${LT[k]}. ${esc(o)}</div>`).join('')}<div class="ex"><b>Pembahasan:</b> ${q.exp}</div></div>`}).join('');
+$('side').classList.add('hid');
+panel.innerHTML=`<div class="res"><h2>Hasil ujian</h2><div class="hero"><span class="n" style="color:${col}">${tot}</span><span class="o">dari ${QUESTIONS.length} soal benar · nilai akhir <b style="color:${col}">${sc}</b></span></div><div class="bd">${bd}</div><button type="button" class="bg" id="rt">Ulangi ujian</button><div style="margin-top:30px">${rv}</div></div>`;
+$('rt').onclick=again;panel.scrollTo(0,0)}
+function again(){st.cur=0;st.ans.fill(null);st.done=false;clearInterval(tick);running=false;clearSave();
+ $('side').classList.remove('hid');$('fin').classList.add('hid');$('tmr').classList.remove('hid');$('tmr').className='timer';$('tv').textContent=fmt(DUR);
+ render();$('intro').classList.remove('hid')}
+const SOAL_URL='../soal.html'; // ganti dengan nama/alamat file HTML tujuan
+$('fin').onclick=()=>{clearSave();location.href=SOAL_URL};
+$('okb').onclick=()=>{$('intro').classList.add('hid');startTimer()};
+function render(){if(st.done){results();return}question();upd();if(running)save();panel.scrollTo(0,0)}
+// Cegah refresh saat ujian berjalan + pulihkan jawaban dan sisa waktu bila halaman tetap termuat ulang
+addEventListener('beforeunload',e=>{if(running){e.preventDefault();e.returnValue=''}});
+addEventListener('keydown',e=>{if(!running)return;if(e.key==='F5'||((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='r'))e.preventDefault()});
+(function(){try{const d=JSON.parse(localStorage.getItem(KEY)||'null');
+ if(d&&Array.isArray(d.ans)&&d.ans.length===QUESTIONS.length){st.ans=d.ans;st.cur=d.cur||0;endAt=d.endAt;$('intro').classList.add('hid');
+  if(d.done||Date.now()>=endAt){st.done=true;render();return}
+  startTimer(true);render();return}}catch(e){}
+ render()})();
+</script>
+</body>
+</html>

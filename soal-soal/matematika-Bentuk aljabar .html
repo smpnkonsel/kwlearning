@@ -4,18 +4,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Ujian Bentuk Aljabar — KW Learning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--paper:#F0F2F5;--panel:#fff;--ink:#1B2430;--soft:#5B6473;--navy:#0F3D63;--deep:#0A2B48;--gold:#D79A2C;--line:#DDE2E8;
 --sedang:#2E86AB;--sedang-bg:#EAF3F8;--sulit:#C9642A;--sulit-bg:#FBEEE4;--hots:#7B4FA6;--hots-bg:#F1EAF8;--olimpiade:#B23A48;--olimpiade-bg:#FAEBEC;--ok:#2F9E5B;--ok-bg:#E7F5EC;--bad:#C0392B;--bad-bg:#FBEBE9;color-scheme:light}
-*{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--paper)}
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--paper);overscroll-behavior-y:none}
 body{color:var(--ink);font-family:'Public Sans',system-ui,sans-serif;line-height:1.5;overflow:hidden}
 h2,h3{font-family:'Fraunces',Georgia,serif;margin:0}button{font-family:inherit}
 .app{height:100dvh;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 header{flex:none;background:linear-gradient(120deg,var(--navy),var(--deep));color:#fff;padding:10px 26px 0}
-.row{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:baseline}
+.row{display:flex;justify-content:space-between;gap:12px 16px;flex-wrap:wrap;align-items:flex-start}
+.hl{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
+.logo{width:52px;height:52px;border-radius:50%;object-fit:cover;background:#fff;border:2px solid var(--gold);padding:2px;flex:none}
 .brand{font-size:13px;color:#B9C6D6;font-weight:600}.et{font-family:'Fraunces',serif;font-weight:600;font-size:18px}
-.sub{margin:4px 0 8px;color:#C7D2DE;font-size:12.5px}
+.hr{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.timer{display:inline-flex;align-items:baseline;gap:8px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.32);border-radius:8px;padding:4px 14px;font-size:12px;color:#C7D2DE}
+.timer b{font-size:19px;color:#fff;font-weight:700;font-variant-numeric:tabular-nums}
+.timer.warn{background:rgba(215,154,44,.3);border-color:var(--gold)}.timer.crit{background:rgba(192,57,43,.45);border-color:#F1948A}
+.fin{background:var(--gold);color:#2A1D06;border:0;border-radius:8px;padding:7px 22px;font-size:14.5px;font-weight:700;cursor:pointer}
+.sub{margin:6px 0 8px;color:#C7D2DE;font-size:12.5px}
 .strip{display:flex;height:4px}.strip span{flex:1}
 .body{flex:1;display:flex;min-height:0}
 aside{width:270px;flex:none;background:var(--panel);border-right:1px solid var(--line);border-top:3px solid var(--gold);display:flex;flex-direction:column;min-height:0}
@@ -39,7 +48,7 @@ main{flex:1;min-width:0;overflow-y:auto;display:flex;justify-content:center;padd
 .qt{font-size:18.5px;line-height:1.55;margin:0 0 16px}
 .figbox{display:flex;justify-content:center;background:#F7F9FB;border:1px solid var(--line);border-radius:8px;padding:10px;margin-bottom:18px}
 .fig{width:100%;max-width:340px;height:auto}
-fieldset{border:0;margin:0 0 24px;padding:0;display:flex;flex-direction:column;gap:10px}
+fieldset{border:0;margin:0 0 24px;padding:0;display:flex;flex-direction:column;gap:10px;min-width:0}
 .opt{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line);border-radius:8px;padding:12px 16px;cursor:pointer}
 .opt:hover{border-color:var(--navy)}.opt.sel{border-color:var(--navy);background:#F2F6FA}.opt input{margin-top:4px;accent-color:var(--navy)}.ol{font-weight:700;color:var(--navy);width:18px;flex:none}
 .nb{display:flex;justify-content:space-between;gap:12px}
@@ -47,24 +56,31 @@ fieldset{border:0;margin:0 0 24px;padding:0;display:flex;flex-direction:column;g
 .g{background:#fff;border-color:var(--line);color:var(--ink)}.g:disabled{opacity:.4;cursor:not-allowed}.p{background:var(--c,var(--navy));color:#fff}
 button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 .rw{max-width:820px;margin:0 auto;width:100%}.rw h2{font-size:24px}
-.hero{display:flex;align-items:baseline;gap:10px;margin:10px 0 20px}.hero .n{font-family:'Fraunces',serif;font-size:52px;font-weight:600}.hero .o{color:var(--soft)}
+.hero{display:flex;align-items:baseline;gap:10px;margin:10px 0 20px;flex-wrap:wrap}.hero .n{font-family:'Fraunces',serif;font-size:52px;font-weight:600}.hero .o{color:var(--soft)}
 .bd{display:grid;grid-template-columns:90px 1fr 50px;gap:12px;align-items:center;font-size:14px;margin-bottom:10px}
 .bt{height:9px;background:#E7EAEF;border-radius:99px;overflow:hidden}.bt div{height:100%;background:var(--c)}
 .ri{border-top:1px solid var(--line);padding:18px 0}.rq{font-size:16px;margin:10px 0}
 .ro{padding:7px 12px;border-radius:6px;font-size:14px;margin-bottom:6px;border:1px solid var(--line)}
 .ro.c{border-color:var(--ok);background:var(--ok-bg);color:#1E6B3E}.ro.w{border-color:var(--bad);background:var(--bad-bg);color:#8E2A20}
 .ex{font-size:14px;color:var(--soft);background:#F6F4EC;border-radius:8px;padding:12px 14px;margin-top:10px}.ex b{color:var(--ink)}
+.fr{text-align:center;margin-top:30px;padding-top:26px;border-top:1px solid var(--line)}
+.fs{text-align:center;padding-top:40px}.fs p{color:var(--soft);font-size:16px;margin:10px 0 24px}.fs .g{margin:4px 5px}
 .hidden{display:none!important}
 .ov{position:fixed;inset:0;background:rgba(10,20,32,.55);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}
-.mb{background:#fff;border-radius:12px;padding:24px 26px;max-width:380px;border-top:4px solid var(--gold)}
-.mb p{font-size:14.5px;color:var(--soft);margin:8px 0 18px}.ma{display:flex;justify-content:flex-end;gap:10px}
-@media(max-width:820px){.body{flex-direction:column}aside{width:100%;max-height:36vh;border-right:0}main{padding:18px 14px 30px}}
+#intro{z-index:200;background:rgba(10,20,32,.72)}
+.mb{background:#fff;border-radius:12px;padding:24px 26px;max-width:380px;width:100%;border-top:4px solid var(--gold)}
+.mb.big{max-width:560px;max-height:90vh;overflow-y:auto}
+.mb h3{font-size:20px}.mb p{font-size:14.5px;color:var(--soft);margin:8px 0 18px}.ma{display:flex;justify-content:flex-end;gap:10px}
+.mb ol{margin:12px 0 20px;padding-left:20px;font-size:14.5px}.mb li{margin-bottom:8px}
+@media(max-width:820px){.body{flex-direction:column}aside{width:100%;max-height:34vh;border-right:0;border-bottom:1px solid var(--line)}main{padding:18px 14px 30px}.card{padding:20px 16px}header{padding:10px 14px 0}.logo{width:42px;height:42px}.hr{align-items:flex-start}.qt{font-size:17px}.grid{grid-template-columns:repeat(9,1fr)}.sc{padding:12px 14px 8px}.legend{flex-direction:row;flex-wrap:wrap;gap:6px 12px}.sub{font-size:12px}}
+@media(max-width:480px){.grid{grid-template-columns:repeat(7,1fr)}.g,.p{padding:11px 14px;font-size:14px}.hero .n{font-size:42px}.bd{grid-template-columns:78px 1fr 46px}.mb{padding:20px}}
 </style>
 </head>
 <body>
 <div class="app">
 <header>
-<div class="row"><span class="brand">KW Learning · Ruang Belajar Matematika</span><span class="et">Ujian Bentuk Aljabar</span></div>
+<div class="row"><div class="hl"><img class="logo" src="../assets/logo-sekolah.png" alt="Logo sekolah"><span class="brand">KW Learning · Ruang Belajar Matematika</span></div>
+<div class="hr"><span class="et">Ujian Bentuk Aljabar</span><div class="timer" id="tmr" role="timer"><span>Sisa waktu</span><b id="tv">1:30:00</b></div><button type="button" class="fin hidden" id="fin">Selesai</button></div></div>
 <p class="sub">45 soal pilihan ganda dengan gambar persegi panjang dan neraca — sedang, sulit, HOTS, dan olimpiade.</p>
 <div class="strip"><span style="background:var(--sedang)"></span><span style="background:var(--sulit)"></span><span style="background:var(--hots)"></span><span style="background:var(--olimpiade)"></span></div>
 </header>
@@ -73,25 +89,33 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 <h2>Progres</h2><div class="pt"><div class="pf" id="pf"></div></div><div class="pl" id="pl"></div>
 <h2>Navigasi soal</h2><div class="grid" id="grid"></div>
 <div class="legend"><span class="sedang"><i></i>Sedang (1–15)</span><span class="sulit"><i></i>Sulit (16–30)</span><span class="hots"><i></i>HOTS (31–40)</span><span class="olimpiade"><i></i>Olimpiade (41–45)</span></div>
-</div><div class="sf"><button class="bs" id="bsub">Kumpulkan jawaban</button></div></aside>
+</div><div class="sf"><button type="button" class="bs" id="bsub">Kumpulkan jawaban</button></div></aside>
 <main id="panel" aria-live="polite"></main>
 </div></div>
-<div class="ov hidden" id="ov"><div class="mb"><h3>Kumpulkan jawaban?</h3><p id="cm"></p><div class="ma"><button class="g" id="no">Kembali</button><button class="p" id="yes">Ya, kumpulkan</button></div></div></div>
+<div class="ov hidden" id="ov"><div class="mb"><h3>Kumpulkan jawaban?</h3><p id="cm"></p><div class="ma"><button type="button" class="g" id="no">Kembali</button><button type="button" class="p" id="yes">Ya, kumpulkan</button></div></div></div>
+<div class="ov" id="intro" role="dialog" aria-modal="true" aria-labelledby="it"><div class="mb big">
+<h3 id="it">Petunjuk Mengerjakan Soal</h3>
+<ol>
+<li>Ujian terdiri dari <b>45 soal pilihan ganda</b>: Sedang (1–15), Sulit (16–30), HOTS (31–40), dan Olimpiade (41–45).</li>
+<li>Waktu mengerjakan <b>90 menit</b>. Waktu <b>langsung berjalan</b> setelah kamu menekan tombol OK dan tidak dapat dihentikan.</li>
+<li>Pilih satu jawaban yang paling tepat untuk setiap soal. Jawaban boleh diubah selama waktu masih ada.</li>
+<li>Gunakan kotak navigasi soal untuk berpindah soal, dan perhatikan sisa waktu di pojok kanan atas.</li>
+<li>Tekan <b>Kumpulkan jawaban</b> bila sudah selesai. Jika waktu habis, jawaban akan dikumpulkan secara otomatis.</li>
+<li>Setelah dikumpulkan, nilai dan pembahasan setiap soal akan ditampilkan.</li>
+</ol>
+<div class="ma"><button type="button" class="p" id="okb">OK, mulai mengerjakan</button></div>
+</div></div>
 
 <script>
-const NS='http://www.w3.org/2000/svg';
-// Gambar: persegi panjang berlabel
 function rect(w,h){
   return `<svg class="fig" viewBox="0 0 320 170" role="img" aria-label="Persegi panjang dengan sisi berlabel"><rect x="70" y="24" width="200" height="104" fill="#EAF3F8" stroke="#0F3D63" stroke-width="2.5"/><path d="M80 24v10h10M80 128v-10h10" fill="none"/><text x="170" y="150" font-size="16" font-weight="700" text-anchor="middle" fill="#0F3D63">${w}</text><text x="62" y="80" font-size="16" font-weight="700" text-anchor="end" fill="#C9642A">${h}</text></svg>`;
 }
-// Gambar: neraca seimbang
 function neraca(l,r){
   const pan=(x,t)=>`<line x1="${x}" y1="46" x2="${x-42}" y2="104"/><line x1="${x}" y1="46" x2="${x+42}" y2="104"/><path d="M${x-52} 104h104a52 30 0 0 1 -104 0z" fill="#FBEEE4" stroke="#C9642A"/><text x="${x}" y="100" font-size="15" font-weight="700" text-anchor="middle" fill="#0F3D63" stroke="none">${t}</text>`;
   return `<svg class="fig" viewBox="0 0 320 170" role="img" aria-label="Neraca seimbang"><g stroke="#0F3D63" stroke-width="2" fill="none"><path d="M160 150v-100M130 150h60"/><line x1="64" y1="46" x2="256" y2="46" stroke-width="3.5"/>${pan(64,l)}${pan(256,r)}</g><circle cx="160" cy="46" r="6" fill="#D79A2C" stroke="#0F3D63"/></svg>`;
 }
 const F=(h)=>`<div class="figbox">${h}</div>`;
 const Q=[
-// SEDANG
 {l:"sedang",t:"Unsur Bentuk Aljabar",q:"Pada bentuk aljabar 5x + 3, koefisien dari x adalah ...",o:["3","5","x","8"],c:1,e:"Koefisien adalah angka yang mendampingi variabel, yaitu 5."},
 {l:"sedang",t:"Suku Sejenis",q:"Suku yang sejenis dengan 4x adalah ...",o:["4y","7x","4x²","7"],c:1,e:"Suku sejenis memiliki variabel dan pangkat yang sama. 7x sejenis dengan 4x."},
 {l:"sedang",t:"Operasi Penjumlahan",q:"Bentuk sederhana dari 3x + 5x adalah ...",o:["8x","8x²","15x","2x"],c:0,e:"Jumlahkan koefisiennya: 3 + 5 = 8, sehingga 8x."},
@@ -107,7 +131,6 @@ const Q=[
 {l:"sedang",t:"Perkalian",q:"Hasil dari 2a × 3b adalah ...",o:["5ab","6a + b","6ab","5a²b"],c:2,e:"(2 × 3)(a × b) = 6ab."},
 {l:"sedang",t:"Persamaan pada Neraca",f:F(neraca('x + 2','7')),q:"Neraca di atas dalam keadaan seimbang. Nilai x adalah ...",o:["4","5","6","9"],c:1,e:"x + 2 = 7 → x = 5."},
 {l:"sedang",t:"Substitusi",q:"Nilai dari 3a − 2b untuk a = 4 dan b = 1 adalah ...",o:["8","9","10","14"],c:2,e:"3(4) − 2(1) = 12 − 2 = 10."},
-// SULIT
 {l:"sulit",t:"Perkalian Dua Suku",q:"Hasil dari (x + 2)(x + 3) adalah ...",o:["x² + 5x + 6","x² + 6x + 5","x² + 5x + 5","x² + 6"],c:0,e:"x² + 3x + 2x + 6 = x² + 5x + 6."},
 {l:"sulit",t:"Perkalian Dua Suku",q:"Hasil dari (2x − 1)(x + 4) adalah ...",o:["2x² + 9x − 4","2x² + 7x − 4","2x² + 7x + 4","2x² − 7x − 4"],c:1,e:"2x² + 8x − x − 4 = 2x² + 7x − 4."},
 {l:"sulit",t:"Kuadrat Suku Dua",q:"Hasil dari (x + 5)² adalah ...",o:["x² + 25","x² + 5x + 25","x² + 10x + 25","x² + 10x + 10"],c:2,e:"(x + 5)² = x² + 2(5)x + 25 = x² + 10x + 25."},
@@ -123,7 +146,6 @@ const Q=[
 {l:"sulit",t:"Persamaan pada Neraca",f:F(neraca('3x','x + 8')),q:"Neraca di atas seimbang. Nilai x adalah ...",o:["2","4","6","8"],c:1,e:"3x = x + 8 → 2x = 8 → x = 4."},
 {l:"sulit",t:"Pemfaktoran",q:"Bentuk faktor dari x² − 9 adalah ...",o:["(x − 9)(x + 1)","(x − 3)(x + 3)","(x − 3)²","(x + 9)(x − 1)"],c:1,e:"Selisih dua kuadrat: x² − 3² = (x − 3)(x + 3)."},
 {l:"sulit",t:"Pecahan Bentuk Aljabar",q:"Hasil dari 2/3 x + 1/6 x adalah ...",o:["3/9 x","2/9 x","5/6 x","1/2 x"],c:2,e:"4/6 x + 1/6 x = 5/6 x."},
-// HOTS
 {l:"hots",t:"Soal Cerita",q:"Umur Ayah 4 kali umur Andi. Jika jumlah umur mereka 45 tahun, umur Andi adalah ... tahun.",o:["7","8","9","10"],c:2,e:"x + 4x = 45 → 5x = 45 → x = 9."},
 {l:"hots",t:"Keliling Persegi Panjang",q:"Keliling persegi panjang 30 cm dan panjangnya 3 cm lebih dari lebarnya. Lebar persegi panjang adalah ...",o:["5 cm","6 cm","7 cm","8 cm"],c:1,e:"2(l + 3 + l) = 30 → 4l + 6 = 30 → l = 6 cm."},
 {l:"hots",t:"Luas dengan Substitusi",f:F(rect('x + 3','x + 1')),q:"Untuk x = 2, luas persegi panjang pada gambar di atas adalah ...",o:["12","15","18","20"],c:1,e:"Panjang = 5 dan lebar = 3, sehingga luas = 15."},
@@ -134,7 +156,6 @@ const Q=[
 {l:"hots",t:"Persamaan",q:"Jika 3(x − 2) = 2x + 5, nilai x adalah ...",o:["9","10","11","12"],c:2,e:"3x − 6 = 2x + 5 → x = 11."},
 {l:"hots",t:"Keliling Persegi",f:F(rect('2x + 1','2x + 1')),q:"Keliling persegi pada gambar di atas adalah 36 cm. Nilai x adalah ...",o:["3","4","5","6"],c:1,e:"4(2x + 1) = 36 → 8x + 4 = 36 → x = 4."},
 {l:"hots",t:"Selisih Kuadrat",q:"Jika x − y = 3 dan x + y = 7, nilai x² − y² adalah ...",o:["10","21","4","49"],c:1,e:"x² − y² = (x − y)(x + y) = 3 × 7 = 21."},
-// OLIMPIADE
 {l:"olimpiade",t:"Identitas Aljabar",q:"Jika a + b = 5 dan ab = 6, nilai a² + b² adalah ...",o:["11","13","19","25"],c:1,e:"a² + b² = (a + b)² − 2ab = 25 − 12 = 13."},
 {l:"olimpiade",t:"Identitas Aljabar",q:"Jika x + 1/x = 3, nilai x² + 1/x² adalah ...",o:["5","7","9","11"],c:1,e:"(x + 1/x)² = x² + 2 + 1/x² → 9 = x² + 1/x² + 2 → 7."},
 {l:"olimpiade",t:"Identitas Aljabar",q:"Jika x² + y² = 34 dan xy = 15 dengan x, y positif, nilai x + y adalah ...",o:["6","7","8","9"],c:2,e:"(x + y)² = 34 + 30 = 64, sehingga x + y = 8."},
@@ -142,8 +163,16 @@ const Q=[
 {l:"olimpiade",t:"Perkalian Suku Tiga",q:"Hasil dari (a + 1)(a² − a + 1) adalah ...",o:["a³ + 1","a³ − 1","a³ + 2a + 1","a³ + a² + 1"],c:0,e:"a³ − a² + a + a² − a + 1 = a³ + 1."}
 ];
 const LB={sedang:"Sedang",sulit:"Sulit",hots:"HOTS",olimpiade:"Olimpiade"},LT=['A','B','C','D'];
-const S={cur:0,ans:Q.map(()=>null),done:false};
+const S={cur:0,ans:Q.map(()=>null),done:false,score:0};
 const $=id=>document.getElementById(id),panel=$('panel'),grid=$('grid');
+const DUR=90*60,KEY='ujian-bentuk-aljabar-v1',SOAL_URL='../soal.html';
+let endAt=0,tick=null,running=false;
+function save(){try{localStorage.setItem(KEY,JSON.stringify({endAt,ans:S.ans,cur:S.cur,done:S.done}))}catch(e){}}
+function clearSave(){try{localStorage.removeItem(KEY)}catch(e){}}
+const tf=s=>Math.floor(s/3600)+':'+String(Math.floor(s%3600/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+function tickFn(){const r=Math.max(0,Math.ceil((endAt-Date.now())/1000));$('tv').textContent=tf(r);$('tmr').className='timer'+(r<=300?' crit':r<=600?' warn':'');
+ if(r<=0){clearInterval(tick);$('ov').classList.add('hidden');S.done=true;results()}}
+function startTimer(resume){if(!resume)endAt=Date.now()+DUR*1000;running=true;save();clearInterval(tick);tick=setInterval(tickFn,250);tickFn()}
 Q.forEach((q,i)=>{const b=document.createElement('button');b.type='button';b.className='cell '+q.l;b.textContent=i+1;b.setAttribute('aria-label','Soal '+(i+1)+', '+LB[q.l]);b.onclick=()=>{S.cur=i;render()};grid.appendChild(b)});
 function upd(){grid.childNodes.forEach((c,i)=>{c.classList.toggle('answered',S.ans[i]!==null);c.classList.toggle('current',i===S.cur&&!S.done)});
  const n=S.ans.filter(a=>a!==null).length;$('pf').style.width=Math.round(n/Q.length*100)+'%';$('pl').textContent=n+' dari '+Q.length+' soal terjawab'}
@@ -156,24 +185,37 @@ function question(){
   <div class="qn">Soal ${i+1} dari ${Q.length}</div>${q.f||''}<p class="qt">${q.q}</p>
   <fieldset>${q.o.map((o,k)=>`<label class="opt${S.ans[i]===k?' sel':''}"><input type="radio" name="o" value="${k}"${S.ans[i]===k?' checked':''}><span class="ol">${LT[k]}.</span><span>${o}</span></label>`).join('')}</fieldset>
   <div class="nb"><button type="button" class="g" id="pv"${i?'':' disabled'}>Sebelumnya</button><button type="button" class="p" id="nx">${i===Q.length-1?'Ke ringkasan':'Berikutnya'}</button></div></div>`;
-  panel.querySelectorAll('input').forEach(inp=>inp.onchange=e=>{S.ans[i]=+e.target.value;panel.querySelectorAll('.opt').forEach((el,k)=>el.classList.toggle('sel',k===S.ans[i]));upd()});
+  panel.querySelectorAll('input').forEach(inp=>inp.onchange=e=>{S.ans[i]=+e.target.value;panel.querySelectorAll('.opt').forEach((el,k)=>el.classList.toggle('sel',k===S.ans[i]));upd();save()});
   $('pv').onclick=()=>{S.cur--;render()};
   $('nx').onclick=()=>i===Q.length-1?submit():(S.cur++,render());
 }
+function again(){S.cur=0;S.ans=Q.map(()=>null);S.done=false;S.score=0;clearInterval(tick);running=false;clearSave();
+  $('side').classList.remove('hidden');$('fin').classList.add('hidden');$('tmr').classList.remove('hidden');$('tmr').className='timer';$('tv').textContent=tf(DUR);
+  render();$('intro').classList.remove('hidden')}
 function results(){
+  clearInterval(tick);running=false;$('tmr').classList.add('hidden');$('fin').classList.remove('hidden');save();
   const cnt={};Object.keys(LB).forEach(k=>cnt[k]=[0,0]);let tot=0;
   Q.forEach((q,i)=>{cnt[q.l][1]++;if(S.ans[i]===q.c){cnt[q.l][0]++;tot++}});
-  const sc=Math.round(tot/Q.length*100),col=sc>=75?'var(--ok)':sc>=50?'var(--gold)':'var(--bad)';
+  const sc=Math.round(tot/Q.length*100),col=sc>=75?'var(--ok)':sc>=50?'var(--gold)':'var(--bad)';S.score=sc;
   $('side').classList.add('hidden');
   panel.innerHTML=`<div class="rw"><h2>Hasil ujian</h2><div class="hero"><span class="n" style="color:${col}">${tot}</span><span class="o">dari ${Q.length} soal benar · nilai akhir <b style="color:${col}">${sc}</b></span></div>
   ${Object.keys(LB).map(k=>`<div class="bd ${k}"><span>${LB[k]}</span><div class="bt"><div style="width:${cnt[k][1]?cnt[k][0]/cnt[k][1]*100:0}%"></div></div><span>${cnt[k][0]}/${cnt[k][1]}</span></div>`).join('')}
-  <button class="g" id="rt">Ulangi ujian</button>
-  <div style="margin-top:24px">${Q.map((q,i)=>{const a=S.ans[i],ok=a===q.c;return `<div class="ri ${q.l}"><div class="chips"><span class="chip">${LB[q.l]}</span><span class="tc">${q.t}</span><span class="tc" style="color:${ok?'var(--ok)':'var(--bad)'};border-color:currentColor">${ok?'Benar':a===null?'Tidak dijawab':'Salah'}</span></div>${q.f||''}<p class="rq">${i+1}. ${q.q}</p>${q.o.map((o,k)=>`<div class="ro ${k===q.c?'c':k===a?'w':''}">${LT[k]}. ${o}</div>`).join('')}<div class="ex"><b>Pembahasan:</b> ${q.e}</div></div>`}).join('')}</div></div>`;
-  $('rt').onclick=()=>{S.cur=0;S.ans=Q.map(()=>null);S.done=false;$('side').classList.remove('hidden');render()};
+  <button type="button" class="g" id="rt">Ulangi ujian</button>
+  <div style="margin-top:24px">${Q.map((q,i)=>{const a=S.ans[i],ok=a===q.c;return `<div class="ri ${q.l}"><div class="chips"><span class="chip">${LB[q.l]}</span><span class="tc">${q.t}</span><span class="tc" style="color:${ok?'var(--ok)':'var(--bad)'};border-color:currentColor">${ok?'Benar':a===null?'Tidak dijawab':'Salah'}</span></div>${q.f||''}<p class="rq">${i+1}. ${q.q}</p>${q.o.map((o,k)=>`<div class="ro ${k===q.c?'c':k===a?'w':''}">${LT[k]}. ${o}</div>`).join('')}<div class="ex"><b>Pembahasan:</b> ${q.e}</div></div>`}).join('')}</div>
+  <div class="fr"><button type="button" class="p" id="fin2">Selesai</button></div></div>`;
+  $('rt').onclick=again;$('fin2').onclick=()=>$('fin').onclick();
   panel.scrollTo(0,0);
 }
-function render(){if(S.done)return results();question();upd();panel.scrollTo(0,0)}
-render();
+function render(){if(S.done)return results();question();upd();if(running)save();panel.scrollTo(0,0)}
+$('fin').onclick=()=>{clearSave();location.href=SOAL_URL};
+$('okb').onclick=()=>{$('intro').classList.add('hidden');startTimer()};
+addEventListener('beforeunload',e=>{if(running){e.preventDefault();e.returnValue=''}});
+addEventListener('keydown',e=>{if(!running)return;if(e.key==='F5'||((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='r'))e.preventDefault()});
+(function(){try{const d=JSON.parse(localStorage.getItem(KEY)||'null');
+ if(d&&Array.isArray(d.ans)&&d.ans.length===Q.length){S.ans=d.ans;S.cur=d.cur||0;endAt=d.endAt;$('intro').classList.add('hidden');
+  if(d.done||Date.now()>=endAt){S.done=true;render();return}
+  startTimer(true);render();return}}catch(e){}
+ render()})();
 </script>
 </body>
 </html>

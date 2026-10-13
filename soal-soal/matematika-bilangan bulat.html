@@ -10,16 +10,24 @@
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#0E141B;--panel:#17202A;--ink:#E8ECF1;--soft:#9AA6B5;--line:#2A3644;--sel:#1F2D3B;--figbg:#1D2A38;--navy:#4C8FC4}}
 :root[data-theme="dark"]{--paper:#0E141B;--panel:#17202A;--ink:#E8ECF1;--soft:#9AA6B5;--line:#2A3644;--sel:#1F2D3B;--figbg:#1D2A38;--navy:#4C8FC4}
 *{box-sizing:border-box}
-html,body{margin:0;height:100%;background:var(--paper)}
+html,body{margin:0;height:100%;background:var(--paper);overscroll-behavior-y:none}
 body{color:var(--ink);font-family:'Public Sans',system-ui,sans-serif;line-height:1.5;overflow:hidden}
 h2,h3{font-family:'Fraunces',Georgia,serif;margin:0}
 button{font-family:inherit}
 .app{height:100dvh;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 header{flex:none;background:linear-gradient(120deg,#0F3D63,#0A2B48);color:#F4F1E8;padding:10px 26px 0}
-.row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap}
-.brand{font-size:13.5px;color:#B9C6D6;font-weight:600}
-.title{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(16px,2vw,19px);color:#fff}
-.sub{margin:4px 0 8px;color:#C7D2DE;font-size:12.5px;max-width:820px}
+.row{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.hl{display:flex;align-items:center;gap:14px;flex:1;min-width:0}.ht{min-width:0}
+.logo{width:56px;height:56px;border-radius:50%;object-fit:cover;background:#fff;border:2px solid var(--gold);padding:2px;flex:none}
+.brand{display:block;font-size:13px;color:#B9C6D6;font-weight:600}
+.et{font-family:'Fraunces',serif;font-weight:600;font-size:18px;color:#fff}
+.hr{display:flex;flex-direction:column;align-items:flex-end;gap:6px;min-height:62px}
+.timer{display:inline-flex;align-items:baseline;gap:8px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.32);border-radius:8px;padding:4px 14px;font-size:12px;color:#C7D2DE}
+.timer b{font-size:19px;color:#fff;font-weight:700;font-variant-numeric:tabular-nums}
+.timer.warn{background:rgba(215,154,44,.3);border-color:var(--gold)}
+.timer.crit{background:rgba(192,57,43,.45);border-color:#F1948A}
+.fin{background:var(--gold);color:#2A1D06;border:0;border-radius:8px;padding:7px 22px;font-size:14.5px;font-weight:700;cursor:pointer}
+.sub{margin:4px 0 12px;color:#C7D2DE;font-size:12.5px;max-width:820px}
 .strip{display:flex;height:4px}.strip span{flex:1}
 .body{flex:1;display:flex;min-height:0}
 aside{width:280px;flex:none;background:var(--panel);border-right:1px solid var(--line);border-top:3px solid var(--gold);display:flex;flex-direction:column;min-height:0}
@@ -56,7 +64,7 @@ fieldset{border:0;margin:0 0 26px;padding:0;display:flex;flex-direction:column;g
 .nb{display:flex;justify-content:space-between;gap:12px}
 .bg,.bp{font-size:15px;font-weight:700;border-radius:8px;padding:11px 22px;cursor:pointer;border:1px solid var(--line)}
 .bg{background:var(--panel);color:var(--ink)}.bg:disabled{opacity:.4;cursor:not-allowed}
-.bp{background:var(--c);color:#fff;border-color:var(--c)}
+.bp{background:var(--c,var(--navy));color:#fff;border-color:var(--c,var(--navy))}
 button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 .res{max-width:820px;width:100%;align-self:flex-start}
 .res h2{font-size:24px}
@@ -75,19 +83,56 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 .ex b{color:var(--ink)}
 .hid{display:none!important}
 .ov{position:fixed;inset:0;background:rgba(10,20,32,.55);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px}
+#intro{z-index:200;background:rgba(10,20,32,.72)}
 .mb{background:var(--panel);border-radius:12px;padding:26px 28px;max-width:380px;width:100%;border-top:4px solid var(--gold)}
-.mb h3{font-size:18px;margin-bottom:10px}.mb p{font-size:14.5px;color:var(--soft);margin:0 0 22px}
+.mb.big{max-width:560px;max-height:90vh;overflow-y:auto}
+.mb h3{font-size:18px;margin-bottom:10px}.mb.big h3{font-size:21px}
+.mb p{font-size:14.5px;color:var(--soft);margin:0 0 22px}
+.mb ol{margin:12px 0 20px;padding-left:20px;font-size:14.5px;color:var(--ink)}.mb li{margin-bottom:8px}
 .ma{display:flex;justify-content:flex-end;gap:10px}
 .ma button{font-size:14.5px;font-weight:700;border-radius:8px;padding:10px 18px;cursor:pointer;border:1px solid var(--line);background:var(--panel);color:var(--ink)}
 .ma .y{background:var(--navy);color:#fff;border-color:var(--navy)}
-@media (max-width:820px){.body{flex-direction:column}aside{width:100%;max-height:38vh;border-right:0;border-bottom:1px solid var(--line)}main{padding:20px 16px 30px}.qc{padding:20px}}
+@media (max-width:820px){
+ .body{flex-direction:column}
+ header{padding:8px 12px 0}
+ .row{gap:6px}
+ .hl{flex:none;width:100%;gap:10px}
+ .logo{width:36px;height:36px;padding:1px}
+ .brand{font-size:12px}.sub{display:none}
+ .hr{width:100%;flex-direction:row;align-items:center;justify-content:space-between;min-height:0;gap:8px;margin-bottom:8px}
+ .et{font-size:15px}
+ .timer{padding:3px 10px;font-size:11px}.timer b{font-size:16px}
+ .fin{padding:6px 16px;font-size:13.5px}
+ aside{width:100%;flex-direction:row;align-items:center;border-right:0;border-bottom:1px solid var(--line);border-top-width:2px;max-height:none}
+ .side{padding:8px 0 8px 12px;min-width:0;overflow:hidden}
+ aside h3,.lg{display:none}
+ .pt{margin-bottom:4px}.pl{font-size:11.5px;margin-bottom:6px}
+ .grid{display:flex;overflow-x:auto;gap:6px;margin-bottom:0;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+ .cell{flex:none;width:36px;height:36px;aspect-ratio:auto}
+ .sf{padding:8px 12px;border-top:0}
+ .bsub{width:auto;white-space:nowrap;padding:10px 12px;font-size:13px}
+ main{padding:12px 10px 24px}
+ .qc{padding:16px 14px 18px;border-radius:8px}
+ .chips{margin-bottom:10px}
+ .qt{font-size:16.5px;margin-bottom:14px}
+ .fig{padding:6px;margin-bottom:14px}
+ fieldset{margin-bottom:18px;gap:8px}
+ .opt{padding:11px 12px}
+ .bg,.bp{padding:11px 16px;font-size:14.5px}
+ .nb .bg,.nb .bp{flex:1}
+ .res h2{font-size:21px}.hero .n{font-size:42px}
+ .br{grid-template-columns:78px 1fr 44px;gap:8px}
+ .mb,.mb.big{padding:20px 18px}.mb.big ol{font-size:14px;padding-left:18px}
+}
 </style>
 </head>
 <body>
 <div class="app">
 <header>
-  <div class="row"><span class="brand">KW Learning · Ruang Belajar Matematika</span><span class="title">Ujian Bilangan Bulat Kelas 7</span></div>
-  <p class="sub">45 soal pilihan ganda tentang bilangan bulat, dengan gambar dari kehidupan sehari-hari: termometer, lift, penyelam, dan garis bilangan. Jenjang sedang, sulit, HOTS, dan olimpiade.</p>
+  <div class="row"><div class="hl"><img class="logo" src="../assets/logo-sekolah.png" alt="Logo sekolah"><div class="ht"><span class="brand">KW Learning · Ruang Belajar Matematika</span><p class="sub">45 soal pilihan ganda tentang bilangan bulat, dengan gambar dari kehidupan sehari-hari: termometer, lift, penyelam, dan garis bilangan. Jenjang sedang, sulit, HOTS, dan olimpiade.</p></div></div>
+  <div class="hr"><span class="et">Ujian Bilangan Bulat Kelas 7</span>
+  <div class="timer" id="tmr" role="timer"><span>Sisa waktu</span><b id="tv">1:30:00</b></div>
+  <button type="button" class="fin hid" id="fin">Selesai</button></div></div>
   <div class="strip"><span style="background:#2E86AB"></span><span style="background:#C9642A"></span><span style="background:#7B4FA6"></span><span style="background:#B23A48"></span></div>
 </header>
 <div class="body">
@@ -108,6 +153,19 @@ button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
 </div>
 </div>
 <div class="ov hid" id="ov"><div class="mb"><h3>Kumpulkan jawaban?</h3><p id="msg"></p><div class="ma"><button type="button" id="no">Kembali</button><button type="button" class="y" id="yes">Ya, kumpulkan</button></div></div></div>
+
+<div class="ov" id="intro" role="dialog" aria-modal="true" aria-labelledby="it"><div class="mb big">
+<h3 id="it">Petunjuk Mengerjakan Soal</h3>
+<ol>
+<li>Ujian terdiri dari <b>45 soal pilihan ganda</b>: Sedang (1–15), Sulit (16–30), HOTS (31–40), dan Olimpiade (41–45).</li>
+<li>Waktu mengerjakan <b>90 menit</b>. Waktu <b>langsung berjalan</b> setelah kamu menekan tombol OK dan tidak dapat dihentikan.</li>
+<li>Pilih satu jawaban yang paling tepat untuk setiap soal. Jawaban boleh diubah selama waktu masih ada.</li>
+<li>Gunakan kotak navigasi soal untuk berpindah soal, dan perhatikan sisa waktu di bagian atas layar.</li>
+<li>Tekan <b>Kumpulkan jawaban</b> bila sudah selesai. Jika waktu habis, jawaban akan dikumpulkan secara otomatis.</li>
+<li>Setelah dikumpulkan, nilai dan pembahasan setiap soal akan ditampilkan.</li>
+</ol>
+<div class="ma"><button type="button" class="y" id="okb">OK, mulai mengerjakan</button></div>
+</div></div>
 
 <script>
 const sv=(w,h,b)=>`<svg viewBox="0 0 ${w} ${h}" width="${w}" role="img" aria-label="Ilustrasi soal">${b}</svg>`;
@@ -178,6 +236,18 @@ const LB={sedang:"Sedang",sulit:"Sulit",hots:"HOTS",olimpiade:"Olimpiade"},LT=['
 const st={cur:0,ans:new Array(QUESTIONS.length).fill(null),done:false};
 const $=id=>document.getElementById(id),panel=$('panel'),grid=$('grid');
 const cv=l=>`style="--c:var(--${l})"`;
+
+// ===== Timer & penyimpanan (90 menit) =====
+const DUR=90*60;let endAt=0,tick=null,running=false;
+const KEY='ujian-bilangan-bulat-v1';
+function save(){try{localStorage.setItem(KEY,JSON.stringify({endAt,ans:st.ans,cur:st.cur,done:st.done}))}catch(e){}}
+function clearSave(){try{localStorage.removeItem(KEY)}catch(e){}}
+function fmt(s){const h=Math.floor(s/3600),m=Math.floor(s%3600/60),c=s%60;return h+':'+String(m).padStart(2,'0')+':'+String(c).padStart(2,'0')}
+function tickFn(){const r=Math.max(0,Math.ceil((endAt-Date.now())/1000));$('tv').textContent=fmt(r);
+ $('tmr').className='timer'+(r<=300?' crit':r<=600?' warn':'');
+ if(r<=0){clearInterval(tick);$('ov').classList.add('hid');st.done=true;results()}}
+function startTimer(resume){if(!resume)endAt=Date.now()+DUR*1000;running=true;save();clearInterval(tick);tick=setInterval(tickFn,250);tickFn()}
+
 QUESTIONS.forEach((q,i)=>{const b=document.createElement('button');b.type='button';b.className='cell';b.style.setProperty('--c','var(--'+q.level+')');b.textContent=i+1;b.setAttribute('aria-label','Soal '+(i+1)+', '+LB[q.level]);b.onclick=()=>{st.cur=i;render()};grid.appendChild(b)});
 function upd(){const n=st.ans.filter(a=>a!==null).length;grid.querySelectorAll('.cell').forEach((c,i)=>{c.classList.toggle('ans',st.ans[i]!==null);c.classList.toggle('cur',i===st.cur&&!st.done)});$('pf').style.width=Math.round(n/QUESTIONS.length*100)+'%';$('pl').textContent=n+' dari '+QUESTIONS.length+' soal terjawab'}
 function confirmBox(m,fn){const o=$('ov');$('msg').textContent=m;o.classList.remove('hid');const y=$('yes'),n=$('no');const off=()=>{o.classList.add('hid');y.onclick=n.onclick=null};y.onclick=()=>{off();fn()};n.onclick=off}
@@ -185,18 +255,32 @@ function submit(){const u=st.ans.filter(a=>a===null).length;const go=()=>{st.don
 $('bsub').onclick=submit;
 function question(){const i=st.cur,q=QUESTIONS[i],last=i===QUESTIONS.length-1;
 panel.innerHTML=`<div class="qc" ${cv(q.level)}><div class="chips"><span class="lc">${LB[q.level]}</span><span class="tc">${q.topic}</span></div><div class="qn">Soal ${i+1} dari ${QUESTIONS.length}</div><p class="qt">${q.q}</p>${q.fig?`<div class="fig">${q.fig}</div>`:''}<fieldset>${q.opts.map((o,k)=>`<label class="opt${st.ans[i]===k?' sel':''}"><input type="radio" name="o" value="${k}" ${st.ans[i]===k?'checked':''}><span class="L">${LT[k]}.</span><span>${o}</span></label>`).join('')}</fieldset><div class="nb"><button type="button" class="bg" id="pv" ${i?'':'disabled'}>Sebelumnya</button><button type="button" class="bp" id="nx">${last?'Ke ringkasan':'Berikutnya'}</button></div></div>`;
-panel.querySelectorAll('input').forEach(inp=>inp.onchange=e=>{st.ans[i]=+e.target.value;upd();panel.querySelectorAll('.opt').forEach((el,k)=>el.classList.toggle('sel',k===st.ans[i]))});
+panel.querySelectorAll('input').forEach(inp=>inp.onchange=e=>{st.ans[i]=+e.target.value;upd();panel.querySelectorAll('.opt').forEach((el,k)=>el.classList.toggle('sel',k===st.ans[i]));save()});
 $('pv').onclick=()=>{st.cur--;render()};$('nx').onclick=()=>last?submit():(st.cur++,render())}
-function results(){const lv=['sedang','sulit','hots','olimpiade'],c={};lv.forEach(l=>c[l]={r:0,t:0});let tot=0;
+function results(){clearInterval(tick);running=false;$('tmr').classList.add('hid');$('fin').classList.remove('hid');save();
+const lv=['sedang','sulit','hots','olimpiade'],c={};lv.forEach(l=>c[l]={r:0,t:0});let tot=0;
 QUESTIONS.forEach((q,i)=>{c[q.level].t++;if(st.ans[i]===q.correct){c[q.level].r++;tot++}});
 const sc=Math.round(tot/QUESTIONS.length*100),col=sc>=75?'var(--ok)':sc>=50?'var(--gold)':'var(--bad)';
 const bd=lv.map(l=>`<div class="br" ${cv(l)}><span>${LB[l]}</span><div class="bt"><div style="width:${c[l].t?c[l].r/c[l].t*100:0}%"></div></div><span>${c[l].r}/${c[l].t}</span></div>`).join('');
 const rv=QUESTIONS.map((q,i)=>{const u=st.ans[i],ok=u===q.correct;return `<div class="ri"><div class="chips" ${cv(q.level)}><span class="lc">${LB[q.level]}</span><span class="tc">${q.topic}</span><span class="tc" style="color:${ok?'var(--ok)':'var(--bad)'};border-color:currentColor">${ok?'Benar':u===null?'Tidak dijawab':'Salah'}</span></div><p class="rq">${i+1}. ${q.q}</p>${q.fig?`<div class="fig">${q.fig}</div>`:''}${q.opts.map((o,k)=>`<div class="ro ${k===q.correct?'ok':k===u?'no':''}">${LT[k]}. ${o}</div>`).join('')}<div class="ex"><b>Pembahasan:</b> ${q.exp}</div></div>`}).join('');
 $('side').classList.add('hid');
 panel.innerHTML=`<div class="res"><h2>Hasil ujian</h2><div class="hero"><span class="n" style="color:${col}">${tot}</span><span class="o">dari ${QUESTIONS.length} soal benar · nilai akhir <b style="color:${col}">${sc}</b></span></div><div class="bd">${bd}</div><button type="button" class="bg" id="rt">Ulangi ujian</button><div style="margin-top:30px">${rv}</div></div>`;
-$('rt').onclick=()=>{st.cur=0;st.ans.fill(null);st.done=false;$('side').classList.remove('hid');render()};panel.scrollTo(0,0)}
-function render(){if(st.done){results();return}question();upd();panel.scrollTo(0,0)}
-render();
+$('rt').onclick=again;panel.scrollTo(0,0)}
+function again(){st.cur=0;st.ans.fill(null);st.done=false;clearInterval(tick);running=false;clearSave();
+ $('side').classList.remove('hid');$('fin').classList.add('hid');$('tmr').classList.remove('hid');$('tmr').className='timer';$('tv').textContent=fmt(DUR);
+ render();$('intro').classList.remove('hid')}
+const SOAL_URL='../soal.html'; // ganti dengan nama/alamat file HTML tujuan
+$('fin').onclick=()=>{clearSave();location.href=SOAL_URL};
+$('okb').onclick=()=>{$('intro').classList.add('hid');startTimer()};
+function render(){if(st.done){results();return}question();upd();if(running)save();panel.scrollTo(0,0)}
+// Cegah refresh saat ujian berjalan + pulihkan jawaban dan sisa waktu bila halaman tetap termuat ulang
+addEventListener('beforeunload',e=>{if(running){e.preventDefault();e.returnValue=''}});
+addEventListener('keydown',e=>{if(!running)return;if(e.key==='F5'||((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='r'))e.preventDefault()});
+(function(){try{const d=JSON.parse(localStorage.getItem(KEY)||'null');
+ if(d&&Array.isArray(d.ans)&&d.ans.length===QUESTIONS.length){st.ans=d.ans;st.cur=d.cur||0;endAt=d.endAt;$('intro').classList.add('hid');
+  if(d.done||Date.now()>=endAt){st.done=true;render();return}
+  startTimer(true);render();return}}catch(e){}
+ render()})();
 </script>
 </body>
 </html>
