@@ -528,9 +528,9 @@ const search   = document.getElementById("searchGame");
 let activeCat = "all";
 
 function gameUrl(g) {
-  if (g.path) return g.path;
-  if (g.file) return "game/" + encodeURIComponent(g.file);
-  return "";
+    if (g.path) return g.path;
+    if (g.file) return encodeURI(g.file);
+    return "";
 }
 
 function esc(s) {
