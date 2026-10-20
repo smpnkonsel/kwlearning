@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Satu Kejujuran, Seribu Harapan — Film Animasi Antikorupsi</title>
+<style>
+:root{--bg:#f4f1ea;--fg:#1f2937;--pn:#fff;--ac:#2e7d32;--mu:#6b7280;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f172a;--fg:#e5e7eb;--pn:#1e293b;--ac:#66bb6a;--mu:#94a3b8}}
+:root[data-theme="dark"]{--bg:#0f172a;--fg:#e5e7eb;--pn:#1e293b;--ac:#66bb6a;--mu:#94a3b8}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,'Segoe UI',Roboto,sans-serif}
+.wrap{max-width:1080px;margin:auto;padding:12px}
+h1{font-size:1.25rem;margin:.2em 0}.mu{color:var(--mu);font-size:.85rem;margin:0 0 10px}
+#stage{position:relative;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden;container-type:inline-size}
+#svg{display:block;width:100%;height:100%}
+#cam{transition:transform 2.6s ease-in-out}
+.ov{position:absolute;opacity:0;pointer-events:none;transition:opacity .5s}.ov.on{opacity:1}
+#sub{left:4%;right:4%;bottom:4%;text-align:center;font-size:2.5cqw}
+#sub .sp{display:block;font-weight:700;font-size:1.8cqw;margin-bottom:.2em;text-shadow:0 1px 3px #000}
+#sub .t{display:inline-block;background:rgba(0,0,0,.75);color:#fff;padding:.3em .8em;border-radius:.5em;line-height:1.35}
+#sub.vo .t{font-style:italic;background:rgba(15,23,42,.85)}
+#tx{top:7%;left:50%;transform:translateX(-50%);max-width:82%;background:#fff8dc;color:#3b2f0b;border-left:.7cqw solid #f59e0b;padding:.7em 1.1em;font-size:2.5cqw;font-weight:700;border-radius:.4em;text-align:center}
+#scn{top:3%;left:3%;background:#0009;color:#fff;font-size:1.6cqw;padding:.4em .9em;border-radius:2em;letter-spacing:.05em}
+#chip{top:11%;left:3%;background:#111d;color:#a7f3d0;font:700 2cqw ui-monospace,monospace;padding:.5em .9em;border-radius:.5em}
+#ins{inset:0;display:grid;place-items:center;background:rgba(0,0,0,.5)}
+.card{width:58%;background:#fffdf3;color:#2d2a1f;border-radius:1.2cqw;padding:2.2cqw;box-shadow:0 1cqw 4cqw #0008;font-size:2.3cqw;text-align:center;animation:pop .5s;position:relative}
+.nb{text-align:left;border-left:2.2cqw solid #2e8b57}.nb b{letter-spacing:.1em}
+.ln{border-bottom:.2cqw solid #9bb;height:3.6cqw;margin-top:.8cqw;line-height:3.6cqw;font-family:'Comic Sans MS',cursive,sans-serif}
+.w{position:relative;font-size:3.4cqw;animation:pop .4s .6s both}.w:after{content:"";position:absolute;left:-.3em;top:50%;height:.35cqw;width:0;background:#c62828;animation:str .8s 2s forwards}
+.typed{overflow:hidden;white-space:nowrap;width:0;animation:typed 2.4s steps(36) .3s forwards}
+.pen{position:absolute;right:10%;top:28%;font-size:5cqw;animation:hov 1s infinite alternate}
+.bigclock{width:17cqw;height:17cqw;border:1cqw solid #444;border-radius:50%;margin:auto;position:relative;background:#fff}
+.bigclock i{position:absolute;left:50%;top:50%;width:.8cqw;margin-left:-.4cqw;background:#222;border-radius:1cqw;transform-origin:50% 0;transform:rotate(180deg);animation:spin 6s steps(12) infinite}
+.bigclock i:nth-child(1){height:6.5cqw;background:#c62828}.bigclock i:nth-child(2){height:4.5cqw;animation-duration:72s}
+.seed{font-size:12cqw;animation:grow 2s both;display:inline-block}.soil{height:2cqw;background:#6d4c41;border-radius:1cqw;width:40%;margin:0 auto}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1cqw;margin-top:1cqw}.tg{background:#e8f5e9;border:.3cqw solid #66bb6a;border-radius:1cqw;padding:.7cqw;font-weight:700;font-size:2cqw;animation:pop .4s both}
+.tb{width:100%;border-collapse:collapse;font-size:2cqw;text-align:left}.tb td{border-bottom:.2cqw solid #cdb;padding:.4cqw .8cqw}.tb td+td{text-align:right}
+.tag{display:inline-block;background:#fff;border:.3cqw solid #2e7d32;border-radius:.8cqw;padding:.3cqw 2cqw;font-weight:700;font-size:3cqw;color:#1b5e20}
+.full{inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;background:linear-gradient(160deg,#1b5e20,#43a047);padding:4%}
+.full h2{font-size:6cqw;line-height:1.1;margin:.3em 0}.full small{letter-spacing:.2em;font-size:1.8cqw}.full p{font-size:2.3cqw;margin:.35em 0}
+#start{inset:0;display:flex;flex-direction:column;gap:1em;align-items:center;justify-content:center;background:#0b1f12cc;color:#fff;pointer-events:auto}
+#go{font-size:3cqw;padding:.5em 1.4em;border:0;border-radius:3em;background:#ffd54f;color:#3b2f0b;font-weight:800;cursor:pointer}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+.bar button,.bar select,.chips button{background:var(--pn);color:var(--fg);border:1px solid #8884;border-radius:8px;padding:.5em .8em;font-size:.9rem;cursor:pointer}
+.bar button.on{background:var(--ac);color:#fff}
+#pg{flex:1;min-width:120px;height:8px;background:#8883;border-radius:4px;overflow:hidden}#pg i{display:block;height:100%;width:0;background:var(--ac);transition:width .4s}
+.chips{display:flex;flex-wrap:wrap;gap:6px}.chips button.on{background:var(--ac);color:#fff}
+.ch{transition:transform 1.8s ease-in-out}.bob{animation:bob 2.6s ease-in-out infinite}.walking .bob{animation:bob .35s infinite}.talking .bob{animation:bob .6s infinite}
+.ey{transform-box:fill-box;transform-origin:center;animation:blink 4s infinite}
+.mo,.bl,.br{transform-box:fill-box;transform-origin:center}.talking .mo{animation:talk .2s infinite alternate}
+.sad .bl{transform:rotate(-22deg)}.sad .br{transform:rotate(22deg)}.happy .mo{rx:9px;ry:3.5px}
+.sec{animation:spin 4s steps(12) infinite}
+@keyframes bob{50%{transform:translateY(-3px)}}@keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
+@keyframes talk{to{transform:scaleY(4.5)}}@keyframes spin{to{transform:rotate(540deg)}}
+@keyframes pop{from{transform:scale(.8);opacity:0}}@keyframes str{to{width:120%}}@keyframes typed{to{width:100%}}
+@keyframes hov{to{transform:translate(-2cqw,1cqw) rotate(-10deg)}}@keyframes grow{from{transform:scale(.2) translateY(6cqw);opacity:0}}
+.bk{display:none}.back .bk{display:inline}.back .face{display:none}.back .bkh{display:none}
+.ra{transition:transform .4s;transform-origin:38px -136px}.oath .ra{transform:rotate(55deg)}
+.dig .bob{transform-origin:0 -70px;animation:dig .9s ease-in-out infinite alternate}
+.shock .bl,.shock .br{transform:translateY(-4px)}.shock .mo{rx:5px;ry:6px}
+.fan{animation:spin 1.2s linear infinite}.flag{transform-origin:59px 90px;animation:wave 1.6s ease-in-out infinite alternate}
+.drop{animation:drop 2.6s ease-in-out both}
+.nbk{display:inline-block;width:11cqw;height:14cqw;background:#2e8b57;border-radius:.8cqw;color:#fff;font-weight:800;font-size:1.8cqw;padding-top:5cqw;box-sizing:border-box;margin:1cqw;box-shadow:0 .5cqw 1cqw #0004}
+.env{display:inline-block;width:18cqw;height:11cqw;background:#efdcaa;border:.3cqw solid #b89b55;font-weight:800;padding-top:3cqw;box-sizing:border-box;margin:1cqw;border-radius:.6cqw}
+.bill{display:inline-block;width:20cqw;height:9cqw;margin:1cqw;border-radius:.8cqw;color:#fff;font-weight:800;line-height:9cqw;box-shadow:0 .4cqw 1cqw #0004;transform:rotate(-4deg)}
+.calc{width:26cqw;margin:auto;background:#37474f;border-radius:1.4cqw;padding:1.4cqw}.disp{background:#cfe8c8;font:700 2.2cqw ui-monospace,monospace;text-align:right;padding:.8cqw;border-radius:.6cqw;margin-bottom:1cqw}
+.keys{display:grid;grid-template-columns:repeat(4,1fr);gap:.7cqw}.keys i{background:#eceff1;border-radius:.5cqw;font-style:normal;padding:.5cqw 0}
+.fi{position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(#a9dcf3 0 46%,#8cc66b 46%)}
+.fi:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 18% 40%,#fff9,#0000 28%),radial-gradient(circle at 82% 30%,#ffe9a899,#0000 30%);filter:blur(10px)}
+.sway{display:inline-block;font-size:15cqw;transform-origin:50% 100%;animation:sway 2s ease-in-out infinite alternate;position:relative}.fi .tag{position:relative}
+@keyframes dig{to{transform:rotate(10deg)}}@keyframes wave{to{transform:scaleX(.9) skewY(4deg)}}
+@keyframes drop{0%{transform:translateY(-40px)}60%{transform:translateY(8px)}100%{transform:translateY(40px)}}
+@keyframes sway{from{transform:rotate(-7deg)}to{transform:rotate(7deg)}}
+</style></head><body><div class="wrap">
+<h1>🎬 Satu Kejujuran, Seribu Harapan</h1>
+<p class="mu">Animatic film pendek antikorupsi · SMP Negeri 20 Konawe Selatan · pratinjau naskah dengan karakter kartun</p>
+<div id="stage">
+<svg id="svg" viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice"><g id="cam"><g id="world"></g></g></svg>
+<div id="scn" class="ov"></div><div id="chip" class="ov"></div><div id="tx" class="ov"></div><div id="ins" class="ov"></div><div id="sub" class="ov"></div>
+<div id="title" class="ov full"><small>SMP NEGERI 20 KONAWE SELATAN</small><h2>SATU KEJUJURAN,<br>SERIBU HARAPAN</h2><p>Film Pendek Antikorupsi</p><p>🌱</p></div>
+<div id="end" class="ov full"><p>Korupsi tidak selalu dimulai dari sesuatu yang besar.</p><p>Ia bisa dimulai ketika kita membenarkan kebohongan kecil.</p><p><b>Jangan tunggu menjadi pemimpin untuk belajar berintegritas. Mulailah dari diri sendiri.</b></p><h2 style="font-size:3.6cqw;margin-top:.8em">SMP NEGERI 20 KONAWE SELATAN</h2><p>Jujur dalam tindakan, berani dalam kebenaran.</p><p>#konselsetara #konselbersatucegahkorupsi</p></div>
+<div id="start" class="ov on"><button id="go">▶ Putar Film</button><small>Nyalakan suara perangkat · ±5 menit</small></div>
+</div>
+<div class="bar"><button id="pp">⏸ Jeda</button><button id="rs">⟲ Ulang</button><button id="vt" class="on">🔊 Suara</button><button id="mt" class="on">🎵 Musik</button>
+<select id="sp"><option value=".8">0,8×</option><option value="1" selected>1×</option><option value="1.25">1,25×</option></select><button id="fs">⛶ Layar penuh</button><div id="pg"><i></i></div></div>
+<div class="chips" id="chips"></div>
+<p class="mu" id="note"></p>
+</div>
+<script>
+const $=i=>document.getElementById(i);
+const DEFS='<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4fb0ec"/><stop offset="1" stop-color="#e0f4fc"/></linearGradient><linearGradient id="gr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#93d46c"/><stop offset="1" stop-color="#4c9a44"/></linearGradient><linearGradient id="fl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f1e9d6"/><stop offset="1" stop-color="#cdc2a5"/></linearGradient><linearGradient id="cu" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d6d0c0"/><stop offset="1" stop-color="#b9b3a2"/></linearGradient><linearGradient id="lb" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient><pattern id="tl" width="80" height="40" patternUnits="userSpaceOnUse"><rect width="80" height="40" fill="none" stroke="#0000001c" stroke-width="2"/></pattern><radialGradient id="vg" cx=".5" cy=".5" r=".78"><stop offset=".62" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".38"/></radialGradient></defs>';
+const VIG='<rect width="960" height="540" fill="url(#vg)"/>';
+const R=(x,y,w,h,f,e='')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${f}" ${e}/>`;
+const NV=['Jujur','Tanggung Jawab','Peduli','Disiplin','Berani','Sederhana','Kerja Keras','Adil','Mandiri'];
+const TL={sekop:'<path d="M42 -72L52 -14" stroke="#8d6e63" stroke-width="4"/><path d="M46 -20L62 -20L58 -2L48 -2Z" fill="#9e9e9e"/>',gembor:'<path d="M42 -66h26l-3 24H45Z" fill="#43a047"/><path d="M66 -60L86 -76" stroke="#2e7d32" stroke-width="4"/>',sapu:'<path d="M44 -74L52 -6" stroke="#a1887f" stroke-width="4"/><path d="M44 -12L62 -12L68 2H40Z" fill="#d4a24c"/>',bibit:'<path d="M42 -72h16l-2 16H44Z" fill="#37474f"/><path d="M50 -72Q40 -88 36 -86Q46 -94 50 -78Q56 -94 64 -86Q58 -88 50 -72Z" fill="#43a047"/>'};
+function body(c,ov){c={...c,...ov};const sk=c.sk,h=c.hr||'#222',t=c.top||'#fbfbfb',g=c.st==2,hj=c.hj||'#f6f6f6',lg=c.long,p=c.pants||(c.fem?'#2a56a8':'#24478f'),L='stroke="#aab4c4" stroke-width="1.2"';
+let o='<ellipse cy="3" rx="36" ry="7" fill="#0003"/>';
+if(c.bag)o+=`<rect x="-27" y="-134" width="54" height="64" rx="14" fill="${c.bag}"/><rect x="-27" y="-102" width="54" height="5" fill="#0003"/>`;
+o+=c.fem?`<rect x="-15" y="-34" width="12" height="32" fill="${sk}"/><rect x="3" y="-34" width="12" height="32" fill="${sk}"/><rect x="-15" y="-14" width="12" height="12" fill="#fff"/><rect x="3" y="-14" width="12" height="12" fill="#fff"/>`:`<rect x="-22" y="-70" width="20" height="68" rx="3" fill="${p}"/><rect x="2" y="-70" width="20" height="68" rx="3" fill="${p}"/><path d="M0 -68V-4" stroke="#0003"/>`;
+o+='<ellipse cx="-13" cy="-1" rx="14" ry="6" fill="#1c1c1c"/><ellipse cx="13" cy="-1" rx="14" ry="6" fill="#1c1c1c"/>';
+if(c.fem)o+=`<path d="M-33 -74L-39 -24H39L33 -74Z" fill="${p}"/><path d="M-8 -72L-10 -26M8 -72L10 -26" stroke="#0002"/>`;
+o+=`<g class="bob"><path d="M-31 -72Q-35 -134 -19 -140H19Q35 -134 31 -72Z" fill="${t}" ${L}/><rect x="-31" y="-78" width="62" height="7" fill="${p}"/><rect x="-31" y="-78" width="62" height="7" fill="#0002"/>`;
+if(c.batik)o+='<g fill="#f6dfa8" opacity=".85"><circle cx="-14" cy="-116" r="5"/><circle cx="8" cy="-126" r="4"/><circle cx="14" cy="-100" r="5"/><circle cx="-6" cy="-92" r="4"/><circle cx="-18" cy="-90" r="3"/><path d="M0 -112l5 6l-5 6l-5 -6Z"/><path d="M-20 -104l4 5l-4 5l-4 -5Z"/></g>';
+else o+=`<path d="M-12 -140L0 -124L12 -140" fill="#fff" ${L}/><rect x="9" y="-122" width="17" height="15" fill="none" ${L}/><rect x="12" y="-119" width="11" height="7" fill="#d32f2f"/>`;
+if(c.lan)o+='<path d="M-9 -140L0 -108L9 -140" stroke="#c62828" fill="none" stroke-width="3"/><rect x="-6" y="-108" width="12" height="16" fill="#fff" stroke="#888"/>';
+const arm=(x,k)=>`<g class="${k}"><rect x="${x-7.5}" y="-136" width="15" height="64" rx="7.5" fill="${lg?t:sk}" ${lg?L:''}/>${lg?'':`<path d="M${x-9} -134Q${x} -148 ${x+9} -134L${x+8} -110H${x-8}Z" fill="${t}" ${L}/>`}<circle cx="${x}" cy="-70" r="8" fill="${sk}"/></g>`;
+o+=arm(-38,'la')+arm(38,'ra')+(TL[c.tool]||'');
+if(g)o+=`<ellipse cy="-162" rx="40" ry="43" fill="${hj}" stroke="#cfd8dc" class="bkh"/>`;
+o+=`<rect x="-7" y="-146" width="14" height="14" fill="${sk}"/>`;
+if(g)o+=`<path d="M-32 -142Q0 -116 32 -142L38 -102Q0 -86 -38 -102Z" fill="${hj}" stroke="#cfd8dc"/>`;
+else o+=`<circle cx="-31" cy="-158" r="6" fill="${sk}"/><circle cx="31" cy="-158" r="6" fill="${sk}"/>`;
+o+=`<circle cy="-161" r="${g?28:31}" fill="${sk}"/>`;
+if(c.st==0)o+=`<path d="M-32 -158C-38 -208 38 -208 32 -158C28 -176 8 -186 -6 -183C-18 -179 -28 -170 -32 -158Z" fill="${h}"/>`;
+if(c.st==1)o+=`<path d="M-32 -162L-27 -200L-14 -182L0 -212L14 -182L27 -200L32 -162C20 -182 -20 -182 -32 -162Z" fill="${h}"/>`;
+if(g)o+=`<path d="M-28 -166Q0 -200 28 -166Q18 -182 0 -184Q-18 -182 -28 -166Z" fill="${hj}" stroke="#cfd8dc"/>`;
+const bc=g?hj:h;
+o+=`<circle class="bk" cy="-161" r="${g?29:32}" fill="${bc}"/><g class="face"><g class="ey"><ellipse cx="-11" cy="-160" rx="5.2" ry="6" fill="#fff"/><ellipse cx="11" cy="-160" rx="5.2" ry="6" fill="#fff"/><circle cx="-10.5" cy="-159" r="3.4" fill="#2b1d12"/><circle cx="11.5" cy="-159" r="3.4" fill="#2b1d12"/><circle cx="-9.4" cy="-160.4" r="1.1" fill="#fff"/><circle cx="12.6" cy="-160.4" r="1.1" fill="#fff"/></g><circle cx="-19" cy="-148" r="5" fill="#ff7a7a" opacity=".28"/><circle cx="19" cy="-148" r="5" fill="#ff7a7a" opacity=".28"/><path d="M-1.5 -154Q0 -149 2 -151" stroke="#0005" fill="none" stroke-width="1.6"/><line class="bl" x1="-18" y1="-172" x2="-5" y2="-172" stroke="#2a1b12" stroke-width="3.2" stroke-linecap="round"/><line class="br" x1="5" y1="-172" x2="18" y2="-172" stroke="#2a1b12" stroke-width="3.2" stroke-linecap="round"/><ellipse class="mo" cx="0" cy="-143" rx="7" ry="1.7" fill="#8a2f2f"/>${c.gl?'<circle cx="-11" cy="-160" r="9.5" fill="none" stroke="#222" stroke-width="2"/><circle cx="11" cy="-160" r="9.5" fill="none" stroke="#222" stroke-width="2"/><path d="M-1.5 -160h3" stroke="#222" stroke-width="2"/>':''}${c.mus?`<path d="M-12 -148Q0 -156 12 -148Q0 -143 -12 -148Z" fill="${h}"/>`:''}</g></g>`;
+return o}
+const C={andi:{sk:'#e0ac69',hr:'#1b1b1b',st:0},siti:{sk:'#efc39a',st:2,fem:1},bima:{sk:'#c68642',hr:'#111',st:1,bag:'#e53935'},
+guru:{sk:'#d9a066',hr:'#6b6b6b',st:0,top:'#b5651d',batik:1,mus:1,long:1,lan:1,pants:'#2b2b2b'},guru2:{sk:'#e8b88a',st:2,fem:1,hj:'#7b1fa2',top:'#2e7d9a',batik:1,long:1,pants:'#444'},
+ketua:{sk:'#f0c08f',hr:'#3a2418',st:0,gl:1},s1:{sk:'#e0ac69',hr:'#5b3a1e',st:1},s2:{sk:'#c68642',st:2,fem:1}};
+const SK=['#e0ac69','#c68642','#f0c08f','#d9a066','#b5835a'],HR=['#1b1b1b','#3a2418','#111','#5b3a1e'];
+for(let i=0;i<14;i++)C['f'+i]={sk:SK[i%5],hr:HR[i%4],st:i%3,fem:i%3==2};
+const DESK='<path d="M-74 -63H74L68 -41H-68Z" fill="#dba665"/><path d="M-74 -63H74" stroke="#f3cf9a" stroke-width="2"/><rect x="-68" y="-41" width="136" height="62" fill="#b9803f"/><rect x="-68" y="-41" width="136" height="6" fill="#0002"/><rect x="-60" y="-26" width="120" height="36" rx="3" fill="#a56f32"/><rect x="-24" y="-60" width="48" height="8" rx="1" fill="#2e8b57"/>';
+const clk=(x,y,r=30)=>`<g transform="translate(${x} ${y})"><circle r="${r}" fill="#fff" stroke="#3b3b3b" stroke-width="4"/><path d="M0 -${r-5}v4M0 ${r-5}v-4M-${r-5} 0h4M${r-5} 0h-4" stroke="#333" stroke-width="2"/><line y2="-${r*.55}" stroke="#222" stroke-width="3"/><line class="sec" y2="-${r*.8}" stroke="#d32f2f" stroke-width="2"/></g>`;
+const garuda=(x,y)=>`<g transform="translate(${x} ${y})"><circle r="19" fill="#d4a017" stroke="#9a7510" stroke-width="2"/><path d="M0 -13L3 -4H13L5 3L8 13L0 7L-8 13L-5 3L-13 -4H-3Z" fill="#fff"/></g>`;
+const flg=(x,y)=>R(x,y,30,10,'#e53935')+R(x,y+10,30,10,'#fff','stroke="#ddd"')+R(x-3,y-2,3,34,'#8d6e63');
+const cl=(x,y)=>`<g fill="#fff" opacity=".92"><ellipse cx="${x}" cy="${y}" rx="64" ry="18"/><ellipse cx="${x+32}" cy="${y-13}" rx="42" ry="17"/></g>`;
+const tree=(x,y,s=1)=>`<g transform="translate(${x} ${y}) scale(${s})"><rect x="-11" y="-96" width="22" height="96" fill="#6d4c41"/><circle cx="-46" cy="-122" r="50" fill="#37853a"/><circle cx="46" cy="-122" r="50" fill="#37853a"/><circle cy="-164" r="60" fill="#46a044"/><circle cx="-22" cy="-146" r="32" fill="#5cb552" opacity=".75"/></g>`;
+function gedung(x,y,w,sg){let o=R(x,y,w,150,'#f6f0de')+R(x,y+98,w,52,'#74b08b')+R(x,y+94,w,5,'#4f8f6a')+R(x-14,y-30,w+28,36,'#b73c2d')+R(x-14,y+2,w+28,7,'#7e251b');
+for(let j=0;j<4;j++)o+=R(x-14,y-26+j*9,w+28,2,'#0003');
+for(let i=x+24;i<x+w-80;i+=96)o+=R(i,y+34,64,48,'#bfe4f3','stroke="#fff" stroke-width="5"')+`<path d="M${i+32} ${y+34}V${y+82}" stroke="#fff" stroke-width="3"/>`;
+o+=R(x+w-70,y+58,46,92,'#8a5a30')+R(x+w-62,y+66,30,34,'#cfe9f4');
+if(sg)o+=R(x+w/2-150,y+10,300,24,'#174a99','stroke="#fff" stroke-width="2"')+`<text x="${x+w/2}" y="${y+27}" text-anchor="middle" font-size="15" font-weight="800" fill="#fff" font-family="sans-serif">SMP NEGERI 20 KONAWE SELATAN</text>`;
+return o}
+const kelas=(dim)=>R(0,0,960,400,'#f7f0db')+R(0,262,960,140,'#9fd4c6')+R(0,258,960,6,'#7fb8a9')+R(0,400,960,140,'url(#fl)')+R(0,400,960,140,'url(#tl)')+R(0,396,960,8,'#8d7a5a')+R(0,0,960,14,'#fff')
++'<g transform="translate(480 26)"><rect x="-4" y="-8" width="8" height="12" fill="#777"/><g class="fan"><ellipse cx="-50" rx="48" ry="4" fill="#9a8f7a"/><ellipse cx="50" rx="48" ry="4" fill="#9a8f7a"/></g></g>'
++garuda(300,44)+flg(236,28)+flg(346,28)
++R(80,70,440,170,'#b9c1c9')+R(88,78,424,154,'#fcfcfc')+R(100,236,420,6,'#8a939c')+'<text x="300" y="158" text-anchor="middle" font-size="38" font-weight="700" fill="#1b6aa5" font-family="Comic Sans MS,cursive,sans-serif">Penghijauan Jumat</text><path d="M180 176H420" stroke="#1b6aa5" stroke-width="3" opacity=".5"/>'
++clk(590,102)+R(545,150,80,90,'#fff','stroke="#9aa" stroke-width="3"')+'<text x="585" y="168" text-anchor="middle" font-size="11" font-weight="700" fill="#c62828" font-family="sans-serif">JADWAL</text><path d="M555 178h60M555 190h60M555 202h60M555 214h60" stroke="#9aa" stroke-width="2"/>'
++R(660,66,240,172,'url(#sky)')+tree(780,238,.28)+'<path d="M780 66V238M660 152H900" stroke="#fff" stroke-width="5"/>'+R(654,60,252,184,'none','stroke="#f4f4f4" stroke-width="10"')
++'<polygon points="670,150 890,150 600,400 330,400" fill="url(#lb)" opacity=".4"/>'
++(dim?R(656,62,92,180,'#a8452e')+R(812,62,92,180,'#a8452e')+R(656,62,92,10,'#7e2f1d')+R(812,62,92,10,'#7e2f1d'):'')
++R(0,350,26,50,'#546e7a')+R(0,346,26,6,'#37474f');
+const lorong=()=>R(0,0,960,540,'#f3ecd8')+R(0,0,960,38,'url(#cu)')+R(0,250,960,152,'#8ec9b0')+R(0,246,960,6,'#6aa890')+R(0,400,960,140,'url(#fl)')+R(0,400,960,140,'url(#tl)')+R(0,396,960,8,'#8d7a5a')
++[40,270,500].map((x,i)=>R(x,120,120,282,'#9a6a3c')+R(x+14,136,92,100,'#cfe9f4','stroke="#fff" stroke-width="4"')+R(x+10,92,100,22,'#fff','stroke="#888"')+`<text x="${x+60}" y="108" text-anchor="middle" font-size="14" font-weight="800" fill="#174a99" font-family="sans-serif">KELAS VII-${'ABC'[i]}</text>`+R(x+90,270,8,14,'#d4a017')).join('')
++R(790,100,130,302,'#7a4a2a')+R(802,114,106,110,'#cfe9f4','stroke="#fff" stroke-width="4"')+R(776,62,158,28,'#174a99')+'<text x="855" y="82" text-anchor="middle" font-size="17" font-weight="800" fill="#fff" font-family="sans-serif">RUANG GURU</text>'
++[200,430,680].map(x=>R(x,38,28,362,'#e0d9c6')+R(x,366,28,34,'#a69c84')+R(x-4,38,36,8,'#c9c1ab')).join('')
++'<polygon points="60,40 360,40 520,400 220,400" fill="url(#lb)" opacity=".35"/>'
++[160,640].map(x=>`<g transform="translate(${x} 398)"><path d="M-16 0L-12 -26H12L16 0Z" fill="#b5651d"/><circle cy="-40" r="18" fill="#3f9a43"/><circle cx="-10" cy="-34" r="12" fill="#58b85a"/></g>`).join('');
+const pagar=Array.from({length:32},(_,i)=>R(i*30+4,352,6,44,'#f4f4f4')).join('')+R(0,362,960,5,'#e4e4e4')+R(0,384,960,5,'#e4e4e4');
+const hedge=[80,300,520,740,900].map(x=>`<ellipse cx="${x}" cy="400" rx="80" ry="22" fill="#2f7d32"/><ellipse cx="${x+20}" cy="394" rx="50" ry="14" fill="#3f9a43"/>`).join('');
+const papan='<g><rect x="866" y="300" width="6" height="124" fill="#6d4c41"/><rect x="936" y="300" width="6" height="124" fill="#6d4c41"/><rect x="852" y="228" width="104" height="116" fill="#f1e3b8" stroke="#a1887f" stroke-width="4"/><text x="904" y="248" text-anchor="middle" font-size="9" font-weight="800" fill="#5a4300" font-family="sans-serif">PAPAN LAPORAN</text><text x="904" y="259" text-anchor="middle" font-size="9" font-weight="800" fill="#5a4300" font-family="sans-serif">TERBUKA</text><path d="M862 274h84M862 290h84M862 306h84M862 322h84" stroke="#a89a6a" stroke-width="2"/></g>';
+const taman=b=>R(0,0,960,540,'url(#sky)')+'<circle cx="840" cy="90" r="74" fill="#fff6c2" opacity=".5"/><circle cx="840" cy="90" r="42" fill="#ffe66d"/>'+cl(150,70)+cl(560,52)+tree(900,350,.8)+gedung(20,190,560,1)+R(0,340,960,200,'url(#gr)')+'<path d="M310 540L430 360H560L780 540Z" fill="#d9ccab"/>'+pagar+hedge+tree(660,410,1.05)+tree(60,430,.9)+(b?papan:'');
+const lapangan=()=>R(0,0,960,540,'url(#sky)')+cl(220,80)+cl(700,60)+tree(30,330,.9)+tree(930,330,.9)+gedung(110,190,740,1)+R(0,330,960,16,'#8bc96a')+R(0,346,960,194,'#c9c3b3')+'<path d="M0 400H960M0 460H960" stroke="#fff" stroke-width="3" opacity=".55"/><path d="M480 346V540" stroke="#fff" stroke-width="3" opacity=".4"/>'
++'<rect x="52" y="60" width="7" height="290" fill="#9e9e9e"/><g class="flag"><rect x="59" y="64" width="86" height="26" fill="#e53935"/><rect x="59" y="90" width="86" height="26" fill="#fff" stroke="#ddd"/></g>'
++[340,398,456].map(y=>[130,830].map(x=>`<path d="M${x-9} ${y+6}L${x} ${y-14}L${x+9} ${y+6}Z" fill="#ff7043"/>`).join('')).join('');
+const rguru=()=>R(0,0,960,400,'#f5ebd7')+R(0,262,960,140,'#dcc9a0')+R(0,258,960,5,'#b49a68')+R(0,400,960,140,'url(#fl)')+R(0,400,960,140,'url(#tl)')+R(0,396,960,8,'#8d7a5a')+R(0,0,960,14,'#fff')
++R(380,30,200,30,'#174a99')+'<text x="480" y="52" text-anchor="middle" font-size="20" font-weight="800" fill="#fff" font-family="sans-serif">RUANG GURU</text>'
++R(60,80,150,140,'url(#sky)','stroke="#fff" stroke-width="7"')+'<path d="M135 80V220M60 150H210" stroke="#fff" stroke-width="4"/><polygon points="70,150 200,150 340,400 150,400" fill="url(#lb)" opacity=".3"/>'
++R(270,96,160,304,'#8a5a30')+[0,1].map(i=>R(280+i*76,108,68,280,'#d5e6ee','stroke="#5b3a1e" stroke-width="3"')).join('')+['#c62828','#1565c0','#2e7d32','#f9a825'].map((c,i)=>R(288,124+i*64,52,40,c)+R(362,124+i*64,52,40,c)).join('')
++R(560,92,300,156,'#fff','stroke="#9aa5b1" stroke-width="6"')+'<text x="710" y="114" text-anchor="middle" font-size="13" font-weight="800" fill="#174a99" font-family="sans-serif">STRUKTUR ORGANISASI</text>'+R(675,124,70,22,'#cfe0f5')+R(590,170,70,22,'#cfe0f5')+R(675,170,70,22,'#cfe0f5')+R(760,170,70,22,'#cfe0f5')+'<path d="M710 146V158M625 158H795M625 158V170M710 158V170M795 158V170" stroke="#174a99" stroke-width="2"/>'
++clk(480,122,26)+garuda(900,60);
+const meja=R(140,392,740,24,'#8b5a2b')+R(140,392,740,4,'#b07a3e')+R(140,416,740,62,'#a8712f')+R(150,424,720,44,'#94601f')+R(290,376,66,16,'#2e8b57')+R(400,384,42,8,'#fff','stroke="#bbb"')+R(448,382,42,10,'#fff','stroke="#bbb"')+R(540,368,36,24,'#9e9e9e')+R(546,372,24,8,'#a5d6a7')+R(620,382,56,10,'#e8d8a8')+R(720,372,18,20,'#546e7a');
+const bags=t=>NV.map((n,i)=>`<g transform="translate(${80+i*100} 524)"><path d="M-22 0L-18 -34H18L22 0Z" fill="#37474f"/><ellipse cy="-34" rx="18" ry="4" fill="#5d4037"/><path d="M0 -34Q-18 -52 -22 -62Q-4 -64 0 -44Q4 -64 22 -62Q18 -52 0 -34Z" fill="#43a047"/>${t?`<rect x="-30" y="-26" width="60" height="16" rx="3" fill="#fff" stroke="#9ccc65"/><text y="-14" text-anchor="middle" font-size="9" font-weight="800" fill="#1b5e20" font-family="sans-serif">${n}</text>`:''}</g>`).join('');
+const plant='<g transform="translate(480 506) scale(1.9)"><path d="M-22 0L-18 -34H18L22 0Z" fill="#37474f"/><ellipse cy="-34" rx="18" ry="5" fill="#5d4037"/><g class="drop"><path d="M0 -30V-62" stroke="#43a047" stroke-width="3"/><path d="M0 -48Q-18 -54 -22 -68Q-4 -68 0 -54Q4 -70 22 -68Q18 -54 0 -48Z" fill="#4caf50"/><rect x="-13" y="-92" width="26" height="30" rx="12" fill="#e0ac69"/><rect x="-9" y="-124" width="18" height="34" rx="8" fill="#e0ac69"/></g></g>';
+const INS={
+pen0:'<div class="card nb"><b>PENGELUARAN</b><div class="ln"></div><div class="ln"></div><div class="ln"></div><span class="pen">✒️</span></div>',
+clock:'<div class="card"><div class="bigclock"><i></i><i></i></div></div>',
+serah:'<div class="card"><span class="nbk">BUKU<br>CATATAN</span><span class="env">DANA<br>Rp250.000</span><p>Pak Guru menyerahkan buku catatan hijau dan amplop</p></div>',
+uang:'<div class="card"><span class="bill" style="background:#2e9a6e">Rp20.000</span><span class="bill" style="background:#9a6a3a">Rp5.000</span><p>Andi menghitung uang di amplop: Rp25.000</p></div>',
+nbP:'<div class="card nb"><b>PENGELUARAN</b><div class="ln">Bibit ......... 150.000</div><div class="ln">Polybag &amp; pupuk .. 40.000</div><div class="ln"><span class="w">P</span></div><span class="pen">✒️</span></div>',
+tutup:'<div class="card"><span class="nbk">BUKU<br>CATATAN</span><p>Andi menutup buku tanpa menulis apa-apa</p></div>',
+calc:'<div class="card"><div class="calc"><div class="disp">150000 + 40000 = 190000</div><div class="keys">'+'789÷456×123−0.=+'.split('').map(k=>`<i>${k}</i>`).join('')+'</div></div></div>',
+sel:'<div class="card nb"><b>PENGELUARAN</b><div class="ln typed">Selisih Rp35.000 — dalam penelusuran.</div></div>',
+tags:'<div class="card"><b>Papan nama nilai antikorupsi</b><div class="grid">'+NV.map((n,i)=>`<div class="tg" style="animation-delay:${i*.35}s">🌱 ${n}</div>`).join('')+'</div></div>',
+board:'<div class="card" style="width:54%;background:#f4e7bb"><b>PAPAN LAPORAN TERBUKA</b><table class="tb"><tr><td>Pemasukan (dana awal)</td><td>Rp250.000</td></tr><tr><td>Pengeluaran: bibit</td><td>Rp150.000</td></tr><tr><td>Polybag &amp; pupuk</td><td>Rp40.000</td></tr><tr><td>Ongkos angkut</td><td>Rp15.000</td></tr><tr><td><b>Sisa</b> (amplop 25.000 + kembalian 20.000)</td><td><b>Rp45.000</b></td></tr><tr><td>Bukti</td><td>3 nota ✔</td></tr></table></div>',
+jujur:'<div class="fi"><div style="text-align:center"><span class="sway">🌱</span><br><span class="tag">Jujur</span></div></div>'};
+const SPK={A:['Andi','#60a5fa',1.25,1,'andi'],S:['Siti','#f472b6',1.5,1,'siti'],B:['Bima','#fb923c',1.1,1.08,'bima'],G:['Pak Guru','#c4b5fd',.55,.92,'guru'],K:['Ketua Kelas','#5eead4',.9,1,'ketua'],'1':['Siswa 1','#bef264',1.3,1,'s1'],'2':['Siswa 2','#fde047',1,1,'s2'],L:['Pemimpin Deklarasi','#5eead4',.85,.95,'ketua'],ALL:['Seluruh Siswa','#fca5a5',1,.9,'*'],VO:['Suara Batin Andi (VO)','#cbd5e1',1.15,.85,'']};
+const PE={top:'#ef6c00',fem:0,pants:'#1c3d8f'};
+const crowd=()=>{const a=[];let n=0;[[340,.5,5,200,140],[398,.6,5,200,140],[456,.7,4,240,160]].forEach(([y,s,c,x0,d])=>{for(let i=0;i<c;i++)a.push(['f'+n++,x0+i*d,y,s])});return a};
+const S=[
+{n:'Pembuka — Bibit dan Sebuah Pertanyaan',bg:taman(0),fg:plant+VIG,cast:[],L:[
+['_','',{cam:[2.4,480,480],snap:1,d:3000}],['_','',{cam:0,d:3400}],['_','',{ins:'pen0',d:3400}],
+['VO','Kepercayaan itu seperti bibit. Butuh waktu untuk tumbuh... tetapi bisa rusak hanya karena satu tulisan yang tidak benar.',{ins:'clock',tick:1}],
+['T','',{d:4200,ins:0,tick:0}]]},
+{n:'Adegan 1 — Amanah yang Diberikan',bg:kelas(0),fg:VIG,cast:[['f0',410,408,.78],['f1',570,408,.78],['f2',730,408,.78],['f3',890,408,.78],['D',410,408,.78],['D',570,408,.78],['D',730,408,.78],['D',890,408,.78],
+['guru',150,470],['ketua',330,455],['D',330,455],['andi',490,455],['D',490,455],['s1',650,455],['D',650,455],['s2',810,455],['D',810,455]],L:[
+['G','Anak-anak, Jumat depan kelas kita kebagian kegiatan penghijauan. Ada dana Rp250.000 untuk bibit dan perlengkapan.'],
+['K','Siapa yang pegang catatannya, Pak?'],
+['G','Andi. Bapak percaya kamu teliti. Catat semua yang masuk dan keluar, simpan notanya.',{cam:[1.4,300,330]}],
+['_','',{d:3200,ins:'serah',cam:0}],
+['_','',{d:1300,cam:[1.7,490,300],mood:{andi:'shock'},ins:0}],
+['A','Siap, Pak. Saya jaga amanahnya.',{mood:{andi:'happy'}}],
+['G','Ingat, Di. Yang diuji bukan cuma ketelitianmu, tetapi juga kejujuranmu.',{cam:0,mood:{andi:''}}],
+['X','Sebuah amanah adalah awal dari ujian integritas.']]},
+{n:'Adegan 2 — Godaan untuk Berbuat Curang',bg:kelas(1),fg:'<rect width="960" height="540" fill="#33415c" opacity=".22"/>'+VIG,cast:[['D',150,455,1],['D',760,455,1],['D',880,455,1],['andi',420,455,1,0,'sad'],['D',420,455],['bima',620,470]],L:[
+['_','',{d:3000,ins:'uang'}],
+['A','Bim, tolong hitung ulang. Uangnya kurang tiga puluh lima ribu dari catatanku.',{ins:0,chip:'Catatan: sisa Rp60.000 · Amplop: Rp25.000'}],
+['B','Ah, paling cuma salah hitung. Tulis saja “perlengkapan tambahan”. Beres.'],
+['A','Tapi kita tidak beli itu.'],
+['B','Siapa yang tahu? Aku mau latihan futsal, Di. Cepat, tulis saja.'],
+['A','Kalau teman-teman tanya?'],
+['B','Mereka tidak akan memeriksa sampai segitunya.',{m:{bima:[1150,470]}}],
+['_','',{d:2600,ins:'clock',tick:1}],['_','',{d:2600,ins:0,cam:[1.7,420,300]}],['_','',{d:5200,ins:'nbP'}],['_','',{d:2600,ins:'tutup'}],
+['X','Kecurangan sering dimulai ketika kita menganggap kesalahan kecil sebagai hal biasa.',{ins:0,cam:0}]]},
+{n:'Adegan 3 — Keberanian untuk Mengingatkan',bg:lorong(),fg:VIG,cast:[['f0',1100,428,.6],['f2',-200,428,.6],['andi',620,470,1,0,'sad'],['siti',-150,470]],L:[
+['_','',{d:2600,tick:1,dur:2.6,m:{siti:[400,470],f0:[-200,428]}}],
+['S','Di, dari tadi diam saja. Ada apa?'],
+['A','Uang kegiatan kurang tiga puluh lima ribu. Bima bilang tulis saja “perlengkapan tambahan”.',{dur:3,m:{f2:[1100,428]}}],
+['S','Terus kamu tulis?'],['A','Belum. Tapi aku takut dibilang tidak becus.'],
+['S','Lebih takut mana, dibilang tidak becus atau berbohong di buku sendiri?',{cam:[1.5,400,330]}],
+['A','Kalau ternyata aku yang salah hitung?',{cam:[1.5,620,330]}],
+['S','Ya diperbaiki. Salah hitung bisa dibetulkan. Kebohongan susah dihapus.',{cam:[1.5,400,330]}],
+['S','Ayo lapor ke Pak Guru. Aku temani. Ceritakan saja apa adanya.',{cam:0,tick:0,mood:{andi:''}}],
+['_','',{d:3600,dur:3.4,mood:{andi:'back',siti:'back'},m:{andi:[835,426,.6],siti:[895,426,.6]}}],
+['X','Integritas berarti memilih yang benar, sekalipun pilihan itu tidak mudah.']]},
+{n:'Adegan 4 — Memilih Kejujuran',bg:rguru(),fg:meja+VIG,cast:[['guru2',110,372,.58],['D',110,372,.58],['andi',300,455,1,0,'sad'],['siti',450,455],['guru',620,455],['bima',790,455,1,0,'sad']],L:[
+['A','Pak, saya mau lapor. Uang kegiatan kurang Rp35.000 dari catatan saya dan saya belum tahu sebabnya. Saya belum mau menulis apa-apa sebelum ada buktinya.',{mood:{andi:''}}],
+['G','Terima kasih sudah berani bilang, Di. Kita periksa sama-sama. Mana nota belanjanya?'],
+['S','Nota bibit Rp150.000, nota polybag dan pupuk Rp40.000, Pak.'],
+['_','',{d:3200,ins:'calc'}],
+['A','Menurut catatanku, sisa uang harusnya Rp60.000. Tapi di amplop hanya Rp25.000.',{ins:0,chip:'250.000 − 190.000 = 60.000  ≠  25.000'}],
+['G','Berarti ada pengeluaran yang belum tercatat atau uang yang belum diserahkan. Jangan menuduh siapa pun tanpa bukti, tetapi jangan juga ditutup-tutupi. Sementara kita tulis apa adanya.'],
+['_','',{d:3800,ins:'sel'}],
+['B','Pak, tadi saya yang suruh Andi menulis “perlengkapan tambahan”. Saya cuma mau cepat selesai. Saya salah.',{ins:0}],
+['G','Terima kasih sudah mengaku, Bim. Mengaku itu berani. Sekarang bantu kami menelusuri.'],
+['B','Maaf, Di. Hampir saja aku bikin kamu menulis yang tidak benar.',{mood:{bima:''}}],
+['A','Tidak apa-apa. Aku juga hampir menurut.',{mood:{andi:'happy'}}],
+['G','Laporan yang jujur lebih penting daripada laporan yang terlihat sempurna.'],
+['X','Jujur dalam laporan. Bertanggung jawab atas amanah.']]},
+{n:'Adegan 5 — Integritas Menjadi Budaya Sekolah',bg:taman(1),fg:bags(1)+VIG,cast:[['f0',215,428,.66,0,'dig',{...PE,tool:'sekop'}],['f1',345,428,.66,0,'',{...PE,tool:'bibit'}],['f2',475,428,.66,0,'dig',{...PE,tool:'gembor'}],['f3',610,428,.66,0,'dig',{...PE,tool:'sekop'}],['f4',735,428,.66,0,'',{...PE,tool:'sapu'}],
+['ketua',150,470,1,0,'',PE],['siti',280,470,1,0,'',{...PE,fem:0}],['andi',410,470,1,0,'happy',PE],['bima',540,470,1,0,'',PE],['s1',680,470,1,0,'',PE],['s2',790,470,1,0,'',{...PE,fem:0}]],L:[
+['K','Selisih kemarin sudah ketemu. Kembalian Rp20.000 masih di aku dan belum kuserahkan.',{chip:'Kembalian Rp20.000'}],
+['S','Dan nota ongkos angkut bibit Rp15.000 ada di tasku. Maaf, aku lupa menyerahkannya.',{chip:'Nota ongkos angkut Rp15.000'}],
+['A','Kalau kemarin aku tulis “perlengkapan tambahan”, catatan ini jadi palsu.'],
+['_','',{d:4200,ins:'tags'}],
+['K','Mulai sekarang semua catatan kita tempel di sini, biar semua bisa lihat.',{ins:0,cam:[1.6,880,330]}],
+['1','Jadi kalau ada selisih, kelihatan dari awal.'],
+['2','Dan bukan cuma satu orang yang pegang uang. Andi dan Siti bergantian mencatat.',{cam:0}],
+['B','Aku belajar, yang kelihatan kecil pun harus dilakukan dengan benar.'],
+['A','Jujur bukan cuma saat ada yang mengawasi. Jujur itu pilihan kita setiap hari.',{cam:[1.5,410,330]}],
+['_','',{d:3600,ins:'board',cam:0}],
+['X','Sekolah berintegritas dimulai dari kebiasaan sederhana.',{ins:0}]]},
+{n:'Adegan 6 — Deklarasi Antikorupsi',bg:lapangan(),fg:VIG,cast:[...crowd(),['andi',240,535,.95],['siti',720,535,.95],['ketua',480,535,.95]],L:[
+['_','',{d:2000,cam:[1.15,480,300]}],
+['L','Siapkah kita menjadi generasi yang berintegritas?',{cam:0}],['ALL','Siap!'],
+['L','Beranikah kita berkata jujur dan menolak segala bentuk kecurangan?'],['ALL','Berani!'],
+['L','Akankah kita menjaga amanah dan bertanggung jawab atas setiap tindakan?'],['ALL','Ya, kami berkomitmen!',{oath:1}],
+['L','Mulai dari diri sendiri, mulai dari hal kecil, dan mulai dari sekarang!',{oath:0}],
+['ALL','KAMI SISWA SMP NEGERI 20 KONAWE SELATAN! KAMI MENOLAK KORUPSI! KAMI MENJUNJUNG TINGGI KEJUJURAN! KAMI MENJAGA AMANAH DAN BERTANGGUNG JAWAB!',{cam:[1.3,480,330]}],
+['ALL','BERSAMA KITA WUJUDKAN KONAWE SELATAN YANG BERINTEGRITAS!'],
+['VO','Satu kejujuran bisa menumbuhkan seribu harapan.',{ins:'jujur',cam:0}]]}];
+let tok=0,paused=false,playing=false,tts=true,mus=true,tick=false,speed=1,vc=null,AC,step=0,cur=0,idx=0;
+const total=S.reduce((a,s)=>a+s.L.length,0),offs=[];S.reduce((a,s,i)=>(offs[i]=a,a+s.L.length),0);
+const show=(i,on)=>$(i).classList.toggle('on',!!on);
+const wait=async(ms,my)=>{let t=0;ms/=speed;while(t<ms){await new Promise(r=>setTimeout(r,80));if(my!==tok)return;if(!paused)t+=80}};
+function note(f,d,v,ty){const o=AC.createOscillator(),g=AC.createGain();o.type=ty;o.frequency.value=f;g.gain.setValueAtTime(v,AC.currentTime);g.gain.exponentialRampToValueAtTime(1e-4,AC.currentTime+d);o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+d)}
+const SC=[[262,330,392,523],[262,330,392,440],[220,262,330,392],[262,330,392,523],[262,330,440,523],[294,370,440,587],[262,330,392,523,659]];
+function audio(){if(AC){AC.resume();return}try{AC=new(window.AudioContext||window.webkitAudioContext)();setInterval(()=>{if(!playing||paused)return;step++;if(tick&&step%2==0)note(1800,.05,.05,'square');if(mus&&step%2==1){const sc=SC[cur];note(sc[[0,2,1,3,2,1,3,0][step>>1&7]%sc.length],1.4,.035,'triangle')}},450)}catch(e){}}
+function setMood(k,m){const e=$('c-'+k);if(e){e.classList.remove('sad','happy','shock','back');if(m)e.classList.add(m)}}
+function say(t,w,my){const sp=SPK[w],est=900+t.length*60;if(!tts||!window.speechSynthesis)return wait(est,my);
+return new Promise(res=>{const u=new SpeechSynthesisUtterance(t);u.lang='id-ID';u.pitch=sp[2];u.rate=sp[3]*speed;if(vc)u.voice=vc;u.onend=u.onerror=()=>res();speechSynthesis.speak(u);wait(est*2.5+1500,my).then(res)})}
+function setup(i){const s=S[i];cur=i;['tx','chip','ins','sub','title'].forEach(x=>show(x,0));$('cam').style.transform='none';
+$('world').innerHTML=DEFS+s.bg+s.cast.map(([k,x,y,sc=1,fl=0,m='',ov])=>k=='D'?`<g transform="translate(${x} ${y}) scale(${sc})">${DESK}</g>`:`<g class="ch ${m}" id="c-${k}" data-s="${sc}" style="transform:translate(${x}px,${y}px) scale(${sc})"><g transform="scale(${fl?-1:1} 1)">${body(C[k],ov)}</g></g>`).join('')+s.fg;
+document.querySelectorAll('#chips button').forEach((b,j)=>b.classList.toggle('on',j==i));$('scn').textContent=i?s.n.toUpperCase():'PEMBUKA';show('scn',1);setTimeout(()=>show('scn',0),3000)}
+async function beat(b,my){const [w,tx='',o={}]=b;
+if(o.ins!==undefined){if(o.ins){$('ins').innerHTML=INS[o.ins]}show('ins',o.ins)}
+if(o.cam!==undefined){const c=$('cam');if(o.snap)c.style.transition='none';if(o.cam)c.style.transformOrigin=`${o.cam[1]}px ${o.cam[2]}px`;c.style.transform=o.cam?`scale(${o.cam[0]})`:'none';if(o.snap){c.getBoundingClientRect();c.style.transition=''}}
+if(o.oath!==undefined)document.querySelectorAll('.ch').forEach(e=>e.classList.toggle('oath',!!o.oath));
+if(o.mood)for(const k in o.mood)setMood(k,o.mood[k]);
+if(o.m)for(const k in o.m){const e=$('c-'+k),a=o.m[k],d=o.dur||1.8,sc=a[2]||e.dataset.s;e.style.transitionDuration=d+'s';e.classList.add('walking');e.style.transform=`translate(${a[0]}px,${a[1]}px) scale(${sc})`;e.dataset.s=sc;setTimeout(()=>e.classList.remove('walking'),d*1000)}
+if('tick'in o)tick=!!o.tick;
+if(o.chip){$('chip').textContent=o.chip;show('chip',1)}
+if(w=='X'){$('tx').textContent=tx;show('tx',1);await wait(o.d||3600,my);show('tx',0)}
+else if(w=='T'){show('title',1);await wait(o.d||4000,my);show('title',0)}
+else if(w=='_')await wait(o.d||2000,my);
+else{const sp=SPK[w],sb=$('sub');sb.innerHTML=`<span class="sp" style="color:${sp[1]}">${sp[0]}</span><span class="t"></span>`;sb.querySelector('.t').textContent=tx;sb.classList.toggle('vo',w=='VO');show('sub',1);
+const els=sp[4]=='*'?[...document.querySelectorAll('.ch')]:sp[4]?[$('c-'+sp[4])]:[];els.forEach(e=>e&&e.classList.add('talking'));
+await say(tx,w,my);els.forEach(e=>e&&e.classList.remove('talking'));show('sub',0);await wait(350,my)}
+if(o.chip)show('chip',0);idx++;$('pg').firstChild.style.width=(idx/total*100)+'%'}
+async function run(i){const my=++tok;if(window.speechSynthesis)speechSynthesis.cancel();paused=false;playing=true;tick=false;$('pp').textContent='⏸ Jeda';show('end',0);show('start',0);idx=offs[i];
+for(let s=i;s<S.length;s++){setup(s);await wait(1800,my);if(my!==tok)return;for(const b of S[s].L){await beat(b,my);if(my!==tok)return}await wait(600,my);if(my!==tok)return}
+show('sub',0);show('ins',0);show('end',1);playing=false;$('pg').firstChild.style.width='100%'}
+$('chips').innerHTML=S.map((s,i)=>`<button>${i?'Adegan '+i:'Pembuka'}</button>`).join('');
+document.querySelectorAll('#chips button').forEach((b,i)=>b.onclick=()=>{audio();run(i)});
+$('go').onclick=()=>{audio();const v=window.speechSynthesis?speechSynthesis.getVoices():[];const id=v.filter(x=>/^id/i.test(x.lang));vc=id[0]||null;
+if(v.length&&!id.length){tts=false;$('vt').classList.remove('on');$('note').textContent='Perangkat ini belum punya suara bahasa Indonesia, jadi film berjalan dengan teks. Pasang suara Indonesia di pengaturan Text-to-Speech perangkat.'}run(0)};
+$('pp').onclick=()=>{if(!playing)return;paused=!paused;$('pp').textContent=paused?'▶ Lanjut':'⏸ Jeda';if(window.speechSynthesis)speechSynthesis[paused?'pause':'resume']()};
+$('rs').onclick=()=>{audio();run(0)};
+$('vt').onclick=e=>{tts=!tts;e.target.classList.toggle('on',tts);if(!tts&&window.speechSynthesis)speechSynthesis.cancel()};
+$('mt').onclick=e=>{mus=!mus;e.target.classList.toggle('on',mus)};
+$('sp').onchange=e=>speed=+e.target.value;
+$('fs').onclick=()=>{const s=$('stage');(s.requestFullscreen||s.webkitRequestFullscreen||(()=>{})).call(s)};
+if(window.speechSynthesis)speechSynthesis.onvoiceschanged=()=>{};
+setup(1);
+</script></body></html>
