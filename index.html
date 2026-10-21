@@ -2,419 +2,181 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!-- ===== SEO META TAGS ===== -->
-<meta name="description" content="KW Learning adalah ruang belajar interaktif untuk siswa SMP/MTs yang menyediakan materi Matematika dan Informatika, ilustrasi visual, latihan, dan kuis interaktif untuk membantu memahami konsep dengan mudah dan menyenangkan.">
-
-<meta name="keywords" content="KW Learning, KW Learning SMP, belajar matematika SMP, belajar informatika SMP, materi matematika SMP, materi informatika SMP, matematika interaktif, informatika interaktif, kuis matematika SMP, kuis informatika SMP, ruang belajar SMP">
-
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#071d3c">
+<title>KW Learning | Ruang Belajar Matematika dan Informatika SMP</title>
+<meta name="description" content="KW Learning adalah ruang belajar interaktif untuk siswa SMP/MTs yang menyediakan materi Matematika dan Informatika, latihan, dan kuis interaktif untuk membantu memahami konsep dengan mudah dan menyenangkan.">
+<meta name="keywords" content="KW Learning, belajar matematika SMP, belajar informatika SMP, materi matematika SMP, materi informatika SMP, kuis matematika SMP, ruang belajar SMP">
 <meta name="author" content="KW Learning">
 <meta name="robots" content="index, follow">
-
 <link rel="canonical" href="https://smpnkonsel.github.io/kwlearning/">
-
-<!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="KW Learning">
 <meta property="og:locale" content="id_ID">
 <meta property="og:title" content="KW Learning | Ruang Belajar Matematika dan Informatika SMP">
-<meta property="og:description" content="Ruang belajar interaktif untuk siswa SMP/MTs dengan materi Matematika dan Informatika, ilustrasi visual, latihan, dan kuis interaktif.">
+<meta property="og:description" content="Ruang belajar interaktif untuk siswa SMP/MTs dengan materi Matematika dan Informatika, latihan, dan kuis interaktif.">
 <meta property="og:url" content="https://smpnkonsel.github.io/kwlearning/">
 <meta property="og:image" content="https://smpnkonsel.github.io/kwlearning/assets/images/og-cover.jpg">
-
-<!-- Twitter / X -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="KW Learning | Matematika dan Informatika SMP">
-<meta name="twitter:description" content="Belajar Matematika dan Informatika SMP melalui materi interaktif, ilustrasi visual, latihan, dan kuis.">
-<meta name="twitter:image" content="https://smpnkonsel.github.io/kwlearning/assets/images/og-cover.jpg">
-
-<!-- Title -->
-<title>KW Learning | Ruang Belajar Matematika dan Informatika SMP</title>
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/sidebar.css">
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="icon" type="image/png" href="favicon.png">
-
-<style>
-/* ===== DASHBOARD BARU: ILUSTRASI + KUIS OTOMATIS ===== */
-.learning-showcase{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:22px;
-}
-.learning-panel{
-  position:relative;
-  overflow:hidden;
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:26px;
-  padding:26px;
-  background:linear-gradient(135deg,rgba(255,255,255,.075),rgba(255,255,255,.025));
-  box-shadow:0 18px 50px rgba(0,0,0,.16);
-}
-.learning-panel.math-panel{background:
-  radial-gradient(circle at 85% 20%,rgba(45,212,191,.18),transparent 28%),
-  linear-gradient(135deg,rgba(12,32,47,.98),rgba(10,19,35,.98));}
-.learning-panel.info-panel{background:
-  radial-gradient(circle at 85% 20%,rgba(168,85,247,.20),transparent 28%),
-  linear-gradient(135deg,rgba(26,18,49,.98),rgba(12,16,35,.98));}
-.learning-head{
-  display:flex;justify-content:space-between;gap:18px;align-items:flex-start;
-  position:relative;z-index:2;
-}
-.learning-kicker{
-  display:inline-flex;align-items:center;gap:8px;font:600 11px 'JetBrains Mono',monospace;
-  letter-spacing:.08em;text-transform:uppercase;opacity:.75;margin-bottom:8px;
-}
-.learning-title{margin:0;font-size:clamp(22px,3vw,34px);}
-.learning-desc{margin:9px 0 0;max-width:650px;line-height:1.65;opacity:.72;}
-.learning-btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  margin-top:18px;padding:11px 16px;border-radius:13px;text-decoration:none;
-  background:rgba(255,255,255,.10);color:inherit;border:1px solid rgba(255,255,255,.12);
-  font-weight:700;transition:.25s;
-}
-.learning-btn:hover{transform:translateY(-2px);background:rgba(255,255,255,.16);}
-.math-illustration,.info-illustration{
-  min-height:205px;margin-top:20px;border-radius:22px;position:relative;overflow:hidden;
-  background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08);
-}
-.math-illustration .board{
-  position:absolute;left:8%;top:14%;width:58%;height:68%;border-radius:14px;
-  background:#f8fafc;box-shadow:0 16px 35px rgba(0,0,0,.22);
-}
-.board-line{position:absolute;left:12%;right:12%;height:2px;background:#d7dee8;opacity:.65;}
-.board-line.l1{top:25%}.board-line.l2{top:50%}.board-line.l3{top:75%}
-.formula{position:absolute;left:12%;top:31%;font:700 24px 'JetBrains Mono',monospace;color:#172033;}
-.formula.f2{top:57%;font-size:19px;}
-.math-shape{
-  position:absolute;right:8%;bottom:13%;width:105px;height:105px;border:5px solid #5eead4;
-  transform:rotate(45deg);border-radius:12px;background:rgba(45,212,191,.08);
-}
-.math-shape:after{content:"";position:absolute;inset:22%;border:3px solid #f8fafc;}
-.pencil{
-  position:absolute;right:14%;top:15%;width:92px;height:13px;border-radius:8px;
-  background:#fbbf24;transform:rotate(-28deg);box-shadow:0 0 0 3px rgba(255,255,255,.12);
-}
-.pencil:after{content:"";position:absolute;right:-15px;top:0;border-left:18px solid #f1d0a8;border-top:6px solid transparent;border-bottom:6px solid transparent;}
-
-.info-illustration .laptop{
-  position:absolute;left:13%;top:16%;width:55%;height:62%;border-radius:13px 13px 7px 7px;
-  border:8px solid #334155;background:#0b1020;box-shadow:0 16px 35px rgba(0,0,0,.25);
-}
-.screen-code{position:absolute;inset:12px;font:12px/1.65 'JetBrains Mono',monospace;color:#c4b5fd;}
-.screen-code b{color:#67e8f9}.screen-code i{color:#f0abfc;font-style:normal}.screen-code em{color:#86efac;font-style:normal}
-.laptop:after{
-  content:"";position:absolute;left:-13%;right:-13%;bottom:-19px;height:18px;border-radius:0 0 14px 14px;
-  background:#64748b;box-shadow:0 8px 18px rgba(0,0,0,.25);
-}
-.node{position:absolute;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;
-  background:rgba(168,85,247,.18);border:1px solid rgba(216,180,254,.5);font-size:20px;}
-.node.n1{right:11%;top:16%}.node.n2{right:23%;bottom:16%}.node.n3{right:5%;bottom:29%}
-.connector{position:absolute;height:2px;background:rgba(216,180,254,.5);transform-origin:left center;}
-.connector.c1{width:92px;right:15%;top:34%;transform:rotate(145deg)}
-.connector.c2{width:75px;right:18%;bottom:35%;transform:rotate(-28deg)}
-
-.quiz-shell{
-  position:relative;overflow:hidden;border-radius:26px;padding:25px;
-  background:linear-gradient(135deg,rgba(255,255,255,.09),rgba(255,255,255,.035));
-  border:1px solid rgba(255,255,255,.12);box-shadow:0 18px 55px rgba(0,0,0,.18);
-}
-.quiz-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:17px;}
-.quiz-badge{padding:7px 11px;border-radius:999px;background:rgba(255,255,255,.08);
-  font:600 11px 'JetBrains Mono',monospace;}
-.quiz-progress{font:600 11px 'JetBrains Mono',monospace;opacity:.6;}
-.quiz-question{font-size:clamp(18px,2.4vw,25px);line-height:1.45;margin:0 0 18px;}
-.quiz-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;}
-.quiz-option{
-  width:100%;text-align:left;border:1px solid rgba(255,255,255,.11);background:rgba(255,255,255,.055);
-  color:inherit;border-radius:15px;padding:14px 15px;cursor:pointer;font:600 14px 'Plus Jakarta Sans',sans-serif;
-  transition:.2s;
-}
-.quiz-option:hover{transform:translateY(-2px);background:rgba(255,255,255,.10);}
-.quiz-option.correct{border-color:#34d399;background:rgba(16,185,129,.17);}
-.quiz-option.wrong{border-color:#fb7185;background:rgba(244,63,94,.14);}
-.quiz-feedback{min-height:25px;margin-top:15px;font-size:13px;opacity:.8;}
-.quiz-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px;}
-.quiz-next{border:0;border-radius:12px;padding:10px 15px;font-weight:800;cursor:pointer;background:#fff;color:#111827;}
-.quiz-next:disabled{opacity:.35;cursor:not-allowed;}
-.quiz-dots{display:flex;gap:5px}.quiz-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.18)}
-.quiz-dot.active{background:currentColor;width:19px;border-radius:9px;}
-.auto-note{font:500 10px 'JetBrains Mono',monospace;opacity:.55;margin-top:10px;}
-
-@media(max-width:700px){
-  .learning-panel,.quiz-shell{padding:19px;border-radius:20px;}
-  .learning-head{display:block}.learning-head .learning-btn{width:100%}
-  .quiz-options{grid-template-columns:1fr;}
-  .math-illustration,.info-illustration{min-height:180px;}
-}
-</style>
-
 </head>
 <body>
-    <!-- SIDEBAR -->
-    <div id="sidebar-container"></div>
-<main class="main">
-  <div class="topbar">
-    <div class="timeWelcome" id="timeWelcome">
-      <span class="timeIcon" id="timeIcon">🌙</span>
+<div class="app">
+  <div id="sidebar-container"></div>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="timeWelcome" id="timeWelcome">
+        <span class="timeIcon" id="timeIcon">🌙</span>
+        <div>
+          <small id="timeGreeting">Selamat malam</small>
+          <strong id="timeMessage">Siap lanjut belajar?</strong>
+        </div>
+      </div>
+      <div class="user">
+        <div class="avatar">🎓</div>
+        <div class="userText"><span class="userMain">Pejuang Ilmu</span><small>Ruang Belajar</small></div>
+        <span class="userChevron">⌄</span>
+      </div>
+    </div>
+
+    <section class="hero">
+      <div class="heroText">
+        <div class="eyebrow"><span class="dot"></span>Dasbor Belajar</div>
+        <div class="greeting" id="greeting"></div>
+        <h1>Ruang Belajar</h1>
+        <h2>Matematika &amp; Informatika</h2>
+        <p>Pilih mata pelajaran yang ingin kamu pelajari, lalu uji pemahamanmu lewat kuis di bawah.</p>
+        <div class="morph-line" id="morphLine"><span class="tag" id="morphTag">math</span><span id="morphTxt">x² + y² = r²</span><span class="cursor"></span></div>
+      </div>
+      <div class="heroArt"><img src="assets/images/hero.png" alt="Ilustrasi siswa belajar Matematika dan Informatika"></div>
+    </section>
+
+    <section class="section" id="mapel">
+      <div class="sectionHead"><h2>Pilih Mata Pelajaran</h2><span>SMP / MTs</span></div>
+      <div class="subjectGrid">
+        <article class="subjectCard">
+          <div class="subjectArt" aria-hidden="true">∑</div>
+          <h3>Matematika</h3>
+          <p>Pahami konsep lewat contoh, pola, grafik, dan latihan pemecahan masalah.</p>
+          <ul class="chips"><li>Bilangan</li><li>Aljabar</li><li>Geometri</li><li>Statistika</li><li>Peluang</li></ul>
+          <a class="subjectBtn" href="ruang-belajar-matematika.html">Buka Matematika</a>
+        </article>
+        <article class="subjectCard infoCard">
+          <div class="subjectArt" aria-hidden="true">&lt;/&gt;</div>
+          <h3>Informatika</h3>
+          <p>Berlatih berpikir komputasional, memahami data, jaringan, dan algoritma.</p>
+          <ul class="chips"><li>Berpikir komputasional</li><li>Sistem komputer</li><li>Jaringan</li><li>Data</li><li>Algoritma</li></ul>
+          <a class="subjectBtn" href="ruang-belajar-informatika.html">Buka Informatika</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="quiz-zone">
+      <div class="sectionHead"><h2>Kuis Singkat</h2><span>Matematika + Informatika</span></div>
+      <div id="autoQuiz">
+        <div class="quiz-top"><span class="quiz-badge" id="quizSubject">MATEMATIKA</span><span class="quiz-progress" id="quizProgress">Soal 1</span></div>
+        <h3 class="quiz-question" id="quizQuestion">Memuat soal...</h3>
+        <div class="quiz-options" id="quizOptions"></div>
+        <div class="quiz-feedback" id="quizFeedback" aria-live="polite"></div>
+        <div class="quiz-footer">
+          <span class="quiz-score" id="quizScore">Benar: 0</span>
+          <button class="quiz-next" id="quizNext" disabled>Soal berikutnya</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
       <div>
-        <small id="timeGreeting">Selamat malam</small>
-        <strong id="timeMessage">Siap lanjut belajar?</strong>
+        <h2>Belajar sedikit demi sedikit, setiap hari.</h2>
+        <p>Baca materi, latihan, lalu uji dengan kuis.</p>
+        <a href="#mapel">Mulai belajar</a>
       </div>
-    </div>
-    <div class="user">
-      <div class="avatar">🎓</div>
-      <div class="userText">
-        <span class="userMain">Pejuang Ilmu</span>
-        <small>Ruang Belajar</small>
+      <div class="rocket" aria-hidden="true">🚀</div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-wrap">
+        <div><h3>KW Learning</h3><p>Materi Matematika &amp; Informatika SMP kelas 7, 8, dan 9.</p></div>
+        <nav aria-label="Menu footer">
+          <h4>Menu</h4>
+          <a href="index.html">Dasbor</a>
+          <a href="ruang-belajar-matematika.html">Matematika</a>
+          <a href="ruang-belajar-informatika.html">Informatika</a>
+          <a href="soal.html">Soal</a>
+        </nav>
       </div>
-      <span class="userChevron">⌄</span>
-    </div>
-  </div>
-
-  <section class="hero">
-    <div class="heroText">
-      <div class="eyebrow"><span class="dot"></span>Dasbor Belajar</div>
-      <div class="greeting" id="greeting"></div>
-      <h1>Ruang Belajar</h1>
-      <h2>Matematika &amp; Informatika</h2>
-      <p>Pilih kelas dan mapel yang ingin kamu pelajari. Setiap bab berisi ringkasan materi dan topik yang bisa kamu buka satu per satu.</p>
-      <div class="morph-line" id="morphLine"><span class="tag" id="morphTag">math</span><span id="morphTxt">x² + y² = r²</span><span class="cursor"></span></div>
-    </div>
-    <div class="heroArt"><img src="assets/images/hero.png" alt="Ilustrasi siswa belajar Matematika dan Informatika"></div>
-  </section>
-
-
-  <!-- ===== ILUSTRASI PEMBELAJARAN MATEMATIKA ===== -->
-  <section class="section" id="learning-math">
-    <div class="sectionHead">
-      <h2>Pembelajaran Matematika</h2>
-      <span>Visual • Konseptual • Interaktif</span>
-    </div>
-    <div class="learning-showcase">
-      <article class="learning-panel math-panel">
-        <div class="learning-head">
-          <div>
-            <div class="learning-kicker">∑ MATH LAB • SMP / MTs</div>
-            <h3 class="learning-title">Matematika jadi lebih mudah dipahami.</h3>
-            <p class="learning-desc">
-              Jelajahi konsep melalui ilustrasi, pola, simbol, grafik, dan pemecahan masalah.
-              Tidak perlu lagi mulai dari “pilih kelas” — materi tampil sebagai pengalaman belajar.
-            </p>
-            <a class="learning-btn" href="#quiz-zone">Coba Soal Matematika →</a>
-          </div>
-        </div>
-        <div class="math-illustration" aria-label="Ilustrasi pembelajaran matematika">
-          <div class="board">
-            <div class="board-line l1"></div><div class="board-line l2"></div><div class="board-line l3"></div>
-            <div class="formula">x² + y² = r²</div>
-            <div class="formula f2">2x + 5 = 17 → x = 6</div>
-          </div>
-          <div class="math-shape"></div>
-          <div class="pencil"></div>
-        </div>
-      </article>
-    </div>
-  </section>
-
-  <!-- ===== ILUSTRASI PEMBELAJARAN INFORMATIKA ===== -->
-  <section class="section" id="learning-info">
-    <div class="sectionHead">
-      <h2>Pembelajaran Informatika</h2>
-      <span>Algoritma • Data • Teknologi</span>
-    </div>
-    <div class="learning-showcase">
-      <article class="learning-panel info-panel">
-        <div class="learning-head">
-          <div>
-            <div class="learning-kicker">⌘ INFO LAB • SMP / MTs</div>
-            <h3 class="learning-title">Belajar berpikir seperti seorang pemecah masalah.</h3>
-            <p class="learning-desc">
-              Eksplorasi berpikir komputasional, sistem komputer, jaringan, data,
-              algoritma, pemrograman, dan dampak sosial informatika.
-            </p>
-            <a class="learning-btn" href="#quiz-zone">Coba Soal Informatika →</a>
-          </div>
-        </div>
-        <div class="info-illustration" aria-label="Ilustrasi pembelajaran informatika">
-          <div class="laptop">
-            <div class="screen-code">
-              <b>function</b> belajar() {<br>
-              &nbsp;&nbsp;<i>let</i> konsep = <em>"pahami"</em>;<br>
-              &nbsp;&nbsp;<i>if</i> (konsep) {<br>
-              &nbsp;&nbsp;&nbsp;&nbsp;latihan();<br>
-              &nbsp;&nbsp;}<br>
-              }
-            </div>
-          </div>
-          <div class="connector c1"></div><div class="connector c2"></div>
-          <div class="node n1">⌘</div><div class="node n2">▦</div><div class="node n3">⚙</div>
-        </div>
-      </article>
-    </div>
-  </section>
-
-  <!-- ===== KUIS SEMUA MATERI ===== -->
-  <section class="section" id="quiz-zone">
-    <div class="sectionHead">
-      <h2>Soal & Kuis Hari Ini</h2>
-      <span>Matematika + Informatika • Berganti otomatis</span>
-    </div>
-
-    <div class="quiz-shell" id="autoQuiz">
-      <div class="quiz-top">
-        <span class="quiz-badge" id="quizSubject">MATEMATIKA</span>
-        <span class="quiz-progress" id="quizProgress">Soal 1</span>
-      </div>
-      <h3 class="quiz-question" id="quizQuestion">Memuat soal...</h3>
-      <div class="quiz-options" id="quizOptions"></div>
-      <div class="quiz-feedback" id="quizFeedback"></div>
-      <div class="quiz-footer">
-        <div class="quiz-dots" id="quizDots"></div>
-        <button class="quiz-next" id="quizNext" disabled>Soal Berikutnya →</button>
-      </div>
-      <div class="auto-note">⟳ Soal akan berganti otomatis setelah dijawab atau saat waktu habis.</div>
-    </div>
-  </section>
-
-  <section class="cta">
-    <div class="ctaText">
-      <h2>Belajar sedikit demi sedikit, setiap hari.</h2>
-      <p>Materi, ilustrasi, dan kuis dibuat menjadi satu pengalaman belajar.</p>
-      <a href="#learning-math">Mulai dari Matematika →</a>
-    </div>
-    <div class="rocket">🚀</div>
-  </section>
-
-  <footer>KW Learning Platform • Matematika &amp; Informatika • Belajar → Latihan → Pahami</footer>
-</main>
+      <p class="copy">© 2026 KW Learning</p>
+    </footer>
+  </main>
 </div>
+
 <script src="assets/js/include.js"></script>
-
 <script>
-/* ===== QUIZ OTOMATIS MATEMATIKA + INFORMATIKA ===== */
 (() => {
-  const questions = [
-    {s:"MATEMATIKA", q:"Berapakah nilai 2³ × 2²?", o:["16","32","64","8"], a:1, f:"Gunakan sifat perkalian bilangan berpangkat dengan basis sama."},
-    {s:"MATEMATIKA", q:"Jika x + 7 = 15, nilai x adalah ...", o:["6","7","8","9"], a:2, f:"Pindahkan 7 ke ruas kanan dengan operasi kebalikan."},
-    {s:"MATEMATIKA", q:"Sisi siku-siku sebuah segitiga adalah 6 cm dan 8 cm. Sisi miringnya ...", o:["9 cm","10 cm","12 cm","14 cm"], a:1, f:"Gunakan teorema Pythagoras: c² = a² + b²."},
-    {s:"MATEMATIKA", q:"Jika f(x) = 2x + 3, maka f(4) = ...", o:["8","10","11","12"], a:2, f:"Substitusikan x = 4 ke bentuk fungsi."},
-    {s:"MATEMATIKA", q:"Rata-rata dari 6, 8, 10, dan 12 adalah ...", o:["8","9","10","11"], a:1, f:"Jumlahkan seluruh data lalu bagi dengan banyak data."},
-    {s:"MATEMATIKA", q:"Peluang muncul sisi gambar pada sebuah koin seimbang adalah ...", o:["0","1/4","1/2","1"], a:2, f:"Ada dua hasil yang sama mungkin pada satu lemparan koin seimbang."},
-
-    {s:"INFORMATIKA", q:"Langkah-langkah terurut untuk menyelesaikan masalah disebut ...", o:["Algoritma","Browser","Database","Monitor"], a:0, f:"Istilah tersebut merujuk pada prosedur atau langkah terstruktur untuk menyelesaikan masalah."},
-    {s:"INFORMATIKA", q:"Perangkat yang digunakan untuk memasukkan teks ke komputer adalah ...", o:["Monitor","Keyboard","Speaker","Proyektor"], a:1, f:"Pilih perangkat yang berfungsi sebagai alat input teks."},
-    {s:"INFORMATIKA", q:"Dalam berpikir komputasional, memecah masalah besar menjadi bagian kecil disebut ...", o:["Abstraksi","Dekomposisi","Enkripsi","Kompresi"], a:1, f:"Konsep ini berfokus pada memecah masalah kompleks menjadi bagian yang lebih mudah ditangani."},
-    {s:"INFORMATIKA", q:"Data yang disusun dalam baris dan kolom paling umum disebut ...", o:["Tabel","Folder","Ikon","Jaringan"], a:0, f:"Cari bentuk penyajian data yang memiliki baris dan kolom."},
-    {s:"INFORMATIKA", q:"Jaringan komputer yang mencakup area sangat luas antarkota atau negara disebut ...", o:["LAN","PAN","WAN","USB"], a:2, f:"Bandingkan cakupan geografis dari jenis-jenis jaringan."},
-    {s:"INFORMATIKA", q:"Urutan instruksi yang dijalankan komputer untuk melakukan tugas merupakan bagian dari ...", o:["Algoritma","Wallpaper","Kabel","Resolusi"], a:0, f:"Fokus pada konsep langkah terstruktur yang dapat dijalankan untuk menyelesaikan tugas."}
+  const Q = [
+    {s:"MATEMATIKA",q:"Berapakah nilai 2³ × 2²?",o:["16","32","64","8"],a:1,f:"Pangkat dijumlahkan jika basisnya sama: 2⁵ = 32."},
+    {s:"MATEMATIKA",q:"Jika x + 7 = 15, nilai x adalah ...",o:["6","7","8","9"],a:2,f:"Kurangi kedua ruas dengan 7."},
+    {s:"MATEMATIKA",q:"Sisi siku-siku segitiga adalah 6 cm dan 8 cm. Sisi miringnya ...",o:["9 cm","10 cm","12 cm","14 cm"],a:1,f:"Pythagoras: c² = 6² + 8² = 100."},
+    {s:"MATEMATIKA",q:"Jika f(x) = 2x + 3, maka f(4) = ...",o:["8","10","11","12"],a:2,f:"Substitusi x = 4: 2(4) + 3 = 11."},
+    {s:"MATEMATIKA",q:"Rata-rata dari 6, 8, 10, dan 12 adalah ...",o:["8","9","10","11"],a:1,f:"Jumlah data 36 dibagi 4 data = 9."},
+    {s:"MATEMATIKA",q:"Peluang muncul sisi gambar pada koin seimbang adalah ...",o:["0","1/4","1/2","1"],a:2,f:"Ada 2 hasil yang sama mungkin."},
+    {s:"INFORMATIKA",q:"Langkah-langkah terurut untuk menyelesaikan masalah disebut ...",o:["Algoritma","Browser","Database","Monitor"],a:0,f:"Algoritma adalah langkah terstruktur untuk menyelesaikan masalah."},
+    {s:"INFORMATIKA",q:"Perangkat untuk memasukkan teks ke komputer adalah ...",o:["Monitor","Keyboard","Speaker","Proyektor"],a:1,f:"Keyboard adalah perangkat input teks."},
+    {s:"INFORMATIKA",q:"Memecah masalah besar menjadi bagian kecil disebut ...",o:["Abstraksi","Dekomposisi","Enkripsi","Kompresi"],a:1,f:"Dekomposisi memecah masalah kompleks menjadi bagian yang mudah ditangani."},
+    {s:"INFORMATIKA",q:"Data yang disusun dalam baris dan kolom disebut ...",o:["Tabel","Folder","Ikon","Jaringan"],a:0,f:"Tabel memiliki baris dan kolom."},
+    {s:"INFORMATIKA",q:"Jaringan komputer yang mencakup area antarkota atau negara disebut ...",o:["LAN","PAN","WAN","USB"],a:2,f:"WAN (Wide Area Network) mencakup area sangat luas."},
+    {s:"INFORMATIKA",q:"Urutan instruksi yang dijalankan komputer untuk suatu tugas merupakan bagian dari ...",o:["Algoritma","Wallpaper","Kabel","Resolusi"],a:0,f:"Instruksi terurut adalah ciri algoritma."}
   ];
-
   const $ = id => document.getElementById(id);
-  const subject = $("quizSubject"), progress = $("quizProgress"), question = $("quizQuestion");
-  const options = $("quizOptions"), feedback = $("quizFeedback"), next = $("quizNext"), dots = $("quizDots");
+  let order = [], cur = 0, done = false, score = 0;
+  const shuffle = a => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 
-  let order = [], current = 0, answered = false, timer = null;
-
-  function shuffle(arr){
-    const a = [...arr];
-    for(let i=a.length-1;i>0;i--){
-      const j=Math.floor(Math.random()*(i+1));
-      [a[i],a[j]]=[a[j],a[i]];
-    }
-    return a;
-  }
-
-  function newRound(){
-    order = shuffle(questions.map((_,i)=>i));
-    current = 0;
-    render();
-  }
-
-  function render(){
-    clearTimeout(timer);
-    answered = false;
-    const item = questions[order[current]];
-    subject.textContent = item.s;
-    progress.textContent = `Soal ${current+1} / ${order.length}`;
-    question.textContent = item.q;
-    feedback.textContent = "";
-    next.disabled = true;
-    options.innerHTML = "";
-
-    item.o.forEach((label, i) => {
-      const btn = document.createElement("button");
-      btn.className = "quiz-option";
-      btn.textContent = `${String.fromCharCode(65+i)}. ${label}`;
-      btn.addEventListener("click", () => answer(i));
-      options.appendChild(btn);
+  function render() {
+    done = false;
+    const it = Q[order[cur]];
+    $("quizSubject").textContent = it.s;
+    $("quizProgress").textContent = `Soal ${cur + 1} / ${order.length}`;
+    $("quizQuestion").textContent = it.q;
+    $("quizFeedback").textContent = "";
+    $("quizNext").disabled = true;
+    $("quizNext").textContent = cur === order.length - 1 ? "Ulangi kuis" : "Soal berikutnya";
+    const box = $("quizOptions");
+    box.innerHTML = "";
+    it.o.forEach((t, i) => {
+      const b = document.createElement("button");
+      b.className = "quiz-option";
+      b.textContent = `${String.fromCharCode(65 + i)}. ${t}`;
+      b.onclick = () => answer(i);
+      box.appendChild(b);
     });
-
-    dots.innerHTML = "";
-    order.slice(0, Math.min(order.length, 8)).forEach((_, i) => {
-      const dot = document.createElement("span");
-      dot.className = "quiz-dot" + (i === current ? " active" : "");
-      dots.appendChild(dot);
+  }
+  function answer(c) {
+    if (done) return;
+    done = true;
+    const it = Q[order[cur]];
+    [...$("quizOptions").children].forEach((b, i) => {
+      b.disabled = true;
+      if (i === it.a) b.classList.add("correct");
+      else if (i === c) b.classList.add("wrong");
     });
-
-    // Otomatis berpindah setelah 18 detik jika belum dijawab.
-    timer = setTimeout(() => {
-      if(!answered){
-        feedback.textContent = "Waktu habis. Soal berikutnya dimuat otomatis.";
-        setTimeout(goNext, 900);
-      }
-    }, 18000);
+    if (c === it.a) score++;
+    $("quizScore").textContent = `Benar: ${score}`;
+    $("quizFeedback").textContent = (c === it.a ? "✓ Benar! " : "✕ Belum tepat. ") + it.f;
+    $("quizNext").disabled = false;
   }
-
-  function answer(choice){
-    if(answered) return;
-    answered = true;
-    clearTimeout(timer);
-
-    const item = questions[order[current]];
-    const buttons = [...options.querySelectorAll(".quiz-option")];
-    buttons.forEach((btn, i) => {
-      btn.disabled = true;
-      if(i === item.a) btn.classList.add("correct");
-      if(i === choice && i !== item.a) btn.classList.add("wrong");
-    });
-
-    feedback.textContent = choice === item.a
-      ? "✓ Benar! " + item.f
-      : "✕ Belum tepat. " + item.f;
-
-    next.disabled = false;
-  }
-
-  function goNext(){
-    if(current < order.length - 1){
-      current++;
-      render();
-    }else{
-      newRound();
-    }
-  }
-
-  next.addEventListener("click", goNext);
-  newRound();
+  function start() { order = shuffle(Q.map((_, i) => i)); cur = 0; score = 0; $("quizScore").textContent = "Benar: 0"; render(); }
+  $("quizNext").onclick = () => { if (cur < order.length - 1) { cur++; render(); } else start(); };
+  start();
 })();
 </script>
-<!-- Structured Data (schema.org) -->
 <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "EducationalOrganization",
-  "name": "KW Learning Platform",
-  "description": "Dasbor belajar Matematika dan Informatika untuk siswa SMP/MTs dengan materi interaktif dan kuis otomatis.",
-  "url": "https://smpnkonsel.github.io/kwlearning/",
-  "sameAs": []
-}
+{"@context":"https://schema.org","@type":"EducationalOrganization","name":"KW Learning","description":"Ruang belajar Matematika dan Informatika untuk siswa SMP/MTs dengan materi interaktif dan kuis.","url":"https://smpnkonsel.github.io/kwlearning/"}
 </script>
 <script src="assets/js/main.js" defer></script>
 </body>

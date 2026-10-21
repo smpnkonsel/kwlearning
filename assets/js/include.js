@@ -1,98 +1,41 @@
-document.addEventListener("DOMContentLoaded", async () => {
-    const sidebar = document.getElementById("sidebar-container");
-
-    if (!sidebar) {
-        console.warn("Container #sidebar-container tidak ditemukan.");
-        return;
-    }
-
+(() => {
+  const me = document.currentScript;
+  document.addEventListener("DOMContentLoaded", async () => {
+    const box = document.getElementById("sidebar-container");
+    if (!box || !me) return;
+    const root = new URL("../../", me.src); // folder utama situs
     try {
-        // ==========================================
-        // CARI LOKASI include.js
-        // ==========================================
+      const res = await fetch(new URL("components/sidebar.html", root), { cache: "no-cache" });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      box.innerHTML = await res.text();
 
-        const script = document.currentScript;
+      const page = location.pathname.split("/").pop() || "index.html";
+      box.querySelectorAll("a[href],img[src]").forEach(el => {
+        const attr = el.hasAttribute("href") ? "href" : "src";
+        const v = el.getAttribute(attr);
+        if (!v || v.startsWith("#") || /^(https?:|mailto:)/.test(v)) return;
+        const url = new URL(v.replace(/^\.\//, ""), root);
+        el.setAttribute(attr, url.href);
+        if (el.tagName === "A" && (url.pathname.split("/").pop() || "index.html") === page) el.classList.add("active");
+      });
 
-        // Jika document.currentScript kosong, cari script include.js
-        const includeScript =
-            script ||
-            [...document.scripts].find(s =>
-                s.src.includes("include.js")
-            );
-
-        if (!includeScript) {
-            throw new Error("include.js tidak ditemukan.");
-        }
-
-        // ==========================================
-        // LOKASI SIDEBAR BERDASARKAN include.js
-        // aset/js/include.js
-        //        ↓
-        // ../../components/sidebar.html
-        // ==========================================
-
-        const sidebarUrl = new URL(
-            "../../components/sidebar.html",
-            includeScript.src
-        ).href;
-
-        console.log("Mencoba memuat sidebar:");
-        console.log(sidebarUrl);
-
-        // ==========================================
-        // LOAD SIDEBAR
-        // ==========================================
-
-        const res = await fetch(sidebarUrl, {
-            cache: "no-cache"
-        });
-
-        if (!res.ok) {
-            throw new Error(
-                `HTTP ${res.status}: ${res.statusText}`
-            );
-        }
-
-        const html = await res.text();
-
-        sidebar.innerHTML = html;
-
-        // ==========================================
-        // MENU AKTIF
-        // ==========================================
-
-        const currentPage =
-            location.pathname.split("/").pop() || "index.html";
-
-        const links = sidebar.querySelectorAll("a[href]");
-
-        links.forEach(link => {
-            const href = link.getAttribute("href");
-
-            if (!href) return;
-
-            const linkUrl = href
-                .split("?")[0]
-                .split("#")[0];
-
-            const linkPage =
-                linkUrl.split("/").pop() || "index.html";
-
-            if (linkPage === currentPage) {
-                link.classList.add("active");
-            }
-        });
-
-        console.log("✅ Sidebar berhasil dimuat.");
-
+      const btn = box.querySelector(".menu-toggle");
+      const set = open => {
+        document.body.classList.toggle("menu-open", open);
+        btn.setAttribute("aria-expanded", open);
+        btn.textContent = open ? "✕" : "☰";
+      };
+      btn.addEventListener("click", () => set(!document.body.classList.contains("menu-open")));
+      box.querySelector(".menu-backdrop").addEventListener("click", () => set(false));
+      box.querySelectorAll(".nav a").forEach(a => a.addEventListener("click", () => set(false)));
+      document.addEventListener("keydown", e => e.key === "Escape" && set(false));
+      matchMedia("(min-width:901px)").addEventListener("change", e => e.matches && set(false));
     } catch (err) {
-        console.error("❌ Error Sidebar:", err);
-
-        sidebar.innerHTML = `
-            <div class="sidebar-error">
-                <p>Sidebar gagal dimuat.</p>
-                <small>${err.message}</small>
-            </div>
-        `;
+      console.error("Sidebar gagal dimuat:", err);
+      const d = document.createElement("div");
+      d.className = "sidebar-error";
+      d.textContent = "Menu gagal dimuat. Buka situs lewat server, bukan file langsung.";
+      box.appendChild(d);
     }
-});
+  });
+})();
