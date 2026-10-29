@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cyber Defender</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;color-scheme:dark;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:#030814;color:#d8f3ff;font-family:Orbitron,Consolas,monospace;display:flex;flex-direction:column;overflow:hidden;user-select:none;-webkit-user-select:none}
+button{font:inherit;cursor:pointer;color:inherit;border:1px solid #1fe0ff;background:#06203a;border-radius:10px;padding:10px 14px;font-weight:800;transition:filter .15s,transform .15s}
+button:hover{filter:brightness(1.3)}
+button:disabled{opacity:.45;cursor:default}
+#hud{display:flex;gap:8px;padding:8px;align-items:stretch;flex-wrap:wrap}
+.box{flex:1;min-width:70px;padding:6px 10px;border:1px solid #14507a;border-radius:10px;background:#061629}
+.box small{display:block;font-size:9px;color:#6fb8d8;letter-spacing:1px}
+.box b{font-size:18px;color:#1fe0ff}
+.bar{height:14px;margin-top:4px;border-radius:7px;background:#02101f;overflow:hidden;border:1px solid #14507a}
+#hp{display:block;height:100%;width:100%;background:#2dff8f;transition:width .2s,background .3s}
+#hpBox{flex:2;min-width:140px}
+#stage{position:relative;flex:1;min-height:0}
+#c{display:block;width:100%;height:100%;touch-action:none;cursor:crosshair}
+#stage::after{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(#0000 0 2px,#0003 2px 3px)}
+@keyframes glow{50%{text-shadow:0 0 34px #1fe0ff,0 0 6px #fff}}
+.panel h1{animation:glow 2.5s infinite}
+#tip{position:absolute;z-index:2;left:50%;bottom:10px;transform:translateX(-50%);max-width:92%;padding:8px 14px;border:1px solid #1fe0ff;border-radius:10px;background:#04152bdd;font-size:12px;text-align:center;opacity:0;transition:opacity .3s;pointer-events:none}
+#skills{display:flex;gap:8px;padding:8px}
+#skills button{flex:1;font-size:13px}
+#ov{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:16px;background:#020712cc;backdrop-filter:blur(3px);z-index:10}
+#ov.show{display:flex}
+.panel{max-width:560px;max-height:100%;overflow:auto;padding:22px;border:1px solid #1fe0ff;border-radius:18px;background:#061629;box-shadow:0 0 40px #1fe0ff44;font-size:13px;line-height:1.55;font-family:system-ui,Arial,sans-serif}
+.panel h1{font-family:Orbitron,sans-serif;margin:0 0 6px;font-size:28px;color:#1fe0ff;text-shadow:0 0 14px #1fe0ff}
+.panel h3{margin:14px 0 6px;font-size:12px;letter-spacing:2px;color:#6fb8d8}
+.panel ul{margin:4px 0;padding-left:18px}
+.panel .go{width:100%;margin-top:16px;font-size:16px;background:#0a5a46;border-color:#2dff8f}
+</style>
+</head>
+<body>
+<div id="hud">
+  <div class="box" id="hpBox"><small>🛡️ INTEGRITAS SERVER</small><div class="bar"><i id="hp"></i></div></div>
+  <div class="box"><small>SKOR</small><b id="score">0</b></div>
+  <div class="box"><small>LEVEL</small><b id="lvl">1</b></div>
+  <div class="box"><small>COMBO</small><b id="combo">x1</b></div>
+  <button id="pauseBtn" title="Jeda (P)">⏸</button>
+  <button id="soundBtn" title="Suara">🔊</button>
+</div>
+<div id="stage"><canvas id="c"></canvas><div id="tip"></div></div>
+<div id="skills">
+  <button id="fwBtn">🔥 FIREWALL [Spasi]</button>
+  <button id="frBtn">❄️ FREEZE [F]</button>
+</div>
+<div id="ov"></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const cv=$("c"), ctx=cv.getContext("2d");
+const T={
+  virus:{e:"🦠",c:"#ff3b6b",sp:55,hp:1,r:22,dmg:10,pts:10,tip:"🦠 Virus: jangan membuka file dari sumber yang tidak dikenal."},
+  phish:{e:"🎣",c:"#ffb020",sp:70,hp:1,r:20,dmg:8,pts:15,tip:"🎣 Phishing: periksa alamat pengirim dan tautan sebelum mengklik."},
+  ransom:{e:"🔒",c:"#a855f7",sp:34,hp:3,r:30,dmg:25,pts:40,tip:"🔒 Ransomware: buat backup data secara rutin dan jangan bayar tebusan."},
+  ddos:{e:"🤖",c:"#ff7a3b",sp:105,hp:1,r:15,dmg:4,pts:5,tip:"🤖 DDoS: banjir permintaan palsu. Firewall bisa meredamnya."},
+  good:{e:"📦",c:"#3dff9a",sp:60,hp:1,r:20,dmg:0,pts:0,tip:"📦 Data sah! Jangan diblokir, biarkan masuk ke server."}
+};
+T.heal={e:"💚",c:"#2dff8f",sp:28,hp:1,r:18,dmg:0,pts:0,tip:""};
+T.dbl={e:"✨",c:"#ffd34d",sp:28,hp:1,r:18,dmg:0,pts:0,tip:""};
+T.boss={e:"👾",c:"#ff2bd6",sp:22,hp:25,r:52,dmg:40,pts:300,tip:"👾 APT: peretas yang sabar dan terarah. Lawan dengan pembaruan sistem dan autentikasi dua faktor."};
+const ATK=["virus","phish","ransom","ddos","boss"];
+const CORE=42;
+let W,H,DPR,CX,CY;
+let state="menu", threats=[], parts=[], rings=[];
+let hp=100, score=0, kills=0, lvl=1, combo=0, time=0, spawnT=1, fwCd=0, frCd=0, freeze=0, shake=0, tipT=0, last=0;
+let soundOn=true, audioCtx, hi=0;
+let stars=[], floats=[], beams=[], dbl=0, droneCd=1, banner=null;
+try{hi=+localStorage.getItem("cd_hi")||0}catch(e){}
+
+function resize(){
+  DPR=Math.min(devicePixelRatio||1,2);
+  const r=cv.getBoundingClientRect();
+  W=r.width; H=r.height;
+  cv.width=W*DPR; cv.height=H*DPR;
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  CX=W/2; CY=H/2;
+  stars=Array.from({length:110},()=>({x:Math.random()*W,y:Math.random()*H,z:Math.random()*.8+.2}));
+}
+addEventListener("resize",resize);
+
+function tone(f=440,d=.1,type="sine",v=.05){
+  if(!soundOn) return;
+  try{
+    audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();
+    if(audioCtx.state==="suspended") audioCtx.resume();
+    const o=audioCtx.createOscillator(), g=audioCtx.createGain(), t=audioCtx.currentTime;
+    o.type=type; o.frequency.value=f;
+    g.gain.setValueAtTime(v,t); g.gain.exponentialRampToValueAtTime(.001,t+d);
+    o.connect(g); g.connect(audioCtx.destination); o.start(); o.stop(t+d);
+  }catch(e){}
+}
+
+function tip(text){
+  $("tip").textContent=text; $("tip").style.opacity=1; tipT=3.5;
+}
+
+/* ===== Spawn ===== */
+function spawn(type,side,pos){
+  side=side??Math.floor(Math.random()*4);
+  pos=pos??Math.random();
+  const m=40;
+  let x,y;
+  if(side===0){x=pos*W;y=-m}else if(side===1){x=W+m;y=pos*H}else if(side===2){x=pos*W;y=H+m}else{x=-m;y=pos*H}
+  threats.push({type,x,y,hp:T[type].hp,t:Math.random()*6,flash:0,tr:[]});
+}
+
+function spawnWave(){
+  const w=[["virus",5],["good",2]];
+  if(lvl>=2) w.push(["phish",3],["ddos",1.5]);
+  if(lvl>=3) w.push(["ransom",1.5]);
+  let r=Math.random()*w.reduce((a,b)=>a+b[1],0), pick="virus";
+  for(const [t,v] of w){ if((r-=v)<=0){pick=t;break} }
+  if(pick==="ddos"){
+    const side=Math.floor(Math.random()*4), base=Math.random()*.7;
+    for(let i=0;i<5;i++) spawn("ddos",side,base+i*.06);
+  } else spawn(pick);
+}
+
+/* ===== Aksi ===== */
+function burst(x,y,color,n=14){
+  for(let i=0;i<n;i++){
+    const a=Math.random()*6.28, s=40+Math.random()*160;
+    parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:.6,color});
+  }
+}
+
+function spawnPickup(x,y){
+  threats.push({type:Math.random()<.6?"heal":"dbl",x,y,hp:1,t:0,flash:0,tr:[]});
+}
+function checkLevel(){
+  const n=1+Math.floor(kills/15);
+  if(n>lvl){
+    lvl=n; banner={t:"LEVEL "+lvl,c:"#1fe0ff",life:2}; tone(880,.3,"triangle",.07);
+    if(lvl%4===0){ spawn("boss"); banner={t:"⚠️ BOSS: APT HACKER",c:"#ff2bd6",life:3}; tone(90,.8,"sawtooth",.08); }
+  }
+}
+function droneFire(){
+  const n=Math.min(4,Math.floor(lvl/2));
+  for(let i=0;i<n;i++){
+    const a=time*1.5+i*6.283/n, dx=CX+Math.cos(a)*74, dy=CY+Math.sin(a)*74;
+    let best=null, bd=260;
+    for(const th of threats){
+      if(!ATK.includes(th.type)) continue;
+      const d=Math.hypot(th.x-dx,th.y-dy);
+      if(d<bd){bd=d;best=th}
+    }
+    if(best){ beams.push({x1:dx,y1:dy,x2:best.x,y2:best.y,life:.18,color:"#58d6ff"}); hit(best,true); }
+  }
+}
+function hit(th,auto){
+  const d=T[th.type];
+  if(!auto) beams.push({x1:CX,y1:CY,x2:th.x,y2:th.y,life:.15,color:d.c});
+  if(th.type==="good"){
+    hp-=8; combo=0; shake=.25; tone(140,.25,"sawtooth");
+    burst(th.x,th.y,"#ff3b6b"); tip("⚠️ Kamu memblokir data sah! Integritas turun. "+d.tip);
+    threats.splice(threats.indexOf(th),1);
+    return;
+  }
+  if(th.type==="heal"||th.type==="dbl"){
+    threats.splice(threats.indexOf(th),1); burst(th.x,th.y,d.c,10); tone(900,.15,"triangle");
+    if(th.type==="heal"){hp=Math.min(100,hp+15);floats.push({x:th.x,y:th.y,txt:"+15 HP",color:d.c,life:1})}
+    else{dbl=8;floats.push({x:th.x,y:th.y,txt:"SKOR x2!",color:d.c,life:1})}
+    return;
+  }
+  th.hp--; th.flash=.12;
+  if(th.hp>0){ tone(380,.07,"square",.04); burst(th.x,th.y,d.c,6); return; }
+  threats.splice(threats.indexOf(th),1);
+  kills++; combo++;
+  const mult=Math.min(5,1+Math.floor(combo/5));
+  const gain=d.pts*mult*(dbl>0?2:1);
+  score+=gain;
+  floats.push({x:th.x,y:th.y-10,txt:"+"+gain,color:d.c,life:1});
+  if(combo>0&&combo%5===0) floats.push({x:CX,y:CY-80,txt:"COMBO x"+mult+"!",color:"#ffd34d",life:1.2});
+  if(Math.random()<.1&&th.type!=="boss") spawnPickup(th.x,th.y);
+  burst(th.x,th.y,d.c);
+  tone(520+Math.min(combo,20)*25,.12,"triangle");
+  if(Math.random()<.25 || th.type==="ransom"||th.type==="boss") tip(d.tip);
+  checkLevel();
+}
+
+function firewall(){
+  if(state!=="play"||fwCd>0) return;
+  fwCd=25; rings.push({r:0,max:Math.hypot(W,H),color:"#ff8a3b",w:6});
+  [...threats].forEach(th=>{
+    if(!ATK.includes(th.type)) return;
+    if(th.type==="boss"){th.hp=Math.max(1,th.hp-5);th.flash=.2;return;}
+    score+=T[th.type].pts; kills++; burst(th.x,th.y,T[th.type].c,8);
+    threats.splice(threats.indexOf(th),1);
+  });
+  checkLevel();
+  tone(200,.5,"sawtooth",.08); tip("🔥 Firewall aktif! Semua ancaman diblokir.");
+}
+function doFreeze(){
+  if(state!=="play"||frCd>0) return;
+  frCd=18; freeze=4; rings.push({r:0,max:Math.hypot(W,H),color:"#58d6ff",w:4});
+  tone(900,.4,"sine",.06); tip("❄️ Sistem membeku! Ancaman melambat 4 detik.");
+}
+
+cv.addEventListener("pointerdown",e=>{
+  if(state!=="play") return;
+  const r=cv.getBoundingClientRect(), px=e.clientX-r.left, py=e.clientY-r.top;
+  let best=null, bd=1e9;
+  for(const th of threats){
+    const d=Math.hypot(th.x-px,th.y-py);
+    if(d<T[th.type].r+14 && d<bd){bd=d;best=th}
+  }
+  rings.push({r:4,max:34,x:px,y:py,color:"#1fe0ff",w:2});
+  if(best) hit(best); else tone(220,.04,"square",.02);
+});
+
+/* ===== Update ===== */
+function update(dt){
+  time+=dt; spawnT-=dt;
+  if(spawnT<=0){ spawnWave(); spawnT=Math.max(.35,1.5-lvl*.12); }
+  fwCd=Math.max(0,fwCd-dt); frCd=Math.max(0,frCd-dt); freeze=Math.max(0,freeze-dt);
+  shake=Math.max(0,shake-dt);
+  dbl=Math.max(0,dbl-dt);
+  droneCd-=dt; if(droneCd<=0){ droneFire(); droneCd=1.1; }
+  if(banner){ banner.life-=dt; if(banner.life<=0) banner=null; }
+  for(let i=floats.length-1;i>=0;i--){ const f=floats[i]; f.y-=35*dt; f.life-=dt; if(f.life<=0) floats.splice(i,1); }
+  for(let i=beams.length-1;i>=0;i--){ beams[i].life-=dt; if(beams[i].life<=0) beams.splice(i,1); }
+  const slow=freeze>0?.3:1;
+
+  for(let i=threats.length-1;i>=0;i--){
+    const th=threats[i], d=T[th.type];
+    th.t+=dt; th.flash=Math.max(0,th.flash-dt);
+    const dx=CX-th.x, dy=CY-th.y, dist=Math.hypot(dx,dy)||1, ux=dx/dist, uy=dy/dist;
+    const sp=d.sp*(1+lvl*.08)*slow;
+    const wob=th.type==="phish"?Math.sin(th.t*5)*60*dt*slow:0;
+    th.x+=ux*sp*dt-uy*wob; th.y+=uy*sp*dt+ux*wob;
+    th.tr.push([th.x,th.y]); if(th.tr.length>8) th.tr.shift();
+    if(dist<CORE+d.r){
+      threats.splice(i,1);
+      if(th.type==="good"){ score+=5; hp=Math.min(100,hp+1); tone(700,.08,"triangle",.03); }
+      else if(th.type==="heal"||th.type==="dbl"){}
+      else{
+        hp-=d.dmg; combo=0; shake=.35; tone(120,.3,"sawtooth",.08);
+        burst(CX,CY,"#ff3b6b",18); tip("💥 Server diserang! "+d.tip);
+      }
+    }
+  }
+  for(let i=parts.length-1;i>=0;i--){
+    const p=parts[i]; p.x+=p.vx*dt; p.y+=p.vy*dt; p.life-=dt;
+    if(p.life<=0) parts.splice(i,1);
+  }
+  for(let i=rings.length-1;i>=0;i--){
+    const r=rings[i]; r.r+=(r.max>100?1400:140)*dt;
+    if(r.r>=r.max) rings.splice(i,1);
+  }
+  tipT-=dt; if(tipT<=0) $("tip").style.opacity=0;
+  if(hp<=0){ hp=0; gameOver(); }
+}
+
+/* ===== Gambar ===== */
+function draw(){
+  ctx.save();
+  const bg=ctx.createRadialGradient(CX,CY,20,CX,CY,Math.max(W,H)*.7);
+  bg.addColorStop(0,"#0a2a52"); bg.addColorStop(1,"#02050f");
+  ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+  ctx.fillStyle="#bfe9ff";
+  stars.forEach(st=>{ctx.globalAlpha=.3+.7*Math.abs(Math.sin(time*st.z*2+st.x));ctx.fillRect((st.x+time*6*st.z)%W,st.y,st.z*2,st.z*2)});
+  ctx.globalAlpha=1;
+  if(shake>0) ctx.translate((Math.random()-.5)*10*shake*3,(Math.random()-.5)*10*shake*3);
+
+  // grid
+  ctx.strokeStyle="#0b2748"; ctx.lineWidth=1; ctx.beginPath();
+  const off=(time*20)%40;
+  for(let gx=-40+off;gx<W+40;gx+=40){ctx.moveTo(gx,0);ctx.lineTo(gx,H)}
+  for(let gy=-40+off;gy<H+40;gy+=40){ctx.moveTo(0,gy);ctx.lineTo(W,gy)}
+  ctx.stroke();
+
+  // ring
+  rings.forEach(r=>{
+    ctx.strokeStyle=r.color; ctx.lineWidth=r.w||2;
+    ctx.globalAlpha=Math.max(0,1-r.r/r.max);
+    ctx.beginPath(); ctx.arc(r.x??CX,r.y??CY,r.r,0,6.28); ctx.stroke();
+  });
+  ctx.globalAlpha=1;
+
+  // inti server
+  const hpc=hp>60?"#2dff8f":hp>30?"#ffb020":"#ff3b6b";
+  ctx.shadowColor=hpc; ctx.shadowBlur=25;
+  ctx.strokeStyle=hpc; ctx.lineWidth=4;
+  ctx.beginPath(); ctx.arc(CX,CY,CORE+10,-Math.PI/2,-Math.PI/2+6.28*hp/100); ctx.stroke();
+  ctx.fillStyle="#06203a"; ctx.lineWidth=3;
+  ctx.beginPath();
+  for(let i=0;i<6;i++){
+    const a=time*.6+i*Math.PI/3;
+    ctx[i?"lineTo":"moveTo"](CX+Math.cos(a)*CORE,CY+Math.sin(a)*CORE);
+  }
+  ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.shadowBlur=0;
+  ctx.setLineDash([10,14]); ctx.lineDashOffset=-time*30; ctx.strokeStyle="#1fe0ff66"; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.arc(CX,CY,CORE+24+Math.sin(time*3)*3,0,6.28); ctx.stroke(); ctx.setLineDash([]);
+  ctx.font="34px sans-serif"; ctx.textAlign="center"; ctx.textBaseline="middle";
+  ctx.fillText("🖥️",CX,CY+2);
+
+  // ancaman
+  threats.forEach(th=>{
+    const d=T[th.type];
+    th.tr.forEach((q,i)=>{ctx.globalAlpha=i/th.tr.length*.35;ctx.fillStyle=d.c;ctx.beginPath();ctx.arc(q[0],q[1],d.r*.55*i/th.tr.length+2,0,6.28);ctx.fill()});
+    ctx.globalAlpha=1;
+    ctx.shadowColor=d.c; ctx.shadowBlur=14;
+    ctx.fillStyle=th.flash>0?"#ffffff":d.c+"33"; ctx.strokeStyle=d.c; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.arc(th.x,th.y,d.r,0,6.28); ctx.fill(); ctx.stroke();
+    ctx.shadowBlur=0;
+    ctx.font=Math.round(d.r*1.2)+"px sans-serif"; ctx.fillText(d.e,th.x,th.y+1);
+    if(d.hp>6){ctx.fillStyle="#334";ctx.fillRect(th.x-30,th.y-d.r-12,60,6);ctx.fillStyle=d.c;ctx.fillRect(th.x-30,th.y-d.r-12,60*th.hp/d.hp,6);}
+    else if(d.hp>1){
+      for(let i=0;i<d.hp;i++){
+        ctx.fillStyle=i<th.hp?d.c:"#334";
+        ctx.fillRect(th.x-d.hp*5+i*10,th.y-d.r-9,8,4);
+      }
+    }
+  });
+
+  parts.forEach(p=>{
+    ctx.globalAlpha=Math.max(0,p.life/.6); ctx.fillStyle=p.color;
+    ctx.fillRect(p.x-2,p.y-2,4,4);
+  });
+  ctx.globalAlpha=1;
+  beams.forEach(b=>{
+    ctx.globalAlpha=Math.max(0,b.life/.18); ctx.strokeStyle=b.color; ctx.shadowColor=b.color; ctx.shadowBlur=12; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(b.x1,b.y1); ctx.lineTo(b.x2,b.y2); ctx.stroke();
+  });
+  ctx.shadowBlur=0; ctx.globalAlpha=1;
+  const nd=Math.min(4,Math.floor(lvl/2));
+  for(let i=0;i<nd;i++){
+    const a=time*1.5+i*6.283/nd;
+    ctx.fillStyle="#58d6ff"; ctx.shadowColor="#58d6ff"; ctx.shadowBlur=14;
+    ctx.beginPath(); ctx.arc(CX+Math.cos(a)*74,CY+Math.sin(a)*74,7,0,6.28); ctx.fill();
+  }
+  ctx.shadowBlur=0;
+  ctx.font="800 16px Orbitron,sans-serif";
+  floats.forEach(f=>{ctx.globalAlpha=Math.max(0,Math.min(1,f.life));ctx.fillStyle=f.color;ctx.fillText(f.txt,f.x,f.y)});
+  ctx.globalAlpha=1;
+  if(banner){
+    ctx.globalAlpha=Math.min(1,banner.life); ctx.font="800 "+Math.round(Math.min(40,W/12))+"px Orbitron,sans-serif";
+    ctx.fillStyle=banner.c; ctx.shadowColor=banner.c; ctx.shadowBlur=20; ctx.fillText(banner.t,CX,H*.18);
+    ctx.shadowBlur=0; ctx.globalAlpha=1;
+  }
+  if(freeze>0){ ctx.fillStyle="#58d6ff18"; ctx.fillRect(0,0,W,H); }
+  const vg=ctx.createRadialGradient(CX,CY,Math.min(W,H)*.35,CX,CY,Math.max(W,H)*.75);
+  vg.addColorStop(0,"#0000"); vg.addColorStop(1,"#000a");
+  ctx.fillStyle=vg; ctx.fillRect(0,0,W,H);
+  ctx.restore();
+}
+
+/* ===== HUD ===== */
+function hud(){
+  $("hp").style.width=hp+"%";
+  $("hp").style.background=hp>60?"#2dff8f":hp>30?"#ffb020":"#ff3b6b";
+  $("score").textContent=score;
+  $("lvl").textContent=lvl;
+  $("combo").textContent="x"+Math.min(5,1+Math.floor(combo/5))+(dbl>0?" ✨":"");
+  const a=fwCd>0?"🔥 "+Math.ceil(fwCd)+" dtk":"🔥 FIREWALL [Spasi]";
+  const b=frCd>0?"❄️ "+Math.ceil(frCd)+" dtk":"❄️ FREEZE [F]";
+  if($("fwBtn").textContent!==a){$("fwBtn").textContent=a;$("fwBtn").disabled=fwCd>0}
+  if($("frBtn").textContent!==b){$("frBtn").textContent=b;$("frBtn").disabled=frCd>0}
+}
+
+/* ===== Alur game ===== */
+function loop(now){
+  const dt=Math.min(.05,(now-last)/1000||0); last=now;
+  if(state==="play") update(dt);
+  else time+=dt*.3;
+  draw(); hud();
+  requestAnimationFrame(loop);
+}
+
+function showOverlay(html,btn,fn){
+  const ov=$("ov");
+  ov.innerHTML='<div class="panel">'+html+'<button class="go" id="goBtn">'+btn+'</button></div>';
+  ov.classList.add("show");
+  $("goBtn").onclick=()=>{ov.classList.remove("show");fn()};
+}
+
+function startGame(){
+  threats=[];parts=[];rings=[];floats=[];beams=[];dbl=0;banner=null;droneCd=1;
+  hp=100;score=0;kills=0;lvl=1;combo=0;spawnT=1;fwCd=0;frCd=0;freeze=0;
+  $("tip").style.opacity=0;
+  state="play"; tone(600,.15,"triangle");
+}
+
+function gameOver(){
+  state="over";
+  const best=score>hi;
+  if(best){hi=score;try{localStorage.setItem("cd_hi",hi)}catch(e){}}
+  tone(110,.8,"sawtooth",.08);
+  showOverlay(
+    "<h1>💀 SERVER JEBOL</h1><p>Skor: <b>"+score+"</b> • Level: <b>"+lvl+"</b> • Ancaman dihentikan: <b>"+kills+"</b></p>"+
+    '<p>Peringkat: <b style="font-size:24px;color:#ffd34d">'+(score>=2500?"S":score>=1200?"A":score>=500?"B":"C")+"</b> • "+(best?"🏆 Rekor baru!":"Rekor tertinggi: "+hi)+"</p>"+
+    "<p>Ingat: tetap waspada terhadap file asing, tautan mencurigakan, dan selalu backup data.</p>",
+    "🔄 MAIN LAGI",startGame);
+}
+
+function togglePause(){
+  if(state==="play"){
+    state="pause";
+    showOverlay("<h1>⏸ JEDA</h1><p>Game dihentikan sementara.</p>","▶ LANJUT",()=>{state="play"});
+  } else if(state==="pause"){
+    $("ov").classList.remove("show"); state="play";
+  }
+}
+
+function intro(){
+  showOverlay(
+    "<h1>🛡️ CYBER DEFENDER</h1><p>Kamu adalah penjaga keamanan server. Hentikan serangan siber sebelum mencapai server di tengah layar!</p>"+
+    "<h3>CARA BERMAIN</h3><ul><li><b>Klik / ketuk</b> ancaman untuk menghancurkannya.</li>"+
+    "<li>Jangan klik 📦 <b>data sah</b> (hijau). Biarkan masuk, kamu dapat bonus.</li>"+
+    "<li>Beruntun tanpa kena serangan menaikkan <b>combo</b> (skor hingga ×5).</li>"+
+    "<li>🔥 <b>Firewall</b> (Spasi) membasmi semua ancaman. ❄️ <b>Freeze</b> (F) memperlambat ancaman.</li>"+
+    "<li>Mulai level 2, <b>drone pertahanan</b> 🔹 mengorbit dan menembak otomatis.</li>"+
+    "<li>Ambil 💚 (+15 HP) dan ✨ (skor ×2 selama 8 detik) dengan mengkliknya.</li>"+
+    "<li>Tiap 4 level muncul <b>BOSS 👾</b> dengan nyawa banyak.</li>"+
+    "<li>P = jeda. Semakin tinggi level, semakin cepat dan banyak ancaman.</li></ul>"+
+    "<h3>JENIS ANCAMAN</h3><ul><li>🦠 Virus: cepat sedang, 1 klik</li><li>🎣 Phishing: bergerak zigzag</li>"+
+    "<li>🔒 Ransomware: lambat tapi kuat, 3 klik, sangat berbahaya</li><li>🤖 DDoS: datang berkelompok, cepat</li></ul>"+
+    (hi?"<p>🏆 Rekor: <b>"+hi+"</b></p>":""),
+    "▶ MULAI MISI",startGame);
+}
+
+$("fwBtn").onclick=firewall;
+$("frBtn").onclick=doFreeze;
+$("pauseBtn").onclick=togglePause;
+$("soundBtn").onclick=()=>{soundOn=!soundOn;$("soundBtn").textContent=soundOn?"🔊":"🔇"};
+const SEQ=[110,110,165,110,131,131,196,131]; let seqI=0;
+setInterval(()=>{ if(state==="play"&&soundOn){ tone(SEQ[seqI%8],.18,"square",.012); seqI++; } },230);
+addEventListener("keydown",e=>{
+  if(e.code==="Space"){e.preventDefault();firewall()}
+  if(e.code==="KeyF") doFreeze();
+  if(e.code==="KeyP"||e.code==="Escape") togglePause();
+});
+document.addEventListener("visibilitychange",()=>{ if(document.hidden && state==="play") togglePause(); });
+
+resize();
+intro();
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
